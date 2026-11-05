@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'products', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'overview', q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
