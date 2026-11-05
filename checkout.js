@@ -56,10 +56,9 @@ function render() {
   $('#submit').disabled = t.items < S.settings.minOrder;
 }
 
-// Orders are sent to the shop owner on WhatsApp (there is no server on GitHub Pages).
 const ref = () => { const d = new Date(); return 'DEW-' + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000); };
 
-$('#form').onsubmit = e => {
+$('#form').onsubmit = async e => {
   e.preventDefault();
   $('#err').textContent = '';
   const t = totals();
@@ -72,7 +71,22 @@ $('#form').onsubmit = e => {
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
   try { localStorage.setItem('dew_customer', JSON.stringify({ name: first + ' ' + last, phone })); } catch {}
+  
   const o = { number: ref(), lines: t.ls, itemsTotal: t.items, delivery: t.delivery, total: t.total, area, customer: { first, last, phone, whatsapp, address } };
+  
+  // Send to Telegram Proxy if enabled
+  if (S.settings.telegramEnabled && S.settings.telegramProxyUrl) {
+    try {
+      await fetch(S.settings.telegramProxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(o)
+      });
+    } catch (err) {
+      console.error('Telegram notification failed', err);
+    }
+  }
+
   Cart.clear();
   done(o);
 };
