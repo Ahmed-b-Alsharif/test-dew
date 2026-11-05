@@ -361,7 +361,7 @@ function discForm(id) {
     <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="dSave">Save</button><button class="btn ghost" id="dX">Cancel</button></div>`);
   $('#dX').onclick = closeModal;
   $('#dSave').onclick = () => {
-    const code = $('#dc`.value.trim().toUpperCase();
+    const code = $('#dc').value.trim().toUpperCase();
     if (!code) { $('#me').textContent = 'Promo code is required.'; return; }
     d.code = code;
     d.type = $('#dt').value;
