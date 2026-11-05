@@ -25,7 +25,7 @@ async function gh(method, path, body) {
   try {
     r = await fetch(`https://api.github.com/repos/${cfg.repo}${path ? '/' + path : ''}`, { method, cache: 'no-store', headers, body: body ? JSON.stringify(body) : undefined });
   } catch (e) {
-    throw new Error('Your browser could not reach GitHub. Turn off any ad blocker or VPN, then sign in again.');
+    throw new Error('Your browser could not reach GitHub. Turn off ad blocker or VPN, then sign in again.');
   }
   const j = await r.json().catch(() => ({}));
   if (r.status === 401) throw new Error('That token was not accepted. Create a new one and sign in again.');
@@ -252,31 +252,43 @@ function catForm(id) {
 /* ---------- orders ---------- */
 function orders() {
   $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
-    <p class="note">View and manage customer orders placed on your website.</p>
+    <p class="note">View and manage customer orders, payment status, fulfillment, and tracking numbers.</p>
     <div class="scroll"><table>
-      <tr><th>Order #</th><th>Date</th><th>Customer</th><th>Area</th><th>Items Total</th><th>Delivery</th><th>Discount</th><th>Total</th><th>Status</th><th></th></tr>
+      <tr><th>Order #</th><th>Date</th><th>Customer</th><th>Total</th><th>Payment</th><th>Fulfillment</th><th>Tracking #</th><th></th></tr>
       ${ordersList.length ? ordersList.map((o, idx) => `<tr>
         <td><b>${esc(o.number)}</b></td>
-        <td>${esc(new Date(o.date || Date.now()).toLocaleString())}</td>
+        <td>${esc(new Date(o.date || Date.now()).toLocaleDateString())}</td>
         <td>${esc(o.customer.first + ' ' + o.customer.last)}<br><small class="note">${esc(o.customer.phone)}</small></td>
-        <td>${o.area === 'alex' ? 'Alex' : 'Cairo/Giza'}</td>
-        <td>${egp(o.itemsTotal)}</td>
-        <td>${egp(o.delivery)}</td>
-        <td>${o.discount ? '-' + egp(o.discount) + ' (' + esc(o.promoCode || '') + ')' : 'EGP 0'}</td>
         <td><b>${egp(o.total)}</b></td>
-        <td><select data-ost="${idx}" style="padding:4px 8px;border-radius:6px;border:1px solid #cfd3cc">
-          <option ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
-          <option ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
-          <option ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        <td><select data-opay="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
+          <option ${o.paymentStatus === 'Unpaid (COD)' ? 'selected' : ''}>Unpaid (COD)</option>
+          <option ${o.paymentStatus === 'Paid' ? 'selected' : ''}>Paid</option>
         </select></td>
+        <td><select data-ofull="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
+          <option ${o.fulfillmentStatus === 'Pending' ? 'selected' : ''}>Pending</option>
+          <option ${o.fulfillmentStatus === 'Processing' ? 'selected' : ''}>Processing</option>
+          <option ${o.fulfillmentStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
+          <option ${o.fulfillmentStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
+          <option ${o.fulfillmentStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select></td>
+        <td><input type="text" value="${esc(o.trackingNumber || '')}" placeholder="Tracking #" data-otrack="${idx}" style="width:110px;padding:4px 6px;border:1px solid #cfd3cc;border-radius:6px"></td>
         <td style="white-space:nowrap"><button class="btn small" data-view="${idx}">View</button> <button class="btn small ghost" data-delord="${idx}" style="color:var(--red)">Delete</button></td>
-      </tr>`).join('') : '<tr><td colspan="10" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
+      </tr>`).join('') : '<tr><td colspan="8" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
     </table></div>`;
 
-  document.querySelectorAll('[data-ost]').forEach(sel => sel.onchange = () => {
-    ordersList[sel.dataset.ost].status = sel.value;
-    saveOrders('Update order status');
+  document.querySelectorAll('[data-opay]').forEach(sel => sel.onchange = () => {
+    ordersList[sel.dataset.opay].paymentStatus = sel.value;
+    saveOrders('Update payment status');
+  });
+
+  document.querySelectorAll('[data-ofull]').forEach(sel => sel.onchange = () => {
+    ordersList[sel.dataset.ofull].fulfillmentStatus = sel.value;
+    saveOrders('Update fulfillment status');
+  });
+
+  document.querySelectorAll('[data-otrack]').forEach(input => input.onchange = () => {
+    ordersList[input.dataset.otrack].trackingNumber = input.value.trim();
+    saveOrders('Update tracking number');
   });
 
   document.querySelectorAll('[data-view]').forEach(btn => btn.onclick = () => {
@@ -284,12 +296,13 @@ function orders() {
     const c = o.customer;
     modal(`<h2>Order ${esc(o.number)}</h2>
       <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleString()}</p>
-      <p><b>Status:</b> ${esc(o.status || 'Pending')}</p>
+      <p><b>Payment Status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
+      <p><b>Tracking Number:</b> ${esc(o.trackingNumber || 'None yet')}</p>
       <h3>Customer details</h3>
       <p><b>Name:</b> ${esc(c.first + ' ' + c.last)}<br><b>Phone:</b> ${esc(c.phone)}<br><b>WhatsApp:</b> ${esc(c.whatsapp)}<br><b>Area:</b> ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}<br><b>Address:</b> ${esc(c.address)}</p>
       <h3>Order items</h3>
       <ul>${o.lines.map(l => `<li>${esc(l.name)} &times; ${l.qty} — ${egp(l.total)} (${egp(l.unit)} each)</li>`).join('')}</ul>
-      <p><b>Items Cost:</b> ${egp(o.itemsTotal)}<br><b>Shipping Cost:</b> ${egp(o.delivery)}<br>${o.discount ? '<b>Discount (' + esc(o.promoCode) + '):</b> -' + egp(o.discount) + '<br>' : ''}<b>Total:</b> ${egp(o.total)} (COD)</p>
+      <p><b>Items Cost:</b> ${egp(o.itemsTotal)}<br><b>Shipping Cost:</b> ${egp(o.delivery)}<br>${o.discount ? '<b>Discount (' + esc(o.promoCode) + '):</b> -' + egp(o.discount) + '<br>' : ''}<b>Total:</b> ${egp(o.total)}</p>
       <button class="btn red" id="mCloseBtn" style="margin-top:12px">Close</button>`);
     $('#mCloseBtn').onclick = closeModal;
   });
@@ -348,7 +361,7 @@ function discForm(id) {
     <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="dSave">Save</button><button class="btn ghost" id="dX">Cancel</button></div>`);
   $('#dX').onclick = closeModal;
   $('#dSave').onclick = () => {
-    const code = $('#dc').value.trim().toUpperCase();
+    const code = $('#dc`.value.trim().toUpperCase();
     if (!code) { $('#me').textContent = 'Promo code is required.'; return; }
     d.code = code;
     d.type = $('#dt').value;
@@ -391,8 +404,8 @@ function store() {
 function help() {
   $('#view').innerHTML = `<h2>How this works</h2><div class="box">
     <p>This shop lives on GitHub. Every order placed on your website is automatically saved in your <b>orders.json</b> file and sent instantly to your Telegram bot.</p>
-    <p><b>Promo Codes</b> can be created in the Discounts tab and applied by customers at checkout.</p>
-    <p><b>Stock</b> is managed from the Products tab.</p></div>`;
+    <p><b>Orders</b> include payment status tracking (Paid vs COD), fulfillment statuses (Pending, Processing, Shipped, Delivered, Cancelled), and delivery tracking numbers.</p>
+    <p><b>Promo Codes</b> can be created in the Discounts tab and applied by customers at checkout.</p></div>`;
 }
 
 start();
