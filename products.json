@@ -13,8 +13,8 @@
     "checkoutBtnText": "Complete order",
     "checkoutTitle": "Delivery details",
     "paymentNote": "Payment is cash on delivery.",
-    "whatsapp": "+201044620635",
-    "phone": "+201044620635",
+    "whatsapp": "+201118225522",
+    "phone": "+201118225522",
     "email": "hello@example.com",
     "instagram": "dew_skincaree",
     "minOrder": 250,
@@ -22,7 +22,7 @@
     "deliveryCairo": 85,
     "deliveryAlex": 90,
     "telegramEnabled": true,
-    "telegramProxyUrl": "https://dew-telegram-proxy.vercel.app/api/telegram"
+    "telegramProxyUrl": ""
   },
   "catalogs": [
     {
@@ -97,6 +97,16 @@
       "stock": 10,
       "tags": "body",
       "visible": true
+    }
+  ],
+  "discounts": [
+    {
+      "id": "d1",
+      "code": "WELCOME10",
+      "type": "percentage",
+      "value": 10,
+      "minSpend": 0,
+      "active": true
     }
   ]
 }
