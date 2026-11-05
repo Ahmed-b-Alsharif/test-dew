@@ -48,7 +48,9 @@
       "featured": true,
       "howToUse": "",
       "id": "21e425f0",
-      "images": [],
+      "images": [
+        "images/1793922316271-9673b908.jpg"
+      ],
       "name": "Chopstick lip balm",
       "price": 60,
       "salePrice": 0,
