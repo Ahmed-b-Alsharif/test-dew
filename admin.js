@@ -121,7 +121,7 @@ function showLogin(msg) {
 
 /* ---------- shell ---------- */
 function render() {
-  const tabs = [['products', 'Products'], ['catalogs', 'Catalogs'], ['orders', 'Orders'], ['discounts', 'Discounts'], ['store', 'Store'], ['help', 'Help']];
+  const tabs = [['homepage', 'Homepage'], ['products', 'Products'], ['catalogs', 'Catalogs'], ['orders', 'Orders'], ['discounts', 'Discounts'], ['store', 'Store'], ['help', 'Help']];
   $('#app').innerHTML = `
     <div class="admin-bar"><div class="wrap"><b>Dew Admin</b>
       ${tabs.map(([k, n]) => `<button class="tab ${tab === k ? 'on' : ''}" data-t="${k}">${n} ${k === 'orders' && ordersList.length ? '('+ordersList.length+')' : ''}</button>`).join('')}
@@ -130,13 +130,28 @@ function render() {
     <div class="wrap" style="padding-top:18px;padding-bottom:60px"><div id="view"></div></div>`;
   document.querySelectorAll('.tab[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; q = ''; render(); });
   $('#out').onclick = () => { try { localStorage.removeItem('dew_gh'); sessionStorage.removeItem('dew_gh'); } catch {} D = null; cfg = null; showLogin(); };
-  ({ products, catalogs, orders, discounts, store, help })[tab]();
+  ({ homepage, products, catalogs, orders, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
 $('#ov').onclick = e => { if (e.target.id === 'ov') closeModal(); };
 const searchBox = () => `<input id="q" value="${esc(q)}" placeholder="Search" style="padding:9px 14px;border-radius:999px;border:1.5px solid #cfd3cc;margin-bottom:12px">`;
 function bindSearch() { const el = $('#q'); if (!el) return; el.oninput = () => { q = el.value; const pos = q.length; render(); const n = $('#q'); n.focus(); n.setSelectionRange(pos, pos); }; }
+
+
+/* ---------- homepage editor ---------- */
+function homepage() {
+  const base={"announcement":{"show":true,"text":"Buy 2 Get 1 Free  |  Free delivery on orders over 600 EGP","link":"#shop"},"header":{"logo":"Dew","links":[{"label":"Shop","url":"#shop"},{"label":"Our Story","url":"#about"},{"label":"Contact","url":"#contact"}]},"hero":{"show":true,"title":"Your Skin. Your Natural Glow.","text":"Thoughtful skincare, made with love in Egypt.","button":"Discover the collection","url":"#shop","image":""},"categories":{"show":true,"title":"Shop by category","items":[{"title":"Face Care","image":"","url":"#shop"},{"title":"Lip Care","image":"","url":"#shop"},{"title":"Body Care","image":"","url":"#shop"},{"title":"Hair Care","image":"","url":"#shop"}]},"products":{"show":true,"title":"Our Best Sellers","limit":5},"promo":{"show":true,"title":"A little more love for your skin","text":"Explore your everyday skincare essentials.","button":"Shop now","url":"#shop","image":""},"benefits":{"show":true,"items":["Made in Egypt","Thoughtfully selected ingredients","Cruelty-free","Delivery across Egypt"]},"reviews":{"show":true,"title":"Kind words from our customers","items":[{"name":"Your customer","text":"Customer feedback will appear here.","stars":5}]},"social":{"show":true,"title":"A little Dew every day","handle":"@dew_skincaree","images":["","","","","",""]},"newsletter":{"show":true,"title":"Stay in the glow","text":"Get updates, skincare tips and special offers.","button":"Join us"},"footer":{"show":true,"about":"Natural skincare, made with love in Egypt.","copyright":"All rights reserved.","links":[{"label":"About","url":"#about"},{"label":"Contact","url":"#contact"}]},"theme":{"green":"#1c524e","cream":"#fbf8f1","ink":"#183b35","accent":"#e7eee5"}};
+  const h = D.settings.homepage || (D.settings.homepage = JSON.parse(JSON.stringify(base)));
+  const json = JSON.stringify(h, null, 2);
+  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h2>Homepage editor</h2><p class="note">Edit every homepage section, text, button, link, image path, colors and visibility.</p></div><a class="btn ghost" href="./" target="_blank">Preview storefront ↗</a></div>
+  <div class="box" style="margin:14px 0"><h3>Homepage content and design</h3><p class="note">Edit the settings below as JSON. Text, buttons, links, images, section visibility and colors are all configurable. Keep the JSON syntax valid.</p><textarea id="homeJson" spellcheck="false" style="width:100%;min-height:560px;font:13px/1.5 ui-monospace,monospace;white-space:pre;tab-size:2">${esc(json)}</textarea>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn red" id="homeSave">Save homepage</button><button class="btn ghost" id="homeReset">Restore default layout</button></div><div class="err" id="homeErr"></div></div>
+  <div class="box"><h3>Upload homepage image</h3><p class="note">Upload a banner, category, promotion or Instagram image. Copy the generated path into the matching image field in the JSON editor above.</p><input type="file" id="homeImage" accept="image/*"><p id="homeImagePath" class="note"></p></div>`;
+  $('#homeSave').onclick=()=>{try{const next=JSON.parse($('#homeJson').value);if(!next.theme||!next.hero||!next.categories)throw new Error('Keep the theme, hero and categories sections.');D.settings.homepage=next;save('Update homepage design');$('#homeErr').textContent='';}catch(e){$('#homeErr').textContent='Could not save: '+e.message;}};
+  $('#homeReset').onclick=()=>{if(confirm('Restore the default homepage layout? This will replace current homepage settings.'))$('#homeJson').value=JSON.stringify(base,null,2);};
+  $('#homeImage').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{$('#homeImagePath').textContent='Uploading…';const path=await uploadImage(await resize(f));$('#homeImagePath').innerHTML='Uploaded: <b>'+esc(path)+'</b> — copy this into an image field.';}catch(err){$('#homeImagePath').textContent=err.message;}e.target.value='';};
+}
 
 /* ---------- products ---------- */
 function products() {
