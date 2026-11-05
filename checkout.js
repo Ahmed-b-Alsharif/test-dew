@@ -1,10 +1,11 @@
 const $ = s => document.querySelector(s);
-let S, area = null;
+let S, area = null, appliedDiscount = null;
 
 (async function () {
   try { S = await (await fetch('products.json?v=' + Date.now())).json(); }
   catch { $('#sumBody').innerHTML = '<p class="note">Could not load the shop. Please refresh.</p>'; return; }
   S.products = S.products.filter(p => p.visible);
+  if (!S.discounts) S.discounts = [];
   const s = S.settings;
   $('#lblCairo').textContent = `Cairo & Giza - ${egp(s.deliveryCairo)}`;
   $('#lblAlex').textContent = `Alexandria - ${egp(s.deliveryAlex)}`;
@@ -38,8 +39,21 @@ function lines() {
 function totals() {
   const ls = lines();
   const items = ls.reduce((a, l) => a + l.total, 0);
-  const delivery = area === 'alex' ? S.settings.deliveryAlex : area === 'cairo' ? S.settings.deliveryCairo : 0;
-  return { ls, items, delivery, total: items + delivery };
+  let delivery = area === 'alex' ? S.settings.deliveryAlex : area === 'cairo' ? S.settings.deliveryCairo : 0;
+
+  let discount = 0;
+  if (appliedDiscount) {
+    if (appliedDiscount.type === 'percentage') {
+      discount = Math.round((items * appliedDiscount.value) / 100);
+    } else if (appliedDiscount.type === 'fixed') {
+      discount = Math.min(items, appliedDiscount.value);
+    } else if (appliedDiscount.type === 'free_shipping') {
+      discount = delivery;
+      delivery = 0;
+    }
+  }
+
+  return { ls, items, delivery, discount, total: Math.max(0, items + delivery - (appliedDiscount && appliedDiscount.type === 'free_shipping' ? 0 : discount)) };
 }
 
 function render() {
@@ -48,11 +62,46 @@ function render() {
     $('#sumBody').innerHTML = '<p class="note">Your cart is empty.</p><a class="btn" href="./">Go shopping</a>';
     $('#submit').disabled = true; return;
   }
+
+  const discHtml = appliedDiscount ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(appliedDiscount.code)})</span><b>-${egp(t.discount)}</b></div>` : '';
+
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? egp(t.delivery) : 'Choose area'}</b></div>
+     ${discHtml}
      <div class="sum-line total"><span>Total</span><span>${egp(t.total)}</span></div>` +
+    `<div style="margin:14px 0 8px;display:flex;gap:8px">
+       <input id="promoInput" placeholder="Promo code" style="flex:1;padding:8px 12px;border:1.5px solid #cfd3cc;border-radius:999px;font-size:.9rem" value="${appliedDiscount ? esc(appliedDiscount.code) : ''}">
+       <button type="button" class="btn small" id="applyPromo">${appliedDiscount ? 'Remove' : 'Apply'}</button>
+     </div>
+     <div id="promoErr" class="note" style="margin-bottom:8px"></div>` +
     (t.items < S.settings.minOrder ? `<div class="warn">Minimum order is ${egp(S.settings.minOrder)} for items.</div>` : '');
+
+  $('#applyPromo').onclick = () => {
+    const codeInput = $('#promoInput').value.trim().toUpperCase();
+    if (appliedDiscount) {
+      appliedDiscount = null;
+      render();
+      return;
+    }
+    if (!codeInput) return;
+    const disc = (S.discounts || []).find(d => d.code === codeInput && d.active);
+    if (!disc) {
+      $('#promoErr').textContent = 'Invalid or inactive promo code.';
+      $('#promoErr').style.color = 'var(--red)';
+      return;
+    }
+    if (disc.minSpend && t.items < disc.minSpend) {
+      $('#promoErr').textContent = `Minimum spend for this code is ${egp(disc.minSpend)}.`;
+      $('#promoErr').style.color = 'var(--red)';
+      return;
+    }
+    appliedDiscount = disc;
+    $('#promoErr').textContent = 'Promo code applied successfully!';
+    $('#promoErr').style.color = 'var(--green)';
+    render();
+  };
+
   $('#submit').disabled = t.items < S.settings.minOrder;
 }
 
@@ -71,10 +120,22 @@ $('#form').onsubmit = async e => {
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
   try { localStorage.setItem('dew_customer', JSON.stringify({ name: first + ' ' + last, phone })); } catch {}
-  
-  const o = { number: ref(), lines: t.ls, itemsTotal: t.items, delivery: t.delivery, total: t.total, area, customer: { first, last, phone, whatsapp, address } };
-  
-  // Send to Telegram Proxy if enabled
+
+  const o = {
+    number: ref(),
+    date: new Date().toISOString(),
+    status: 'Pending',
+    lines: t.ls,
+    itemsTotal: t.items,
+    delivery: t.delivery,
+    discount: t.discount,
+    promoCode: appliedDiscount ? appliedDiscount.code : null,
+    total: t.total,
+    area,
+    customer: { first, last, phone, whatsapp, address }
+  };
+
+  // Send to Telegram & Orders Proxy if enabled
   if (S.settings.telegramEnabled && S.settings.telegramProxyUrl) {
     try {
       await fetch(S.settings.telegramProxyUrl, {
@@ -83,7 +144,7 @@ $('#form').onsubmit = async e => {
         body: JSON.stringify(o)
       });
     } catch (err) {
-      console.error('Telegram notification failed', err);
+      console.error('Notification proxy failed', err);
     }
   }
 
@@ -92,19 +153,9 @@ $('#form').onsubmit = async e => {
 };
 
 function done(o) {
-  const c = o.customer;
-  const msg = [`New order ${o.number}`, '',
-    ...o.lines.map(l => `${l.qty} x ${l.name} @ ${egp(l.unit)} = ${egp(l.total)}`), '',
-    `Items: ${egp(o.itemsTotal)}`, `Delivery: ${egp(o.delivery)}`, `Total: ${egp(o.total)} (cash on delivery)`, '',
-    `Name: ${c.first} ${c.last}`, `Phone: ${c.phone}`, `WhatsApp: ${c.whatsapp}`,
-    `Address: ${c.address}`, `Area: ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}`].join('\n');
-  const num = String(S.settings.whatsapp).replace(/\D/g, '');
-  const link = `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
-  $('#page').innerHTML = `<div class="box ok-box" style="grid-column:1/-1">
-    <h2>Almost done</h2>
-    <p>Your order <b>${esc(o.number)}</b> is ready. Total: <b>${egp(o.total)}</b>, cash on delivery.</p>
-    <p><b>Tap the button below to send your order to us on WhatsApp.</b> The order is only placed once we receive that message.</p>
-    <a class="btn red" href="${link}" target="_blank" rel="noopener">Send order on WhatsApp</a>
-    <p><a href="./">Back to the shop</a></p></div>`;
-  window.open(link, '_blank');
+  $('#page').innerHTML = `<div class="box ok-box" style="grid-column:1/-1;text-align:center;padding:40px">
+    <h2>Order placed successfully!</h2>
+    <p>Your order reference is <b>${esc(o.number)}</b>. Total: <b>${egp(o.total)}</b> (cash on delivery).</p>
+    <p style="color:var(--muted)">We have received your order and will contact you shortly.</p>
+    <a class="btn red" href="./" style="margin-top:16px">Back to the shop</a></div>`;
 }
