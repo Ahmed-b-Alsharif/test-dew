@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'products', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'overview', q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
@@ -121,16 +121,24 @@ function showLogin(msg) {
 
 /* ---------- shell ---------- */
 function render() {
-  const tabs = [['homepage', 'Homepage'], ['products', 'Products'], ['catalogs', 'Catalogs'], ['orders', 'Orders'], ['discounts', 'Discounts'], ['store', 'Store'], ['help', 'Help']];
+  const tabs = [['overview','Overview'],['homepage','Homepage'],['products','Products'],['catalogs','Collections'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
+  const names = Object.fromEntries(tabs);
   $('#app').innerHTML = `
-    <div class="admin-bar"><div class="wrap"><b>Dew Admin</b>
-      ${tabs.map(([k, n]) => `<button class="tab ${tab === k ? 'on' : ''}" data-t="${k}">${n} ${k === 'orders' && ordersList.length ? '('+ordersList.length+')' : ''}</button>`).join('')}
-      <span style="flex:1"></span><a class="tab" href="./" style="text-decoration:none">View shop</a>
-      <button class="tab" id="out">Sign out</button></div></div>
-    <div class="wrap" style="padding-top:18px;padding-bottom:60px"><div id="view"></div></div>`;
-  document.querySelectorAll('.tab[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; q = ''; render(); });
-  $('#out').onclick = () => { try { localStorage.removeItem('dew_gh'); sessionStorage.removeItem('dew_gh'); } catch {} D = null; cfg = null; showLogin(); };
-  ({ homepage, products, catalogs, orders, discounts, store, help })[tab]();
+    <div class="admin-shell">
+      <aside class="admin-sidebar">
+        <a class="admin-brand" href="./"><span class="admin-mark">dew</span><span><b>Dew Skincare</b><small>STORE ADMIN</small></span></a>
+        <div class="side-caption">STORE MANAGEMENT</div>
+        <nav class="admin-nav">${tabs.map(([k,n]) => `<button class="side-link ${tab===k?'active':''}" data-t="${k}"><span class="side-dot"></span><span>${n}</span>${k==='orders'&&ordersList.length?`<i>${ordersList.length}</i>`:''}</button>`).join('')}</nav>
+        <div class="sidebar-bottom"><span class="status-dot"></span><span><b>Store connected</b><small>GitHub sync enabled</small></span></div>
+      </aside>
+      <main class="admin-main">
+        <header class="admin-topbar"><div><div class="admin-eyebrow">DEW SKINCARE / ADMIN</div><h1>${names[tab]||'Overview'}</h1></div><div class="top-actions"><a class="admin-view-store" href="./" target="_blank">View storefront ↗</a><button class="admin-signout" id="out">Sign out</button></div></header>
+        <section class="admin-content" id="view"></section>
+      </main>
+    </div>`;
+  document.querySelectorAll('.side-link[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
+  $('#out').onclick = () => { try { localStorage.removeItem('dew_gh'); sessionStorage.removeItem('dew_gh'); } catch {} D=null; cfg=null; showLogin(); };
+  ({ overview, homepage, products, catalogs, orders, customers, inventory, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -142,17 +150,73 @@ function bindSearch() { const el = $('#q'); if (!el) return; el.oninput = () => 
 /* ---------- homepage editor ---------- */
 function homepage() {
   const base={"announcement":{"show":true,"text":"Buy 2 Get 1 Free  |  Free delivery on orders over 600 EGP","link":"#shop"},"header":{"logo":"Dew","links":[{"label":"Shop","url":"#shop"},{"label":"Our Story","url":"#about"},{"label":"Contact","url":"#contact"}]},"hero":{"show":true,"title":"Your Skin. Your Natural Glow.","text":"Thoughtful skincare, made with love in Egypt.","button":"Discover the collection","url":"#shop","image":""},"categories":{"show":true,"title":"Shop by category","items":[{"title":"Face Care","image":"","url":"#shop"},{"title":"Lip Care","image":"","url":"#shop"},{"title":"Body Care","image":"","url":"#shop"},{"title":"Hair Care","image":"","url":"#shop"}]},"products":{"show":true,"title":"Our Best Sellers","limit":5},"promo":{"show":true,"title":"A little more love for your skin","text":"Explore your everyday skincare essentials.","button":"Shop now","url":"#shop","image":""},"benefits":{"show":true,"items":["Made in Egypt","Thoughtfully selected ingredients","Cruelty-free","Delivery across Egypt"]},"reviews":{"show":true,"title":"Kind words from our customers","items":[{"name":"Your customer","text":"Customer feedback will appear here.","stars":5}]},"social":{"show":true,"title":"A little Dew every day","handle":"@dew_skincaree","images":["","","","","",""]},"newsletter":{"show":true,"title":"Stay in the glow","text":"Get updates, skincare tips and special offers.","button":"Join us"},"footer":{"show":true,"about":"Natural skincare, made with love in Egypt.","copyright":"All rights reserved.","links":[{"label":"About","url":"#about"},{"label":"Contact","url":"#contact"}]},"theme":{"green":"#1c524e","cream":"#fbf8f1","ink":"#183b35","accent":"#e7eee5"}};
-  const h = D.settings.homepage || (D.settings.homepage = JSON.parse(JSON.stringify(base)));
-  const json = JSON.stringify(h, null, 2);
-  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><h2>Homepage editor</h2><p class="note">Edit every homepage section, text, button, link, image path, colors and visibility.</p></div><a class="btn ghost" href="./" target="_blank">Preview storefront ↗</a></div>
-  <div class="box" style="margin:14px 0"><h3>Homepage content and design</h3><p class="note">Edit the settings below as JSON. Text, buttons, links, images, section visibility and colors are all configurable. Keep the JSON syntax valid.</p><textarea id="homeJson" spellcheck="false" style="width:100%;min-height:560px;font:13px/1.5 ui-monospace,monospace;white-space:pre;tab-size:2">${esc(json)}</textarea>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button class="btn red" id="homeSave">Save homepage</button><button class="btn ghost" id="homeReset">Restore default layout</button></div><div class="err" id="homeErr"></div></div>
-  <div class="box"><h3>Upload homepage image</h3><p class="note">Upload a banner, category, promotion or Instagram image. Copy the generated path into the matching image field in the JSON editor above.</p><input type="file" id="homeImage" accept="image/*"><p id="homeImagePath" class="note"></p></div>`;
-  $('#homeSave').onclick=()=>{try{const next=JSON.parse($('#homeJson').value);if(!next.theme||!next.hero||!next.categories)throw new Error('Keep the theme, hero and categories sections.');D.settings.homepage=next;save('Update homepage design');$('#homeErr').textContent='';}catch(e){$('#homeErr').textContent='Could not save: '+e.message;}};
-  $('#homeReset').onclick=()=>{if(confirm('Restore the default homepage layout? This will replace current homepage settings.'))$('#homeJson').value=JSON.stringify(base,null,2);};
-  $('#homeImage').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{$('#homeImagePath').textContent='Uploading…';const path=await uploadImage(await resize(f));$('#homeImagePath').innerHTML='Uploaded: <b>'+esc(path)+'</b> — copy this into an image field.';}catch(err){$('#homeImagePath').textContent=err.message;}e.target.value='';};
+  const h=D.settings.homepage||(D.settings.homepage=JSON.parse(JSON.stringify(base)));
+  const val=(o,k,d='')=>o&&o[k]!==undefined?o[k]:d;
+  const field=(path,label,value,type='text')=>`<div class="hp-field"><label>${label}</label><input type="${type}" data-hp="${path}" value="${esc(value??'')}"></div>`;
+  const area=(path,label,value,rows=3)=>`<div class="hp-field hp-wide"><label>${label}</label><textarea rows="${rows}" data-hp="${path}">${esc(value??'')}</textarea></div>`;
+  const toggle=(key,obj)=>`<label class="hp-toggle"><input type="checkbox" data-hp-show="${key}" ${obj.show!==false?'checked':''}><span class="hp-switch"></span><span>Show this section on the storefront</span></label>`;
+  const photo=(path,label,value)=>`<div class="hp-photo-field"><div><label>${label}</label><small>Recommended: landscape image</small></div><div class="hp-photo-control">${value?`<img src="${esc(value)}" alt="">`:'<div class="hp-photo-empty">DEW</div>'}<label class="hp-upload">Upload photo<input type="file" accept="image/*" data-hp-upload="${path}"></label></div></div>`;
+  const section=(id,title,desc,body,obj,key)=>`<article class="hp-card"><div class="hp-card-head"><div><span class="hp-step">${id}</span><div><h3>${title}</h3><p>${desc}</p></div></div>${toggle(key||id.toLowerCase(),obj||{})}</div><div class="hp-card-body">${body}</div></article>`;
+  const categories=(h.categories.items||[]);
+  const benefits=(h.benefits.items||[]);
+  const socials=(h.social.images||['','','','','','']);
+  $('#view').innerHTML=`
+    <div class="hp-intro"><div><span class="admin-eyebrow">YOUR STOREFRONT</span><h2>Make your homepage yours.</h2><p>Change words, photos and sections here. No code or JSON needed.</p></div><a class="admin-view-store" href="./" target="_blank">Preview storefront ↗</a></div>
+    <div class="hp-savebar"><div><b>Homepage changes</b><small>Changes are saved to your live storefront after publishing.</small></div><button class="admin-primary" id="homeSave">Save and publish changes</button></div>
+    ${section('01','Announcement bar','The slim offer message at the top of your website.',field('announcement.text','Announcement text',val(h.announcement,'text'))+field('announcement.link','When clicked, go to',val(h.announcement,'link','#shop')),h.announcement,'announcement')}
+    ${section('02','Main navigation','Your logo and links in the website header.',field('header.logo','Store logo text',val(h.header,'logo','Dew'))+(h.header.links||[]).map((x,i)=>field('header.links.'+i+'.label','Link '+(i+1)+' name',x.label)+field('header.links.'+i+'.url','Link '+(i+1)+' destination',x.url)).join(''),h.header,'header')}
+    ${section('03','Hero banner','The large first section visitors see.',field('hero.title','Main headline',val(h.hero,'title'))+area('hero.text','Supporting text',val(h.hero,'text'),3)+field('hero.button','Button text',val(h.hero,'button'))+field('hero.url','Button destination',val(h.hero,'url'))+photo('hero.image','Hero image',val(h.hero,'image')),h.hero,'hero')}
+    ${section('04','Shop by category','Show your main product categories.',field('categories.title','Section heading',val(h.categories,'title'))+categories.map((x,i)=>'<div class="hp-subcard"><b>Category '+(i+1)+'</b>'+field('categories.items.'+i+'.title','Category name',x.title)+field('categories.items.'+i+'.url','Category destination',x.url)+photo('categories.items.'+i+'.image','Category photo',x.image)+'</div>').join(''),h.categories,'categories')}
+    ${section('05','Featured products','Choose the heading and how many products appear.',field('products.title','Section heading',val(h.products,'title'))+field('products.limit','Number of products to show',val(h.products,'limit',5),'number'),h.products,'products')}
+    ${section('06','Promotional banner','A second banner for a campaign or special offer.',field('promo.title','Headline',val(h.promo,'title'))+area('promo.text','Supporting text',val(h.promo,'text'),2)+field('promo.button','Button text',val(h.promo,'button'))+field('promo.url','Button destination',val(h.promo,'url'))+photo('promo.image','Promotion image',val(h.promo,'image')),h.promo,'promo')}
+    ${section('07','Why shop with Dew','The trust points shown below products.',area('benefits.items','One benefit per line',benefits.join('\n'),4),h.benefits,'benefits')}
+    ${section('08','Customer reviews','The review section heading and first featured review.',field('reviews.title','Section heading',val(h.reviews,'title'))+field('reviews.items.0.name','Customer name',h.reviews.items?.[0]?.name||'')+area('reviews.items.0.text','Review text',h.reviews.items?.[0]?.text||'',2),h.reviews,'reviews')}
+    ${section('09','Instagram gallery','Your Instagram heading and handle.',field('social.title','Section heading',val(h.social,'title'))+field('social.handle','Instagram handle',val(h.social,'handle'))+socials.map((x,i)=>photo('social.images.'+i,'Instagram photo '+(i+1),x)).join(''),h.social,'social')}
+    ${section('10','Newsletter signup','The email signup section near the bottom.',field('newsletter.title','Headline',val(h.newsletter,'title'))+area('newsletter.text','Supporting text',val(h.newsletter,'text'),2)+field('newsletter.button','Button text',val(h.newsletter,'button')),h.newsletter,'newsletter')}
+    ${section('11','Footer','The information at the bottom of your website.',area('footer.about','About your brand',val(h.footer,'about'),2)+field('footer.copyright','Copyright line',val(h.footer,'copyright')),h.footer,'footer')}
+    <article class="hp-card"><div class="hp-card-head"><div><span class="hp-step">12</span><div><h3>Store colours</h3><p>Change the colours used across your homepage.</p></div></div></div><div class="hp-card-body hp-color-grid">${[['green','Main green'],['cream','Background'],['ink','Text'],['accent','Soft accent']].map(([k,l])=>`<div class="hp-color-field"><label>${l}</label><input type="color" data-hp="theme.${k}" value="${esc(h.theme?.[k]||'#1c524e')}"><code>${esc(h.theme?.[k]||'#1c524e')}</code></div>`).join('')}</div></article>
+    <div class="hp-bottom-save"><button class="admin-primary" id="homeSaveBottom">Save and publish changes</button><a class="admin-view-store" href="./" target="_blank">Preview storefront ↗</a></div>`;
+  const setPath=(obj,path,value)=>{const bits=path.split('.');let cur=obj;for(let i=0;i<bits.length-1;i++){const key=/^\d+$/.test(bits[i])?Number(bits[i]):bits[i];if(cur[key]===undefined)cur[key]=/^\d+$/.test(bits[i+1])?[]:{};cur=cur[key];}const last=bits.at(-1);cur[/^\d+$/.test(last)?Number(last):last]=value;};
+  const bind=el=>{const path=el.dataset.hp;if(!path)return;let v=el.value;if(el.type==='number')v=Math.max(1,Math.min(20,Number(v)||5));if(path==='benefits.items')v=v.split('\n').map(x=>x.trim()).filter(Boolean);setPath(h,path,v);if(el.type==='color')el.nextElementSibling.textContent=v;};
+  document.querySelectorAll('[data-hp]').forEach(el=>{el.addEventListener('input',()=>bind(el));el.addEventListener('change',()=>bind(el));});
+  document.querySelectorAll('[data-hp-show]').forEach(el=>el.onchange=()=>{h[el.dataset.hpShow].show=el.checked;});
+  $('#view').addEventListener('change',async event=>{const el=event.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;const box=el.closest('.hp-photo-field');const label=box.querySelector('.hp-upload');label.textContent='Uploading…';try{const path=await uploadImage(await resize(file));setPath(h,el.dataset.hpUpload,path);const preview=box.querySelector('.hp-photo-control');preview.querySelector('img,.hp-photo-empty')?.remove();const img=document.createElement('img');img.src=path;img.alt='';preview.prepend(img);label.innerHTML='Change photo<input type="file" accept="image/*" data-hp-upload="'+el.dataset.hpUpload+'">';toast('Photo uploaded. Remember to save and publish.');}catch(e){label.textContent='Upload failed';toast(e.message,true);}});
+  const publish=()=>{D.settings.homepage=h;save('Update homepage design');};
+  $('#homeSave').onclick=publish;$('#homeSaveBottom').onclick=publish;
 }
 
+/* ---------- overview / customers / inventory ---------- */
+function overview() {
+  const revenue=ordersList.reduce((n,o)=>n+Number(o.total||0),0);
+  const low=D.products.filter(p=>Number(p.stock||0)<=5);
+  const counts={};
+  ordersList.forEach(o=>(o.lines||[]).forEach(l=>{const k=l.name||'Product';counts[k]=(counts[k]||0)+Number(l.qty||1);}));
+  const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  $('#view').innerHTML=`<div class="welcome-strip"><div><span class="admin-eyebrow">WELCOME TO YOUR STORE</span><h2>Good to see you.</h2><p>Here is what is happening with Dew Skincare.</p></div><a class="admin-primary" href="./" target="_blank">View storefront ↗</a></div>
+    <div class="overview-stats">
+      <article><span>Total products</span><b>${D.products.length}</b><small>In your catalogue</small></article>
+      <article><span>Total orders</span><b>${ordersList.length}</b><small>Orders recorded</small></article>
+      <article><span>Order value</span><b>${egp(revenue)}</b><small>Across all saved orders</small></article>
+      <article><span>Low stock</span><b>${low.length}</b><small>Products with 5 or fewer left</small></article>
+    </div>
+    <div class="overview-columns"><article class="admin-panel"><div class="panel-heading"><div><h3>Recent orders</h3><p>Your latest customer orders</p></div><button class="text-link" data-go="orders">View all</button></div>${ordersList.slice().reverse().slice(0,5).map(o=>`<div class="overview-row"><div><b>${esc(o.customer?.first||'Customer')} ${esc(o.customer?.last||'')}</b><small>#${esc(o.number||'—')} · ${esc(new Date(o.date||Date.now()).toLocaleDateString())}</small></div><strong>${egp(o.total||0)}</strong></div>`).join('')||'<p class="empty-note">No orders yet. New orders will appear here.</p>'}</article>
+    <article class="admin-panel"><div class="panel-heading"><div><h3>Top products</h3><p>Based on saved orders</p></div><button class="text-link" data-go="products">Manage</button></div>${top.map(([n,c])=>`<div class="overview-row"><b>${esc(n)}</b><strong>${c} sold</strong></div>`).join('')||'<p class="empty-note">Sales data will appear here when orders come in.</p>'}<div class="low-stock-note"><b>${low.length} products need attention</b><small>${low.slice(0,3).map(p=>esc(p.name)+' ('+p.stock+')').join(' · ')||'All products have more than 5 in stock.'}</small><button class="text-link" data-go="inventory">Open inventory</button></div></article></div>`;
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render();});
+}
+function customers() {
+  const map=new Map();
+  ordersList.forEach(o=>{const c=o.customer||{};const key=c.phone||c.whatsapp||((c.first||'')+(c.last||''));if(!map.has(key))map.set(key,{...c,count:0,total:0,last:o.date});const x=map.get(key);x.count++;x.total+=Number(o.total||0);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
+  const rows=[...map.values()];
+  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer details collected from orders.</p></div><span class="admin-count">${rows.length} customers</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th></tr></thead><tbody>${rows.map(c=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td></tr>`).join('')||'<tr><td colspan="5">Customers appear here after their first order.</td></tr>'}</tbody></table></div></div>`;
+}
+function inventory() {
+  const rows=D.products.slice().sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
+  $('#view').innerHTML=`<div class="page-heading"><div><h2>Inventory</h2><p>Keep track of available stock for every product.</p></div><span class="admin-count">${rows.reduce((n,p)=>n+Number(p.stock||0),0)} units in stock</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Available</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</td><td><input class="stock-input" type="number" min="0" value="${Number(p.stock||0)}" data-inv="${p.id}"></td><td><span class="stock-status ${p.stock<=0?'out':p.stock<=5?'low':''}">${p.stock<=0?'Out of stock':p.stock<=5?'Low stock':'In stock'}</span></td><td><button class="text-link" data-edit-inv="${p.id}">Edit product</button></td></tr>`).join('')}</tbody></table></div></div>`;
+  document.querySelectorAll('[data-inv]').forEach(el=>el.onchange=()=>{const p=D.products.find(x=>x.id===el.dataset.inv);p.stock=Math.max(0,Math.floor(Number(el.value)||0));save('Update inventory for '+p.name);inventory();});
+  document.querySelectorAll('[data-edit-inv]').forEach(b=>b.onclick=()=>productForm(b.dataset.editInv));
+}
+
+/* ---------- products ---------- */
 /* ---------- products ---------- */
 function products() {
   const list = D.products.filter(p => !q || (p.name + p.tags).toLowerCase().includes(q.toLowerCase()));
