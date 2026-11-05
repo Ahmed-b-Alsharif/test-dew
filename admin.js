@@ -1,9 +1,9 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, cfg = null, tab = 'products', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'products', q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
-/* ---------- base64 helpers (UTF-8 safe) ---------- */
+/* ---------- base64 helpers ---------- */
 const enc = s => { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); };
 const dec = b => { const bin = atob(b.replace(/\n/g, '')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); };
 
@@ -25,21 +25,33 @@ async function gh(method, path, body) {
   try {
     r = await fetch(`https://api.github.com/repos/${cfg.repo}${path ? '/' + path : ''}`, { method, cache: 'no-store', headers, body: body ? JSON.stringify(body) : undefined });
   } catch (e) {
-    throw new Error('Your browser could not reach GitHub. Turn off any ad blocker, privacy shield or VPN for this site, or try another browser or mobile data, then sign in again.');
+    throw new Error('Your browser could not reach GitHub. Turn off any ad blocker or VPN, then sign in again.');
   }
   const j = await r.json().catch(() => ({}));
   if (r.status === 401) throw new Error('That token was not accepted. Create a new one and sign in again.');
-  if (r.status === 404) throw new Error('Repository or file not found. Check the repository name and that the token has access to it.');
+  if (r.status === 404 && path.includes('orders.json')) { return { content: enc('[]\n'), sha: null }; }
+  if (r.status === 404) throw new Error('Repository or file not found. Check repository name and token permissions (needs repo scope).');
   if (r.status === 409 || r.status === 422) throw new Error('The data changed somewhere else. Reload this page and try again.');
   if (!r.ok) throw new Error(j.message || 'GitHub error ' + r.status);
   return j;
 }
+
 async function loadData() {
   const f = await gh('GET', 'contents/products.json?t=' + Date.now());
   SHA = f.sha; D = JSON.parse(dec(f.content));
+  if (!D.discounts) D.discounts = [];
+
+  try {
+    const ord = await gh('GET', 'contents/orders.json?t=' + Date.now());
+    ordersSHA = ord.sha;
+    ordersList = JSON.parse(dec(ord.content));
+  } catch {
+    ordersList = [];
+    ordersSHA = null;
+  }
 }
+
 function save(message) {
-  // saves run one after another so each uses the latest file version
   chain = chain.then(async () => {
     try {
       const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: SHA });
@@ -49,6 +61,18 @@ function save(message) {
   });
   return chain.catch(() => {});
 }
+
+function saveOrders(message) {
+  chain = chain.then(async () => {
+    try {
+      const r = await gh('PUT', 'contents/orders.json', { message, content: enc(JSON.stringify(ordersList, null, 2) + '\n'), sha: ordersSHA });
+      ordersSHA = r.content.sha;
+      toast('Orders updated.');
+    } catch (e) { toast(e.message, true); throw e; }
+  });
+  return chain.catch(() => {});
+}
+
 async function uploadImage(dataUrl) {
   const name = `${Date.now()}-${uid()}.jpg`;
   await gh('PUT', 'contents/images/' + name, { message: 'Add photo ' + name, content: dataUrl.split(',')[1] });
@@ -70,23 +94,23 @@ function showLogin(msg) {
   $('#app').innerHTML = `<div class="login box" style="text-align:left">
     <h2 style="text-align:center">Dew Admin</h2>
     <form id="lf">
-      <label>GitHub repository (username/name)</label><input id="repo" value="${esc((saved && saved.repo) || guessRepo())}" placeholder="yourname/dew-skincare" required>
-      <label>Access token</label><input id="tok" type="password" placeholder="github_pat_..." required>
+      <label>GitHub repository (username/name)</label><input id="repo" value="${esc((saved && saved.repo) || guessRepo())}" placeholder="yourname/test-dew" required>
+      <label>Access token (Classic token with 'repo' scope)</label><input id="tok" type="password" placeholder="ghp_..." required>
       <label style="font-weight:400"><input type="checkbox" id="rem" style="width:auto"> Remember on this device</label>
       <div class="err" id="le">${esc(msg || '')}</div>
       <button class="btn red" style="width:100%;margin-top:6px">Sign in</button>
     </form>
-    <p class="note">Need a token? See the steps in <b>README.md</b> (a fine-grained token with Contents: Read and write for this repository only).</p>
+    <p class="note">Need a token? GitHub Settings -> Developer settings -> Personal access tokens -> Tokens (classic) -> Generate new token with <b>repo</b> scope.</p>
     <p style="text-align:center"><a href="./">Back to the shop</a></p></div>`;
   $('#lf').onsubmit = async e => {
     e.preventDefault();
     const tok = $('#tok').value.replace(/^\s*Bearer\s+/i, '').replace(/\s+/g, '');
-    if (!tok || /[^\x21-\x7e]/.test(tok)) { $('#le').textContent = 'The token has an invalid character. Copy it again from GitHub and paste it with no spaces.'; return; }
+    if (!tok || /[^\x21-\x7e]/.test(tok)) { $('#le').textContent = 'The token has an invalid character. Check your input.'; return; }
     cfg = { repo: $('#repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''), token: tok };
     $('#le').textContent = 'Checking...';
     try {
       const r = await gh('GET', '');
-      if (!r.permissions || !r.permissions.push) throw new Error('This token can read the repository but not change it. It needs Contents: Read and write.');
+      if (!r.permissions || !r.permissions.push) throw new Error('Token needs repo read and write permissions.');
       await loadData();
       const st = $('#rem').checked ? localStorage : sessionStorage;
       try { st.setItem('dew_gh', JSON.stringify(cfg)); } catch {}
@@ -97,16 +121,16 @@ function showLogin(msg) {
 
 /* ---------- shell ---------- */
 function render() {
-  const tabs = [['products', 'Products'], ['catalogs', 'Catalogs'], ['store', 'Store'], ['help', 'Help']];
+  const tabs = [['products', 'Products'], ['catalogs', 'Catalogs'], ['orders', 'Orders'], ['discounts', 'Discounts'], ['store', 'Store'], ['help', 'Help']];
   $('#app').innerHTML = `
     <div class="admin-bar"><div class="wrap"><b>Dew Admin</b>
-      ${tabs.map(([k, n]) => `<button class="tab ${tab === k ? 'on' : ''}" data-t="${k}">${n}</button>`).join('')}
+      ${tabs.map(([k, n]) => `<button class="tab ${tab === k ? 'on' : ''}" data-t="${k}">${n} ${k === 'orders' && ordersList.length ? '('+ordersList.length+')' : ''}</button>`).join('')}
       <span style="flex:1"></span><a class="tab" href="./" style="text-decoration:none">View shop</a>
       <button class="tab" id="out">Sign out</button></div></div>
     <div class="wrap" style="padding-top:18px;padding-bottom:60px"><div id="view"></div></div>`;
   document.querySelectorAll('.tab[data-t]').forEach(b => b.onclick = () => { tab = b.dataset.t; q = ''; render(); });
   $('#out').onclick = () => { try { localStorage.removeItem('dew_gh'); sessionStorage.removeItem('dew_gh'); } catch {} D = null; cfg = null; showLogin(); };
-  ({ products, catalogs, store, help })[tab]();
+  ({ products, catalogs, orders, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -118,7 +142,7 @@ function bindSearch() { const el = $('#q'); if (!el) return; el.oninput = () => 
 function products() {
   const list = D.products.filter(p => !q || (p.name + p.tags).toLowerCase().includes(q.toLowerCase()));
   $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h2>Products</h2><button class="btn red" id="newP">+ New product</button></div>
-    <p class="note">Orders arrive on WhatsApp. After each order, lower the stock here so customers can't over-order.</p>
+    <p class="note">Manage your catalog items, prices, and stock.</p>
     ${searchBox()}
     <div class="scroll"><table><tr><th></th><th>Name</th><th>Catalog</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr>
     ${list.map(p => `<tr><td>${p.images[0] ? `<img class="thumb" src="${esc(p.images[0])}" alt="">` : '<div class="thumb"></div>'}</td>
@@ -159,8 +183,8 @@ function productForm(id) {
     <div class="full"><label>Description</label><textarea id="pdesc" rows="3">${esc(p.description)}</textarea></div>
     <div class="full"><label>How to use</label><textarea id="phow" rows="2">${esc(p.howToUse)}</textarea></div>
     <div class="full"><label>Tags (comma separated)</label><input id="ptags" value="${esc(p.tags)}"></div>
-    <div class="full"><label>Photos (first is the cover, up to 8)</label><div class="imgs" id="imgs"></div><input type="file" id="pf" accept="image/*" multiple></div>
-    <div><label><input type="checkbox" id="pv" ${p.visible ? 'checked' : ''} style="width:auto"> Visible in the store</label></div>
+    <div class="full"><label>Photos (first is cover, up to 8)</label><div class="imgs" id="imgs"></div><input type="file" id="pf" accept="image/*" multiple></div>
+    <div><label><input type="checkbox" id="pv" ${p.visible ? 'checked' : ''} style="width:auto"> Visible in store</label></div>
     <div><label><input type="checkbox" id="pfe" ${p.featured ? 'checked' : ''} style="width:auto"> Feature on homepage</label></div></div>
     <div class="err" id="me"></div>
     <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="pSave">Save</button><button class="btn ghost" id="pX">Cancel</button></div>`);
@@ -194,7 +218,7 @@ function resize(file) {
       c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
       URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.82));
     };
-    img.onerror = () => rej(new Error('Could not read that image.'));
+    img.onerror = () => rej(new Error('Could not read image.'));
     img.src = url;
   });
 }
@@ -209,7 +233,7 @@ function catalogs() {
   document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => catForm(b.dataset.e));
   document.querySelectorAll('[data-x]').forEach(b => b.onclick = () => {
     const c = D.catalogs.find(x => x.id === b.dataset.x);
-    if (D.products.some(p => p.catalog === c.id)) { alert('Move or delete this catalog\'s products first.'); return; }
+    if (D.products.some(p => p.catalog === c.id)) { alert('Move or delete products in this catalog first.'); return; }
     if (confirm('Delete "' + c.name + '"?')) { D.catalogs = D.catalogs.filter(x => x !== c); render(); save('Delete catalog ' + c.name); }
   });
 }
@@ -225,6 +249,117 @@ function catForm(id) {
   };
 }
 
+/* ---------- orders ---------- */
+function orders() {
+  $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
+    <p class="note">View and manage customer orders placed on your website.</p>
+    <div class="scroll"><table>
+      <tr><th>Order #</th><th>Date</th><th>Customer</th><th>Area</th><th>Items Total</th><th>Delivery</th><th>Discount</th><th>Total</th><th>Status</th><th></th></tr>
+      ${ordersList.length ? ordersList.map((o, idx) => `<tr>
+        <td><b>${esc(o.number)}</b></td>
+        <td>${esc(new Date(o.date || Date.now()).toLocaleString())}</td>
+        <td>${esc(o.customer.first + ' ' + o.customer.last)}<br><small class="note">${esc(o.customer.phone)}</small></td>
+        <td>${o.area === 'alex' ? 'Alex' : 'Cairo/Giza'}</td>
+        <td>${egp(o.itemsTotal)}</td>
+        <td>${egp(o.delivery)}</td>
+        <td>${o.discount ? '-' + egp(o.discount) + ' (' + esc(o.promoCode || '') + ')' : 'EGP 0'}</td>
+        <td><b>${egp(o.total)}</b></td>
+        <td><select data-ost="${idx}" style="padding:4px 8px;border-radius:6px;border:1px solid #cfd3cc">
+          <option ${o.status === 'Pending' ? 'selected' : ''}>Pending</option>
+          <option ${o.status === 'Processing' ? 'selected' : ''}>Processing</option>
+          <option ${o.status === 'Completed' ? 'selected' : ''}>Completed</option>
+          <option ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+        </select></td>
+        <td style="white-space:nowrap"><button class="btn small" data-view="${idx}">View</button> <button class="btn small ghost" data-delord="${idx}" style="color:var(--red)">Delete</button></td>
+      </tr>`).join('') : '<tr><td colspan="10" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
+    </table></div>`;
+
+  document.querySelectorAll('[data-ost]').forEach(sel => sel.onchange = () => {
+    ordersList[sel.dataset.ost].status = sel.value;
+    saveOrders('Update order status');
+  });
+
+  document.querySelectorAll('[data-view]').forEach(btn => btn.onclick = () => {
+    const o = ordersList[btn.dataset.view];
+    const c = o.customer;
+    modal(`<h2>Order ${esc(o.number)}</h2>
+      <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleString()}</p>
+      <p><b>Status:</b> ${esc(o.status || 'Pending')}</p>
+      <h3>Customer details</h3>
+      <p><b>Name:</b> ${esc(c.first + ' ' + c.last)}<br><b>Phone:</b> ${esc(c.phone)}<br><b>WhatsApp:</b> ${esc(c.whatsapp)}<br><b>Area:</b> ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}<br><b>Address:</b> ${esc(c.address)}</p>
+      <h3>Order items</h3>
+      <ul>${o.lines.map(l => `<li>${esc(l.name)} &times; ${l.qty} — ${egp(l.total)} (${egp(l.unit)} each)</li>`).join('')}</ul>
+      <p><b>Items Cost:</b> ${egp(o.itemsTotal)}<br><b>Shipping Cost:</b> ${egp(o.delivery)}<br>${o.discount ? '<b>Discount (' + esc(o.promoCode) + '):</b> -' + egp(o.discount) + '<br>' : ''}<b>Total:</b> ${egp(o.total)} (COD)</p>
+      <button class="btn red" id="mCloseBtn" style="margin-top:12px">Close</button>`);
+    $('#mCloseBtn').onclick = closeModal;
+  });
+
+  document.querySelectorAll('[data-delord]').forEach(btn => btn.onclick = () => {
+    if (confirm('Delete this order record?')) {
+      ordersList.splice(btn.dataset.delord, 1);
+      render();
+      saveOrders('Delete order');
+    }
+  });
+}
+
+/* ---------- discounts ---------- */
+function discounts() {
+  if (!D.discounts) D.discounts = [];
+  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h2>Promo Codes & Discounts</h2><button class="btn red" id="newDisc">+ New promo code</button></div>
+    <p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p>
+    <div class="scroll"><table><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>
+    ${D.discounts.map(d => `<tr>
+      <td><b>${esc(d.code)}</b></td>
+      <td>${d.type === 'percentage' ? 'Percentage (%)' : d.type === 'fixed' ? 'Fixed amount (EGP)' : 'Free Shipping'}</td>
+      <td>${d.type === 'percentage' ? d.value + '%' : d.type === 'fixed' ? egp(d.value) : 'Free delivery'}</td>
+      <td>${d.minSpend ? egp(d.minSpend) : 'None'}</td>
+      <td><button class="pill ${d.active ? 'g' : ''}" data-toggledisc="${d.id}" style="border:0;cursor:pointer">${d.active ? 'Active' : 'Inactive'}</button></td>
+      <td style="white-space:nowrap"><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}" style="color:var(--red)">Delete</button></td>
+    </tr>`).join('') || '<tr><td colspan="6" class="note">No promo codes created yet.</td></tr>'}</table></div>`;
+
+  $('#newDisc').onclick = () => discForm();
+  document.querySelectorAll('[data-editdisc]').forEach(b => b.onclick = () => discForm(b.dataset.editdisc));
+  document.querySelectorAll('[data-toggledisc]').forEach(b => b.onclick = () => {
+    const d = D.discounts.find(x => x.id === b.dataset.toggledisc);
+    d.active = !d.active; render(); save('Toggle discount ' + d.code);
+  });
+  document.querySelectorAll('[data-deldisc]').forEach(b => b.onclick = () => {
+    const d = D.discounts.find(x => x.id === b.dataset.deldisc);
+    if (confirm('Delete promo code "' + d.code + '"?')) {
+      D.discounts = D.discounts.filter(x => x !== d); render(); save('Delete discount ' + d.code);
+    }
+  });
+}
+
+function discForm(id) {
+  const d = id ? D.discounts.find(x => x.id === id) : { id: uid(), code: '', type: 'percentage', value: 10, minSpend: 0, active: true };
+  modal(`<h2>${id ? 'Edit' : 'New'} promo code</h2><div class="form-grid">
+    <div class="full"><label>Promo code</label><input id="dc" value="${esc(d.code)}" placeholder="e.g. SAVE20"></div>
+    <div><label>Discount type</label><select id="dt">
+      <option value="percentage" ${d.type === 'percentage' ? 'selected' : ''}>Percentage (%)</option>
+      <option value="fixed" ${d.type === 'fixed' ? 'selected' : ''}>Fixed amount (EGP)</option>
+      <option value="free_shipping" ${d.type === 'free_shipping' ? 'selected' : ''}>Free shipping</option>
+    </select></div>
+    <div><label>Value (percentage or EGP)</label><input id="dv" type="number" min="0" value="${d.value}"></div>
+    <div class="full"><label>Minimum order spend (EGP, 0 for none)</label><input id="dm" type="number" min="0" value="${d.minSpend || 0}"></div>
+    <div class="full"><label><input type="checkbox" id="da" ${d.active ? 'checked' : ''} style="width:auto"> Active</label></div></div>
+    <div class="err" id="me"></div>
+    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="dSave">Save</button><button class="btn ghost" id="dX">Cancel</button></div>`);
+  $('#dX').onclick = closeModal;
+  $('#dSave').onclick = () => {
+    const code = $('#dc').value.trim().toUpperCase();
+    if (!code) { $('#me').textContent = 'Promo code is required.'; return; }
+    d.code = code;
+    d.type = $('#dt').value;
+    d.value = Number($('#dv').value) || 0;
+    d.minSpend = Number($('#dm').value) || 0;
+    d.active = $('#da').checked;
+    if (!id) D.discounts.push(d);
+    closeModal(); render(); save('Promo code ' + code);
+  };
+}
+
 /* ---------- store settings ---------- */
 function store() {
   const s = D.settings;
@@ -237,15 +372,15 @@ function store() {
     ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
     ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
-    ${f('telegramProxyUrl', 'Telegram proxy URL')}
-    <div><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Telegram enabled</label></div>
+    <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (Vercel api/telegram)')}</div>
+    <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable Telegram order notifications</label></div>
     </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
   $('#ss').onclick = () => {
-    for (const k of Object.keys(s)) { 
-      const el = $('#s_' + k); 
+    for (const k of Object.keys(s)) {
+      const el = $('#s_' + k);
       if (el) {
         if (el.type === 'checkbox') s[k] = el.checked;
-        else s[k] = el.type === 'number' ? Math.max(0, Number(el.value) || 0) : el.value.trim(); 
+        else s[k] = el.type === 'number' ? Math.max(0, Number(el.value) || 0) : el.value.trim();
       }
     }
     save('Update store settings');
@@ -255,10 +390,9 @@ function store() {
 /* ---------- help ---------- */
 function help() {
   $('#view').innerHTML = `<h2>How this works</h2><div class="box">
-    <p>This shop lives on GitHub. Every change you save here is stored in your GitHub repository and appears on the site after about a minute.</p>
-    <p><b>Orders</b> are sent to your WhatsApp when a customer taps the button at checkout. There is no order list or customer list on this version, so keep your WhatsApp chat as the record.</p>
-    <p><b>Stock</b> does not go down by itself. After an order, change the number in the Stock column.</p>
-    <p><b>Your token</b> is the admin password. Never share it. If it leaks, delete it in GitHub (Settings, Developer settings, Personal access tokens) and make a new one. Use <b>Sign out</b> on shared devices.</p></div>`;
+    <p>This shop lives on GitHub. Every order placed on your website is automatically saved in your <b>orders.json</b> file and sent instantly to your Telegram bot.</p>
+    <p><b>Promo Codes</b> can be created in the Discounts tab and applied by customers at checkout.</p>
+    <p><b>Stock</b> is managed from the Products tab.</p></div>`;
 }
 
 start();
