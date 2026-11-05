@@ -21,8 +21,8 @@
     "deliveryNote": "Cash on delivery. Delivery to Cairo, Giza and Alexandria.",
     "deliveryCairo": 85,
     "deliveryAlex": 90,
-    "telegramEnabled": false,
-    "telegramProxyUrl": ""
+    "telegramEnabled": true,
+    "telegramProxyUrl": "https://dew-telegram-proxy.vercel.app/api/telegram"
   },
   "catalogs": [
     {
