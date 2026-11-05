@@ -164,7 +164,7 @@ function homepage() {
     <div class="hp-intro"><div><span class="admin-eyebrow">YOUR STOREFRONT</span><h2>Make your homepage yours.</h2><p>Change words, photos and sections here. No code or JSON needed.</p></div><a class="admin-view-store" href="./" target="_blank">Preview storefront ↗</a></div>
     <div class="hp-savebar"><div><b>Homepage changes</b><small>Changes are saved to your live storefront after publishing.</small></div><button class="admin-primary" id="homeSave">Save and publish changes</button></div>
     ${section('01','Announcement bar','The slim offer message at the top of your website.',field('announcement.text','Announcement text',val(h.announcement,'text'))+field('announcement.link','When clicked, go to',val(h.announcement,'link','#shop')),h.announcement,'announcement')}
-    ${section('02','Main navigation','Your logo and links in the website header.',field('header.logo','Store logo text',val(h.header,'logo','Dew'))+(h.header.links||[]).map((x,i)=>field('header.links.'+i+'.label','Link '+(i+1)+' name',x.label)+field('header.links.'+i+'.url','Link '+(i+1)+' destination',x.url)).join(''),h.header,'header')}
+    ${section('02','Main navigation','Your logo and links in the website header.',field('header.logo','Store logo text',val(h.header,'logo','Dew'))+photo('header.logoImage','Store logo image',val(h.header,'logoImage',''))+(h.header.links||[]).map((x,i)=>field('header.links.'+i+'.label','Link '+(i+1)+' name',x.label)+field('header.links.'+i+'.url','Link '+(i+1)+' destination',x.url)).join(''),h.header,'header')}
     ${section('03','Hero banner','The large first section visitors see.',field('hero.title','Main headline',val(h.hero,'title'))+area('hero.text','Supporting text',val(h.hero,'text'),3)+field('hero.button','Button text',val(h.hero,'button'))+field('hero.url','Button destination',val(h.hero,'url'))+photo('hero.image','Hero image',val(h.hero,'image')),h.hero,'hero')}
     ${section('04','Shop by category','Show your main product categories.',field('categories.title','Section heading',val(h.categories,'title'))+categories.map((x,i)=>'<div class="hp-subcard"><b>Category '+(i+1)+'</b>'+field('categories.items.'+i+'.title','Category name',x.title)+field('categories.items.'+i+'.url','Category destination',x.url)+photo('categories.items.'+i+'.image','Category photo',x.image)+'</div>').join(''),h.categories,'categories')}
     ${section('05','Featured products','Choose the heading and how many products appear.',field('products.title','Section heading',val(h.products,'title'))+field('products.limit','Number of products to show',val(h.products,'limit',5),'number'),h.products,'products')}
@@ -219,31 +219,26 @@ function inventory() {
 /* ---------- products ---------- */
 /* ---------- products ---------- */
 function products() {
-  const list = D.products.filter(p => !q || (p.name + p.tags).toLowerCase().includes(q.toLowerCase()));
-  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px"><h2>Products</h2><button class="btn red" id="newP">+ New product</button></div>
-    <p class="note">Manage your catalog items, prices, and stock.</p>
-    ${searchBox()}
-    <div class="scroll"><table><tr><th></th><th>Name</th><th>Catalog</th><th>Price</th><th>Stock</th><th>Status</th><th></th></tr>
-    ${list.map(p => `<tr><td>${p.images[0] ? `<img class="thumb" src="${esc(p.images[0])}" alt="">` : '<div class="thumb"></div>'}</td>
-      <td><b>${esc(p.name)}</b></td><td>${esc(catName(p.catalog))}</td>
-      <td>${p.salePrice > 0 && p.salePrice < p.price ? `<s class="note">${egp(p.price)}</s> ${egp(p.salePrice)}` : egp(p.price)}</td>
-      <td><input type="number" min="0" value="${p.stock}" data-s="${p.id}" style="width:74px;padding:6px 8px;border:1.5px solid #cfd3cc;border-radius:8px"></td>
-      <td><button class="pill ${p.visible ? 'g' : ''}" data-v="${p.id}" style="border:0;cursor:pointer">${p.visible ? 'Live' : 'Hidden'}</button></td>
-      <td style="white-space:nowrap"><button class="btn small" data-e="${p.id}">Edit</button> <button class="btn small ghost" data-x="${p.id}" style="color:var(--red)">Delete</button></td></tr>`).join('') || '<tr><td colspan="7" class="note">No products.</td></tr>'}</table></div>`;
-  bindSearch();
-  $('#newP').onclick = () => productForm();
-  document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => productForm(b.dataset.e));
-  document.querySelectorAll('[data-s]').forEach(i => i.onchange = () => {
-    const p = D.products.find(x => x.id === i.dataset.s); p.stock = Math.max(0, Math.floor(Number(i.value) || 0));
-    save('Stock: ' + p.name + ' = ' + p.stock);
-  });
-  document.querySelectorAll('[data-v]').forEach(b => b.onclick = async () => {
-    const p = D.products.find(x => x.id === b.dataset.v); p.visible = !p.visible; render(); save((p.visible ? 'Show ' : 'Hide ') + p.name);
-  });
-  document.querySelectorAll('[data-x]').forEach(b => b.onclick = async () => {
-    const p = D.products.find(x => x.id === b.dataset.x);
-    if (confirm('Delete "' + p.name + '"?')) { D.products = D.products.filter(x => x !== p); render(); save('Delete ' + p.name); }
-  });
+  const query=q.toLowerCase();
+  const list=D.products.filter(p=>(!query||(p.name+' '+(p.tags||'')).toLowerCase().includes(query)));
+  const live=D.products.filter(p=>p.visible).length;
+  const low=D.products.filter(p=>Number(p.stock||0)<=5).length;
+  $('#view').innerHTML=`
+    <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
+    <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><span class="shopify-muted">${list.length} products</span></div>
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
+    ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
+      <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
+      <td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b>${p.salePrice>0&&p.salePrice<p.price?`<small class="old-price">${egp(p.price)}</small>`:''}</td>
+      <td><span class="${Number(p.stock||0)<=5?'inventory-low':''}">${Number(p.stock||0)} in stock</span></td>
+      <td>${p.featured?'<span class="shopify-featured">Featured</span>':'—'}</td>
+      <td><div class="table-actions"><button class="text-link" data-e="${p.id}">Edit</button><button class="text-link danger-link" data-x="${p.id}">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found. Add your first product to get started.</td></tr>'}
+    </tbody></table></div></div>`;
+  $('#newP').onclick=()=>productForm();
+  const search=$('#q');search.oninput=()=>{q=search.value;const pos=q.length;products();const next=$('#q');next.focus();next.setSelectionRange(pos,pos);};
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
+  document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const p=D.products.find(x=>x.id===b.dataset.x);if(p&&confirm('Delete "'+p.name+'"?')){D.products=D.products.filter(x=>x!==p);render();save('Delete '+p.name);}});
 }
 function productForm(id) {
   if (!D.catalogs.length) { alert('Create a catalog first.'); return; }
@@ -304,30 +299,28 @@ function resize(file) {
 
 /* ---------- catalogs ---------- */
 function catalogs() {
-  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h2>Catalogs</h2><button class="btn red" id="newC">+ New catalog</button></div>
-    <div class="scroll"><table><tr><th>Name</th><th>Description</th><th>Products</th><th></th></tr>
-    ${D.catalogs.map(c => `<tr><td><b>${esc(c.name)}</b></td><td>${esc(c.description)}</td><td>${D.products.filter(p => p.catalog === c.id).length}</td>
-      <td style="white-space:nowrap"><button class="btn small" data-e="${c.id}">Edit</button> <button class="btn small ghost" data-x="${c.id}" style="color:var(--red)">Delete</button></td></tr>`).join('')}</table></div>`;
-  $('#newC').onclick = () => catForm();
-  document.querySelectorAll('[data-e]').forEach(b => b.onclick = () => catForm(b.dataset.e));
-  document.querySelectorAll('[data-x]').forEach(b => b.onclick = () => {
-    const c = D.catalogs.find(x => x.id === b.dataset.x);
-    if (D.products.some(p => p.catalog === c.id)) { alert('Move or delete products in this catalog first.'); return; }
-    if (confirm('Delete "' + c.name + '"?')) { D.catalogs = D.catalogs.filter(x => x !== c); render(); save('Delete catalog ' + c.name); }
-  });
+  const rows=D.catalogs.map(c=>({...c,items:D.products.filter(p=>p.catalog===c.id)}));
+  $('#view').innerHTML=`
+    <div class="shopify-page-head"><div><span class="admin-eyebrow">PRODUCT ORGANIZATION</span><h2>Collections</h2><p>Group products so customers can browse your store easily.</p></div><button class="admin-primary" id="newC">＋ Create collection</button></div>
+    <div class="shopify-metrics"><div><span>Collections</span><b>${rows.length}</b></div><div><span>Products assigned</span><b>${D.products.filter(p=>D.catalogs.some(c=>c.id===p.catalog)).length}</b></div><div><span>Unassigned products</span><b>${D.products.filter(p=>!D.catalogs.some(c=>c.id===p.catalog)).length}</b></div></div>
+    <div class="collection-grid">${rows.map(c=>{const cover=c.image||c.items.find(p=>p.images?.[0])?.images?.[0];return `<article class="collection-card"><div class="collection-cover">${cover?`<img src="${esc(cover)}" alt="">`:'<span>DEW</span>'}<span class="collection-count">${c.items.length} products</span></div><div class="collection-card-body"><div><h3>${esc(c.name)}</h3><p>${esc(c.description||'No description added')}</p></div><div class="collection-card-actions"><button class="text-link" data-e="${c.id}">Edit collection</button><button class="text-link danger-link" data-x="${c.id}">Delete</button></div></div></article>`;}).join('')||'<div class="admin-panel empty-note">No collections yet. Create your first collection to organize your products.</div>'}</div>`;
+  $('#newC').onclick=()=>catForm();
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>catForm(b.dataset.e));
+  document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const c=D.catalogs.find(x=>x.id===b.dataset.x);if(!c)return;if(D.products.some(p=>p.catalog===c.id)){alert('Move these products to another collection first.');return;}if(confirm('Delete collection "'+c.name+'"?')){D.catalogs=D.catalogs.filter(x=>x!==c);render();save('Delete collection '+c.name);}});
 }
 function catForm(id) {
-  const c = id ? D.catalogs.find(x => x.id === id) : { name: '', description: '' };
-  modal(`<h2>${id ? 'Edit' : 'New'} catalog</h2><label>Name</label><input id="cn" value="${esc(c.name)}"><label>Description</label><input id="cd" value="${esc(c.description)}">
-    <div class="err" id="me"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="cs">Save</button><button class="btn ghost" id="cx">Cancel</button></div>`);
-  $('#cx').onclick = closeModal;
-  $('#cs').onclick = () => {
-    const name = $('#cn').value.trim(); if (!name) { $('#me').textContent = 'Catalog name is required.'; return; }
-    if (id) { c.name = name; c.description = $('#cd').value.trim(); } else D.catalogs.push({ id: uid(), name, description: $('#cd').value.trim() });
-    closeModal(); render(); save('Catalog ' + name);
-  };
+  const c=id?D.catalogs.find(x=>x.id===id):{name:'',description:'',image:''};
+  let image=c.image||'';
+  modal(`<div class="modal-eyebrow">PRODUCT ORGANIZATION</div><h2>${id?'Edit collection':'Create collection'}</h2><div class="collection-form">
+    <div class="full"><label>Collection name</label><input id="cn" value="${esc(c.name)}" placeholder="e.g. Lip Care"></div>
+    <div class="full"><label>Description</label><textarea id="cd" rows="3" placeholder="Describe this collection for your customers">${esc(c.description)}</textarea></div>
+    <div class="full"><label>Collection image</label><div class="collection-upload" id="collectionPreview">${image?`<img src="${esc(image)}" alt="">`:'<span>DEW</span>'}<label class="admin-upload-button">Upload image<input type="file" id="cf" accept="image/*"></label></div><small class="shopify-muted">You can also use the first product photo as the collection cover.</small></div>
+    <div class="full"><label>Products in this collection</label><div class="collection-product-list">${D.products.filter(p=>p.catalog===c.id).map(p=>`<span>${esc(p.name)}</span>`).join('')||'No products assigned yet. Assign products from their product editor.'}</div></div>
+  </div><div class="err" id="me"></div><div class="modal-actions"><button class="admin-primary" id="cs">Save collection</button><button class="admin-view-store" id="cx">Cancel</button></div>`);
+  $('#cx').onclick=closeModal;
+  const bindCollectionUpload=()=>{$('#cf').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;const label=$('#collectionPreview');label.querySelector('.admin-upload-button').textContent='Uploading…';try{image=await uploadImage(await resize(file));label.innerHTML=`<img src="${esc(image)}" alt=""><label class="admin-upload-button">Change image<input type="file" id="cf" accept="image/*"></label>`;bindCollectionUpload();}catch(err){$('#me').textContent=err.message;}};};bindCollectionUpload();
+  $('#cs').onclick=()=>{const name=$('#cn').value.trim();if(!name){$('#me').textContent='Collection name is required.';return;}if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image});closeModal();render();save('Save collection '+name);};
 }
-
 /* ---------- orders ---------- */
 function orders() {
   $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
