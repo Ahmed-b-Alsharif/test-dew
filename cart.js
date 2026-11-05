@@ -1,3 +1,5 @@
+/* Shared helpers are scoped so they don't collide with page-specific scripts. */
+(function () {
 /* Shared cart: { productId: qty } stored in localStorage */
 const Cart = {
   key: 'dew_cart',
@@ -11,3 +13,9 @@ const Cart = {
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const eff = p => (p.salePrice > 0 && p.salePrice < p.price ? p.salePrice : p.price);
 const egp = n => 'EGP ' + Number(n).toLocaleString('en-US');
+
+window.Cart = Cart;
+window.esc = esc;
+window.eff = eff;
+window.egp = egp;
+})();
