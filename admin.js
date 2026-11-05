@@ -237,9 +237,17 @@ function store() {
     ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
     ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
+    ${f('telegramProxyUrl', 'Telegram proxy URL')}
+    <div><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Telegram enabled</label></div>
     </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
   $('#ss').onclick = () => {
-    for (const k of Object.keys(s)) { const el = $('#s_' + k); if (el) s[k] = el.type === 'number' ? Math.max(0, Number(el.value) || 0) : el.value.trim(); }
+    for (const k of Object.keys(s)) { 
+      const el = $('#s_' + k); 
+      if (el) {
+        if (el.type === 'checkbox') s[k] = el.checked;
+        else s[k] = el.type === 'number' ? Math.max(0, Number(el.value) || 0) : el.value.trim(); 
+      }
+    }
     save('Update store settings');
   };
 }
