@@ -1,0 +1,102 @@
+{
+  "settings": {
+    "storeName": "Dew Skincare",
+    "tagline": "Natural skincare, formulated by pharmacists",
+    "heroTitle": "Glow, naturally.",
+    "heroText": "Lip balms in 4 flavours and body care, formulated by specialised pharmacists. Made in Egypt.",
+    "welcomeLine": "Welcome to Dew",
+    "welcomeNote": "Enter your name and number to start shopping.",
+    "welcomeBtnText": "Start shopping",
+    "marqueeText": "Natural skincare • Cash on delivery • Made in Egypt • Formulated by pharmacists",
+    "searchPlaceholder": "Search products",
+    "cartTitle": "Your cart",
+    "checkoutBtnText": "Complete order",
+    "checkoutTitle": "Delivery details",
+    "paymentNote": "Payment is cash on delivery.",
+    "whatsapp": "+201118225522",
+    "phone": "+201118225522",
+    "email": "hello@example.com",
+    "instagram": "dew_skincaree",
+    "minOrder": 250,
+    "deliveryNote": "Cash on delivery. Delivery to Cairo, Giza and Alexandria.",
+    "deliveryCairo": 85,
+    "deliveryAlex": 90,
+    "telegramEnabled": false,
+    "telegramProxyUrl": ""
+  },
+  "catalogs": [
+    {
+      "description": "Lip balms in 4 flavours",
+      "id": "bc000f32",
+      "name": "Lip care"
+    },
+    {
+      "description": "Moisturiser, body butter, shower gel",
+      "id": "7aa4667d",
+      "name": "Body care"
+    },
+    {
+      "description": "Lip gloss and more",
+      "id": "33be4ce6",
+      "name": "Makeup"
+    }
+  ],
+  "products": [
+    {
+      "catalog": "bc000f32",
+      "description": "Stick lip balm. Flavours: chocolate, coconut, strawberry, candy.",
+      "featured": true,
+      "howToUse": "",
+      "id": "21e425f0",
+      "images": [],
+      "name": "Chopstick lip balm",
+      "price": 60,
+      "salePrice": 0,
+      "stock": 25,
+      "tags": "chocolate, coconut, strawberry, candy",
+      "visible": true
+    },
+    {
+      "catalog": "bc000f32",
+      "description": "Macaron-shaped lip balm. Flavours: chocolate, coconut, strawberry, candy.",
+      "featured": true,
+      "howToUse": "",
+      "id": "a0444a5e",
+      "images": [],
+      "name": "Macaron lip balm",
+      "price": 90,
+      "salePrice": 0,
+      "stock": 25,
+      "tags": "chocolate, coconut, strawberry, candy",
+      "visible": true
+    },
+    {
+      "catalog": "7aa4667d",
+      "description": "Rich, nourishing body butter.",
+      "featured": false,
+      "howToUse": "",
+      "id": "0210991b",
+      "images": [],
+      "name": "Body butter",
+      "price": 180,
+      "salePrice": 160,
+      "stock": 10,
+      "tags": "body",
+      "visible": true
+    },
+    {
+      "catalog": "7aa4667d",
+      "description": "Gentle everyday shower gel.",
+      "featured": false,
+      "howToUse": "",
+      "id": "fad223bf",
+      "images": [],
+      "name": "Shower gel",
+      "price": 120,
+      "salePrice": 0,
+      "stock": 10,
+      "tags": "body",
+      "visible": true
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout | Dew Skincare</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="brand" href="./" style="text-decoration:none">Dew<span>.</span></a>
+  <a class="cart-btn" href="./" style="text-decoration:none">Back to shop</a>
+</div></header>
+
+<div class="page" id="page">
+  <form class="box" id="form">
+    <h2>Delivery details</h2>
+    <div class="row2">
+      <div><label>First name</label><input id="first" required autocomplete="given-name"></div>
+      <div><label>Last name</label><input id="last" required autocomplete="family-name"></div>
+    </div>
+    <label>Full address</label><textarea id="address" rows="3" required placeholder="Street, building, floor, apartment, area"></textarea>
+    <div class="row2">
+      <div><label>Phone</label><input id="phone" required inputmode="tel" autocomplete="tel"></div>
+      <div><label>WhatsApp number</label><input id="whatsapp" required inputmode="tel"></div>
+    </div>
+    <label>Delivery area</label>
+    <label class="opt" id="optCairo"><input type="radio" name="area" value="cairo"> <span id="lblCairo"></span></label>
+    <label class="opt" id="optAlex"><input type="radio" name="area" value="alex"> <span id="lblAlex"></span></label>
+    <div class="err" id="err"></div>
+    <button class="btn red" id="submit" style="width:100%;margin-top:8px">Complete order</button>
+    <p class="note">Payment is cash on delivery.</p>
+  </form>
+
+  <div class="box" id="summary"><h2>Order summary</h2><div id="sumBody"></div></div>
+</div>
+
+<script src="cart.js"></script>
+<script src="checkout.js"></script>
+</body>
+</html>

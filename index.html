@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dew Skincare</title>
+<meta name="description" content="Natural lip balms and body care, formulated by pharmacists. Made in Egypt.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top"><div class="wrap">
+  <div class="brand" id="brand">Dew<span>.</span></div>
+  <button class="cart-btn" id="openCart">Cart<b id="cartCount">0</b></button>
+</div></header>
+
+<div class="marquee"><div id="marquee"></div></div>
+
+<section class="hero"><div class="wrap">
+  <h1 id="heroTitle"></h1>
+  <p id="heroText"></p>
+  <a class="btn" href="#shop">Shop now</a>
+</div></section>
+
+<main class="wrap" id="shop">
+  <div class="toolbar">
+    <div id="chips"></div>
+    <input class="grow" id="search" type="search" placeholder="Search products">
+    <select id="sort">
+      <option value="featured">Featured</option>
+      <option value="low">Price: low to high</option>
+      <option value="high">Price: high to low</option>
+    </select>
+  </div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <p id="deliveryNote"></p>
+  <p id="contact"></p>
+  <p>&copy; <span id="year"></span> <span id="footName"></span>
+    <!-- Hidden admin entry: the dot after the name. Also: click the logo 5 times fast. -->
+    <a class="secret" href="admin.html" aria-label="Admin" title="">&middot;</a></p>
+</div></footer>
+
+<!-- welcome -->
+<div class="overlay" id="welcomeOv"><div class="modal welcome">
+  <h2 id="welcomeLine"></h2>
+  <p id="welcomeNote" style="color:#bcd0c4"></p>
+  <form id="welcomeForm">
+    <input id="wName" placeholder="Your name" required minlength="2" autocomplete="name">
+    <input id="wPhone" placeholder="Phone number" required inputmode="tel" autocomplete="tel">
+    <small id="wErr" style="color:#ffb4a8"></small>
+    <button class="btn" style="width:100%">Start shopping</button>
+  </form>
+</div></div>
+
+<!-- product detail -->
+<div class="overlay" id="prodOv"><div class="modal" id="prodModal"></div></div>
+
+<!-- cart -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer">
+  <header><h3 style="margin:0">Your cart</h3><button class="x" id="closeCart" style="background:none;border:0;font-size:1.8rem;cursor:pointer">&times;</button></header>
+  <div class="items" id="cartItems"></div>
+  <footer>
+    <div class="sum-line"><span>Items</span><b id="cartSub">EGP 0</b></div>
+    <div class="note" id="minNote"></div>
+    <a class="btn red" id="checkoutBtn" href="checkout.html" style="display:block;text-align:center;margin-top:10px">Complete order</a>
+  </footer>
+</aside>
+
+<script src="cart.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
