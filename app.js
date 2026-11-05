@@ -1,174 +1,32 @@
-const $ = s => document.querySelector(s);
-let S = { settings: {}, catalogs: [], products: [] };
-let filter = 'all';
-
-async function boot() {
-  try { S = await (await fetch('products.json?v=' + Date.now())).json(); S.products = S.products.filter(p => p.visible); }
-  catch { $('#grid').innerHTML = '<div class="empty">Could not load the shop. Please refresh.</div>'; return; }
-  const s = S.settings || {};
-  document.title = (s.storeName || 'Dew Skincare') + (s.tagline ? ' | ' + s.tagline : '');
-  if ($('#brand')) $('#brand').innerHTML = esc(s.storeName || 'Dew') + '<span>.</span>';
-  if ($('#heroTitle')) $('#heroTitle').textContent = s.heroTitle || '';
-  if ($('#heroText')) $('#heroText').textContent = s.heroText || '';
-  if ($('#deliveryNote')) $('#deliveryNote').textContent = s.deliveryNote || '';
-  if ($('#footName')) $('#footName').textContent = s.storeName || '';
-  if ($('#year')) $('#year').textContent = new Date().getFullYear();
-  if ($('#welcomeLine')) $('#welcomeLine').textContent = s.welcomeLine || '';
-  if ($('#welcomeNote')) $('#welcomeNote').textContent = s.welcomeNote || '';
-  if ($('#welcomeForm button')) $('#welcomeForm button').textContent = s.welcomeBtnText || 'Start shopping';
-  if ($('#search')) $('#search').placeholder = s.searchPlaceholder || 'Search products';
-  if ($('#drawer header h3')) $('#drawer header h3').textContent = s.cartTitle || 'Your cart';
-  if ($('#checkoutBtn')) $('#checkoutBtn').textContent = s.checkoutBtnText || 'Complete order';
-  
-  const ig = s.instagram ? `<a href="https://instagram.com/${encodeURIComponent(s.instagram)}" target="_blank" rel="noopener">@${esc(s.instagram)}</a>` : '';
-  if ($('#contact')) $('#contact').innerHTML = [esc(s.phone), esc(s.email), ig].filter(Boolean).join(' &middot; ');
-  
-  const marqueeStr = s.marqueeText || [s.tagline, 'Cash on delivery', 'Made in Egypt', 'Minimum order ' + egp(s.minOrder)].filter(Boolean).join(' • ');
-  const row = `<span>${esc(marqueeStr)}</span>`;
-  if ($('#marquee')) $('#marquee').innerHTML = row + row + row + row;
-  
-  renderChips(); renderGrid(); renderCart();
-  let known = false; try { known = !!localStorage.getItem('dew_customer'); } catch {}
-  if (!known && $('#welcomeOv')) $('#welcomeOv').classList.add('open');
-}
-
-function renderChips() {
-  const all = [{ id: 'all', name: 'All' }, ...S.catalogs];
-  $('#chips').innerHTML = all.map(c => `<button class="chip ${filter === c.id ? 'on' : ''}" data-id="${c.id}">${esc(c.name)}</button>`).join(' ');
-  document.querySelectorAll('.chip').forEach(b => b.onclick = () => { filter = b.dataset.id; renderChips(); renderGrid(); });
-}
-
-function cover(p) {
-  return p.images && p.images[0] ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy">` : esc(p.name.slice(0, 1));
-}
-function priceHtml(p) {
-  return eff(p) < p.price ? `<s>${egp(p.price)}</s><em>${egp(eff(p))}</em>` : egp(p.price);
-}
-
-function renderGrid() {
-  const q = $('#search').value.trim().toLowerCase();
-  let list = S.products.filter(p => (filter === 'all' || p.catalog === filter) &&
-    (!q || (p.name + ' ' + p.tags + ' ' + p.description).toLowerCase().includes(q)));
-  const sort = $('#sort').value;
-  if (sort === 'low') list.sort((a, b) => eff(a) - eff(b));
-  else if (sort === 'high') list.sort((a, b) => eff(b) - eff(a));
-  else list.sort((a, b) => (b.featured - a.featured));
-  $('#grid').innerHTML = list.length ? list.map(p => `
-    <div class="card" data-id="${p.id}">
-      <div class="ph">${cover(p)}${p.stock < 1 ? '<span class="tag out">Sold out</span>' : eff(p) < p.price ? '<span class="tag">Sale</span>' : ''}</div>
-      <div class="info">
-        <h3>${esc(p.name)}</h3>
-        <div class="price">${priceHtml(p)}</div>
-        ${p.stock > 0 && p.stock <= 3 ? `<div class="low">Only ${p.stock} left</div>` : ''}
-        <button class="btn small" ${p.stock < 1 ? 'disabled' : ''} data-add="${p.id}" style="margin-top:auto">Add to cart</button>
-      </div>
-    </div>`).join('') : '<div class="empty">No products found.</div>';
-  document.querySelectorAll('.card').forEach(c => c.onclick = e => {
-    if (e.target.dataset.add) return;
-    openProduct(c.dataset.id);
-  });
-  document.querySelectorAll('[data-add]').forEach(b => b.onclick = () => addToCart(b.dataset.add, 1, true));
-}
-
-function prod(id) { return S.products.find(p => p.id === id); }
-
-function addToCart(id, qty, open) {
-  const p = prod(id); if (!p || p.stock < 1) return;
-  Cart.add(id, qty, p.stock);
-  renderCart();
-  if (open) openCart();
-}
-
-function openProduct(id) {
-  const p = prod(id); if (!p) return;
-  let qty = 1, img = 0;
-  const imgs = p.images || [];
-  const draw = () => {
-    $('#prodModal').innerHTML = `
-      <button class="x" id="pClose">&times;</button>
-      <div class="detail">
-        <div class="gal">
-          <div class="ph" style="border-radius:12px;overflow:hidden">${imgs[img] ? `<img src="${esc(imgs[img])}" alt="">` : esc(p.name.slice(0, 1))}</div>
-          ${imgs.length > 1 ? `<div class="thumbs">${imgs.map((u, i) => `<img src="${esc(u)}" class="${i === img ? 'on' : ''}" data-i="${i}" alt="">`).join('')}</div>` : ''}
-        </div>
-        <div>
-          <h2>${esc(p.name)}</h2>
-          <div class="price" style="font-size:1.2rem">${priceHtml(p)}</div>
-          <p>${esc(p.description)}</p>
-          ${p.howToUse ? `<h3 style="font-size:1rem">How to use</h3><p>${esc(p.howToUse)}</p>` : ''}
-          ${p.stock > 0 && p.stock <= 3 ? `<div class="low">Only ${p.stock} left</div>` : ''}
-          ${p.stock < 1 ? '<p class="low">Sold out</p>' : `
-          <div style="display:flex;gap:12px;align-items:center;margin-top:12px">
-            <div class="qty"><button id="qm">&minus;</button><span>${qty}</span><button id="qp">+</button></div>
-            <button class="btn" id="pAdd">Add to cart</button>
-          </div>`}
-        </div>
-      </div>`;
-    $('#pClose').onclick = () => $('#prodOv').classList.remove('open');
-    document.querySelectorAll('.thumbs img').forEach(t => t.onclick = () => { img = +t.dataset.i; draw(); });
-    if (p.stock > 0) {
-      $('#qm').onclick = () => { qty = Math.max(1, qty - 1); draw(); };
-      $('#qp').onclick = () => { qty = Math.min(p.stock, qty + 1); draw(); };
-      $('#pAdd').onclick = () => { addToCart(id, qty, true); $('#prodOv').classList.remove('open'); };
-    }
-  };
-  draw();
-  $('#prodOv').classList.add('open');
-}
-
-function renderCart() {
-  const c = Cart.get();
-  for (const id of Object.keys(c)) {
-    const p = prod(id);
-    if (!p || p.stock < 1) Cart.setQty(id, 0);
-    else if (c[id] > p.stock) Cart.setQty(id, p.stock);
-  }
-  const cart = Cart.get();
-  const ids = Object.keys(cart);
-  $('#cartCount').textContent = Cart.count();
-  let sub = 0;
-  $('#cartItems').innerHTML = ids.length ? ids.map(id => {
-    const p = prod(id), q = cart[id], t = eff(p) * q; sub += t;
-    return `<div class="line">
-      <div class="ph">${cover(p)}</div>
-      <div class="grow"><b>${esc(p.name)}</b><div class="note">${egp(eff(p))} each</div>
-        <div class="qty" style="margin-top:4px"><button data-m="${id}">&minus;</button><span>${q}</span><button data-p="${id}">+</button></div></div>
-      <div style="text-align:right"><b>${egp(t)}</b><br><button class="rm" data-r="${id}">Remove</button></div>
-    </div>`;
-  }).join('') : '<p class="note" style="padding:20px 0">Your cart is empty.</p>';
-  $('#cartSub').textContent = egp(sub);
-  const min = S.settings.minOrder || 0;
-  const ok = sub >= min && ids.length > 0;
-  $('#minNote').innerHTML = ids.length && !ok ? `<div class="warn">Add ${egp(min - sub)} more to reach the ${egp(min)} minimum.</div>` : `Minimum order ${egp(min)}. Delivery is added at checkout.`;
-  const b = $('#checkoutBtn');
-  b.style.opacity = ok ? 1 : .5; b.style.pointerEvents = ok ? 'auto' : 'none';
-  document.querySelectorAll('[data-m]').forEach(x => x.onclick = () => { Cart.setQty(x.dataset.m, (Cart.get()[x.dataset.m] || 0) - 1); renderCart(); });
-  document.querySelectorAll('[data-p]').forEach(x => x.onclick = () => { const p = prod(x.dataset.p); Cart.add(x.dataset.p, 1, p.stock); renderCart(); });
-  document.querySelectorAll('[data-r]').forEach(x => x.onclick = () => { Cart.setQty(x.dataset.r, 0); renderCart(); });
-}
-function openCart() { $('#drawer').classList.add('open'); $('#scrim').classList.add('open'); }
-function closeCart() { $('#drawer').classList.remove('open'); $('#scrim').classList.remove('open'); }
-
-if ($('#openCart')) $('#openCart').onclick = openCart;
-if ($('#closeCart')) $('#closeCart').onclick = closeCart;
-if ($('#scrim')) $('#scrim').onclick = closeCart;
-if ($('#prodOv')) $('#prodOv').onclick = e => { if (e.target.id === 'prodOv') $('#prodOv').classList.remove('open'); };
-if ($('#search')) $('#search').oninput = renderGrid;
-if ($('#sort')) $('#sort').onchange = renderGrid;
-
-if ($('#welcomeForm')) $('#welcomeForm').onsubmit = e => {
-  e.preventDefault();
-  const name = $('#wName').value.trim(), phone = $('#wPhone').value.trim();
-  if (name.length < 2 || phone.replace(/\D/g, '').length < 8) { $('#wErr').textContent = 'Enter a valid name and phone number.'; return; }
-  try { localStorage.setItem('dew_customer', JSON.stringify({ name, phone })); } catch {}
-  $('#welcomeOv').classList.remove('open');
-};
-
-let taps = [];
-if ($('#brand')) $('#brand').onclick = () => {
-  const now = Date.now();
-  taps = taps.filter(t => now - t < 3000); taps.push(now);
-  if (taps.length >= 5) location.href = 'admin.html';
-};
-
-boot();
+const $=s=>document.querySelector(s);let S={settings:{},products:[],catalogs:[]};
+const defaults={"announcement":{"show":true,"text":"Buy 2 Get 1 Free  |  Free delivery on orders over 600 EGP","link":"#shop"},"header":{"logo":"Dew","links":[{"label":"Shop","url":"#shop"},{"label":"Our Story","url":"#about"},{"label":"Contact","url":"#contact"}]},"hero":{"show":true,"title":"Your Skin. Your Natural Glow.","text":"Thoughtful skincare, made with love in Egypt.","button":"Discover the collection","url":"#shop","image":""},"categories":{"show":true,"title":"Shop by category","items":[{"title":"Face Care","image":"","url":"#shop"},{"title":"Lip Care","image":"","url":"#shop"},{"title":"Body Care","image":"","url":"#shop"},{"title":"Hair Care","image":"","url":"#shop"}]},"products":{"show":true,"title":"Our Best Sellers","limit":5},"promo":{"show":true,"title":"A little more love for your skin","text":"Explore your everyday skincare essentials.","button":"Shop now","url":"#shop","image":""},"benefits":{"show":true,"items":["Made in Egypt","Thoughtfully selected ingredients","Cruelty-free","Delivery across Egypt"]},"reviews":{"show":true,"title":"Kind words from our customers","items":[{"name":"Your customer","text":"Customer feedback will appear here.","stars":5}]},"social":{"show":true,"title":"A little Dew every day","handle":"@dew_skincaree","images":["","","","","",""]},"newsletter":{"show":true,"title":"Stay in the glow","text":"Get updates, skincare tips and special offers.","button":"Join us"},"footer":{"show":true,"about":"Natural skincare, made with love in Egypt.","copyright":"All rights reserved.","links":[{"label":"About","url":"#about"},{"label":"Contact","url":"#contact"}]},"theme":{"green":"#1c524e","cream":"#fbf8f1","ink":"#183b35","accent":"#e7eee5"}};
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'EGP '+Number(n||0).toLocaleString('en-US');
+const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
+function merge(a,b){if(!b||typeof b!=='object')return a;for(const k of Object.keys(b)){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k]))a[k]=merge(a[k]||{},b[k]);else a[k]=b[k]}return a}
+function picture(src,label){return src?'<img src="'+esc(src)+'" alt="'+esc(label)+'" loading="lazy">':'<div class="dew-placeholder"><b>DEW</b><small>Image can be uploaded in Admin → Homepage</small></div>'}
+async function boot(){try{S=await(await fetch('products.json?v='+Date.now())).json()}catch(e){$('#app').textContent='Could not load the store. Please refresh.';return}
+const H=merge(JSON.parse(JSON.stringify(defaults)),S.settings?.homepage||{}),T=H.theme;
+for(const k of ['green','cream','ink','accent'])document.documentElement.style.setProperty('--dew-'+k,T[k]);
+document.title=S.settings.storeName||'Dew Skincare';const P=(S.products||[]).filter(p=>p.visible);
+let out='';
+if(H.announcement.show)out+='<div class="dew-ann"><a href="'+esc(H.announcement.link)+'">'+esc(H.announcement.text)+'</a></div>';
+out+='<header class="dew-header"><nav>'+H.header.links.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('')+'</nav><a class="dew-logo" href="./">'+esc(H.header.logo)+'<small>SKINCARE</small></a><button class="dew-cart" id="openCart">Bag <b id="cartCount">0</b></button></header>';
+if(H.hero.show)out+='<section class="dew-hero"><div class="dew-hero-copy"><span class="dew-kicker">NATURAL SKINCARE · MADE IN EGYPT</span><h1>'+esc(H.hero.title).replace(/\n/g,'<br>')+'</h1><p>'+esc(H.hero.text)+'</p><a class="dew-btn" href="'+esc(H.hero.url)+'">'+esc(H.hero.button)+' ↗</a></div><div class="dew-hero-art">'+picture(H.hero.image,'Dew Skincare')+'</div></section>';
+out+='<main class="dew-main" id="shop">';
+if(H.categories.show)out+='<section class="dew-categories"><div class="dew-section-head"><span>EXPLORE</span><h2>'+esc(H.categories.title)+'</h2></div><div class="dew-cat-grid">'+H.categories.items.map(x=>'<a class="dew-cat" href="'+esc(x.url)+'">'+picture(x.image,x.title)+'<span>'+esc(x.title)+' ↗</span></a>').join('')+'</div></section>';
+if(H.products.show)out+='<section class="dew-products-section"><div class="dew-section-head"><span>THE DEW EDIT</span><h2>'+esc(H.products.title)+'</h2></div><div class="dew-products">'+P.slice().sort((a,b)=>(b.featured?1:0)-(a.featured?1:0)).slice(0,Math.max(1,+H.products.limit||5)).map(p=>'<article class="dew-product"><div class="dew-product-photo">'+picture(p.images?.[0],p.name)+'</div><div class="dew-product-info"><h3>'+esc(p.name)+'</h3><p>'+money(price(p))+'</p><button class="dew-add" data-add="'+esc(p.id)+'" '+(p.stock<1?'disabled':'')+'>Add to bag</button></div></article>').join('')+'</div></section>';
+if(H.promo.show)out+='<section class="dew-promo">'+picture(H.promo.image,'Dew promotion')+'<div><span class="dew-kicker">A MOMENT FOR YOU</span><h2>'+esc(H.promo.title)+'</h2><p>'+esc(H.promo.text)+'</p><a class="dew-btn" href="'+esc(H.promo.url)+'">'+esc(H.promo.button)+' ↗</a></div></section>';
+if(H.benefits.show)out+='<section class="dew-benefits">'+H.benefits.items.map(x=>'<div><span>✳</span>'+esc(x)+'</div>').join('')+'</section>';
+if(H.reviews.show)out+='<section class="dew-reviews"><div class="dew-section-head"><span>COMMUNITY LOVE</span><h2>'+esc(H.reviews.title)+'</h2></div><div class="dew-review-grid">'+H.reviews.items.map(x=>'<blockquote><div class="dew-stars">'+('★'.repeat(Math.min(5,Math.max(0,+x.stars||5))))+'</div><p>“'+esc(x.text)+'”</p><b>'+esc(x.name)+'</b></blockquote>').join('')+'</div></section>';
+if(H.social.show)out+='<section class="dew-social"><div class="dew-section-head"><span>FOLLOW ALONG</span><h2>'+esc(H.social.title)+'</h2><a href="https://instagram.com/'+encodeURIComponent(H.social.handle.replace('@',''))+'">'+esc(H.social.handle)+'</a></div><div class="dew-social-grid">'+H.social.images.map(x=>picture(x,'Instagram post')).join('')+'</div></section>';
+if(H.newsletter.show)out+='<section class="dew-news"><div><span class="dew-kicker">THE DEW LETTER</span><h2>'+esc(H.newsletter.title)+'</h2><p>'+esc(H.newsletter.text)+'</p></div><form id="newsForm"><input type="email" placeholder="Your email address" required><button>'+esc(H.newsletter.button)+' ↗</button></form></section>';
+out+='</main>';
+if(H.footer.show)out+='<footer class="dew-footer" id="contact"><div><a class="dew-logo" href="./">'+esc(H.header.logo)+'</a><p>'+esc(H.footer.about)+'</p></div><nav>'+H.footer.links.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('')+'</nav><small>© '+new Date().getFullYear()+' '+esc(S.settings.storeName||'Dew Skincare')+'. '+esc(H.footer.copyright)+'</small></footer>';
+out+='<div class="dew-scrim" id="scrim"></div><aside class="dew-drawer" id="drawer"><header><b>Your bag</b><button id="closeCart">×</button></header><div id="cartItems"></div><footer><div class="dew-total"><span>Subtotal</span><b id="cartSub">EGP 0</b></div><p id="minNote"></p><a class="dew-btn" id="checkoutBtn" href="checkout.html">Continue to checkout ↗</a></footer></aside>';
+$('#app').innerHTML=out;renderCart();document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>add(b.dataset.add));$('#openCart').onclick=openCart;$('#closeCart').onclick=closeCart;$('#scrim').onclick=closeCart;$('#newsForm')?.addEventListener('submit',e=>{e.preventDefault();alert('Thank you for subscribing!')});
+function find(id){return P.find(p=>p.id===id)}
+function add(id){const p=find(id);if(!p||p.stock<1)return;Cart.add(id,1,p.stock);renderCart();openCart()}
+function renderCart(){const c=Cart.get(),ids=Object.keys(c);$('#cartCount').textContent=Cart.count();let total=0;$('#cartItems').innerHTML=ids.map(id=>{const p=find(id);if(!p)return '';total+=price(p)*c[id];return '<div class="dew-line"><b>'+esc(p.name)+'</b><span>'+c[id]+' × '+money(price(p))+'</span><button data-remove="'+id+'">Remove</button></div>'}).join('')||'<p class="dew-empty">Your bag is waiting for something lovely.</p>';$('#cartSub').textContent=money(total);const min=+(S.settings.minOrder||0),ok=total>=min&&ids.length;$('#minNote').textContent=ok?'Delivery calculated at checkout':'Minimum order: '+money(min);$('#checkoutBtn').style.opacity=ok?1:.5;$('#checkoutBtn').style.pointerEvents=ok?'auto':'none';document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{Cart.setQty(b.dataset.remove,0);renderCart()})}
+function openCart(){$('#drawer').classList.add('open');$('#scrim').classList.add('open')}function closeCart(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open')}
+}boot();
