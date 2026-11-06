@@ -81,7 +81,7 @@ async function createOrder(request, env) {
   const number="DEW-"+now.toISOString().slice(2,10).replace(/-/g,"")+"-"+crypto.randomUUID().slice(0,6).toUpperCase();
   const order={
     number,date:now.toISOString(),status:"Pending",paymentStatus:"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
-    lines,itemsTotal,delivery,discount,promoCode,total,area,
+    lines,itemsTotal,delivery,discount,promoCode,total,area:body.area,
     customer:{first,last,phone,address}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
