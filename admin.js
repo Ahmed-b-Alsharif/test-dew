@@ -395,7 +395,14 @@ function orders() {
       <h3>Order items</h3>
       <ul>${o.lines.map(l => `<li>${esc(l.name)} &times; ${l.qty} — ${egp(l.total)} (${egp(l.unit)} each)</li>`).join('')}</ul>
       <p><b>Items Cost:</b> ${egp(o.itemsTotal)}<br><b>Shipping Cost:</b> ${egp(o.delivery)}<br>${o.discount ? '<b>Discount (' + esc(o.promoCode) + '):</b> -' + egp(o.discount) + '<br>' : ''}<b>Total:</b> ${egp(o.total)}</p>
-      <button class="btn red" id="mCloseBtn" style="margin-top:12px">Close</button>`);
+      <h3>Order notes</h3>
+      <p class="note">Private notes for your team. Customers cannot see these.</p>
+      <textarea id="orderNote" rows="4" placeholder="Add a note about this order..." style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #cfd3cc;border-radius:8px">${esc(o.note || '')}</textarea>
+      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="saveOrderNote">Save note</button><button class="btn ghost" id="mCloseBtn">Close</button></div>`);
+    $('#saveOrderNote').onclick = () => {
+      o.note = $('#orderNote').value.trim();
+      saveOrders('Save note for ' + o.number).then(() => { closeModal(); toast('Order note saved.'); });
+    };
     $('#mCloseBtn').onclick = closeModal;
   });
 
