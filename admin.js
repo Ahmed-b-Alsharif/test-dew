@@ -78,7 +78,7 @@ function saveOrders(message) {
         const result=await response.json().catch(()=>({}));
         if(!response.ok||!result.ok) throw new Error(result.error||'Could not update orders.');
       } else {
-        const r=await gh('PUT','contents/orders.json',{message,content:enc(JSON.stringify(ordersList,null,2)+'\\n'),sha:ordersSHA});
+        const r=await gh('PUT','contents/orders.json',{message,content:enc(JSON.stringify(ordersList,null,2)+'\n'),sha:ordersSHA});
         ordersSHA=r.content.sha;
       }
       toast('Orders updated.');
