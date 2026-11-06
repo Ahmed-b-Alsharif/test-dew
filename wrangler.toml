@@ -1,0 +1,8 @@
+name = "dew-orders-api"
+main = "worker.js"
+compatibility_date = "2026-11-06"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "dew-orders"
+database_id = "PASTE_YOUR_D1_DATABASE_ID_HERE"

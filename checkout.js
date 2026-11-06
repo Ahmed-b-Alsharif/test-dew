@@ -119,37 +119,22 @@ $('#form').onsubmit = async e => {
   }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
-  try { localStorage.setItem('dew_customer', JSON.stringify({ name: first + ' ' + last, phone })); } catch {}
-
-  const o = {
-    number: ref(),
-    date: new Date().toISOString(),
-    status: 'Pending',
-    lines: t.ls,
-    itemsTotal: t.items,
-    delivery: t.delivery,
-    discount: t.discount,
-    promoCode: appliedDiscount ? appliedDiscount.code : null,
-    total: t.total,
-    area,
-    customer: { first, last, phone, address }
-  };
-
-  // Send the order to the configured Telegram notification endpoint, if one is set.
-  if (S.settings.telegramEnabled && S.settings.telegramProxyUrl) {
-    try {
-      await fetch(S.settings.telegramProxyUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(o)
-      });
-    } catch (err) {
-      console.error('Notification proxy failed', err);
-    }
+  const api=(S.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
+  if (!api) { $('#err').textContent = 'Online ordering is being set up. Please contact Dew Skincare to place your order.'; return; }
+  const button=$('#submit'), oldLabel=button.textContent;
+  button.disabled=true; button.textContent='Placing your order…';
+  try {
+    const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      lines:t.ls.map(l=>({id:l.id,qty:l.qty})),area,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
+    })});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
+    try { localStorage.setItem('dew_customer',JSON.stringify({name:first+' '+last,phone})); } catch {}
+    Cart.clear(); done(result.order);
+  } catch(err) {
+    $('#err').textContent=err.message||'We could not save your order. Please try again.';
+    button.disabled=false; button.textContent=oldLabel;
   }
-
-  Cart.clear();
-  done(o);
 };
 
 function done(o) {
