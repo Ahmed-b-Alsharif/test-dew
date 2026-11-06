@@ -498,7 +498,12 @@ function store() {
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
     const apiKey=$('#s_ordersApiKey').value.trim();
     if(apiKey) localStorage.setItem('dew_orders_api_key',apiKey);
-    save('Update store settings');
+    save('Update store settings').then(async()=>{
+      if(s.ordersApiUrl && (apiKey || localStorage.getItem('dew_orders_api_key'))) {
+        try { await loadData(); render(); toast('Orders API connected.'); }
+        catch(err) { toast(err.message,true); }
+      }
+    });
   };
 }
 
