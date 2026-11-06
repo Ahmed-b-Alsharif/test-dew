@@ -254,6 +254,35 @@ function overview() {
   $('#analyticsPeriod').onchange=()=>{const v=$('#analyticsPeriod').value;history.replaceState(null,'',location.pathname+(v==='30'?'':'?period='+v));overview();};
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render();});
 }
+function exportCustomersExcel(rows) {
+  if (typeof XLSX === 'undefined') {
+    toast('Excel export library did not load. Refresh the admin page and try again.', true);
+    return;
+  }
+  const data = rows.map(c => {
+    const history = c.orders.slice().sort((a,b) => new Date(b.date||0)-new Date(a.date||0));
+    const latest = history[0] || {};
+    return {
+      'Customer name': ((c.first||'')+' '+(c.last||'')).trim(),
+      'Phone number': c.phone || '',
+      'Address': latest.customer?.address || c.address || '',
+      'Total orders': c.count,
+      'Total spent (EGP)': Number(c.total||0)
+    };
+  });
+  const ws = XLSX.utils.json_to_sheet(data, {header:['Customer name','Phone number','Address','Total orders','Total spent (EGP)']});
+  ws['!cols'] = [{wch:26},{wch:18},{wch:48},{wch:14},{wch:20}];
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:E1');
+  for (let row=1; row<=range.e.r; row++) {
+    const cell=ws[XLSX.utils.encode_cell({r:row,c:4})];
+    if(cell) cell.z='#,##0.00 "EGP"';
+  }
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Customers');
+  XLSX.writeFile(wb, 'Dew-Customers.xlsx');
+  toast('Customer Excel file exported.');
+}
+
 function customers() {
   const map=new Map();
   ordersList.forEach(o=>{
@@ -264,9 +293,10 @@ function customers() {
   });
   const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
   const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
-  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><span class="admin-count">${rows.length} customers</span></div>
+  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="admin-count">${rows.length} customers</span><button class="admin-view-store" id="exportCustomers">Export Excel</button></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
     <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="6">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+  $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
     const c=rows[Number(b.dataset.customer)];
