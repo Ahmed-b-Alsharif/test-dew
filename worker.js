@@ -78,7 +78,11 @@ async function createOrder(request, env) {
   }
   const total=Math.max(0,itemsTotal+delivery-(promoCode && (catalogue.discounts||[]).find(d=>d.code===promoCode)?.type==="free_shipping"?0:discount));
   const now=new Date();
-  const number="DEW-"+now.toISOString().slice(2,10).replace(/-/g,"")+"-"+crypto.randomUUID().slice(0,6).toUpperCase();
+  // Generate short, sequential Dew order numbers: DEW#1000, DEW#1001, ...
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS order_counter (id INTEGER PRIMARY KEY CHECK (id = 1), last_number INTEGER NOT NULL)").run();
+  await env.DB.prepare("INSERT OR IGNORE INTO order_counter (id, last_number) VALUES (1, 999)").run();
+  const sequence = await env.DB.prepare("UPDATE order_counter SET last_number = last_number + 1 WHERE id = 1 RETURNING last_number").first();
+  const number = "DEW#" + sequence.last_number;
   const order={
     number,date:now.toISOString(),status:"Pending",paymentStatus:"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,promoCode,total,area:body.area,
