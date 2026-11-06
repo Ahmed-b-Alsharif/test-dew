@@ -291,7 +291,7 @@ function products() {
   $('#view').innerHTML=`
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><span class="shopify-muted">${list.length} products</span></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list.length} products</span></div></div>
     <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
     ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
       <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
@@ -301,6 +301,9 @@ function products() {
       <td><div class="table-actions"><button class="text-link" data-e="${p.id}">Edit</button><button class="text-link danger-link" data-x="${p.id}">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found. Add your first product to get started.</td></tr>'}
     </tbody></table></div></div>`;
   $('#newP').onclick=()=>productForm();
+  $('#exportProducts').onclick=()=>exportProductsExcel();
+  $('#importProducts').onclick=()=>$('#productExcelFile').click();
+  $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=q.length;products();const next=$('#q');next.focus();next.setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
   document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const p=D.products.find(x=>x.id===b.dataset.x);if(p&&confirm('Delete "'+p.name+'"?')){D.products=D.products.filter(x=>x!==p);render();save('Delete '+p.name);}});
@@ -309,6 +312,8 @@ function productForm(id) {
   const p = id ? D.products.find(x => x.id === id) : { name:'', catalog:D.catalogs[0]?.id||'', price:'', salePrice:'', stock:0, description:'', howToUse:'', tags:'', images:[], visible:true, featured:false };
   if (!p) return;
   let images=[...(p.images||[])];
+  let optionRows=(p.options||[]).map(x=>({name:x.name,values:[...(x.values||[])]}));
+  let variantRows=(p.variants||[]).map(v=>({...v,options:{...(v.options||{})}}));
   const moneyLabel=n=>'EGP '+Number(n||0).toLocaleString('en-US');
   $('#view').innerHTML=`
     <div class="editor-breadcrumb"><button class="text-link" id="backProducts">← Products</button><span>/</span><b>${id?'Edit product':'Add product'}</b></div>
@@ -318,19 +323,65 @@ function productForm(id) {
         <section class="editor-panel"><h3>Product information</h3><div class="editor-field"><label>Title</label><input id="pn" value="${esc(p.name)}" placeholder="e.g. Dew Lip Balm"></div><div class="editor-field"><label>Description</label><textarea id="pdesc" rows="6" placeholder="Describe your product">${esc(p.description)}</textarea></div></section>
         <section class="editor-panel"><div class="editor-panel-title"><h3>Media</h3><span>Up to 8 images</span></div><div class="product-media-grid" id="productMedia"></div><label class="media-add">＋ Add images<input type="file" id="pf" accept="image/*" multiple></label><p class="editor-hint">The first image is the main product photo customers see.</p></section>
         <section class="editor-panel"><h3>Pricing</h3><div class="editor-two-col"><div class="editor-field"><label>Price (EGP)</label><input id="pp" type="number" min="0" step="1" value="${esc(p.price)}"></div><div class="editor-field"><label>Compare-at price / Sale price (EGP)</label><input id="pd" type="number" min="0" step="1" value="${esc(p.salePrice||'')}"><small>Enter a lower price to show a sale.</small></div></div><div class="price-preview" id="pricePreview">${moneyLabel(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</div></section>
-        <section class="editor-panel"><h3>Inventory</h3><div class="editor-field"><label>Available quantity</label><input id="ps" type="number" min="0" step="1" value="${Number(p.stock||0)}"></div><p class="editor-hint">Stock is updated when customers place orders.</p></section>
+        <section class="editor-panel"><div class="editor-panel-title"><h3>Variants</h3><span>Options such as Size, Color, Scent or Volume</span></div><div id="variantOptions"></div><button type="button" class="admin-view-store" id="addVariantOption">＋ Add option</button><div id="variantTable" style="margin-top:14px"></div><p class="editor-hint">Add option names and values, then edit each variant's price, stock, SKU and barcode.</p></section>
+        <section class="editor-panel"><h3>Inventory</h3><div class="editor-field"><label>Available quantity (used when there are no variants)</label><input id="ps" type="number" min="0" step="1" value="${Number(p.stock||0)}"></div><p class="editor-hint">For products with variants, stock is managed separately for each variant.</p></section>
         <section class="editor-panel"><h3>Product organization</h3><div class="editor-two-col"><div class="editor-field"><label>Collection</label><select id="pc">${D.catalogs.map(c=>`<option value="${esc(c.id)}" ${c.id===p.catalog?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div><div class="editor-field"><label>Tags</label><input id="ptags" value="${esc(p.tags||'')}" placeholder="lip care, skincare, gift"></div></div><div class="editor-field"><label>How to use</label><textarea id="phow" rows="3" placeholder="Usage instructions">${esc(p.howToUse||'')}</textarea></div></section>
       </div>
       <aside class="product-editor-side"><section class="editor-panel"><h3>Status</h3><select id="pvStatus"><option value="active" ${p.visible?'selected':''}>Active</option><option value="draft" ${!p.visible?'selected':''}>Draft</option></select><p class="editor-hint">Active products can appear in your storefront.</p></section><section class="editor-panel"><h3>Sales channels</h3><label class="editor-check"><input id="pfe" type="checkbox" ${p.featured?'checked':''}> Feature on homepage</label><p class="editor-hint">Featured products appear in the homepage product section.</p></section><section class="editor-panel"><h3>Store preview</h3><div class="mini-product-preview" id="miniProductPreview"><div class="mini-product-photo">${images[0]?'<img src="'+esc(images[0])+'" alt="">':'<span>DEW</span>'}</div><b id="miniProductName">${esc(p.name||'Product title')}</b><span id="miniProductPrice">${moneyLabel(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</span></div></section></aside>
     </div>`;
   const paint=()=>{$('#productMedia').innerHTML=images.map((u,i)=>`<div class="product-media-item"><img src="${esc(u)}" alt=""><button type="button" data-remove-image="${i}" aria-label="Remove image">×</button>${i===0?'<small>Cover</small>':''}</div>`).join('')+'<div class="product-media-empty">＋</div>';document.querySelectorAll('[data-remove-image]').forEach(b=>b.onclick=()=>{images.splice(+b.dataset.removeImage,1);paint();});const mini=$('#miniProductPreview .mini-product-photo');mini.innerHTML=images[0]?'<img src="'+esc(images[0])+'" alt="">':'<span>DEW</span>';};
   const refreshPreview=()=>{$('#miniProductName').textContent=$('#pn').value||'Product title';const v=Number($('#pd').value)>0&&Number($('#pd').value)<Number($('#pp').value)?Number($('#pd').value):Number($('#pp').value);$('#miniProductPrice').textContent=moneyLabel(v);$('#pricePreview').textContent=moneyLabel(v);};
+  const escAttr=s=>esc(s);
+  const makeCombos=opts=>{if(!opts.length)return [];return opts.reduce((acc,opt)=>acc.flatMap(base=>opt.values.map(value=>({...base,[opt.name]:value}))),[{}]);};
+  const renderVariants=()=>{
+    $('#variantOptions').innerHTML=optionRows.map((o,i)=>'<div class="editor-two-col" style="align-items:end;margin:8px 0"><div class="editor-field"><label>Option name</label><input data-opt-name="${i}" value="${escAttr(o.name)}" placeholder="e.g. Size"></div><div class="editor-field"><label>Values (comma separated)</label><input data-opt-values="${i}" value="${escAttr(o.values.join(', '))}" placeholder="Small, Medium, Large"></div><button type="button" class="text-link danger-link" data-opt-remove="${i}">Remove</button></div>').join('');
+    document.querySelectorAll('[data-opt-name]').forEach(el=>el.onchange=()=>{optionRows[+el.dataset.optName].name=el.value.trim();renderVariants();});
+    document.querySelectorAll('[data-opt-values]').forEach(el=>el.onchange=()=>{optionRows[+el.dataset.optValues].values=el.value.split(',').map(x=>x.trim()).filter(Boolean);renderVariants();});
+    document.querySelectorAll('[data-opt-remove]').forEach(el=>el.onclick=()=>{optionRows.splice(+el.dataset.optRemove,1);renderVariants();});
+    const opts=optionRows.filter(o=>o.name&&o.values.length), combos=makeCombos(opts);
+    const previous=new Map(variantRows.map(v=>[JSON.stringify(v.options||{}),v]));
+    variantRows=combos.map((o,i)=>({...({id:previous.get(JSON.stringify(o))?.id||uid(),options:o,price:Number(previous.get(JSON.stringify(o))?.price??p.price??0),salePrice:Number(previous.get(JSON.stringify(o))?.salePrice??0),stock:Number(previous.get(JSON.stringify(o))?.stock??0),sku:previous.get(JSON.stringify(o))?.sku||'',barcode:previous.get(JSON.stringify(o))?.barcode||''})}));
+    $('#variantTable').innerHTML=combos.length?'<div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Variant</th><th>Price</th><th>Sale price</th><th>Stock</th><th>SKU</th><th>Barcode</th></tr></thead><tbody>'+variantRows.map((v,i)=>'<tr><td><b>'+esc(Object.values(v.options).join(' / '))+'</b></td><td><input style="width:85px" type="number" min="0" data-vfield="price" data-vi="'+i+'" value="'+v.price+'"></td><td><input style="width:85px" type="number" min="0" data-vfield="salePrice" data-vi="'+i+'" value="'+(v.salePrice||'')+'"></td><td><input style="width:75px" type="number" min="0" data-vfield="stock" data-vi="'+i+'" value="'+v.stock+'"></td><td><input style="width:110px" data-vfield="sku" data-vi="'+i+'" value="'+esc(v.sku)+'"></td><td><input style="width:130px" data-vfield="barcode" data-vi="'+i+'" value="'+esc(v.barcode)+'"></td></tr>').join('')+'</tbody></table></div>':'<p class="empty-note">No variants yet. Add an option to create variants.</p>';
+    document.querySelectorAll('[data-vfield]').forEach(el=>el.onchange=()=>{const v=variantRows[+el.dataset.vi],k=el.dataset.vfield;v[k]=['price','salePrice','stock'].includes(k)?Number(el.value||0):el.value.trim();});
+  };
+  $('#addVariantOption').onclick=()=>{optionRows.push({name:'',values:[]});renderVariants();};
+  renderVariants();
   paint();$('#backProducts').onclick=()=>{tab='products';render();};$('#cancelProduct').onclick=()=>{tab='products';render();};
   $('#pn').oninput=refreshPreview;$('#pp').oninput=refreshPreview;$('#pd').oninput=refreshPreview;
   $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resize(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
-  $('#saveProduct').onclick=()=>{const name=$('#pn').value.trim(),price=Number($('#pp').value);if(!name){toast('Product title is required.',true);return;}if(!(price>0)){toast('Enter a valid price.',true);return;}const data={name,catalog:$('#pc').value,price,salePrice:Number($('#pd').value)||0,stock:Math.max(0,Math.floor(Number($('#ps').value)||0)),description:$('#pdesc').value.trim(),howToUse:$('#phow').value.trim(),tags:$('#ptags').value.trim(),images,visible:$('#pvStatus').value==='active',featured:$('#pfe').checked};if(id)Object.assign(p,data);else D.products.unshift({id:uid(),...data});tab='products';render();save((id?'Update ':'Add ')+name);};
+  $('#saveProduct').onclick=()=>{const name=$('#pn').value.trim(),price=Number($('#pp').value);if(!name){toast('Product title is required.',true);return;}if(!(price>0)){toast('Enter a valid price.',true);return;}const cleanOptions=optionRows.filter(o=>o.name.trim()&&o.values.length).map(o=>({name:o.name.trim(),values:[...new Set(o.values)]}));const cleanVariants=cleanOptions.length?variantRows:[];const data={name,catalog:$('#pc').value,price,salePrice:Number($('#pd').value)||0,stock:cleanOptions.length?cleanVariants.reduce((n,v)=>n+Number(v.stock||0),0):Math.max(0,Math.floor(Number($('#ps').value)||0)),description:$('#pdesc').value.trim(),howToUse:$('#phow').value.trim(),tags:$('#ptags').value.trim(),images,visible:$('#pvStatus').value==='active',featured:$('#pfe').checked,options:cleanOptions,variants:cleanVariants};if(id)Object.assign(p,data);else D.products.unshift({id:uid(),...data});tab='products';render();save((id?'Update ':'Add ')+name);};
 }
 
+function exportProductsExcel(){
+  if(!window.XLSX){toast('Excel tools are still loading. Refresh and try again.',true);return;}
+  const rows=[];
+  D.products.forEach(p=>{
+    const vars=p.variants?.length?p.variants:[{options:{},price:p.price,salePrice:p.salePrice,stock:p.stock,sku:p.sku||'',barcode:p.barcode||''}];
+    vars.forEach(v=>rows.push({productId:p.id,name:p.name,description:p.description||'',collection:p.catalog||'',tags:p.tags||'',visible:p.visible?'Active':'Draft',featured:p.featured?'Yes':'No',image1:p.images?.[0]||'',image2:p.images?.[1]||'',image3:p.images?.[2]||'',price:v.price??p.price,salePrice:v.salePrice??p.salePrice??'',stock:v.stock??p.stock,sku:v.sku||'',barcode:v.barcode||'',option1Name:p.options?.[0]?.name||'',option1Value:v.options?.[p.options?.[0]?.name]||'',option2Name:p.options?.[1]?.name||'',option2Value:v.options?.[p.options?.[1]?.name]||'',option3Name:p.options?.[2]?.name||'',option3Value:v.options?.[p.options?.[2]?.name]||''}));
+  });
+  const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Products');XLSX.writeFile(wb,'dew-products.xlsx');
+}
+async function importProductsExcel(file){
+  if(!file)return;if(!window.XLSX)throw new Error('Excel tools are still loading. Refresh and try again.');
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array'}),sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:''});
+  if(!rows.length)throw new Error('The spreadsheet is empty.');
+  const required=['name','price'];if(required.some(k=>!(k in rows[0])))throw new Error('Use the exported Dew template; required columns: name and price.');
+  const groups=new Map();
+  rows.forEach((r,i)=>{
+    const name=String(r.name||'').trim(),price=Number(r.price);
+    if(!name||!Number.isFinite(price)||price<0)throw new Error('Invalid product name or price on spreadsheet row '+(i+2)+'.');
+    const key=String(r.productId||'').trim()||('new:'+name);
+    if(!groups.has(key))groups.set(key,{id:String(r.productId||'').trim()||uid(),name,description:String(r.description||''),catalog:String(r.collection||''),tags:String(r.tags||''),visible:String(r.visible||'Active').toLowerCase()!=='draft',featured:String(r.featured||'').toLowerCase()==='yes',images:[r.image1,r.image2,r.image3].map(String).filter(Boolean),variants:[],optionNames:[]});
+    const g=groups.get(key),opts={};
+    for(let n=1;n<=3;n++){const on=String(r['option'+n+'Name']||'').trim(),ov=String(r['option'+n+'Value']||'').trim();if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}}
+    g.variants.push({id:uid(),options:opts,price,salePrice:Number(r.salePrice)||0,stock:Math.max(0,Math.floor(Number(r.stock)||0)),sku:String(r.sku||''),barcode:String(r.barcode||'')});
+  });
+  const incoming=[...groups.values()].map(g=>{const options=g.optionNames.map(name=>({name,values:[...new Set(g.variants.map(v=>v.options[name]).filter(Boolean))]}));const first=g.variants[0];return{id:g.id,name:g.name,description:g.description,catalog:g.catalog,tags:g.tags,visible:g.visible,featured:g.featured,images:g.images,options,variants:g.variants,price:first.price,salePrice:first.salePrice,stock:g.variants.reduce((n,v)=>n+v.stock,0)};});
+  const existing=new Map(D.products.map(p=>[p.id,p]));
+  incoming.forEach(p=>{const old=existing.get(p.id);if(old){p.images=p.images.length?p.images:old.images;p.catalog=p.catalog||old.catalog;p.description=p.description||old.description;p.tags=p.tags||old.tags;}});
+  const ids=new Set(incoming.map(p=>p.id));D.products=[...D.products.filter(p=>!ids.has(p.id)),...incoming];
+  await save('Import products from Excel');toast('Imported '+incoming.length+' products.');products();
+}
 function resize(file) {
   return new Promise((res, rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
