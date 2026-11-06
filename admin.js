@@ -192,11 +192,11 @@ function homepage() {
     document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{selected=b.dataset.section;drawEditor();});
     $('#sectionVisible').onchange=e=>{h[selected].show=e.target.checked;drawEditor();preview();};
     document.querySelectorAll('[data-hp]').forEach(el=>{const update=()=>{let v=el.value;if(el.type==='number')v=Math.min(20,Math.max(1,Number(v)||5));if(selected==='benefits'&&el.dataset.hp==='benefits.items')v=v.split('\n').map(x=>x.trim()).filter(Boolean);pathSet(h,el.dataset.hp,v);preview();};el.oninput=update;el.onchange=update;});
-    $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
     $('#saveHomepage').onclick=()=>save('Update homepage');
   };
   $('#view').innerHTML=`<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / THEME EDITOR</span><h2>Edit your storefront visually.</h2><p>Select a section on the left. The preview shows exactly which part you are changing.</p></div><a class="admin-view-store" href="./" target="_blank">Open live store ↗</a></div><div class="homepage-theme-editor"><aside class="homepage-section-list"><div class="homepage-section-list-head"><b>Homepage sections</b><small>Click a section to edit it</small></div><div id="homepageSectionNav"></div></aside><section class="homepage-editor-work"><div class="homepage-editor-card" id="homepageEditorPanel"></div><div class="homepage-preview-card"><div class="homepage-preview-top"><b>Live preview</b><span>Visual guide · Desktop</span></div><div class="homepage-preview-browser"><div class="homepage-browser-dots">● ● ●</div><div id="homepageLivePreview"></div></div></div></section></div>`;
   drawEditor();preview();
+  $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
 }
 
 function overview() {
