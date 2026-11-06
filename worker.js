@@ -23,8 +23,7 @@ async function validAdminSession(request,env){
  const row=await env.DB.prepare("SELECT token_hash FROM admin_sessions WHERE token_hash=? AND expires_at>?").bind(await digest(token),Date.now()).first();return !!row;
 }
 async function authorized(request,env){
- if(await validAdminSession(request,env))return true;
- const h=request.headers.get("Authorization")||"";return !!env.ADMIN_TOKEN&&h==="Bearer "+env.ADMIN_TOKEN;
+ return await validAdminSession(request,env);
 }
 async function adminLogin(request,env){
  if(!env.ADMIN_USERNAME||!env.ADMIN_PASSWORD)return adminJson(request,{ok:false,error:"Admin login is not configured yet."},503);
