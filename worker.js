@@ -113,7 +113,7 @@ export default {
           const result=await env.DB.prepare("SELECT order_json FROM orders WHERE order_number=?").bind(o.number).first();
           if (!result) continue;
           const previous=JSON.parse(result.order_json);
-          const updated={...previous,paymentStatus:o.paymentStatus||previous.paymentStatus,fulfillmentStatus:o.fulfillmentStatus||previous.fulfillmentStatus,trackingNumber:o.trackingNumber??previous.trackingNumber};
+          const updated={...previous,paymentStatus:o.paymentStatus||previous.paymentStatus,fulfillmentStatus:o.fulfillmentStatus||previous.fulfillmentStatus,trackingNumber:o.trackingNumber??previous.trackingNumber,note:o.note??previous.note??""};
           await env.DB.prepare("UPDATE orders SET order_json=? WHERE order_number=?").bind(JSON.stringify(updated),o.number).run();
         }
         return json({ok:true});
