@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, cfg = null, tab = 'overview', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, tab = 'overview', q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
@@ -7,56 +7,28 @@ const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const enc = s => { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); };
 const dec = b => { const bin = atob(b.replace(/\n/g, '')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); };
 
-/* ---------- GitHub API ---------- */
-function guessRepo() {
-  const h = location.hostname;
-  if (!h.endsWith('.github.io')) return '';
-  const o = h.split('.')[0], seg = location.pathname.split('/')[1] || '';
-  return o + '/' + (seg && !seg.includes('.') ? seg : o + '.github.io');
+/* ---------- Secure admin API ---------- */
+const ADMIN_API='https://dew-orders-api.aalshari.workers.dev', ADMIN_SESSION_KEY='dew_admin_session';
+function adminToken(){try{return sessionStorage.getItem(ADMIN_SESSION_KEY)||''}catch{return ''}}
+async function gh(method,path,body){
+ const cleanPath=String(path||'').split('?')[0],url=ADMIN_API+'/api/admin/github?path='+encodeURIComponent(cleanPath);
+ const headers={Authorization:'Bearer '+adminToken(),Accept:'application/vnd.github+json'};
+ if(body)headers['Content-Type']='application/json';
+ let r;try{r=await fetch(url,{method,cache:'no-store',headers,body:body?JSON.stringify(body):undefined})}catch{throw Error('Could not reach the secure Dew admin service.')}
+ const data=await r.json().catch(()=>({}));
+ if(r.status===401)throw Error('Your admin session expired. Please sign in again.');
+ if(!r.ok)throw Error(data.message||data.error||'Admin service error '+r.status);
+ return data;
 }
-function savedCfg() {
-  for (const st of [localStorage, sessionStorage]) { try { const v = JSON.parse(st.getItem('dew_gh')); if (v && v.token && v.repo) return v; } catch {} }
-  return null;
-}
-async function gh(method, path, body) {
-  const headers = { Authorization: 'Bearer ' + cfg.token, Accept: 'application/vnd.github+json' };
-  if (body) headers['Content-Type'] = 'application/json';
-  let r;
-  try {
-    r = await fetch(`https://api.github.com/repos/${cfg.repo}${path ? '/' + path : ''}`, { method, cache: 'no-store', headers, body: body ? JSON.stringify(body) : undefined });
-  } catch (e) {
-    throw new Error('Your browser could not reach GitHub. Turn off ad blocker or VPN, then sign in again.');
-  }
-  const j = await r.json().catch(() => ({}));
-  if (r.status === 401) throw new Error('That token was not accepted. Create a new one and sign in again.');
-  if (r.status === 404 && path.includes('orders.json')) { return { content: enc('[]\n'), sha: null }; }
-  if (r.status === 404) throw new Error('Repository or file not found. Check repository name and token permissions (needs repo scope).');
-  if (r.status === 409 || r.status === 422) throw new Error('The data changed somewhere else. Reload this page and try again.');
-  if (!r.ok) throw new Error(j.message || 'GitHub error ' + r.status);
-  return j;
-}
-
 async function loadData() {
   const f = await gh('GET', 'contents/products.json?t=' + Date.now());
   SHA = f.sha; D = JSON.parse(dec(f.content));
   if (!D.discounts) D.discounts = [];
 
-  const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
-  const apiKey=localStorage.getItem('dew_orders_api_key')||'';
-  if(api) {
-    if(!apiKey) { ordersList=[]; ordersSHA=null; }
-    else {
-      const response=await fetch(api+'/api/orders',{headers:{Authorization:'Bearer '+apiKey}});
-      const result=await response.json().catch(()=>({}));
-      if(!response.ok||!result.ok) throw new Error(result.error||'Could not load orders from the orders service.');
-      ordersList=result.orders||[]; ordersSHA=null;
-    }
-  } else {
-    try {
-      const ord=await gh('GET','contents/orders.json?t='+Date.now());
-      ordersSHA=ord.sha; ordersList=JSON.parse(dec(ord.content));
-    } catch { ordersList=[]; ordersSHA=null; }
-  }
+  const response=await fetch(ADMIN_API+'/api/orders',{headers:{Authorization:'Bearer '+adminToken()}});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.ok)throw Error(result.error||'Could not load orders.');
+  ordersList=result.orders||[];ordersSHA=null;
 }
 
 function save(message) {
@@ -70,24 +42,14 @@ function save(message) {
   return chain.catch(() => {});
 }
 
-function saveOrders(message) {
-  chain=chain.then(async()=>{
-    try {
-      const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
-      const apiKey=localStorage.getItem('dew_orders_api_key')||'';
-      if(api) {
-        if(!apiKey) throw new Error('Enter the Orders API key in Store Settings before managing orders.');
-        const response=await fetch(api+'/api/orders',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+apiKey},body:JSON.stringify({orders:ordersList})});
-        const result=await response.json().catch(()=>({}));
-        if(!response.ok||!result.ok) throw new Error(result.error||'Could not update orders.');
-      } else {
-        const r=await gh('PUT','contents/orders.json',{message,content:enc(JSON.stringify(ordersList,null,2)+'\n'),sha:ordersSHA});
-        ordersSHA=r.content.sha;
-      }
-      toast('Orders updated.');
-    } catch(e) { toast(e.message,true); throw e; }
-  });
-  return chain.catch(()=>{});
+function saveOrders(message){
+ chain=chain.then(async()=>{
+  try{
+   const response=await fetch(ADMIN_API+'/api/orders',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+adminToken()},body:JSON.stringify({orders:ordersList})});
+   const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not update orders.');
+   toast('Orders updated.');
+  }catch(e){toast(e.message,true);throw e}
+ });return chain.catch(()=>{});
 }
 
 async function uploadImage(dataUrl) {
@@ -101,39 +63,24 @@ function toast(msg, bad) {
 }
 
 /* ---------- login ---------- */
-async function start() {
-  cfg = savedCfg();
-  if (!cfg) return showLogin();
-  try { await loadData(); render(); } catch (e) { showLogin(e.message); }
+async function start(){
+ if(!adminToken())return showLogin();
+ try{await loadData();render()}catch(e){try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}showLogin(e.message)}
 }
-function showLogin(msg) {
-  const saved = savedCfg();
-  $('#app').innerHTML = `<div class="login box" style="text-align:left">
-    <h2 style="text-align:center">Dew Admin</h2>
-    <form id="lf">
-      <label>GitHub repository (username/name)</label><input id="repo" value="${esc((saved && saved.repo) || guessRepo())}" placeholder="yourname/test-dew" required>
-      <label>Access token (Classic token with 'repo' scope)</label><input id="tok" type="password" placeholder="ghp_..." required>
-      <label style="font-weight:400"><input type="checkbox" id="rem" style="width:auto"> Remember on this device</label>
-      <div class="err" id="le">${esc(msg || '')}</div>
-      <button class="btn red" style="width:100%;margin-top:6px">Sign in</button>
-    </form>
-    <p class="note">Need a token? GitHub Settings -> Developer settings -> Personal access tokens -> Tokens (classic) -> Generate new token with <b>repo</b> scope.</p>
-    <p style="text-align:center"><a href="./">Back to the shop</a></p></div>`;
-  $('#lf').onsubmit = async e => {
-    e.preventDefault();
-    const tok = $('#tok').value.replace(/^\s*Bearer\s+/i, '').replace(/\s+/g, '');
-    if (!tok || /[^\x21-\x7e]/.test(tok)) { $('#le').textContent = 'The token has an invalid character. Check your input.'; return; }
-    cfg = { repo: $('#repo').value.trim().replace(/^https?:\/\/github\.com\//, '').replace(/\/$/, ''), token: tok };
-    $('#le').textContent = 'Checking...';
-    try {
-      const r = await gh('GET', '');
-      if (!r.permissions || !r.permissions.push) throw new Error('Token needs repo read and write permissions.');
-      await loadData();
-      const st = $('#rem').checked ? localStorage : sessionStorage;
-      try { st.setItem('dew_gh', JSON.stringify(cfg)); } catch {}
-      render();
-    } catch (er) { cfg = null; $('#le').textContent = er.message; }
-  };
+function showLogin(msg){
+ $('#app').innerHTML=`<div class="login box" style="text-align:left"><h2 style="text-align:center">Dew Admin</h2><p style="text-align:center">Private store management</p><form id="lf">
+ <label>Username</label><input id="adminUser" type="text" autocomplete="username" required>
+ <label>Password</label><input id="adminPass" type="password" autocomplete="current-password" required>
+ <div class="err" id="le">${esc(msg||'')}</div><button class="btn red" style="width:100%;margin-top:6px">Sign in</button></form>
+ <p class="note">Authorized Dew administrators only.</p><p style="text-align:center"><a href="./">Back to the shop</a></p></div>`;
+ $('#lf').onsubmit=async e=>{
+  e.preventDefault();const username=$('#adminUser').value.trim(),password=$('#adminPass').value;$('#le').textContent='Signing in...';
+  try{
+   const response=await fetch(ADMIN_API+'/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
+   const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok||!result.token)throw Error(result.error||'Sign-in failed.');
+   sessionStorage.setItem(ADMIN_SESSION_KEY,result.token);$('#adminPass').value='';await loadData();render();
+  }catch(er){try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}$('#le').textContent=er.message}
+ };
 }
 
 /* ---------- shell ---------- */
@@ -154,7 +101,7 @@ function render() {
       </main>
     </div>`;
   document.querySelectorAll('.side-link[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
-  $('#out').onclick = () => { try { localStorage.removeItem('dew_gh'); sessionStorage.removeItem('dew_gh'); } catch {} D=null; cfg=null; showLogin(); };
+  $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
   ({ overview, homepage, products, catalogs, orders, customers, inventory, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
@@ -522,20 +469,13 @@ function orders() {
     $('#mCloseBtn').onclick = closeModal;
   });
 
-  document.querySelectorAll('[data-delord]').forEach(btn => btn.onclick = () => {
-    if (confirm('Delete this order record?')) {
-      const order=ordersList[btn.dataset.delord];
-      const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
-      const apiKey=localStorage.getItem('dew_orders_api_key')||'';
-      if(api && !apiKey) { toast('Enter the Orders API key in Store Settings before deleting orders.',true); return; }
-      if(api && apiKey) {
-        fetch(api+'/api/orders/'+encodeURIComponent(order.number),{method:'DELETE',headers:{Authorization:'Bearer '+apiKey}})
-          .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||'Could not delete order');ordersList.splice(btn.dataset.delord,1);render();toast('Order deleted.');})
-          .catch(err=>toast(err.message,true));
-      } else {
-        ordersList.splice(btn.dataset.delord,1); render(); saveOrders('Delete order');
-      }
-    }
+  document.querySelectorAll('[data-delord]').forEach(btn=>btn.onclick=()=>{
+   if(confirm('Delete this order record?')){
+    const order=ordersList[btn.dataset.delord];
+    fetch(ADMIN_API+'/api/orders/'+encodeURIComponent(order.number),{method:'DELETE',headers:{Authorization:'Bearer '+adminToken()}})
+     .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not delete order');ordersList.splice(btn.dataset.delord,1);render();toast('Order deleted.')})
+     .catch(err=>toast(err.message,true));
+   }
   });
 }
 
@@ -611,7 +551,7 @@ function store() {
     <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (legacy notification endpoint)')}</div>
     <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable legacy Telegram order notifications</label></div>
     <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>
-    <div class="full"><label>Orders API key (ADMIN_TOKEN)</label><input id="s_ordersApiKey" type="password" autocomplete="new-password" placeholder="Private admin key; saved only on this device"></div>
+    <div class="full"><label>Orders API</label><input value="Secure Dew admin service" disabled></div>
     </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
   $('#ss').onclick = () => {
     for (const k of Object.keys(s)) {
@@ -619,14 +559,7 @@ function store() {
       if(el) { if(el.type==='checkbox') s[k]=el.checked; else s[k]=el.type==='number'?Math.max(0,Number(el.value)||0):el.value.trim(); }
     }
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
-    const apiKey=$('#s_ordersApiKey').value.trim();
-    if(apiKey) localStorage.setItem('dew_orders_api_key',apiKey);
-    save('Update store settings').then(async()=>{
-      if(s.ordersApiUrl && (apiKey || localStorage.getItem('dew_orders_api_key'))) {
-        try { await loadData(); render(); toast('Orders API connected.'); }
-        catch(err) { toast(err.message,true); }
-      }
-    });
+    save('Update store settings').then(()=>{ toast('Store settings saved.'); });
   };
 }
 
