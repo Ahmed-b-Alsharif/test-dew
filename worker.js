@@ -16,7 +16,12 @@ async function getProducts(env) {
   if (!r.ok) throw new Error("Could not load the store catalogue");
   return r.json();
 }
-async function notifyTelegram(order, env) {
+async function notifyTelegram(order, env, settings) {
+  if (settings?.telegramEnabled && settings?.telegramProxyUrl) {
+    const response=await fetch(settings.telegramProxyUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(order)});
+    if(!response.ok) throw new Error("Telegram proxy returned an error");
+    return;
+  }
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
   const lines = order.lines.map(x => "• " + x.name + " × " + x.qty + " — " + money(x.total)).join("\n");
   const text = [
@@ -81,7 +86,7 @@ async function createOrder(request, env) {
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
     .bind(number,order.date,total,JSON.stringify(order)).run();
-  try { await notifyTelegram(order,env); } catch(e) { console.error("Telegram notification failed",e); }
+  try { await notifyTelegram(order,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
   return json({ok:true,order},201);
 }
 export default {
