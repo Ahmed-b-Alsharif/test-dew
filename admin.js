@@ -43,11 +43,14 @@ async function loadData() {
 
   const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
   const apiKey=localStorage.getItem('dew_orders_api_key')||'';
-  if(api && apiKey) {
-    const response=await fetch(api+'/api/orders',{headers:{Authorization:'Bearer '+apiKey}});
-    const result=await response.json().catch(()=>({}));
-    if(!response.ok||!result.ok) throw new Error(result.error||'Could not load orders from the orders service.');
-    ordersList=result.orders||[]; ordersSHA=null;
+  if(api) {
+    if(!apiKey) { ordersList=[]; ordersSHA=null; }
+    else {
+      const response=await fetch(api+'/api/orders',{headers:{Authorization:'Bearer '+apiKey}});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||!result.ok) throw new Error(result.error||'Could not load orders from the orders service.');
+      ordersList=result.orders||[]; ordersSHA=null;
+    }
   } else {
     try {
       const ord=await gh('GET','contents/orders.json?t='+Date.now());
@@ -401,6 +404,7 @@ function orders() {
       const order=ordersList[btn.dataset.delord];
       const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
       const apiKey=localStorage.getItem('dew_orders_api_key')||'';
+      if(api && !apiKey) { toast('Enter the Orders API key in Store Settings before deleting orders.',true); return; }
       if(api && apiKey) {
         fetch(api+'/api/orders/'+encodeURIComponent(order.number),{method:'DELETE',headers:{Authorization:'Bearer '+apiKey}})
           .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||'Could not delete order');ordersList.splice(btn.dataset.delord,1);render();toast('Order deleted.');})
@@ -501,8 +505,8 @@ function store() {
 /* ---------- help ---------- */
 function help() {
   $('#view').innerHTML = `<h2>How this works</h2><div class="box">
-    <p>This shop lives on GitHub. Every order placed on your website is automatically saved in your <b>orders.json</b> file and sent instantly to your Telegram bot.</p>
-    <p><b>Orders</b> include payment status tracking (Paid vs COD), fulfillment statuses (Pending, Processing, Shipped, Delivered, Cancelled), and delivery tracking numbers.</p>
+    <p>The storefront is hosted on GitHub Pages. Customer orders are saved to the private Cloudflare D1 database after the Orders API is connected in Store Settings. Telegram notifications can be sent through your existing proxy URL or directly through your bot credentials stored as Cloudflare secrets.</p>
+    <p><b>Orders</b> appear here after checkout receives confirmation that the backend saved them. You can update payment status, fulfillment status, and tracking numbers from this page.</p>
     <p><b>Promo Codes</b> can be created in the Discounts tab and applied by customers at checkout.</p></div>`;
 }
 
