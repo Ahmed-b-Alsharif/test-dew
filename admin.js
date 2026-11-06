@@ -217,7 +217,8 @@ function homepage() {
 }
 
 function overview() {
-  const days = Number(new URLSearchParams(location.search).get('period')) || 30;
+  const periodParam = new URLSearchParams(location.search).get('period');
+  const days = periodParam === null ? 30 : Number(periodParam);
   const cutoff = days > 0 ? Date.now() - days * 86400000 : 0;
   const periodOrders = ordersList.filter(o => {
     const time = new Date(o.date || 0).getTime();
