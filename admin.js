@@ -217,27 +217,61 @@ function homepage() {
 }
 
 function overview() {
-  const revenue=ordersList.reduce((n,o)=>n+Number(o.total||0),0);
-  const low=D.products.filter(p=>Number(p.stock||0)<=5);
-  const counts={};
-  ordersList.forEach(o=>(o.lines||[]).forEach(l=>{const k=l.name||'Product';counts[k]=(counts[k]||0)+Number(l.qty||1);}));
+  const days = Number(new URLSearchParams(location.search).get('period')) || 30;
+  const cutoff = days > 0 ? Date.now() - days * 86400000 : 0;
+  const periodOrders = ordersList.filter(o => {
+    const time = new Date(o.date || 0).getTime();
+    return Number.isFinite(time) && time >= cutoff && o.fulfillmentStatus !== 'Cancelled';
+  });
+  const revenue = periodOrders.reduce((n,o)=>n+Number(o.total||0),0);
+  const average = periodOrders.length ? revenue / periodOrders.length : 0;
+  const low = D.products.filter(p=>Number(p.stock||0)<=5);
+  const counts = {};
+  periodOrders.forEach(o=>(o.lines||[]).forEach(l=>{const k=l.name||'Product';counts[k]=(counts[k]||0)+Number(l.qty||1);}));
   const top=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  $('#view').innerHTML=`<div class="welcome-strip"><div><span class="admin-eyebrow">WELCOME TO YOUR STORE</span><h2>Good to see you.</h2><p>Here is what is happening with Dew Skincare.</p></div><a class="admin-primary" href="./" target="_blank">View storefront ↗</a></div>
+  const buckets = Array.from({length:7},(_,i)=>({label:days===7?'Day '+(i+1):['-6','-5','-4','-3','-2','-1','Today'][i],value:0}));
+  periodOrders.forEach(o=>{
+    const d=new Date(o.date||0); if(!Number.isFinite(d.getTime()))return;
+    const age=Math.floor((Date.now()-d.getTime())/86400000);
+    const slot=days===7?6-age:Math.min(6,Math.max(0,Math.floor((6-age/Math.max(1,days))*1)));
+    if(slot>=0&&slot<7)buckets[slot].value+=Number(o.total||0);
+  });
+  const max=Math.max(1,...buckets.map(x=>x.value));
+  const customerCount=new Set(ordersList.map(o=>o.customer?.phone).filter(Boolean)).size;
+  const repeatCount=[...ordersList.reduce((m,o)=>{const p=o.customer?.phone;if(p)m.set(p,(m.get(p)||0)+1);return m;},new Map()).values()].filter(n=>n>1).length;
+  $('#view').innerHTML=`<div class="welcome-strip"><div><span class="admin-eyebrow">STORE PERFORMANCE</span><h2>Your store at a glance.</h2><p>Track sales, orders and customer activity for your selected period.</p></div><a class="admin-primary" href="./" target="_blank">View storefront ↗</a></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:18px 0"><b>Analytics overview</b><select id="analyticsPeriod" style="padding:9px 13px;border:1px solid #d8ded8;border-radius:10px;background:#fff"><option value="7" ${days===7?'selected':''}>Last 7 days</option><option value="30" ${days===30?'selected':''}>Last 30 days</option><option value="90" ${days===90?'selected':''}>Last 90 days</option><option value="0" ${days===0?'selected':''}>All time</option></select></div>
     <div class="overview-stats">
-      <article><span>Total products</span><b>${D.products.length}</b><small>In your catalogue</small></article>
-      <article><span>Total orders</span><b>${ordersList.length}</b><small>Orders recorded</small></article>
-      <article><span>Order value</span><b>${egp(revenue)}</b><small>Across all saved orders</small></article>
-      <article><span>Low stock</span><b>${low.length}</b><small>Products with 5 or fewer left</small></article>
+      <article><span>Sales</span><b>${egp(revenue)}</b><small>Excludes cancelled orders</small></article>
+      <article><span>Orders</span><b>${periodOrders.length}</b><small>In selected period</small></article>
+      <article><span>Average order value</span><b>${egp(average)}</b><small>Sales divided by orders</small></article>
+      <article><span>Customers</span><b>${customerCount}</b><small>${repeatCount} repeat customers overall</small></article>
     </div>
-    <div class="overview-columns"><article class="admin-panel"><div class="panel-heading"><div><h3>Recent orders</h3><p>Your latest customer orders</p></div><button class="text-link" data-go="orders">View all</button></div>${ordersList.slice().reverse().slice(0,5).map(o=>`<div class="overview-row"><div><b>${esc(o.customer?.first||'Customer')} ${esc(o.customer?.last||'')}</b><small>#${esc(o.number||'—')} · ${esc(new Date(o.date||Date.now()).toLocaleDateString())}</small></div><strong>${egp(o.total||0)}</strong></div>`).join('')||'<p class="empty-note">No orders yet. New orders will appear here.</p>'}</article>
-    <article class="admin-panel"><div class="panel-heading"><div><h3>Top products</h3><p>Based on saved orders</p></div><button class="text-link" data-go="products">Manage</button></div>${top.map(([n,c])=>`<div class="overview-row"><b>${esc(n)}</b><strong>${c} sold</strong></div>`).join('')||'<p class="empty-note">Sales data will appear here when orders come in.</p>'}<div class="low-stock-note"><b>${low.length} products need attention</b><small>${low.slice(0,3).map(p=>esc(p.name)+' ('+p.stock+')').join(' · ')||'All products have more than 5 in stock.'}</small><button class="text-link" data-go="inventory">Open inventory</button></div></article></div>`;
+    <div class="overview-columns"><article class="admin-panel"><div class="panel-heading"><div><h3>Sales activity</h3><p>Daily sales trend within the selected period</p></div></div><div style="height:190px;display:flex;align-items:flex-end;gap:10px;padding:18px 4px 4px;border-bottom:1px solid #e8ece7">${buckets.map((b,i)=>`<div title="${egp(b.value)}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:7px"><b style="font-size:11px;color:#52645c">${b.value?egp(b.value).replace('EGP ',''):''}</b><div style="width:100%;max-width:42px;height:${Math.max(3,b.value/max*100)}%;background:#1c524e;border-radius:7px 7px 2px 2px"></div><small style="font-size:10px;color:#78847d">${b.label}</small></div>`).join('')}</div></article>
+    <article class="admin-panel"><div class="panel-heading"><div><h3>Top products</h3><p>Units sold in selected period</p></div><button class="text-link" data-go="products">Manage</button></div>${top.map(([n,c])=>`<div class="overview-row"><b>${esc(n)}</b><strong>${c} sold</strong></div>`).join('')||'<p class="empty-note">Sales data will appear here when orders come in.</p>'}<div class="low-stock-note"><b>${low.length} products need attention</b><small>${low.slice(0,3).map(p=>esc(p.name)+' ('+p.stock+')').join(' · ')||'All products have more than 5 in stock.'}</small><button class="text-link" data-go="inventory">Open inventory</button></div></article></div>
+    <article class="admin-panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Recent orders</h3><p>Latest customer orders</p></div><button class="text-link" data-go="orders">View all</button></div>${ordersList.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0)).slice(0,5).map(o=>`<div class="overview-row"><div><b>${esc(o.customer?.first||'Customer')} ${esc(o.customer?.last||'')}</b><small>#${esc(o.number||'—')} · ${esc(new Date(o.date||Date.now()).toLocaleDateString())}</small></div><strong>${egp(o.total||0)}</strong></div>`).join('')||'<p class="empty-note">No orders yet. New orders will appear here.</p>'}</article>`;
+  $('#analyticsPeriod').onchange=()=>{const v=$('#analyticsPeriod').value;history.replaceState(null,'',location.pathname+(v==='30'?'':'?period='+v));overview();};
   document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render();});
 }
 function customers() {
   const map=new Map();
-  ordersList.forEach(o=>{const c=o.customer||{};const key=c.phone||c.whatsapp||((c.first||'')+(c.last||''));if(!map.has(key))map.set(key,{...c,count:0,total:0,last:o.date});const x=map.get(key);x.count++;x.total+=Number(o.total||0);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
-  const rows=[...map.values()];
-  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer details collected from orders.</p></div><span class="admin-count">${rows.length} customers</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th></tr></thead><tbody>${rows.map(c=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td></tr>`).join('')||'<tr><td colspan="5">Customers appear here after their first order.</td></tr>'}</tbody></table></div></div>`;
+  ordersList.forEach(o=>{
+    const c=o.customer||{},key=c.phone||c.whatsapp||((c.first||'')+(c.last||''));
+    if(!map.has(key))map.set(key,{...c,phone:c.phone||'',count:0,total:0,last:o.date,orders:[]});
+    const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);
+    if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;
+  });
+  const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
+  const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
+  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><span class="admin-count">${rows.length} customers</span></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="6">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+  const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
+  document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
+    const c=rows[Number(b.dataset.customer)];
+    const history=c.orders.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
+    modal(`<h2>${esc((c.first||'')+' '+(c.last||''))}</h2><p><b>Phone:</b> ${esc(c.phone||'—')}<br><b>Address:</b> ${esc(history[0]?.customer?.address||'—')}<br><b>Total orders:</b> ${c.count}<br><b>Total spent:</b> ${egp(c.total)}<br><b>Last order:</b> ${c.last?new Date(c.last).toLocaleString():'—'}</p><h3>Order history</h3>${history.map(o=>`<div class="overview-row"><div><b>${esc(o.number||'Order')}</b><small>${esc(new Date(o.date||0).toLocaleDateString())} · ${esc(o.fulfillmentStatus||'Pending')}</small></div><strong>${egp(o.total)}</strong></div>`).join('')||'<p>No orders found.</p>'}<button class="btn" style="margin-top:16px" onclick="document.getElementById('ov').classList.remove('open')">Close</button>`);
+  });
 }
 function inventory() {
   const rows=D.products.slice().sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
