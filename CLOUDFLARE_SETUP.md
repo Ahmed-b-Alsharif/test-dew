@@ -14,8 +14,8 @@ Cloudflare Workers Free includes 100,000 requests/day. D1 Free includes 5 millio
 4. In the Worker settings, add a D1 binding named **DB** and select the `dew-orders` database.
 5. Add Worker secrets:
    - `ADMIN_TOKEN`: create a long random password. This protects private order/customer data.
-   - `TELEGRAM_BOT_TOKEN`: your Telegram bot token (optional if notifications are already handled elsewhere).
-   - `TELEGRAM_CHAT_ID`: your Telegram chat/group ID (optional).
+   - Optional `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`: use these if you want the Worker to message your bot directly.
+   - If you already use a Telegram proxy, keep its URL in Admin > Settings > Telegram proxy URL and leave Telegram enabled; the Worker will forward the saved order to that proxy.
    - Optional variable `STORE_PRODUCTS_URL`: leave unset to use the Dew GitHub Pages catalogue URL.
 6. Deploy the Worker. Its URL will look like `https://dew-orders-api.<your-account>.workers.dev`.
 7. In Dew Admin > Settings, enter that URL as **Orders API URL** and enter the same ADMIN_TOKEN as **Orders API key**, then save. The API key is stored only in this browser's local storage, not in the public products file.
