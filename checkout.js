@@ -14,7 +14,7 @@ let S, area = null, appliedDiscount = null;
     if (c) {
       const parts = c.name.split(' ');
       $('#first').value = parts[0] || ''; $('#last').value = parts.slice(1).join(' ');
-      $('#phone').value = c.phone; $('#whatsapp').value = c.phone;
+      $('#phone').value = c.phone;
     }
   } catch {}
   document.querySelectorAll('input[name=area]').forEach(r => r.onchange = () => {
@@ -112,10 +112,10 @@ $('#form').onsubmit = async e => {
   $('#err').textContent = '';
   const t = totals();
   const first = $('#first').value.trim(), last = $('#last').value.trim(), address = $('#address').value.trim();
-  const phone = $('#phone').value.trim(), whatsapp = $('#whatsapp').value.trim();
+  const phone = $('#phone').value.trim();
   if (!area) { $('#err').textContent = 'Choose a delivery area.'; return; }
-  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8 || whatsapp.replace(/\D/g, '').length < 8) {
-    $('#err').textContent = 'Please fill in name, address, phone and WhatsApp number.'; return;
+  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8) {
+    $('#err').textContent = 'Please fill in your name, address and phone number.'; return;
   }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
@@ -132,10 +132,10 @@ $('#form').onsubmit = async e => {
     promoCode: appliedDiscount ? appliedDiscount.code : null,
     total: t.total,
     area,
-    customer: { first, last, phone, whatsapp, address }
+    customer: { first, last, phone, address }
   };
 
-  // Send to Telegram & Orders Proxy if enabled
+  // Send the order to the configured Telegram notification endpoint, if one is set.
   if (S.settings.telegramEnabled && S.settings.telegramProxyUrl) {
     try {
       await fetch(S.settings.telegramProxyUrl, {
