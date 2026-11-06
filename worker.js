@@ -3,12 +3,57 @@ const cors = {
   "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type,Authorization"
 };
-const json = (data, status=200) => new Response(JSON.stringify(data), {status, headers:{...cors,"Content-Type":"application/json"}});
+const json = (data, status=200) => new Response(JSON.stringify(data), {status, headers:{...cors,"Content-Type":"application/json","Cache-Control":"no-store"}});
 const clean = v => String(v ?? "").trim();
 const money = n => "EGP " + Number(n || 0).toLocaleString("en-US");
-function authorized(request, env) {
-  const h = request.headers.get("Authorization") || "";
-  return !!env.ADMIN_TOKEN && h === "Bearer " + env.ADMIN_TOKEN;
+const ADMIN_ORIGINS=new Set(["https://ahmed-b-alsharif.github.io","https://dewskincaree.com","https://www.dewskincaree.com"]);
+const adminCors=request=>{const origin=request.headers.get("Origin")||"";return {...cors,"Access-Control-Allow-Origin":ADMIN_ORIGINS.has(origin)?origin:"https://ahmed-b-alsharif.github.io","Access-Control-Allow-Headers":"Content-Type,Authorization","Vary":"Origin"}};
+const adminJson=(request,data,status=200)=>new Response(JSON.stringify(data),{status,headers:{...adminCors(request),"Content-Type":"application/json","Cache-Control":"no-store"}});
+const ADMIN_SESSION_MS=12*60*60*1000, ADMIN_REPO="Ahmed-b-alsharif/test-dew";
+const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
+async function digest(value){return hex(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value))))}
+function randomToken(){const b=new Uint8Array(32);crypto.getRandomValues(b);return hex(b)}
+function bearer(request){const h=request.headers.get("Authorization")||"";return h.startsWith("Bearer ")?h.slice(7):""}
+async function ensureAdminTables(env){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS admin_sessions (token_hash TEXT PRIMARY KEY, expires_at INTEGER NOT NULL)").run();
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS admin_login_attempts (ip TEXT NOT NULL, attempted_at INTEGER NOT NULL)").run();
+}
+async function validAdminSession(request,env){
+ const token=bearer(request);if(!token)return false;await ensureAdminTables(env);
+ const row=await env.DB.prepare("SELECT token_hash FROM admin_sessions WHERE token_hash=? AND expires_at>?").bind(await digest(token),Date.now()).first();return !!row;
+}
+async function authorized(request,env){
+ return await validAdminSession(request,env);
+}
+async function adminLogin(request,env){
+ if(!env.ADMIN_USERNAME||!env.ADMIN_PASSWORD)return adminJson(request,{ok:false,error:"Admin login is not configured yet."},503);
+ await ensureAdminTables(env);const ip=request.headers.get("CF-Connecting-IP")||"unknown",now=Date.now(),start=now-900000;
+ await env.DB.prepare("DELETE FROM admin_login_attempts WHERE attempted_at<?").bind(start).run();
+ const attempts=await env.DB.prepare("SELECT COUNT(*) AS count FROM admin_login_attempts WHERE ip=? AND attempted_at>?").bind(ip,start).first();
+ if(Number(attempts?.count||0)>=8)return adminJson(request,{ok:false,error:"Too many sign-in attempts. Wait 15 minutes and try again."},429);
+ let body={};try{body=await request.json()}catch{}
+ if(String(body.username||"")!==env.ADMIN_USERNAME||String(body.password||"")!==env.ADMIN_PASSWORD){
+  await env.DB.prepare("INSERT INTO admin_login_attempts (ip,attempted_at) VALUES (?,?)").bind(ip,now).run();
+  return adminJson(request,{ok:false,error:"Incorrect username or password."},401);
+ }
+ await env.DB.prepare("DELETE FROM admin_login_attempts WHERE ip=?").bind(ip).run();
+ const token=randomToken(),expires=now+ADMIN_SESSION_MS;
+ await env.DB.prepare("INSERT INTO admin_sessions (token_hash,expires_at) VALUES (?,?)").bind(await digest(token),expires).run();
+ return adminJson(request,{ok:true,token,expiresAt:expires});
+}
+async function adminLogout(request,env){
+ const token=bearer(request);if(token){await ensureAdminTables(env);await env.DB.prepare("DELETE FROM admin_sessions WHERE token_hash=?").bind(await digest(token)).run()}
+ return adminJson(request,{ok:true});
+}
+async function adminGithub(request,env){
+ if(!await validAdminSession(request,env))return adminJson(request,{ok:false,error:"Unauthorized"},401);
+ if(!env.GITHUB_TOKEN)return adminJson(request,{message:"GitHub access is not configured on the secure admin service."},503);
+ const url=new URL(request.url),path=(url.searchParams.get("path")||"").split("?")[0];
+ if(!(path==="contents/products.json"||/^contents\/images\/[A-Za-z0-9._-]+$/.test(path))||!["GET","PUT"].includes(request.method))return adminJson(request,{message:"This admin operation is not allowed."},403);
+ const headers={Authorization:"Bearer "+env.GITHUB_TOKEN,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"},init={method:request.method,headers};
+ if(request.method==="PUT"){headers["Content-Type"]="application/json";init.body=await request.text()}
+ const response=await fetch("https://api.github.com/repos/"+ADMIN_REPO+"/"+path,init);
+ return new Response(await response.text(),{status:response.status,headers:{...adminCors(request),"Content-Type":"application/json","Cache-Control":"no-store"}});
 }
 async function getProducts(env) {
   const url = env.STORE_PRODUCTS_URL || "https://ahmed-b-alsharif.github.io/test-dew/products.json";
@@ -99,14 +144,18 @@ export default {
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
+      if(path==="/api/admin/login"&&request.method==="POST"){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminLogin(request,env)}
+      if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
+      if(path==="/api/admin/logout"&&request.method==="POST")return await adminLogout(request,env);
+      if(path==="/api/admin/github"&&["GET","PUT"].includes(request.method)){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminGithub(request,env)}
       if (path==="/api/orders" && request.method==="POST") return await createOrder(request,env);
       if (path==="/api/orders" && request.method==="GET") {
-        if (!authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
+        if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
         const result=await env.DB.prepare("SELECT order_json FROM orders ORDER BY created_at DESC").all();
         return json({ok:true,orders:(result.results||[]).map(r=>JSON.parse(r.order_json))});
       }
       if (path==="/api/orders" && request.method==="PUT") {
-        if (!authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
+        if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
         const body=await request.json(), orders=Array.isArray(body.orders)?body.orders:[];
         for (const o of orders) {
           if (!o.number) continue;
@@ -119,7 +168,7 @@ export default {
         return json({ok:true});
       }
       if (path.startsWith("/api/orders/") && request.method==="DELETE") {
-        if (!authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
+        if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
         const number=decodeURIComponent(path.slice("/api/orders/".length));
         await env.DB.prepare("DELETE FROM orders WHERE order_number=?").bind(number).run();
         return json({ok:true});
