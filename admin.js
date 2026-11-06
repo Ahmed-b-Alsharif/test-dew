@@ -41,13 +41,18 @@ async function loadData() {
   SHA = f.sha; D = JSON.parse(dec(f.content));
   if (!D.discounts) D.discounts = [];
 
-  try {
-    const ord = await gh('GET', 'contents/orders.json?t=' + Date.now());
-    ordersSHA = ord.sha;
-    ordersList = JSON.parse(dec(ord.content));
-  } catch {
-    ordersList = [];
-    ordersSHA = null;
+  const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
+  const apiKey=localStorage.getItem('dew_orders_api_key')||'';
+  if(api && apiKey) {
+    const response=await fetch(api+'/api/orders',{headers:{Authorization:'Bearer '+apiKey}});
+    const result=await response.json().catch(()=>({}));
+    if(!response.ok||!result.ok) throw new Error(result.error||'Could not load orders from the orders service.');
+    ordersList=result.orders||[]; ordersSHA=null;
+  } else {
+    try {
+      const ord=await gh('GET','contents/orders.json?t='+Date.now());
+      ordersSHA=ord.sha; ordersList=JSON.parse(dec(ord.content));
+    } catch { ordersList=[]; ordersSHA=null; }
   }
 }
 
@@ -63,14 +68,23 @@ function save(message) {
 }
 
 function saveOrders(message) {
-  chain = chain.then(async () => {
+  chain=chain.then(async()=>{
     try {
-      const r = await gh('PUT', 'contents/orders.json', { message, content: enc(JSON.stringify(ordersList, null, 2) + '\n'), sha: ordersSHA });
-      ordersSHA = r.content.sha;
+      const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
+      const apiKey=localStorage.getItem('dew_orders_api_key')||'';
+      if(api) {
+        if(!apiKey) throw new Error('Enter the Orders API key in Store Settings before managing orders.');
+        const response=await fetch(api+'/api/orders',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+apiKey},body:JSON.stringify({orders:ordersList})});
+        const result=await response.json().catch(()=>({}));
+        if(!response.ok||!result.ok) throw new Error(result.error||'Could not update orders.');
+      } else {
+        const r=await gh('PUT','contents/orders.json',{message,content:enc(JSON.stringify(ordersList,null,2)+'\\n'),sha:ordersSHA});
+        ordersSHA=r.content.sha;
+      }
       toast('Orders updated.');
-    } catch (e) { toast(e.message, true); throw e; }
+    } catch(e) { toast(e.message,true); throw e; }
   });
-  return chain.catch(() => {});
+  return chain.catch(()=>{});
 }
 
 async function uploadImage(dataUrl) {
@@ -384,9 +398,16 @@ function orders() {
 
   document.querySelectorAll('[data-delord]').forEach(btn => btn.onclick = () => {
     if (confirm('Delete this order record?')) {
-      ordersList.splice(btn.dataset.delord, 1);
-      render();
-      saveOrders('Delete order');
+      const order=ordersList[btn.dataset.delord];
+      const api=(D.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
+      const apiKey=localStorage.getItem('dew_orders_api_key')||'';
+      if(api && apiKey) {
+        fetch(api+'/api/orders/'+encodeURIComponent(order.number),{method:'DELETE',headers:{Authorization:'Bearer '+apiKey}})
+          .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw new Error(result.error||'Could not delete order');ordersList.splice(btn.dataset.delord,1);render();toast('Order deleted.');})
+          .catch(err=>toast(err.message,true));
+      } else {
+        ordersList.splice(btn.dataset.delord,1); render(); saveOrders('Delete order');
+      }
     }
   });
 }
@@ -460,17 +481,19 @@ function store() {
     ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
     ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
-    <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (Vercel api/telegram)')}</div>
-    <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable Telegram order notifications</label></div>
+    <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (legacy notification endpoint)')}</div>
+    <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable legacy Telegram order notifications</label></div>
+    <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>
+    <div class="full"><label>Orders API key (ADMIN_TOKEN)</label><input id="s_ordersApiKey" type="password" autocomplete="new-password" placeholder="Private admin key; saved only on this device"></div>
     </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
   $('#ss').onclick = () => {
     for (const k of Object.keys(s)) {
-      const el = $('#s_' + k);
-      if (el) {
-        if (el.type === 'checkbox') s[k] = el.checked;
-        else s[k] = el.type === 'number' ? Math.max(0, Number(el.value) || 0) : el.value.trim();
-      }
+      const el=$('#s_'+k);
+      if(el) { if(el.type==='checkbox') s[k]=el.checked; else s[k]=el.type==='number'?Math.max(0,Number(el.value)||0):el.value.trim(); }
     }
+    s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
+    const apiKey=$('#s_ordersApiKey').value.trim();
+    if(apiKey) localStorage.setItem('dew_orders_api_key',apiKey);
     save('Update store settings');
   };
 }
