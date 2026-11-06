@@ -22,7 +22,8 @@
     "deliveryCairo": 85,
     "deliveryAlex": 90,
     "telegramEnabled": true,
-    "telegramProxyUrl": ""
+    "telegramProxyUrl": "",
+    "ordersApiUrl": "https://dew-orders-api.aalshari.workers.dev"
   },
   "catalogs": [
     {
