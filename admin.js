@@ -9,6 +9,7 @@ const dec = b => { const bin = atob(b.replace(/\n/g, '')); const u = new Uint8Ar
 
 /* ---------- Secure admin API ---------- */
 const ADMIN_API='https://dew-orders-api.aalshari.workers.dev', ADMIN_SESSION_KEY='dew_admin_session';
+try { localStorage.removeItem('dew_gh'); localStorage.removeItem('dew_orders_api_key'); sessionStorage.removeItem('dew_gh'); } catch {}
 function adminToken(){try{return sessionStorage.getItem(ADMIN_SESSION_KEY)||''}catch{return ''}}
 async function gh(method,path,body){
  const cleanPath=String(path||'').split('?')[0],url=ADMIN_API+'/api/admin/github?path='+encodeURIComponent(cleanPath);
