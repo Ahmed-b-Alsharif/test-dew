@@ -149,43 +149,56 @@ function bindSearch() { const el = $('#q'); if (!el) return; el.oninput = () => 
 
 /* ---------- homepage editor ---------- */
 function homepage() {
-  const base={"announcement":{"show":true,"text":"Buy 2 Get 1 Free  |  Free delivery on orders over 600 EGP","link":"#shop"},"header":{"logo":"Dew","links":[{"label":"Shop","url":"#shop"},{"label":"Our Story","url":"#about"},{"label":"Contact","url":"#contact"}]},"hero":{"show":true,"title":"Your Skin. Your Natural Glow.","text":"Thoughtful skincare, made with love in Egypt.","button":"Discover the collection","url":"#shop","image":""},"categories":{"show":true,"title":"Shop by category","items":[{"title":"Face Care","image":"","url":"#shop"},{"title":"Lip Care","image":"","url":"#shop"},{"title":"Body Care","image":"","url":"#shop"},{"title":"Hair Care","image":"","url":"#shop"}]},"products":{"show":true,"title":"Our Best Sellers","limit":5},"promo":{"show":true,"title":"A little more love for your skin","text":"Explore your everyday skincare essentials.","button":"Shop now","url":"#shop","image":""},"benefits":{"show":true,"items":["Made in Egypt","Thoughtfully selected ingredients","Cruelty-free","Delivery across Egypt"]},"reviews":{"show":true,"title":"Kind words from our customers","items":[{"name":"Your customer","text":"Customer feedback will appear here.","stars":5}]},"social":{"show":true,"title":"A little Dew every day","handle":"@dew_skincaree","images":["","","","","",""]},"newsletter":{"show":true,"title":"Stay in the glow","text":"Get updates, skincare tips and special offers.","button":"Join us"},"footer":{"show":true,"about":"Natural skincare, made with love in Egypt.","copyright":"All rights reserved.","links":[{"label":"About","url":"#about"},{"label":"Contact","url":"#contact"}]},"theme":{"green":"#1c524e","cream":"#fbf8f1","ink":"#183b35","accent":"#e7eee5"}};
+  const base={"announcement":{"show":true,"text":"Buy 2 Get 1 Free | Free delivery on orders over 600 EGP","link":"#shop"},"header":{"logo":"Dew","logoImage":"","links":[{"label":"Shop","url":"#shop"},{"label":"Our Story","url":"#about"},{"label":"Contact","url":"#contact"}]},"hero":{"show":true,"title":"Your Skin. Your Natural Glow.","text":"Thoughtful skincare, made with love in Egypt.","button":"Discover the collection","url":"#shop","image":""},"categories":{"show":true,"title":"Shop by category","items":[{"title":"Face Care","image":"","url":"#shop"},{"title":"Lip Care","image":"","url":"#shop"},{"title":"Body Care","image":"","url":"#shop"},{"title":"Hair Care","image":"","url":"#shop"}]},"products":{"show":true,"title":"Our Best Sellers","limit":5},"promo":{"show":true,"title":"A little more love for your skin","text":"Explore your everyday skincare essentials.","button":"Shop now","url":"#shop","image":""},"benefits":{"show":true,"items":["Made in Egypt","Thoughtfully selected ingredients","Cruelty-free","Delivery across Egypt"]},"reviews":{"show":true,"title":"Kind words from our customers","items":[{"name":"Your customer","text":"Customer feedback will appear here.","stars":5}]},"social":{"show":true,"title":"A little Dew every day","handle":"@dew_skincaree","images":["","","","","",""]},"newsletter":{"show":true,"title":"Stay in the glow","text":"Get updates, skincare tips and special offers.","button":"Join us"},"footer":{"show":true,"about":"Natural skincare, made with love in Egypt.","copyright":"All rights reserved.","links":[{"label":"About","url":"#about"},{"label":"Contact","url":"#contact"}]},"theme":{"green":"#1c524e","cream":"#fbf8f1","ink":"#183b35","accent":"#e7eee5"}};
   const h=D.settings.homepage||(D.settings.homepage=JSON.parse(JSON.stringify(base)));
-  const val=(o,k,d='')=>o&&o[k]!==undefined?o[k]:d;
-  const field=(path,label,value,type='text')=>`<div class="hp-field"><label>${label}</label><input type="${type}" data-hp="${path}" value="${esc(value??'')}"></div>`;
-  const area=(path,label,value,rows=3)=>`<div class="hp-field hp-wide"><label>${label}</label><textarea rows="${rows}" data-hp="${path}">${esc(value??'')}</textarea></div>`;
-  const toggle=(key,obj)=>`<label class="hp-toggle"><input type="checkbox" data-hp-show="${key}" ${obj.show!==false?'checked':''}><span class="hp-switch"></span><span>Show this section on the storefront</span></label>`;
-  const photo=(path,label,value)=>`<div class="hp-photo-field"><div><label>${label}</label><small>Recommended: landscape image</small></div><div class="hp-photo-control">${value?`<img src="${esc(value)}" alt="">`:'<div class="hp-photo-empty">DEW</div>'}<label class="hp-upload">Upload photo<input type="file" accept="image/*" data-hp-upload="${path}"></label></div></div>`;
-  const section=(id,title,desc,body,obj,key)=>`<article class="hp-card"><div class="hp-card-head"><div><span class="hp-step">${id}</span><div><h3>${title}</h3><p>${desc}</p></div></div>${toggle(key||id.toLowerCase(),obj||{})}</div><div class="hp-card-body">${body}</div></article>`;
-  const categories=(h.categories.items||[]);
-  const benefits=(h.benefits.items||[]);
-  const socials=(h.social.images||['','','','','','']);
-  $('#view').innerHTML=`
-    <div class="hp-intro"><div><span class="admin-eyebrow">YOUR STOREFRONT</span><h2>Make your homepage yours.</h2><p>Change words, photos and sections here. No code or JSON needed.</p></div><a class="admin-view-store" href="./" target="_blank">Preview storefront ↗</a></div>
-    <div class="hp-savebar"><div><b>Homepage changes</b><small>Changes are saved to your live storefront after publishing.</small></div><button class="admin-primary" id="homeSave">Save and publish changes</button></div>
-    ${section('01','Announcement bar','The slim offer message at the top of your website.',field('announcement.text','Announcement text',val(h.announcement,'text'))+field('announcement.link','When clicked, go to',val(h.announcement,'link','#shop')),h.announcement,'announcement')}
-    ${section('02','Main navigation','Your logo and links in the website header.',field('header.logo','Store logo text',val(h.header,'logo','Dew'))+photo('header.logoImage','Store logo image',val(h.header,'logoImage',''))+(h.header.links||[]).map((x,i)=>field('header.links.'+i+'.label','Link '+(i+1)+' name',x.label)+field('header.links.'+i+'.url','Link '+(i+1)+' destination',x.url)).join(''),h.header,'header')}
-    ${section('03','Hero banner','The large first section visitors see.',field('hero.title','Main headline',val(h.hero,'title'))+area('hero.text','Supporting text',val(h.hero,'text'),3)+field('hero.button','Button text',val(h.hero,'button'))+field('hero.url','Button destination',val(h.hero,'url'))+photo('hero.image','Hero image',val(h.hero,'image')),h.hero,'hero')}
-    ${section('04','Shop by category','Show your main product categories.',field('categories.title','Section heading',val(h.categories,'title'))+categories.map((x,i)=>'<div class="hp-subcard"><b>Category '+(i+1)+'</b>'+field('categories.items.'+i+'.title','Category name',x.title)+field('categories.items.'+i+'.url','Category destination',x.url)+photo('categories.items.'+i+'.image','Category photo',x.image)+'</div>').join(''),h.categories,'categories')}
-    ${section('05','Featured products','Choose the heading and how many products appear.',field('products.title','Section heading',val(h.products,'title'))+field('products.limit','Number of products to show',val(h.products,'limit',5),'number'),h.products,'products')}
-    ${section('06','Promotional banner','A second banner for a campaign or special offer.',field('promo.title','Headline',val(h.promo,'title'))+area('promo.text','Supporting text',val(h.promo,'text'),2)+field('promo.button','Button text',val(h.promo,'button'))+field('promo.url','Button destination',val(h.promo,'url'))+photo('promo.image','Promotion image',val(h.promo,'image')),h.promo,'promo')}
-    ${section('07','Why shop with Dew','The trust points shown below products.',area('benefits.items','One benefit per line',benefits.join('\n'),4),h.benefits,'benefits')}
-    ${section('08','Customer reviews','The review section heading and first featured review.',field('reviews.title','Section heading',val(h.reviews,'title'))+field('reviews.items.0.name','Customer name',h.reviews.items?.[0]?.name||'')+area('reviews.items.0.text','Review text',h.reviews.items?.[0]?.text||'',2),h.reviews,'reviews')}
-    ${section('09','Instagram gallery','Your Instagram heading and handle.',field('social.title','Section heading',val(h.social,'title'))+field('social.handle','Instagram handle',val(h.social,'handle'))+socials.map((x,i)=>photo('social.images.'+i,'Instagram photo '+(i+1),x)).join(''),h.social,'social')}
-    ${section('10','Newsletter signup','The email signup section near the bottom.',field('newsletter.title','Headline',val(h.newsletter,'title'))+area('newsletter.text','Supporting text',val(h.newsletter,'text'),2)+field('newsletter.button','Button text',val(h.newsletter,'button')),h.newsletter,'newsletter')}
-    ${section('11','Footer','The information at the bottom of your website.',area('footer.about','About your brand',val(h.footer,'about'),2)+field('footer.copyright','Copyright line',val(h.footer,'copyright')),h.footer,'footer')}
-    <article class="hp-card"><div class="hp-card-head"><div><span class="hp-step">12</span><div><h3>Store colours</h3><p>Change the colours used across your homepage.</p></div></div></div><div class="hp-card-body hp-color-grid">${[['green','Main green'],['cream','Background'],['ink','Text'],['accent','Soft accent']].map(([k,l])=>`<div class="hp-color-field"><label>${l}</label><input type="color" data-hp="theme.${k}" value="${esc(h.theme?.[k]||'#1c524e')}"><code>${esc(h.theme?.[k]||'#1c524e')}</code></div>`).join('')}</div></article>
-    <div class="hp-bottom-save"><button class="admin-primary" id="homeSaveBottom">Save and publish changes</button><a class="admin-view-store" href="./" target="_blank">Preview storefront ↗</a></div>`;
-  const setPath=(obj,path,value)=>{const bits=path.split('.');let cur=obj;for(let i=0;i<bits.length-1;i++){const key=/^\d+$/.test(bits[i])?Number(bits[i]):bits[i];if(cur[key]===undefined)cur[key]=/^\d+$/.test(bits[i+1])?[]:{};cur=cur[key];}const last=bits.at(-1);cur[/^\d+$/.test(last)?Number(last):last]=value;};
-  const bind=el=>{const path=el.dataset.hp;if(!path)return;let v=el.value;if(el.type==='number')v=Math.max(1,Math.min(20,Number(v)||5));if(path==='benefits.items')v=v.split('\n').map(x=>x.trim()).filter(Boolean);setPath(h,path,v);if(el.type==='color')el.nextElementSibling.textContent=v;};
-  document.querySelectorAll('[data-hp]').forEach(el=>{el.addEventListener('input',()=>bind(el));el.addEventListener('change',()=>bind(el));});
-  document.querySelectorAll('[data-hp-show]').forEach(el=>el.onchange=()=>{h[el.dataset.hpShow].show=el.checked;});
-  $('#view').addEventListener('change',async event=>{const el=event.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;const box=el.closest('.hp-photo-field');const label=box.querySelector('.hp-upload');label.textContent='Uploading…';try{const path=await uploadImage(await resize(file));setPath(h,el.dataset.hpUpload,path);const preview=box.querySelector('.hp-photo-control');preview.querySelector('img,.hp-photo-empty')?.remove();const img=document.createElement('img');img.src=path;img.alt='';preview.prepend(img);label.innerHTML='Change photo<input type="file" accept="image/*" data-hp-upload="'+el.dataset.hpUpload+'">';toast('Photo uploaded. Remember to save and publish.');}catch(e){label.textContent='Upload failed';toast(e.message,true);}});
-  const publish=()=>{D.settings.homepage=h;save('Update homepage design');};
-  $('#homeSave').onclick=publish;$('#homeSaveBottom').onclick=publish;
+  const mergeObj=(a,b)=>{if(!b)return a;for(const k of Object.keys(b)){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k]))a[k]=mergeObj(a[k]||{},b[k]);else a[k]=b[k];}return a;};mergeObj(h,base);
+  const sections=[['announcement','Announcement bar','Offer strip at the very top'],['header','Header & logo','Logo and navigation links'],['hero','Hero banner','Main image and headline'],['categories','Collection list','Shop by category tiles'],['products','Featured products','Product cards on homepage'],['promo','Image banner','Second promotional banner'],['benefits','Benefits','Trust and delivery messages'],['reviews','Reviews','Customer testimonials'],['social','Instagram gallery','Social photo strip'],['newsletter','Newsletter','Email signup area'],['footer','Footer','Bottom links and brand details']];
+  let selected='hero';
+  const pathSet=(obj,path,value)=>{const bits=path.split('.');let cur=obj;for(let i=0;i<bits.length-1;i++){const k=/^\d+$/.test(bits[i])?+bits[i]:bits[i];if(cur[k]===undefined)cur[k]=/^\d+$/.test(bits[i+1])?[]:{};cur=cur[k];}const last=bits.at(-1);cur[/^\d+$/.test(last)?+last:last]=value;};
+  const field=(path,label,value,type='text')=>`<div class="editor-field"><label>${label}</label><input type="${type}" data-hp="${path}" value="${esc(value??'')}"></div>`;
+  const area=(path,label,value)=>`<div class="editor-field"><label>${label}</label><textarea rows="3" data-hp="${path}">${esc(value??'')}</textarea></div>`;
+  const photo=(path,label,value)=>`<div class="editor-field"><label>${label}</label><div class="homepage-upload-preview">${value?'<img src="'+esc(value)+'" alt="">':'<span>Image preview</span>'}<label class="media-add">Upload photo<input type="file" accept="image/*" data-hp-upload="${path}"></label></div></div>`;
+  const editorFor=key=>{
+    const x=h[key]||{};
+    if(key==='announcement')return field('announcement.text','Announcement text',x.text)+field('announcement.link','Link destination',x.link);
+    if(key==='header')return field('header.logo','Logo text (used if no logo image)',x.logo)+photo('header.logoImage','Store logo',x.logoImage)+(x.links||[]).map((v,i)=>field('header.links.'+i+'.label','Navigation link '+(i+1),v.label)+field('header.links.'+i+'.url','Link destination',v.url)).join('');
+    if(key==='hero')return field('hero.title','Headline',x.title)+area('hero.text','Supporting text',x.text)+field('hero.button','Button label',x.button)+field('hero.url','Button destination',x.url)+photo('hero.image','Hero image',x.image);
+    if(key==='categories')return field('categories.title','Section heading',x.title)+(x.items||[]).map((v,i)=>'<div class="editor-subgroup"><b>Category '+(i+1)+'</b>'+field('categories.items.'+i+'.title','Name',v.title)+field('categories.items.'+i+'.url','Destination',v.url)+photo('categories.items.'+i+'.image','Category image',v.image)+'</div>').join('');
+    if(key==='products')return field('products.title','Section heading',x.title)+field('products.limit','Number of products',x.limit,'number');
+    if(key==='promo')return field('promo.title','Headline',x.title)+area('promo.text','Supporting text',x.text)+field('promo.button','Button label',x.button)+field('promo.url','Button destination',x.url)+photo('promo.image','Banner image',x.image);
+    if(key==='benefits')return area('benefits.items','One benefit per line',(x.items||[]).join('\n'));
+    if(key==='reviews')return field('reviews.title','Section heading',x.title)+field('reviews.items.0.name','Customer name',x.items?.[0]?.name)+area('reviews.items.0.text','Review text',x.items?.[0]?.text);
+    if(key==='social')return field('social.title','Section heading',x.title)+field('social.handle','Instagram handle',x.handle)+(x.images||[]).map((v,i)=>photo('social.images.'+i,'Instagram photo '+(i+1),v)).join('');
+    if(key==='newsletter')return field('newsletter.title','Headline',x.title)+area('newsletter.text','Supporting text',x.text)+field('newsletter.button','Button label',x.button);
+    if(key==='footer')return area('footer.about','About Dew',x.about)+field('footer.copyright','Copyright text',x.copyright);
+    return '';
+  };
+  const preview=()=>{
+    const image=(src,cls='')=>src?'<img class="'+cls+'" src="'+esc(src)+'" alt="">':'<div class="'+cls+' homepage-preview-placeholder">DEW</div>';
+    const P=D.products.filter(p=>p.visible);
+    $('#homepageLivePreview').innerHTML=`
+      <div class="hp-preview-ann">${h.announcement.show?esc(h.announcement.text):'Announcement bar hidden'}</div>
+      <div class="hp-preview-header"><b>${h.header.logoImage?image(h.header.logoImage,'hp-preview-logo'):esc(h.header.logo)}</b><span>☰　Shop　Our Story　Contact　　♧</span></div>
+      ${h.hero.show?'<section class="hp-preview-hero"><div><small>NATURAL SKINCARE · MADE IN EGYPT</small><h2>'+esc(h.hero.title)+'</h2><p>'+esc(h.hero.text)+'</p><span>'+esc(h.hero.button)+'</span></div>'+image(h.hero.image)+'</section>':''}
+      ${h.categories.show?'<section class="hp-preview-section"><small>EXPLORE</small><h3>'+esc(h.categories.title)+'</h3><div class="hp-preview-cats">'+(h.categories.items||[]).map(v=>'<div>'+image(v.image)+'<b>'+esc(v.title)+'</b></div>').join('')+'</div></section>':''}
+      ${h.products.show?'<section class="hp-preview-section"><small>THE DEW EDIT</small><h3>'+esc(h.products.title)+'</h3><div class="hp-preview-products">'+P.slice(0,4).map(p=>'<div>'+image(p.images?.[0])+'<b>'+esc(p.name)+'</b></div>').join('')+'</div></section>':''}
+      ${h.promo.show?'<section class="hp-preview-promo">'+image(h.promo.image)+'<div><h3>'+esc(h.promo.title)+'</h3><p>'+esc(h.promo.text)+'</p><span>'+esc(h.promo.button)+'</span></div></section>':''}
+      <div class="hp-preview-footer">Dew Skincare · Made in Egypt</div>`;
+  };
+  const drawEditor=()=>{
+    const sec=sections.find(v=>v[0]===selected)||sections[2];
+    $('#homepageSectionNav').innerHTML=sections.map(([k,n,d])=>`<button class="hp-section-nav ${selected===k?'active':''}" data-section="${k}"><b>${n}</b><small>${d}</small><span>${h[k]?.show===false?'Hidden':'Visible'}</span></button>`).join('');
+    $('#homepageEditorPanel').innerHTML=`<div class="homepage-editor-title"><div><span class="admin-eyebrow">EDITING STOREFRONT SECTION</span><h3>${sec[1]}</h3><p>${sec[2]}</p></div><label class="editor-check"><input type="checkbox" id="sectionVisible" ${h[selected]?.show===false?'':'checked'}> Show section</label></div><div class="homepage-editor-fields">${editorFor(selected)}</div><div class="homepage-editor-footer"><button class="admin-primary" id="saveHomepage">Save and publish</button></div>`;
+    document.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>{selected=b.dataset.section;drawEditor();});
+    $('#sectionVisible').onchange=e=>{h[selected].show=e.target.checked;drawEditor();preview();};
+    document.querySelectorAll('[data-hp]').forEach(el=>{const update=()=>{let v=el.value;if(el.type==='number')v=Math.max(1,20,Number(v)||5);if(selected==='benefits'&&el.dataset.hp==='benefits.items')v=v.split('\n').map(x=>x.trim()).filter(Boolean);pathSet(h,el.dataset.hp,v);preview();};el.oninput=update;el.onchange=update;});
+    $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
+    $('#saveHomepage').onclick=()=>save('Update homepage');
+  };
+  $('#view').innerHTML=`<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / THEME EDITOR</span><h2>Edit your storefront visually.</h2><p>Select a section on the left. The preview shows exactly which part you are changing.</p></div><a class="admin-view-store" href="./" target="_blank">Open live store ↗</a></div><div class="homepage-theme-editor"><aside class="homepage-section-list"><div class="homepage-section-list-head"><b>Homepage sections</b><small>Click a section to edit it</small></div><div id="homepageSectionNav"></div></aside><section class="homepage-editor-work"><div class="homepage-editor-card" id="homepageEditorPanel"></div><div class="homepage-preview-card"><div class="homepage-preview-top"><b>Live preview</b><span>Visual guide · Desktop</span></div><div class="homepage-preview-browser"><div class="homepage-browser-dots">● ● ●</div><div id="homepageLivePreview"></div></div></div></section></div>`;
+  drawEditor();preview();
 }
 
-/* ---------- overview / customers / inventory ---------- */
 function overview() {
   const revenue=ordersList.reduce((n,o)=>n+Number(o.total||0),0);
   const low=D.products.filter(p=>Number(p.stock||0)<=5);
@@ -241,48 +254,31 @@ function products() {
   document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const p=D.products.find(x=>x.id===b.dataset.x);if(p&&confirm('Delete "'+p.name+'"?')){D.products=D.products.filter(x=>x!==p);render();save('Delete '+p.name);}});
 }
 function productForm(id) {
-  if (!D.catalogs.length) { alert('Create a catalog first.'); return; }
-  const p = id ? D.products.find(x => x.id === id) : { name: '', catalog: D.catalogs[0].id, price: '', salePrice: '', stock: 0, description: '', howToUse: '', tags: '', images: [], visible: true, featured: false };
-  let images = [...p.images];
-  const paint = () => {
-    $('#imgs').innerHTML = images.map((u, i) => `<div><img src="${esc(u)}" alt=""><button type="button" data-d="${i}">&times;</button></div>`).join('');
-    document.querySelectorAll('[data-d]').forEach(b => b.onclick = () => { images.splice(+b.dataset.d, 1); paint(); });
-  };
-  modal(`<h2>${id ? 'Edit' : 'New'} product</h2><div class="form-grid">
-    <div class="full"><label>Name</label><input id="pn" value="${esc(p.name)}"></div>
-    <div><label>Catalog</label><select id="pc">${D.catalogs.map(c => `<option value="${c.id}" ${c.id === p.catalog ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
-    <div><label>Quantity in stock</label><input id="ps" type="number" min="0" value="${p.stock}"></div>
-    <div><label>Price before discount (EGP)</label><input id="pp" type="number" min="0" value="${p.price}"></div>
-    <div><label>Price after discount (optional)</label><input id="pd" type="number" min="0" value="${p.salePrice || ''}"></div>
-    <div class="full"><label>Description</label><textarea id="pdesc" rows="3">${esc(p.description)}</textarea></div>
-    <div class="full"><label>How to use</label><textarea id="phow" rows="2">${esc(p.howToUse)}</textarea></div>
-    <div class="full"><label>Tags (comma separated)</label><input id="ptags" value="${esc(p.tags)}"></div>
-    <div class="full"><label>Photos (first is cover, up to 8)</label><div class="imgs" id="imgs"></div><input type="file" id="pf" accept="image/*" multiple></div>
-    <div><label><input type="checkbox" id="pv" ${p.visible ? 'checked' : ''} style="width:auto"> Visible in store</label></div>
-    <div><label><input type="checkbox" id="pfe" ${p.featured ? 'checked' : ''} style="width:auto"> Feature on homepage</label></div></div>
-    <div class="err" id="me"></div>
-    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="pSave">Save</button><button class="btn ghost" id="pX">Cancel</button></div>`);
-  paint();
-  $('#pX').onclick = closeModal;
-  $('#pf').onchange = async e => {
-    $('#me').style.color = 'var(--muted)'; $('#me').textContent = 'Uploading photo...';
-    for (const f of e.target.files) {
-      if (images.length >= 8) break;
-      try { images.push(await uploadImage(await resize(f))); paint(); }
-      catch (er) { $('#me').style.color = 'var(--red)'; $('#me').textContent = er.message; return; }
-    }
-    $('#me').textContent = ''; e.target.value = '';
-  };
-  $('#pSave').onclick = () => {
-    const name = $('#pn').value.trim(), price = Number($('#pp').value);
-    if (!name) { $('#me').textContent = 'Product name is required.'; return; }
-    if (!(price > 0)) { $('#me').textContent = 'Enter the price.'; return; }
-    const data = { name, catalog: $('#pc').value, price, salePrice: Number($('#pd').value) || 0, stock: Math.max(0, Math.floor(Number($('#ps').value) || 0)),
-      description: $('#pdesc').value.trim(), howToUse: $('#phow').value.trim(), tags: $('#ptags').value.trim(), images, visible: $('#pv').checked, featured: $('#pfe').checked };
-    if (id) Object.assign(p, data); else D.products.unshift({ id: uid(), ...data });
-    closeModal(); render(); save((id ? 'Update ' : 'Add ') + name);
-  };
+  const p = id ? D.products.find(x => x.id === id) : { name:'', catalog:D.catalogs[0]?.id||'', price:'', salePrice:'', stock:0, description:'', howToUse:'', tags:'', images:[], visible:true, featured:false };
+  if (!p) return;
+  let images=[...(p.images||[])];
+  const moneyLabel=n=>'EGP '+Number(n||0).toLocaleString('en-US');
+  $('#view').innerHTML=`
+    <div class="editor-breadcrumb"><button class="text-link" id="backProducts">← Products</button><span>/</span><b>${id?'Edit product':'Add product'}</b></div>
+    <div class="shopify-page-head product-editor-head"><div><span class="admin-eyebrow">PRODUCTS / ${id?'EDIT':'NEW'}</span><h2>${id?esc(p.name):'Add product'}</h2><p>Organize product details just like Shopify Admin.</p></div><div class="editor-head-actions"><button class="admin-view-store" id="cancelProduct">Discard</button><button class="admin-primary" id="saveProduct">Save</button></div></div>
+    <div class="product-editor-layout">
+      <div class="product-editor-main">
+        <section class="editor-panel"><h3>Product information</h3><div class="editor-field"><label>Title</label><input id="pn" value="${esc(p.name)}" placeholder="e.g. Dew Lip Balm"></div><div class="editor-field"><label>Description</label><textarea id="pdesc" rows="6" placeholder="Describe your product">${esc(p.description)}</textarea></div></section>
+        <section class="editor-panel"><div class="editor-panel-title"><h3>Media</h3><span>Up to 8 images</span></div><div class="product-media-grid" id="productMedia"></div><label class="media-add">＋ Add images<input type="file" id="pf" accept="image/*" multiple></label><p class="editor-hint">The first image is the main product photo customers see.</p></section>
+        <section class="editor-panel"><h3>Pricing</h3><div class="editor-two-col"><div class="editor-field"><label>Price (EGP)</label><input id="pp" type="number" min="0" step="1" value="${esc(p.price)}"></div><div class="editor-field"><label>Compare-at price / Sale price (EGP)</label><input id="pd" type="number" min="0" step="1" value="${esc(p.salePrice||'')}"><small>Enter a lower price to show a sale.</small></div></div><div class="price-preview" id="pricePreview">${moneyLabel(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</div></section>
+        <section class="editor-panel"><h3>Inventory</h3><div class="editor-field"><label>Available quantity</label><input id="ps" type="number" min="0" step="1" value="${Number(p.stock||0)}"></div><p class="editor-hint">Stock is updated when customers place orders.</p></section>
+        <section class="editor-panel"><h3>Product organization</h3><div class="editor-two-col"><div class="editor-field"><label>Collection</label><select id="pc">${D.catalogs.map(c=>`<option value="${esc(c.id)}" ${c.id===p.catalog?'selected':''}>${esc(c.name)}</option>`).join('')}</select></div><div class="editor-field"><label>Tags</label><input id="ptags" value="${esc(p.tags||'')}" placeholder="lip care, skincare, gift"></div></div><div class="editor-field"><label>How to use</label><textarea id="phow" rows="3" placeholder="Usage instructions">${esc(p.howToUse||'')}</textarea></div></section>
+      </div>
+      <aside class="product-editor-side"><section class="editor-panel"><h3>Status</h3><select id="pvStatus"><option value="active" ${p.visible?'selected':''}>Active</option><option value="draft" ${!p.visible?'selected':''}>Draft</option></select><p class="editor-hint">Active products can appear in your storefront.</p></section><section class="editor-panel"><h3>Sales channels</h3><label class="editor-check"><input id="pfe" type="checkbox" ${p.featured?'checked':''}> Feature on homepage</label><p class="editor-hint">Featured products appear in the homepage product section.</p></section><section class="editor-panel"><h3>Store preview</h3><div class="mini-product-preview" id="miniProductPreview"><div class="mini-product-photo">${images[0]?'<img src="'+esc(images[0])+'" alt="">':'<span>DEW</span>'}</div><b id="miniProductName">${esc(p.name||'Product title')}</b><span id="miniProductPrice">${moneyLabel(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</span></div></section></aside>
+    </div>`;
+  const paint=()=>{$('#productMedia').innerHTML=images.map((u,i)=>`<div class="product-media-item"><img src="${esc(u)}" alt=""><button type="button" data-remove-image="${i}" aria-label="Remove image">×</button>${i===0?'<small>Cover</small>':''}</div>`).join('')+'<div class="product-media-empty">＋</div>';document.querySelectorAll('[data-remove-image]').forEach(b=>b.onclick=()=>{images.splice(+b.dataset.removeImage,1);paint();});const mini=$('#miniProductPreview .mini-product-photo');mini.innerHTML=images[0]?'<img src="'+esc(images[0])+'" alt="">':'<span>DEW</span>';};
+  const refreshPreview=()=>{$('#miniProductName').textContent=$('#pn').value||'Product title';const v=Number($('#pd').value)>0&&Number($('#pd').value)<Number($('#pp').value)?Number($('#pd').value):Number($('#pp').value);$('#miniProductPrice').textContent=moneyLabel(v);$('#pricePreview').textContent=moneyLabel(v);};
+  paint();$('#backProducts').onclick=()=>{tab='products';render();};$('#cancelProduct').onclick=()=>{tab='products';render();};
+  $('#pn').oninput=refreshPreview;$('#pp').oninput=refreshPreview;$('#pd').oninput=refreshPreview;
+  $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resize(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
+  $('#saveProduct').onclick=()=>{const name=$('#pn').value.trim(),price=Number($('#pp').value);if(!name){toast('Product title is required.',true);return;}if(!(price>0)){toast('Enter a valid price.',true);return;}const data={name,catalog:$('#pc').value,price,salePrice:Number($('#pd').value)||0,stock:Math.max(0,Math.floor(Number($('#ps').value)||0)),description:$('#pdesc').value.trim(),howToUse:$('#phow').value.trim(),tags:$('#ptags').value.trim(),images,visible:$('#pvStatus').value==='active',featured:$('#pfe').checked};if(id)Object.assign(p,data);else D.products.unshift({id:uid(),...data});tab='products';render();save((id?'Update ':'Add ')+name);};
 }
+
 function resize(file) {
   return new Promise((res, rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
@@ -309,19 +305,26 @@ function catalogs() {
   document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const c=D.catalogs.find(x=>x.id===b.dataset.x);if(!c)return;if(D.products.some(p=>p.catalog===c.id)){alert('Move these products to another collection first.');return;}if(confirm('Delete collection "'+c.name+'"?')){D.catalogs=D.catalogs.filter(x=>x!==c);render();save('Delete collection '+c.name);}});
 }
 function catForm(id) {
-  const c=id?D.catalogs.find(x=>x.id===id):{name:'',description:'',image:''};
+  const c=id?D.catalogs.find(x=>x.id===id):{name:'',description:'',image:''};if(!c)return;
   let image=c.image||'';
-  modal(`<div class="modal-eyebrow">PRODUCT ORGANIZATION</div><h2>${id?'Edit collection':'Create collection'}</h2><div class="collection-form">
-    <div class="full"><label>Collection name</label><input id="cn" value="${esc(c.name)}" placeholder="e.g. Lip Care"></div>
-    <div class="full"><label>Description</label><textarea id="cd" rows="3" placeholder="Describe this collection for your customers">${esc(c.description)}</textarea></div>
-    <div class="full"><label>Collection image</label><div class="collection-upload" id="collectionPreview">${image?`<img src="${esc(image)}" alt="">`:'<span>DEW</span>'}<label class="admin-upload-button">Upload image<input type="file" id="cf" accept="image/*"></label></div><small class="shopify-muted">You can also use the first product photo as the collection cover.</small></div>
-    <div class="full"><label>Products in this collection</label><div class="collection-product-list">${D.products.filter(p=>p.catalog===c.id).map(p=>`<span>${esc(p.name)}</span>`).join('')||'No products assigned yet. Assign products from their product editor.'}</div></div>
-  </div><div class="err" id="me"></div><div class="modal-actions"><button class="admin-primary" id="cs">Save collection</button><button class="admin-view-store" id="cx">Cancel</button></div>`);
-  $('#cx').onclick=closeModal;
-  const bindCollectionUpload=()=>{$('#cf').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;const label=$('#collectionPreview');label.querySelector('.admin-upload-button').textContent='Uploading…';try{image=await uploadImage(await resize(file));label.innerHTML=`<img src="${esc(image)}" alt=""><label class="admin-upload-button">Change image<input type="file" id="cf" accept="image/*"></label>`;bindCollectionUpload();}catch(err){$('#me').textContent=err.message;}};};bindCollectionUpload();
-  $('#cs').onclick=()=>{const name=$('#cn').value.trim();if(!name){$('#me').textContent='Collection name is required.';return;}if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image});closeModal();render();save('Save collection '+name);};
+  const selected=new Set(D.products.filter(p=>p.catalog===c.id).map(p=>p.id));
+  $('#view').innerHTML=`
+    <div class="editor-breadcrumb"><button class="text-link" id="backCollections">← Collections</button><span>/</span><b>${id?'Edit collection':'New collection'}</b></div>
+    <div class="shopify-page-head product-editor-head"><div><span class="admin-eyebrow">COLLECTIONS / ${id?'EDIT':'NEW'}</span><h2>${id?esc(c.name):'Create collection'}</h2><p>Arrange products into an easy-to-browse group.</p></div><div class="editor-head-actions"><button class="admin-view-store" id="cancelCollection">Discard</button><button class="admin-primary" id="saveCollection">Save</button></div></div>
+    <div class="product-editor-layout collection-editor-layout"><div class="product-editor-main">
+      <section class="editor-panel"><h3>Collection details</h3><div class="editor-field"><label>Title</label><input id="cn" value="${esc(c.name)}" placeholder="e.g. Lip Care"></div><div class="editor-field"><label>Description</label><textarea id="cd" rows="5" placeholder="Describe this collection">${esc(c.description||'')}</textarea></div></section>
+      <section class="editor-panel"><h3>Collection image</h3><div class="collection-editor-image" id="collectionPreview">${image?'<img src="'+esc(image)+'" alt="">':'<span>DEW</span>'}</div><label class="media-add">＋ Upload image<input type="file" id="cf" accept="image/*"></label><p class="editor-hint">Choose a landscape image to represent this collection in your storefront.</p></section>
+      <section class="editor-panel"><div class="editor-panel-title"><h3>Products</h3><span id="selectedProductCount">${selected.size} selected</span></div><div class="collection-product-picker">${D.products.map(p=>`<label class="collection-product-option"><input type="checkbox" data-collection-product="${esc(p.id)}" ${selected.has(p.id)?'checked':''}><span class="product-thumb">${p.images?.[0]?'<img src="'+esc(p.images[0])+'" alt="">':'DEW'}</span><span><b>${esc(p.name)}</b><small>${moneyLabelCat(p.price)} · ${Number(p.stock||0)} in stock</small></span></label>`).join('')||'<p class="editor-hint">Add products first, then assign them to this collection.</p>'}</div></section>
+    </div><aside class="product-editor-side"><section class="editor-panel"><h3>Collection status</h3><span class="shopify-status is-live"><i></i>Available on storefront</span><p class="editor-hint">Collections are displayed in your store when linked from the homepage or navigation.</p></section><section class="editor-panel"><h3>Search preview</h3><div class="collection-search-preview"><b id="collectionPreviewTitle">${esc(c.name||'Collection title')}</b><p id="collectionPreviewDesc">${esc(c.description||'Collection description')}</p><small>DEW SKINCARE</small></div></section></aside></div>`;
+  function moneyLabelCat(n){return 'EGP '+Number(n||0).toLocaleString('en-US');}
+  const updateCount=()=>{$('#selectedProductCount').textContent=document.querySelectorAll('[data-collection-product]:checked').length+' selected';};
+  $('#backCollections').onclick=()=>{tab='catalogs';render();};$('#cancelCollection').onclick=()=>{tab='catalogs';render();};
+  document.querySelectorAll('[data-collection-product]').forEach(el=>el.onchange=updateCount);
+  $('#cn').oninput=()=>$('#collectionPreviewTitle').textContent=$('#cn').value||'Collection title';$('#cd').oninput=()=>$('#collectionPreviewDesc').textContent=$('#cd').value||'Collection description';
+  $('#cf').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{image=await uploadImage(await resize(file));$('#collectionPreview').innerHTML='<img src="'+esc(image)+'" alt="">';}catch(err){toast(err.message,true);}};
+  $('#saveCollection').onclick=()=>{const name=$('#cn').value.trim();if(!name){toast('Collection title is required.',true);return;}const chosen=[...document.querySelectorAll('[data-collection-product]:checked')].map(x=>x.dataset.collectionProduct);D.products.forEach(p=>{if(chosen.includes(p.id))p.catalog=c.id;else if(p.catalog===c.id)p.catalog=D.catalogs.find(x=>x.id!==c.id)?.id||'';});if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image});tab='catalogs';render();save('Save collection '+name);};
 }
-/* ---------- orders ---------- */
+
 function orders() {
   $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
     <p class="note">View and manage customer orders, payment status, fulfillment, and tracking numbers.</p>
