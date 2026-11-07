@@ -544,7 +544,7 @@ th{background:var(--green);color:#fff;font-weight:600}
 
 
 /* Header search icon and expandable search panel */
-.dew-header{position:relative;z-index:15}
+.dew-header{position:sticky;top:0;z-index:60}
 .dew-header-actions{display:flex;align-items:center;gap:12px}
 .dew-search-toggle{width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;color:var(--dew-green,#1c524e);cursor:pointer;border-radius:50%;transition:background .2s}
 .dew-search-toggle:hover{background:#eaf2ec}
