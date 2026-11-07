@@ -113,10 +113,17 @@ async function createOrder(request, env) {
   const lines=[];
   for (const item of body.lines) {
     const p=products.find(x=>String(x.id)===String(item.id));
+    const variant=p?.variants?.find(v=>String(v.id)===String(item.variantId||""));
+    const hasVariants=Array.isArray(p?.variants)&&p.variants.length>0;
     const qty=Math.floor(Number(item.qty));
-    if (!p || !Number.isFinite(qty) || qty<1 || qty>Number(p.stock||0)) return json({ok:false,error:"One of the products is unavailable or has insufficient stock. Please refresh your cart."},409);
-    const unit=Number(p.salePrice)>0 && Number(p.salePrice)<Number(p.price) ? Number(p.salePrice) : Number(p.price);
-    lines.push({id:p.id,name:p.name,qty,unit,total:unit*qty});
+    if (!p || (hasVariants&&!variant) || !Number.isFinite(qty) || qty<1) return json({ok:false,error:"One of the products or selected options is unavailable. Please refresh your cart."},409);
+    const stock=variant?Number(variant.stock||0):Number(p.stock||0);
+    if(qty>stock)return json({ok:false,error:"The selected option does not have enough stock. Please update your cart."},409);
+    const basePrice=variant?Number(variant.price||0):Number(p.price||0);
+    const salePrice=variant?Number(variant.salePrice||0):Number(p.salePrice||0);
+    const unit=salePrice>0&&salePrice<basePrice?salePrice:basePrice;
+    const variantLabel=variant?" · "+Object.values(variant.options||{}).join(" / "):"";
+    lines.push({id:p.id,variantId:variant?.id||null,options:variant?.options||{},name:p.name+variantLabel,qty,unit,total:unit*qty});
   }
   const itemsTotal=lines.reduce((n,l)=>n+l.total,0);
   if (itemsTotal < Number(settings.minOrder||0)) return json({ok:false,error:"Minimum order is " + money(settings.minOrder) + "."},400);
