@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let S, area = null, appliedDiscount = null, paymentMethod = 'cod';
+let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas = [];
 
 (async function () {
   try { S = await (await fetch('products.json?v=' + Date.now())).json(); }
@@ -7,6 +7,12 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod';
   S.products = S.products.filter(p => p.visible);
   if (!S.discounts) S.discounts = [];
   const s = S.settings;
+  deliveryAreas = Array.isArray(s.deliveryAreas) ? s.deliveryAreas.filter(x=>x.enabled!==false&&x.name) : [
+    {id:'cairo',name:'Cairo & Giza',fee:Number(s.deliveryCairo||0),enabled:true},
+    {id:'alex',name:'Alexandria',fee:Number(s.deliveryAlex||0),enabled:true}
+  ];
+  $('#deliveryArea').innerHTML='<option value="">Choose your governorate</option>'+deliveryAreas.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+' — '+egp(x.fee)+'</option>').join('');
+  $('#deliveryArea').onchange=()=>{area=$('#deliveryArea').value||null;render();};
   if (s.codEnabled === false) paymentMethod = 'instapay';
   document.querySelectorAll('input[name="paymentMethod"]').forEach(r => {
     const enabled = r.value === 'cod' ? s.codEnabled !== false : s.instapayEnabled !== false && !!String(s.instapayNumber||'').trim();
@@ -15,8 +21,6 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod';
     r.onchange = () => { paymentMethod = r.value; updatePaymentDetails(); };
   });
   updatePaymentDetails();
-  $('#lblCairo').textContent = `Cairo & Giza - ${egp(s.deliveryCairo)}`;
-  $('#lblAlex').textContent = `Alexandria - ${egp(s.deliveryAlex)}`;
   try {
     const c = JSON.parse(localStorage.getItem('dew_customer') || 'null');
     if (c) {
@@ -25,12 +29,6 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod';
       $('#phone').value = c.phone;
     }
   } catch {}
-  document.querySelectorAll('input[name=area]').forEach(r => r.onchange = () => {
-    area = r.value;
-    $('#optCairo').classList.toggle('on', area === 'cairo');
-    $('#optAlex').classList.toggle('on', area === 'alex');
-    render();
-  });
   render();
 })();
 
@@ -53,7 +51,8 @@ function lines() {
 function totals() {
   const ls = lines();
   const items = ls.reduce((a, l) => a + l.total, 0);
-  let delivery = area === 'alex' ? S.settings.deliveryAlex : area === 'cairo' ? S.settings.deliveryCairo : 0;
+  const selectedArea=deliveryAreas.find(x=>x.id===area);
+  let delivery = selectedArea ? Number(selectedArea.fee)||0 : 0;
 
   let discount = 0;
   if (appliedDiscount) {
@@ -127,7 +126,7 @@ $('#form').onsubmit = async e => {
   const t = totals();
   const first = $('#first').value.trim(), last = $('#last').value.trim(), address = $('#address').value.trim();
   const phone = $('#phone').value.trim();
-  if (!area) { $('#err').textContent = 'Choose a delivery area.'; return; }
+  if (!area || !deliveryAreas.some(x=>x.id===area)) { $('#err').textContent = 'Choose your governorate.'; return; }
   if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8) {
     $('#err').textContent = 'Please fill in your name, address and phone number.'; return;
   }
