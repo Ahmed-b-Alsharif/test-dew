@@ -338,7 +338,7 @@
       "id": "5302dec3",
       "name": "Fluffy Kashmir Beauty Pouch",
       "shopifyHandle": "fluffy-pink-beauty-pouch",
-      "description": "A cute and soft fluffy pouch perfect for storing your makeup and skincare. It has a cozy plush feel and a spacious inside that fits your daily beauty essentials easily. Lightweight and practical, making it great for travel, your handbag, or everyday use.\n\n  ð Size:   7 Ã 15 Ã 8 cm\n\n ð Why youâll love it: â¢ Super soft and fluffy, feels nice to touch â¢ Big enough to hold all your skincare and makeup â¢ Light and easy to take anywhere â¢ Zipper keeps your things safe â¢ Pretty design, looks great on your vanity or in your bag",
+      "description": "A cute and soft fluffy pouch perfect for storing your makeup and skincare. It has a cozy plush feel and a spacious inside that fits your daily beauty essentials easily. Lightweight and practical, making it great for travel, your handbag, or everyday use.\n\nSize:   7CM 15CM 8CM\n\nWhy youâll love it: â¢ Super soft and fluffy, feels nice to touch â¢ Big enough to hold all your skincare and makeup â¢ Light and easy to take anywhere â¢ Zipper keeps your things safe â¢ Pretty design, looks great on your vanity or in your bag",
       "catalog": "3f1d5004",
       "tags": "everyday use, Fluffy, Lightweight, pouch",
       "visible": true,
@@ -355,26 +355,26 @@
         {
           "name": "Size",
           "values": [
-            "7 Ã 15 Ã 8 cm"
+            "7CM 15CM 8CM"
           ]
         }
       ],
       "variants": [
         {
-          "id": "98753395",
+          "id": "faecac58",
           "options": {
-            "Size": "7 Ã 15 Ã 8 cm"
+            "Size": "7CM 15CM 8CM"
           },
           "price": 310,
-          "salePrice": 280,
-          "stock": 10,
+          "salePrice": 0,
+          "stock": 0,
           "sku": "",
           "barcode": ""
         }
       ],
       "price": 310,
       "salePrice": 280,
-      "stock": 10
+      "stock": 0
     },
     {
       "id": "6590f759",
