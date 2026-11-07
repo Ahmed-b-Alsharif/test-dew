@@ -55,7 +55,8 @@
       "announcement": {
         "show": true,
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
-        "link": "#shop"
+        "link": "#shop",
+        "mode": "marquee"
       },
       "header": {
         "logo": "Dew",
