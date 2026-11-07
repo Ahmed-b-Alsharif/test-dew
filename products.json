@@ -297,24 +297,6 @@
   "products": [
     {
       "catalog": "bc000f32",
-      "description": "Stick lip balm. Flavours: chocolate, coconut, strawberry, candy.",
-      "featured": true,
-      "howToUse": "",
-      "id": "21e425f0",
-      "images": [
-        "images/1793922316271-9673b908.jpg"
-      ],
-      "name": "Chopstick lip balm",
-      "price": 60,
-      "salePrice": 0,
-      "stock": 25,
-      "tags": "chocolate, coconut, strawberry, candy",
-      "visible": true,
-      "options": [],
-      "variants": []
-    },
-    {
-      "catalog": "bc000f32",
       "description": "Macaron-shaped lip balm. Flavours: chocolate, coconut, strawberry, candy.",
       "featured": true,
       "howToUse": "",
