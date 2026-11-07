@@ -668,3 +668,21 @@ th{background:var(--green);color:#fff;font-weight:600}
 .product-variant-value{min-height:38px;padding:8px 13px;border:1px solid #d8e1d8;border-radius:3px;background:#fff;color:#385347;font-size:12px;cursor:pointer}
 .product-variant-value[aria-pressed="true"]{border-color:#1c524e;background:#eaf2ec;color:#1c524e;font-weight:700;box-shadow:inset 0 0 0 1px #1c524e}
 @media(max-width:760px){.product-gallery-main img{max-height:none}.product-gallery-thumbs{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}}
+
+
+/* Independent variant editor cards */
+.variant-cards{display:grid;gap:14px}
+.variant-editor-card{padding:16px;border:1px solid #dfe7df;border-radius:12px;background:#fff;display:grid;gap:14px}
+.variant-editor-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#183b35}
+.variant-editor-options{display:flex;flex-wrap:wrap;gap:8px}
+.variant-editor-options select{min-height:40px;padding:8px 10px;border:1px solid #d5dfd6;border-radius:7px;background:#fff;color:#183b35}
+.variant-editor-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}
+.variant-editor-fields>label:not(.variant-image-upload){display:grid;gap:6px;color:#53675b;font-size:11px;font-weight:700}
+.variant-editor-fields input{width:100%;min-width:0;min-height:40px;padding:8px 10px;border:1px solid #d5dfd6;border-radius:7px;color:#183b35;background:#fff}
+.variant-editor-fields .variant-image-upload{min-height:64px}
+@media(max-width:760px){.variant-editor-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-editor-fields .variant-image-upload{grid-column:1/-1}}
+/* Clear stock status on storefront */
+.dew-product-photo,.product-gallery-main{position:relative}
+.dew-sold-out-badge{position:absolute;z-index:3;top:12px;left:12px;display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:5px;background:#c83232;color:#fff;font-size:10px;font-weight:800;letter-spacing:1.1px;line-height:1;box-shadow:0 3px 12px rgba(90,20,20,.18)}
+.dew-sold-out-badge[hidden]{display:none}
+.product-sold-out-badge{top:16px;left:16px;padding:10px 15px;font-size:11px}
