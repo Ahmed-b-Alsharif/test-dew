@@ -243,7 +243,7 @@ function customers() {
   const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
   $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="admin-count">${rows.length} customers</span><button class="admin-view-store" id="exportCustomers">Export Excel</button></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="6">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
@@ -540,6 +540,11 @@ function discForm(id) {
 /* ---------- store settings ---------- */
 function store() {
   const s = D.settings;
+  if (s.instapayEnabled === undefined) s.instapayEnabled = true;
+  if (s.codEnabled === undefined) s.codEnabled = true;
+  if (s.instapayNumber === undefined) s.instapayNumber = '';
+  if (s.instapayName === undefined) s.instapayName = '';
+  if (s.instapayInstructions === undefined) s.instapayInstructions = '';
   const f = (k, label, type = 'text') => `<div><label>${label}</label><input id="s_${k}" type="${type}" value="${esc(s[k])}"></div>`;
   $('#view').innerHTML = `<h2>Store settings</h2><div class="box"><div class="form-grid">
     ${f('storeName', 'Store name')}${f('tagline', 'Tagline')}
@@ -549,6 +554,12 @@ function store() {
     ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
     ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
+    <div class="full"><h3>Checkout payment methods</h3></div>
+    <div class="full"><label><input type="checkbox" id="s_instapayEnabled" ${s.instapayEnabled ? 'checked' : ''} style="width:auto"> Enable InstaPay</label></div>
+    ${f('instapayNumber', 'InstaPay number / payment address')}
+    ${f('instapayName', 'InstaPay account name')}
+    <div class="full"><label>Instructions shown to customers after choosing InstaPay</label><textarea id="s_instapayInstructions" rows="3">${esc(s.instapayInstructions||'')}</textarea></div>
+    <div class="full"><label><input type="checkbox" id="s_codEnabled" ${s.codEnabled ? 'checked' : ''} style="width:auto"> Enable Cash on Delivery (COD)</label></div>
     <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (legacy notification endpoint)')}</div>
     <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable legacy Telegram order notifications</label></div>
     <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>
