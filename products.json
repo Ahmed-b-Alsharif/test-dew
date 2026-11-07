@@ -272,5 +272,19 @@
       "minSpend": 0,
       "active": true
     }
+  ],
+  "pages": [
+    {
+      "title": "about us",
+      "slug": "about-us",
+      "intro": "11111111",
+      "content": "2323",
+      "image": "",
+      "published": true,
+      "showInHeader": false,
+      "showInFooter": false,
+      "seoTitle": "",
+      "seoDescription": ""
+    }
   ]
 }
