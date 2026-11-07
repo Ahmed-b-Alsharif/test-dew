@@ -56,8 +56,9 @@ async function adminGithub(request,env){
  return new Response(await response.text(),{status:response.status,headers:{...adminCors(request),"Content-Type":"application/json","Cache-Control":"no-store"}});
 }
 async function getProducts(env) {
-  const url = env.STORE_PRODUCTS_URL || "https://ahmed-b-alsharif.github.io/test-dew/products.json";
-  const r = await fetch(url, {headers:{"Cache-Control":"no-cache"}});
+  const url = new URL(env.STORE_PRODUCTS_URL || "https://ahmed-b-alsharif.github.io/test-dew/products.json");
+  url.searchParams.set("_dew_refresh", String(Date.now()));
+  const r = await fetch(url.toString(), {headers:{"Cache-Control":"no-cache, no-store","Pragma":"no-cache"}});
   if (!r.ok) throw new Error("Could not load the store catalogue");
   return r.json();
 }
@@ -101,7 +102,10 @@ async function createOrder(request, env) {
     {id:"cairo",name:"Cairo & Giza",fee:Number(settings.deliveryCairo||0),enabled:true},
     {id:"alex",name:"Alexandria",fee:Number(settings.deliveryAlex||0),enabled:true}
   ];
-  const selectedArea=deliveryAreas.find(x=>String(x.id)===String(body.area)&&x.enabled!==false);
+  const requestedAreaId=clean(body.area);
+  const requestedAreaName=clean(body.areaName).toLocaleLowerCase();
+  const selectedArea=deliveryAreas.find(x=>x.enabled!==false&&String(x.id??"").trim()===requestedAreaId)
+    || deliveryAreas.find(x=>x.enabled!==false&&requestedAreaName&&clean(x.name).toLocaleLowerCase()===requestedAreaName);
   if (!selectedArea) return json({ok:false,error:"Choose a valid delivery area."},400);
   const paymentMethod=String(body.paymentMethod||"cod").toLowerCase();
   const paymentSettings=settings;
