@@ -297,20 +297,6 @@
   "products": [
     {
       "catalog": "7aa4667d",
-      "description": "Rich, nourishing body butter.",
-      "featured": false,
-      "howToUse": "",
-      "id": "0210991b",
-      "images": [],
-      "name": "Body butter",
-      "price": 180,
-      "salePrice": 160,
-      "stock": 10,
-      "tags": "body",
-      "visible": true
-    },
-    {
-      "catalog": "7aa4667d",
       "description": "Gentle everyday shower gel.",
       "featured": false,
       "howToUse": "",
