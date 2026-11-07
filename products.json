@@ -56,7 +56,7 @@
         "show": true,
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
         "link": "#shop",
-        "mode": "scroll",
+        "mode": "static",
         "speed": "fast",
         "messages": [
           "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
