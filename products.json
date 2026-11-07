@@ -299,7 +299,7 @@
       "id": "4be6283f",
       "name": "Fluffy Kashmir Pouch Set",
       "shopifyHandle": "fluffy-kashmir-pouch-set",
-      "description": "A cute beauty set perfect for everyday use or travel. It comes with our soft  Fluffy Kashmir Pouch  that fits your essentials easily.\n\n Inside the set: â¢  Splash Perfume â 60 ML  for a fresh sweet scent â¢  Orchide Body Butter â 30 ML  to keep your skin soft and hydrated â¢  Macaron Lip Balm  for smooth, moisturized lips â¢  Strawberry Lip Gloss  for a shiny, cute finish\n\nContact US for Different Flavor or Scents.Â \n\n The fluffy pouch is soft, stylish, and spacious enough to carry your small skincare and makeup items anywhere. Perfect for your handbag or travel. ðâ¨",
+      "description": "A cute beauty set perfect for everyday use or travel. It comes with our soft  Fluffy Kashmir Pouch  that fits your essentials easily.\n\n Inside the set: â¢  Splash Perfume â 60 ML  for a fresh sweet scent â¢  Orchide Body Butter â 30 ML  to keep your skin soft and hydrated â¢  Macaron Lip Balm  for smooth, moisturized lips â¢  Strawberry Lip Gloss  for a shiny, cute finish\n\nContact US for Different Flavor or Scents.Â \n\n The fluffy pouch is soft, stylish, and spacious enough to carry your small skincare and makeup items anywhere. Perfect for your handbag or travel.",
       "catalog": "3f1d5004",
       "tags": "BodyButter, Cream, CrueltyFree, Fluffy, Kashmir, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Moisturizing, OrchidBodyButter, Pink, pouch, Self-care, Smooth Lips, Soft Lips",
       "visible": true,
@@ -313,26 +313,26 @@
         {
           "name": "Size",
           "values": [
-            "7 Ã 15 Ã 8 cm"
+            "7 cm 15 cm 8 cm"
           ]
         }
       ],
       "variants": [
         {
-          "id": "e6d0b335",
+          "id": "ed6fb53a",
           "options": {
-            "Size": "7 Ã 15 Ã 8 cm"
+            "Size": "7 cm 15 cm 8 cm"
           },
           "price": 650,
-          "salePrice": 610,
-          "stock": 7,
+          "salePrice": 0,
+          "stock": 0,
           "sku": "",
           "barcode": ""
         }
       ],
       "price": 650,
       "salePrice": 610,
-      "stock": 7
+      "stock": 0
     },
     {
       "id": "5302dec3",
