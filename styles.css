@@ -484,11 +484,12 @@ th{background:var(--green);color:#fff;font-weight:600}
 
 /* Refined product quantity control */
 .product-quantity{
-  display:grid;grid-template-columns:1fr;gap:7px;width:max-content;min-width:154px;
+  display:grid;grid-template-columns:34px 42px 34px;grid-template-rows:auto 34px;
+  align-items:center;gap:7px;width:max-content;min-width:0;
   padding:9px 11px;background:var(--product-qty-bg,#eaf2ec);border:1px solid var(--product-qty-border,#9dbba7);
   border-radius:12px;box-shadow:0 3px 12px rgba(28,82,78,.07);overflow:visible
 }
-.product-quantity-label{width:auto;margin:0;color:#557064;font-size:11px;letter-spacing:.04em}
+.product-quantity-label{grid-column:1/-1;width:auto;margin:0;color:#557064;font-size:11px;letter-spacing:.04em}
 .product-quantity button{
   width:34px;height:34px;border-radius:9px;background:#1c524e;color:#fff;font-size:20px;
   font-weight:500;display:grid;place-items:center;transition:background .18s,transform .18s
@@ -496,10 +497,11 @@ th{background:var(--green);color:#fff;font-weight:600}
 .product-quantity button:hover{background:#123a29;transform:translateY(-1px)}
 .product-quantity input{
   width:42px;height:34px;min-height:34px;background:transparent;color:#183b35;
-  font-size:15px;font-weight:700;border:0
+  font-size:15px;font-weight:700;text-align:center;border:0;padding:0;appearance:textfield
 }
+.product-quantity input::-webkit-inner-spin-button,.product-quantity input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .product-buy-row{justify-content:flex-start}
-@media(max-width:760px){.product-quantity{width:max-content;min-width:154px}.product-buy-row{justify-content:flex-start}}
+@media(max-width:760px){.product-quantity{width:max-content;min-width:0}.product-buy-row{justify-content:flex-start}}
 
 /* Storefront-faithful product page preview inside the theme editor */
 .hp-preview-store-product{padding:0 18px 24px;background:#fff;color:#183b35;text-align:left}
