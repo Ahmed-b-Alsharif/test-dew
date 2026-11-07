@@ -21,8 +21,8 @@ const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
   ['buttonHeight','buttonRadius','buttonFontSize','priceFontSize','quantityWidth','quantityHeight','quantityFontSize'].forEach(k=>{if(pageStyle[k]!==undefined)document.documentElement.style.setProperty('--product-'+k.replace(/[A-Z]/g,m=>'-'+m.toLowerCase()),Math.max(0,Number(pageStyle[k]))+'px');});
   const logo=header.logoImage?'<img class="dew-logo-image" src="'+esc(header.logoImage)+'" alt="'+esc(header.logo||'Dew')+'">':esc(header.logo||store.storeName||'Dew')+'<small>SKINCARE</small>';
   document.title=p.name+' | '+(store.storeName||'Dew Skincare');
-  const gallery=images.length?images.map((u,i)=>'<button type="button" class="product-thumb '+(!i?'active':'')+'" data-image="'+i+'" aria-label="View image '+(i+1)+'"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></button>').join(''):'';
-  const mainImage=images[0]?'<img id="productMainPhoto" src="'+esc(images[0])+'" alt="'+esc(p.name)+'" fetchpriority="high">':'<div class="product-image-empty"><b>DEW</b><span>Product photo coming soon</span></div>';
+  const galleryImages=[...new Set([...images,...(initialVariant?.image?[initialVariant.image]:[])])];const gallery=galleryImages.length?galleryImages.map((u,i)=>'<button type="button" class="product-thumb '+(u===(initialVariant?.image||images[0])?'active':'')+'" data-image="'+i+'" aria-label="View image '+(i+1)+'"><img src="'+esc(u)+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></button>').join(''):'';
+  const mainImage=(initialVariant?.image||images[0])?'<img id="productMainPhoto" src="'+esc(initialVariant?.image||images[0])+'" alt="'+esc(p.name)+'" fetchpriority="high">':'<div class="product-image-empty"><b>DEW</b><span>Product photo coming soon</span></div>';
   const social=(store.instagramUrl&&/^https?:\/\//i.test(store.instagramUrl)?'<a class="dew-social-icon" href="'+esc(store.instagramUrl)+'" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>':'')+(store.facebookUrl&&/^https?:\/\//i.test(store.facebookUrl)?'<a class="dew-social-icon" href="'+esc(store.facebookUrl)+'" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11.4 1 9.5 2.8 9.5 6.1V9H6v4h3.5v8z"/></svg></a>':'');
   const nav=(header.links||[{label:'Shop',url:'./#shop'},{label:'Our Story',url:'./#about'},{label:'Contact',url:'./#contact'}]).map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('');
   const initialVariant=(p.variants||[])[0]||null,initialOriginal=initialVariant?Number(initialVariant.price||0):Number(p.price||0),initialSale=initialVariant?Number(initialVariant.salePrice||0):Number(p.salePrice||0),initialDiscount=initialSale>0&&initialSale<initialOriginal;const oldPrice=initialDiscount?'<del id="productOldPrice">'+money(initialOriginal)+'</del>':'<del id="productOldPrice" hidden></del>';
@@ -58,7 +58,7 @@ const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
     const main=$('#productMainPhoto');if(main)main.src=url;
     let thumbs=$('.product-gallery-thumbs');
     if(!thumbs){thumbs=document.createElement('div');thumbs.className='product-gallery-thumbs';$('.product-gallery').appendChild(thumbs);}
-    let button=[...thumbs.querySelectorAll('[data-variant-photo]')].find(x=>x.dataset.variantPhoto===url);
+    let button=[...thumbs.querySelectorAll('[data-variant-photo]')].find(x=>x.dataset.variantPhoto===url)||[...thumbs.querySelectorAll('[data-image]')].find(x=>x.querySelector('img')?.getAttribute('src')===url);
     if(!button){button=document.createElement('button');button.type='button';button.className='product-thumb';button.dataset.variantPhoto=url;button.innerHTML='<img src="'+esc(url)+'" alt="'+esc(p.name)+' variant photo">';thumbs.appendChild(button);}
     thumbs.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===button));
     button.onclick=()=>{if(main)main.src=url;thumbs.querySelectorAll('.product-thumb').forEach(x=>x.classList.toggle('active',x===button));};
@@ -72,7 +72,7 @@ const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
     if(variantWas>variantNow){oldEl.textContent=money(variantWas);oldEl.hidden=false;saleEl.hidden=false;$('#productPrice').classList.add('is-sale');}
     else{oldEl.textContent='';oldEl.hidden=true;saleEl.hidden=true;$('#productPrice').classList.remove('is-sale');}
     qtyInput.max=Math.max(1,stock);qtyInput.value=1;$('#productStock').className='product-stock '+(available?'in-stock':'out-stock');$('#productStock').innerHTML='<i></i>'+(available?'In stock · '+stock+' available':'Currently unavailable');$('#addProduct').disabled=$('#buyNow').disabled=!available;
-    showVariantPhoto(selectedVariant.image);
+    showVariantPhoto(selectedVariant.image||images[0]);
   }
   document.querySelectorAll('[data-variant-option]').forEach(el=>el.onclick=()=>{
     document.querySelectorAll('[data-variant-option][data-option-value][data-variant-option="'+el.dataset.variantOption+'"]').forEach(x=>x.setAttribute('aria-pressed',String(x===el)));
