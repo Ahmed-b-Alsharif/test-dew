@@ -480,3 +480,60 @@ th{background:var(--green);color:#fff;font-weight:600}
  .hp-preview-swatches{grid-template-columns:repeat(2,1fr)}
  .homepage-preview-top{gap:8px;align-items:flex-start;flex-direction:column}
 }
+
+
+/* Refined product quantity control */
+.product-quantity{
+  display:grid;grid-template-columns:1fr;gap:7px;width:max-content;min-width:154px;
+  padding:9px 11px;background:var(--product-qty-bg,#eaf2ec);border:1px solid var(--product-qty-border,#9dbba7);
+  border-radius:12px;box-shadow:0 3px 12px rgba(28,82,78,.07);overflow:visible
+}
+.product-quantity-label{width:auto;margin:0;color:#557064;font-size:11px;letter-spacing:.04em}
+.product-quantity button{
+  width:34px;height:34px;border-radius:9px;background:#1c524e;color:#fff;font-size:20px;
+  font-weight:500;display:grid;place-items:center;transition:background .18s,transform .18s
+}
+.product-quantity button:hover{background:#123a29;transform:translateY(-1px)}
+.product-quantity input{
+  width:42px;height:34px;min-height:34px;background:transparent;color:#183b35;
+  font-size:15px;font-weight:700;border:0
+}
+.product-buy-row{justify-content:flex-start}
+@media(max-width:760px){.product-quantity{width:max-content;min-width:154px}.product-buy-row{justify-content:flex-start}}
+
+/* Storefront-faithful product page preview inside the theme editor */
+.hp-preview-store-product{padding:0 18px 24px;background:#fff;color:#183b35;text-align:left}
+.hp-preview-breadcrumb{padding:15px 0 18px;color:#8a968d;font-size:9px;border-bottom:1px solid #edf0eb;margin-bottom:17px}
+.hp-preview-store-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px}
+.hp-preview-store-main-image{aspect-ratio:4/5;background:#f2f5ef;overflow:hidden;border-radius:4px}
+.hp-preview-store-main-image img,.hp-preview-store-main-image .homepage-preview-placeholder{width:100%;height:100%;object-fit:cover}
+.hp-preview-product-placeholder{height:100%;display:grid;place-content:center;text-align:center;background:#edf3ec;color:#1c524e;font:42px Georgia,serif}
+.hp-preview-product-placeholder small{font:8px Arial,sans-serif;letter-spacing:2px}
+.hp-preview-thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
+.hp-preview-thumbs span{aspect-ratio:1;background:#f2f5ef;overflow:hidden}
+.hp-preview-thumbs img,.hp-preview-thumbs .homepage-preview-placeholder{width:100%;height:100%;object-fit:cover}
+.hp-preview-store-info{min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:9px}
+.hp-preview-store-kicker{font-size:7px;letter-spacing:1.1px;color:#849286}
+.hp-preview-store-info h2{font:500 22px/1.15 Georgia,serif;color:var(--hp-product-heading,#1c524e);margin:2px 0}
+.hp-preview-store-tags{font-size:8px;color:#75877a}
+.hp-preview-store-price{display:flex;align-items:center;gap:8px}
+.hp-preview-store-price strong{font-weight:700}
+.hp-preview-store-price del{font-size:9px;color:#929c93}
+.hp-preview-store-description{font-size:9px;line-height:1.7;color:#65746a;margin:0}
+.hp-preview-store-options{display:grid;gap:7px}
+.hp-preview-option{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 10px;border:1px solid #dce5dc;border-radius:4px;font-size:8px}
+.hp-preview-option span{color:#65746a}
+.hp-preview-store-stock{font-size:8px;color:#3f865a}
+.hp-preview-store-qty{display:grid;gap:5px;width:max-content}
+.hp-preview-store-qty small{font-size:8px;color:#557064}
+.hp-preview-store-qty>div{display:flex;align-items:center;gap:13px;padding:6px 8px;background:#eaf2ec;border:1px solid #9dbba7;border-radius:10px;color:#1c524e}
+.hp-preview-store-qty b{display:grid;place-items:center;width:23px;height:23px;border-radius:7px;background:#1c524e;color:#fff;font-size:13px}
+.hp-preview-store-qty strong{font-size:10px}
+.hp-preview-store-actions{display:grid;gap:7px;margin-top:3px}
+.hp-preview-store-actions button{width:100%;padding:8px;border:1px solid #1c524e;font-size:8px;font-weight:700}
+.hp-preview-store-actions .hp-preview-store-buy{background:#fff;color:#1c524e}
+.hp-preview-store-delivery{font-size:7px;color:#718075;margin:0}
+.hp-preview-product-accordions{margin-top:8px;border-top:1px solid #e5eae3}
+.hp-preview-product-accordions details{padding:10px 0;border-bottom:1px solid #e5eae3;font-size:8px;color:#405347}
+.hp-preview-product-accordions summary{font-weight:600}
+@media(max-width:700px){.hp-preview-store-grid{grid-template-columns:1fr;gap:13px}.hp-preview-store-main-image{aspect-ratio:1}.hp-preview-store-product{padding:0 12px 18px}}
