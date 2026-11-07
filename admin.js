@@ -135,7 +135,7 @@ function homepage() {
     if(key==='reviews')return field('reviews.title','Section heading',x.title)+field('reviews.items.0.name','Customer name',x.items?.[0]?.name)+area('reviews.items.0.text','Review text',x.items?.[0]?.text);
     if(key==='social')return field('social.title','Section heading',x.title)+field('social.handle','Instagram handle',x.handle)+(x.images||[]).map((v,i)=>photo('social.images.'+i,'Instagram photo '+(i+1),v)).join('');
     if(key==='newsletter')return field('newsletter.title','Headline',x.title)+area('newsletter.text','Supporting text',x.text)+field('newsletter.button','Button label',x.button);
-    if(key==='footer')return area('footer.about','About Dew',x.about)+field('footer.copyright','Copyright text',x.copyright);
+    if(key==='footer')return area('footer.about','About Dew',x.about)+field('footer.copyright','Copyright text',x.copyright)+(x.links||[]).map((v,i)=>field('footer.links.'+i+'.label','Footer link '+(i+1)+' label',v.label)+field('footer.links.'+i+'.url','Footer link '+(i+1)+' destination',v.url)).join('');
     return '';
   };
   const preview=()=>{
@@ -453,7 +453,7 @@ function orders() {
     const c = o.customer;
     modal(`<h2>Order ${esc(o.number)}</h2>
       <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleString()}</p>
-      <p><b>Payment Status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
+      <p><b>Payment method:</b> ${esc(o.paymentMethod === 'instapay' ? 'InstaPay' : 'Cash on Delivery')} | <b>Payment status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
       <p><b>Tracking Number:</b> ${esc(o.trackingNumber || 'None yet')}</p>
       <h3>Customer details</h3>
       <p><b>Name:</b> ${esc(c.first + ' ' + c.last)}<br><b>Phone:</b> ${esc(c.phone)}<br><b>WhatsApp:</b> ${esc(c.whatsapp)}<br><b>Area:</b> ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}<br><b>Address:</b> ${esc(c.address)}</p>
