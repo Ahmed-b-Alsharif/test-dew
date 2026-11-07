@@ -57,7 +57,12 @@
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
         "link": "#shop",
         "mode": "scroll",
-        "speed": "fast"
+        "speed": "fast",
+        "messages": [
+          "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
+          "Hello",
+          "Hi"
+        ]
       },
       "header": {
         "logo": "Dew",
