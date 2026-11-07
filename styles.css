@@ -497,7 +497,13 @@ th{background:var(--green);color:#fff;font-weight:600}
 .product-quantity-controls input{box-sizing:border-box;width:42px;height:34px;min-height:34px;padding:0;border:0;background:transparent;color:#183b35;font-size:15px;font-weight:700;text-align:center;appearance:textfield;justify-self:center}
 .product-quantity-controls input::-webkit-inner-spin-button,.product-quantity-controls input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .product-buy-row{justify-content:flex-start}
-@media(max-width:760px){.product-quantity{width:max-content;min-width:0}.product-buy-row{justify-content:flex-start}}
+@media(max-width:760px){
+ .product-buy-row{display:flex!important;width:100%;justify-content:flex-start!important;align-items:flex-start!important;box-sizing:border-box}
+ .product-quantity{display:flex!important;flex:0 0 auto!important;width:fit-content!important;max-width:100%;margin:0!important;align-items:center!important;box-sizing:border-box}
+ .product-quantity-controls{display:grid!important;grid-template-columns:34px 42px 34px!important;width:117px!important;max-width:100%;margin:0 auto!important;justify-content:center!important;gap:3px!important}
+ .product-quantity-controls button{width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important}
+ .product-quantity-controls input{width:42px!important;min-width:42px!important;height:34px!important;min-height:34px!important}
+}
 
 /* Storefront-faithful product page preview inside the theme editor */
 .hp-preview-store-product{padding:0 18px 24px;background:#fff;color:#183b35;text-align:left}
