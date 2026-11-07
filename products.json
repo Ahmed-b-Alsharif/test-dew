@@ -208,6 +208,90 @@
       "description": "Lip gloss and more",
       "id": "33be4ce6",
       "name": "Makeup"
+    },
+    {
+      "id": "3f1d5004",
+      "name": "Pouch",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "be6c3d75",
+      "name": "lip Gloss",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "21e8c59c",
+      "name": "Bundle",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "b19e25a7",
+      "name": "Deodorant",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "c4dcfef1",
+      "name": "Lip Balm",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "d6a8e3f1",
+      "name": "SunBlock",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "8b845705",
+      "name": "Makeup remover",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "dd86dc77",
+      "name": "Hair Care",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "ce0e6db0",
+      "name": "Body Butter",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "ed4077f0",
+      "name": "Shower Gel",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "19c4466a",
+      "name": "Moisturizer Cream",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "cfb36855",
+      "name": "Foot Cream",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "35003259",
+      "name": "Lip & Cheek Tint",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "444bbcdc",
+      "name": "Lip Scrub",
+      "description": "",
+      "image": ""
     }
   ],
   "products": [
@@ -270,6 +354,2428 @@
       "stock": 10,
       "tags": "body",
       "visible": true
+    },
+    {
+      "id": "4be6283f",
+      "name": "Fluffy Kashmir Pouch Set",
+      "shopifyHandle": "fluffy-kashmir-pouch-set",
+      "description": "A cute beauty set perfect for everyday use or travel. It comes with our soft  Fluffy Kashmir Pouch  that fits your essentials easily.\n\n Inside the set: â¢  Splash Perfume â 60 ML  for a fresh sweet scent â¢  Orchide Body Butter â 30 ML  to keep your skin soft and hydrated â¢  Macaron Lip Balm  for smooth, moisturized lips â¢  Strawberry Lip Gloss  for a shiny, cute finish\n\nContact US for Different Flavor or Scents.Â \n\n The fluffy pouch is soft, stylish, and spacious enough to carry your small skincare and makeup items anywhere. Perfect for your handbag or travel. ðâ¨",
+      "catalog": "3f1d5004",
+      "tags": "BodyButter, Cream, CrueltyFree, Fluffy, Kashmir, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Moisturizing, OrchidBodyButter, Pink, pouch, Self-care, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch1.jpg?v=1773138901",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch2.jpg?v=1773138901"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "7 Ã 15 Ã 8 cm"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e6d0b335",
+          "options": {
+            "Size": "7 Ã 15 Ã 8 cm"
+          },
+          "price": 650,
+          "salePrice": 610,
+          "stock": 7,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 650,
+      "salePrice": 610,
+      "stock": 7
+    },
+    {
+      "id": "5302dec3",
+      "name": "Fluffy Kashmir Beauty Pouch",
+      "shopifyHandle": "fluffy-pink-beauty-pouch",
+      "description": "A cute and soft fluffy pouch perfect for storing your makeup and skincare. It has a cozy plush feel and a spacious inside that fits your daily beauty essentials easily. Lightweight and practical, making it great for travel, your handbag, or everyday use.\n\n  ð Size:   7 Ã 15 Ã 8 cm\n\n ð Why youâll love it: â¢ Super soft and fluffy, feels nice to touch â¢ Big enough to hold all your skincare and makeup â¢ Light and easy to take anywhere â¢ Zipper keeps your things safe â¢ Pretty design, looks great on your vanity or in your bag",
+      "catalog": "3f1d5004",
+      "tags": "everyday use, Fluffy, Lightweight, pouch",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/29.jpg?v=1773141995",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/28.jpg?v=1773141996",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/websitedew_2.jpg?v=1773141959",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/24.jpg?v=1773141959",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/25.jpg?v=1773141959"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "7 Ã 15 Ã 8 cm"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "98753395",
+          "options": {
+            "Size": "7 Ã 15 Ã 8 cm"
+          },
+          "price": 310,
+          "salePrice": 280,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 310,
+      "salePrice": 280,
+      "stock": 10
+    },
+    {
+      "id": "6590f759",
+      "name": "Lip Gloss",
+      "shopifyHandle": "lipgloss",
+      "description": "Glossy Lips, Instant Bliss â¨\n\n Get that glassy, high-shine glow without the sticky feel! This featherlight formula glides on like silk, giving you plump, luminous lips that feel as good as they look.\n\n ð  Why You'll Love It:\n\n Mirror-like shine that lasts\n\n Hydrating & comfortableânever heavy\n\n Flattering shades for every vibe\n\n Perfect solo or over lipstick\n\n Lock in moisture, boost your look, and let your lips steal the show. Whether you're heading out or touching up, this gloss delivers instant radiance with every swipe.\n\n â¨  Shine on. Feel amazing.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_6.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/06.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/05.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/02.jpg?v=1762873227",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Shade",
+          "values": [
+            "0"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "489e35ad",
+          "options": {
+            "Shade": "0"
+          },
+          "price": 235,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "'00",
+          "barcode": "'00"
+        },
+        {
+          "id": "69b6e677",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 8,
+          "sku": "'01",
+          "barcode": "'01"
+        },
+        {
+          "id": "183bbb8a",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "'02",
+          "barcode": "'02"
+        },
+        {
+          "id": "f5545331",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "'03",
+          "barcode": "'03"
+        },
+        {
+          "id": "9bc80a7f",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "'04",
+          "barcode": "'04"
+        },
+        {
+          "id": "532bc874",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 9,
+          "sku": "'05",
+          "barcode": "'05"
+        },
+        {
+          "id": "5d367e5b",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "'06",
+          "barcode": "'06"
+        },
+        {
+          "id": "d3c1dbd8",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 9,
+          "sku": "'09",
+          "barcode": "'09"
+        },
+        {
+          "id": "671cadcf",
+          "options": {},
+          "price": 235,
+          "salePrice": 200,
+          "stock": 9,
+          "sku": "'10",
+          "barcode": "'10"
+        }
+      ],
+      "price": 235,
+      "salePrice": 200,
+      "stock": 85
+    },
+    {
+      "id": "2da6a098",
+      "name": "Winter Essentials Kit + Free Lip Balm",
+      "shopifyHandle": "winter-essentials-kit",
+      "description": "Perfect for daily winter care\n1 Body Butter\n\n 1 Moisturizer\n\n 1 Foot cream\n\n  Free Lip Balm",
+      "catalog": "21e8c59c",
+      "tags": "all skin types, BodyButter, Cream, CrueltyFree, Daily Lip Care, DewSkincare, Foot care, Foot cream, for all skin types, Fresh Mint, Girl of Now, Hand Cream, HoneyMilkButter, HydratingBodyButter, Lip care, Lip Moisturizer, Lip treatment, Moisturizer, Moisturizing, Refreshing, Skin care, SkincareRoutine",
+      "visible": false,
+      "featured": false,
+      "images": [],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Body Butter",
+          "values": [
+            "Honey & Milk"
+          ]
+        },
+        {
+          "name": "Moisturizer",
+          "values": [
+            "Coconut Dreams"
+          ]
+        },
+        {
+          "name": "Foot Cream",
+          "values": [
+            "Fresh Breeze"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "bfbbc4ff",
+          "options": {
+            "Body Butter": "Honey & Milk",
+            "Moisturizer": "Coconut Dreams",
+            "Foot Cream": "Fresh Breeze"
+          },
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "3ce2f77c",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "9ceff397",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "88076ec3",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "0457b6e0",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "38fa5cf4",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "80ef12ed",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "67ace18d",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "893e3612",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "a68c6264",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "9e53cd80",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "99746e84",
+          "options": {},
+          "price": 800,
+          "salePrice": 650,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "73f499f2",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "6422be9f",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "b6bee7a0",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "5b127004",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "3f6626d4",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "cf3bcec1",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "5db7d8cb",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "b20dfceb",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "0efccb5d",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "5368d093",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "bbb96a96",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "188be11e",
+          "options": {},
+          "price": 650,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 800,
+      "salePrice": 650,
+      "stock": 240
+    },
+    {
+      "id": "02155935",
+      "name": "Dew Gloss 01",
+      "shopifyHandle": "dew-gloss-01",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e38b0dd6",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 8,
+          "sku": "'01",
+          "barcode": "'01"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 8
+    },
+    {
+      "id": "53e00483",
+      "name": "Dew Gloss 10",
+      "shopifyHandle": "dew-gloss-10",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "09b8b037",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 9,
+          "sku": "'10",
+          "barcode": "'10"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 9
+    },
+    {
+      "id": "5f537094",
+      "name": "Dew Gloss 09",
+      "shopifyHandle": "dew-gloss-09",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "19ea61db",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 9,
+          "sku": "'09",
+          "barcode": "'09"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 9
+    },
+    {
+      "id": "7aa07c64",
+      "name": "Dew Gloss 06",
+      "shopifyHandle": "dew-gloss-06",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/06.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "cd0d7426",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "'06",
+          "barcode": "'06"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "daaa60ff",
+      "name": "Dew Gloss 05",
+      "shopifyHandle": "dew-gloss-05",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/05.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "c1b53475",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 9,
+          "sku": "'05",
+          "barcode": "'05"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 9
+    },
+    {
+      "id": "9fd72a4a",
+      "name": "Dew Gloss 04",
+      "shopifyHandle": "dew-gloss-04",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "5c152b3d",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "'04",
+          "barcode": "'04"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "12724006",
+      "name": "Dew Gloss 03",
+      "shopifyHandle": "dew-gloss-03",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/03.jpg?v=1757756752"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "ceded652",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "'03",
+          "barcode": "'03"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "97518fd3",
+      "name": "Dew Gloss 02",
+      "shopifyHandle": "dew-gloss-02",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/02.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "2c1ff6ae",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "'02",
+          "barcode": "'02"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "b2518901",
+      "name": "Dew Gloss 00",
+      "shopifyHandle": "dew-gloss-00",
+      "description": "Give your lips the perfect touch of shine and hydration with  Dew Lip Gloss . Its lightweight, non-sticky formula glides on smoothly, delivering a glossy finish that enhances your natural beauty while keeping your lips soft and moisturized.\n\n â¨  Key Benefits:\n\n High-shine finish without stickiness\n\n Nourishing formula for long-lasting hydration\n\n Smooth, comfortable wear all day\n\n Available in flattering shades to suit every mood\n\n Whether worn alone for a fresh, glossy look or layered over your favorite lipstick, Dew Lip Gloss is the ultimate lip essential your skin will love.\n\n ð Because  your skin will love it.",
+      "catalog": "be6c3d75",
+      "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "04beeb8a",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 200,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "'00",
+          "barcode": "'00"
+        }
+      ],
+      "price": 200,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "95e54cca",
+      "name": "Dew Skincare Whitening Creamy Roll-On Deodorant",
+      "shopifyHandle": "dew-skincare-whitening-creamy-roll-on-deodorant",
+      "description": "Stay fresh and confident all day with Dew Skincareâs  Whitening Creamy Roll-On Deodorant . Gentle, aluminum-free, and enriched with brightening ingredients, it keeps your underarms soft, smooth, and odor-free for 24 hours.",
+      "catalog": "b19e25a7",
+      "tags": "all skin types, Hydrating, lacoste fresh, Men, Moisturizing, Natural, Refreshing, Self-care, Tropical, Tulip, underarms, whiten, Whitening, Women",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_deodrant.png?v=1770559468",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/11.png?v=1770559468",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_Make_the_dream_in_a_12a7296a-edb0-4416-877d-941a778ab408.png?v=1770559468",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_make_the_sunset_in_a_2f80aa41-c227-4a49-9798-86d74b835758.png?v=1770559468",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_NOw_the_frost_in_sep_5ff409e2-98c3-4b55-b967-4fe83731ae19.png?v=1770559468"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "50 ML",
+          "values": [
+            "Dream - tulip"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "74d2d34c",
+          "options": {
+            "50 ML": "Dream - tulip"
+          },
+          "price": 220,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "62931622",
+          "options": {},
+          "price": 220,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "153900de",
+          "options": {},
+          "price": 220,
+          "salePrice": 200,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 220,
+      "salePrice": 200,
+      "stock": 30
+    },
+    {
+      "id": "95b42b11",
+      "name": "Lip Gloss Set 1.5 ML",
+      "shopifyHandle": "lip-gloss-set",
+      "description": "ð Get ready to shine with our 6-piece scented lip gloss set! Each gloss is 1.5 ml of yummy flavor and gorgeous color, giving your lips that smooth, glossy look while keeping them soft and hydrated. â¨ With 6 fun shades to mix and match, you can even leave us a note with your favorite colors to make your set totally your own! ð",
+      "catalog": "be6c3d75",
+      "tags": "CrueltyFree, Hydrating, Lips, Moisturizing, Natural, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Glosssettnobox.jpg?v=1762866793",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_3.jpg?v=1762866793",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/openbox.jpg?v=1762866793"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "da41746d",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 265,
+          "salePrice": 250,
+          "stock": 9,
+          "sku": "lipGloss set",
+          "barcode": "lipGloss set"
+        }
+      ],
+      "price": 265,
+      "salePrice": 250,
+      "stock": 9
+    },
+    {
+      "id": "757414b0",
+      "name": "Lip Balm Candy",
+      "shopifyHandle": "lip-balm-candy",
+      "description": "Treat your lips to a burst of sweetness with our Candy Lip Balm! Packed with moisturizing ingredients, it keeps your lips soft, smooth, and hydrated all day. Enjoy the irresistible sugary scent and playful candy-like tasteâperfect for a fun, everyday indulgence.",
+      "catalog": "c4dcfef1",
+      "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_add_come_candy_to_th_1.png?v=1770561374",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candylipbalm1.jpg?v=1770561374",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candylipbalm2.jpg?v=1770561374"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "5c4efe9f",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 110,
+          "salePrice": 90,
+          "stock": 14,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 110,
+      "salePrice": 90,
+      "stock": 14
+    },
+    {
+      "id": "af73e68b",
+      "name": "Dew Bundle",
+      "shopifyHandle": "dew-bundle",
+      "description": "Â \n\n  Choose Your Own Skincare Set  Create your perfect skincare routine with Dew! This collection is ideal for all skin types. Customize your set now and enjoy a tropical glow! ð´â¨\n\n Â",
+      "catalog": "21e8c59c",
+      "tags": "all skin types, Cleansing, Daily Lip Care, DailySkincare, Dew, DewSkincare, for all skin types, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, lip Scrub, Lip treatment, Lips, Moisturizer, Moisturizing, moisturizing shower gel, Natural, Natural Ingredients, NaturalIngredients",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_macron.png?v=1756215281",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_macron_2.png?v=1756215281",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/BC239CEF-D8C3-405A-91AE-66224977A660.jpg?v=1756215281"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "390917a2",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 550,
+          "salePrice": 0,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 550,
+      "salePrice": 0,
+      "stock": 10
+    },
+    {
+      "id": "b7b6c660",
+      "name": "LipBalm x3",
+      "shopifyHandle": "lipbalm-x3-1",
+      "description": "Get your lips ready for all-day softness!\n\n  Enjoy a   special offer   on our best-selling set of 3 natural lip balms â packed with shea butter, coconut oil, vitamin E, and essential oils to deeply hydrate and nourish your lips.\n\n  With delicious scents and long-lasting moisture, one is never enough!",
+      "catalog": "c4dcfef1",
+      "tags": "Daily Lip Care, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Lip treatment, Lips, Moisturizer, Moisturizing, Smooth Lips, Soft Lips, Strawberry",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/balmbundle.jpg?v=1762871720",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bundle_3.jpg?v=1762871720",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_2.jpg?v=1762871720",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/23.jpg?v=1762871720",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/22.jpg?v=1762871720",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate_5c12aeb6-3ad4-43b4-863c-7085e932b649.jpg?v=1756907490"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "4d489fd8",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 265,
+          "salePrice": 250,
+          "stock": 13,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 265,
+      "salePrice": 250,
+      "stock": 13
+    },
+    {
+      "id": "561a22fa",
+      "name": "Sunblock SPF 50++",
+      "shopifyHandle": "sunblock-natural-sunscreen-sfp50",
+      "description": "Your Summer best friend under the sun. With SPF 50++ protection, our sunblock helps prevent sunburn, dryness, and premature agingâwithout the heavy feel or white cast.\n\n ð  When to Use:\n\n Every day â rain or shine\n\n Before sun exposure (outdoor activities, beach days, hikes)\n\n Under makeup as a daily protective base\n\n ð§  How to Use:\n\n Shake well before use.\n\n Apply generously to clean, dry skin 15 minutes before sun exposure.\n\n Gently massage into face, neck, and any exposed areas.\n\n Reapply every 2 hours or after swimming, sweating, or towel drying.",
+      "catalog": "d6a8e3f1",
+      "tags": "all skin types, beach, Hydrating, Moisturizing, Natural, NaturalIngredients, NaturalSkincare, SPF50++, sunblock, Sunscreen",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/IMG-1137.png?v=1756215283",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/IMG-1138.png?v=1756215283"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "100 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "b3b3d8f8",
+          "options": {
+            "Size": "100 ML"
+          },
+          "price": 430,
+          "salePrice": 290,
+          "stock": 6,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 430,
+      "salePrice": 290,
+      "stock": 6
+    },
+    {
+      "id": "1bd5e3ce",
+      "name": "Cookie LipBalm",
+      "shopifyHandle": "cookie-lipbalm",
+      "description": "Say hello to cuteness with care! Our all-new   Cookie-shaped Lip Balm   isnât just adorableâitâs packed with rich hydration to keep your lips soft, smooth, and protected. Shaped like a cookie and scented to match, itâs the perfect blend of fun and function. Keep it in your bag, on your desk, or gift it to someone sweet!",
+      "catalog": "c4dcfef1",
+      "tags": "all skin types, Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Lip treatment, Lips, Moisturizing, Natural, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_change_the_colorfull.png?v=1770632402",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/All.png?v=1770632402",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candy.png?v=1770632402",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/strawberry.png?v=1770632402",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.png?v=1770632402",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.jpg?v=1770633463"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Flavor 10ML",
+          "values": [
+            "Chocolate"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "253eba9e",
+          "options": {
+            "Flavor 10ML": "Chocolate"
+          },
+          "price": 135,
+          "salePrice": 130,
+          "stock": 18,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "33a9e541",
+          "options": {},
+          "price": 135,
+          "salePrice": 130,
+          "stock": 16,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "26c4a452",
+          "options": {},
+          "price": 135,
+          "salePrice": 130,
+          "stock": 15,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "643de885",
+          "options": {},
+          "price": 135,
+          "salePrice": 130,
+          "stock": 20,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 135,
+      "salePrice": 130,
+      "stock": 69
+    },
+    {
+      "id": "d4ef44f1",
+      "name": "Micellar Water - Makeup remover",
+      "shopifyHandle": "micellar-cleansing-water-makeup-remover",
+      "description": "A gentle, natural makeup remover that lifts away all makeup â even waterproof â without drying or irritating your skin.\n\n â¨ Cleanses, hydrates & soothes ð¿ Suitable for all skin types ð« Alcohol-free & fragrance-free\n\n Quick, easy, and refreshing â your new skincare essential ð§",
+      "catalog": "8b845705",
+      "tags": "all skin types, Cleansing, Cleansing Water, makeup remover, Micellar, Moisturizing, Natural",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/remover2.jpg?v=1762871237",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew.jpg?v=1762871237",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/remover22.jpg?v=1756647288"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "80 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "bce6bccd",
+          "options": {
+            "Size": "80 ML"
+          },
+          "price": 220,
+          "salePrice": 0,
+          "stock": 7,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
+      "price": 220,
+      "salePrice": 0,
+      "stock": 7
+    },
+    {
+      "id": "58806ff3",
+      "name": "DEW HAIR KIT",
+      "shopifyHandle": "dew-hair-kit",
+      "description": "Dew Skincare Rosemary Bundle â Shampoo + Conditioner\n\n  ð¿ Hair care made simple!\n\n  Fights hair fall, frizz & dullness.\n\n  Shampoo cleanses & boosts growth,\n\n  Conditioner hydrates & softens.\n\n  â Natural\n\n  â For all hair types\n\n  â 480ml bottles\n\n  â Visible results from first use\n\n  â¨ Healthy, shiny hair starts here!",
+      "catalog": "dd86dc77",
+      "tags": "Chemicals Free, cleans, Cleansing, CrueltyFree, DailyHairCare, DetangleYourHair, Dew, DewSkincare, dryness, EcoFriendlyBeauty, ForAllHairTypes, HairCareRoutine, HairConditioner, HairStrength, HydratingHair, HydratingShampoo, MoisturizingShampoo, Natural, Natural Ingredients, NaturalIngredients, NaturalShampoo, NaturalSkincare, RosemaryConditioner, RosemaryShampoo, Shampoo, ShinyHair, SkincareRoutine, SoftHair, SulfateFree, SulfateFreeConditioner, SulfateFreeShampoo",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bund1.jpg?v=1756215286",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bund2.jpg?v=1756215286"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "fa6a5b72",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 690,
+          "salePrice": 0,
+          "stock": 5,
+          "sku": "Bundle Hair care",
+          "barcode": ""
+        }
+      ],
+      "price": 690,
+      "salePrice": 0,
+      "stock": 5
+    },
+    {
+      "id": "3744b4c0",
+      "name": "Orchid Body Butter",
+      "shopifyHandle": "orchid-body-butter",
+      "description": "Description:\nTreat your skin to our Orchid Body Butter, a luxurious moisturizer that hydrates and nourishes. Infused with the enchanting scent of orchids, this rich formula leaves your skin feeling velvety soft and beautifully fragrant.\n\n  Benefits:\n\n Deep Hydration:  Provides long-lasting moisture for dry skin.\n\n Silky Smooth Texture:  Absorbs quickly without greasiness.\n\n Floral Fragrance:  Enjoy the delicate and uplifting scent of orchids.\n\n Nourishing Ingredients:  Packed with vitamins for healthy, radiant skin.\n\n  How to Use:\nApply generously to clean, dry skin, focusing on areas that need extra moisture. Massage until fully absorbed. For best results, use after a shower or bath.",
+      "catalog": "ce0e6db0",
+      "tags": "all skin types, BodyButter, DailySkincare, Dew, DewSkincare, FloralSkincare, for all skin types, Hydrating, HydratingBodyButter, Moisturizer, Moisturizing, Natural Ingredients, NaturalIngredients, NaturalSkincare, OrchidBodyButter, PamperYourself, refreshes your skin, Self-care, Skin care, SkincareRoutine, SoftSkin",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/orcide1.jpg?v=1756215287",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/orcide2.jpg?v=1756215287"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "192 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "0ff1bb61",
+          "options": {
+            "Size": "192 ML"
+          },
+          "price": 300,
+          "salePrice": 210,
+          "stock": 8,
+          "sku": "'6228600112",
+          "barcode": "'6228600112"
+        }
+      ],
+      "price": 300,
+      "salePrice": 210,
+      "stock": 8
+    },
+    {
+      "id": "ab8882b2",
+      "name": "Honey & Milk Body Butter",
+      "shopifyHandle": "honey-milk-body-butter",
+      "description": "Description:\nTreat your skin to our Honey & Milk Body Butter, a rich and creamy moisturizer that hydrates and softens. Made with natural honey and milk, it leaves your skin feeling smooth and lightly scented.\n\n  Benefits:\n\n Deep Hydration:  Keeps your skin moisturized all day.\n\n Soothing:  Honey helps calm sensitive skin.\n\n Quick Absorption:  Goes on smoothly without greasiness.\n\n Nourishing:  Packed with vitamins for healthy skin.\n\n  How to Use:\nApply generously to clean, dry skin, especially on dry areas. Massage until absorbed. Use after showering for the best results.\n\n Pamper your skin with the goodness of honey and milk!",
+      "catalog": "ce0e6db0",
+      "tags": "BodyButter, CrueltyFree, HoneyMilkButter, HoneySkincare, Hydrating, HydratingBodyButter, LuxurySkincare, Moisturizer, Moisturizing, Natural, NaturalSkincare, Nourishing, PamperYourself, SkincareRoutine, SoftSkin",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Honey.jpg?v=1756215288",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Honey_22.jpg?v=1756215288"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "192 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "7d9c0217",
+          "options": {
+            "Size": "192 ML"
+          },
+          "price": 300,
+          "salePrice": 210,
+          "stock": 11,
+          "sku": "'62286001111",
+          "barcode": "'62286001111"
+        }
+      ],
+      "price": 300,
+      "salePrice": 210,
+      "stock": 11
+    },
+    {
+      "id": "928936b1",
+      "name": "Rosemary Conditioner",
+      "shopifyHandle": "rosemary-conditioner",
+      "description": ".ÙÙÙ Ø´Ø¹Ø±Ù ÙÙØ¯ÙØ¹Ù Ø§ÙÙÙØ´Ø§Ù .Ø¨ÙØ³Ù Ø·Ø¨ÙØ¹Ù Ø¨Ø®ÙØ§ØµØ© Ø§ÙØ±ÙØ²ÙØ§Ø±ÙØ Ø¨ÙØ±Ø·ÙØ¨Ø ÙÙÙÙÙ Ø§ÙØ¨ØµÙÙØ§ØªØ ÙÙÙÙÙ Ø§ÙØªØ³Ø§ÙØ· .Ø±ÙØ­ØªÙ ÙÙØ¹Ø´Ø©Ø ÙØ¨ÙØ³ÙØ¨ Ø´Ø¹Ø±Ù ÙØ§Ø¹Ù ÙØ³ÙÙ Ø§ÙØªØ³Ø±ÙØ­ .ÙÙØ§Ø³Ø¨ ÙÙÙ Ø£ÙÙØ§Ø¹ Ø§ÙØ´Ø¹Ø± ÙØ­Ø¬ÙÙ ÙØ¨ÙØ± (480 ÙÙ)\n\n ð.Ø¬Ø±Ø¨ÙÙ Ø¨Ø¹Ø¯ Ø§ÙØ´Ø§ÙØ¨Ù ÙÙØªØ­Ø³Ù Ø¨Ø§ÙÙØ±Ù ÙÙ Ø£ÙÙ ÙØ±Ø©\n\n â ÙÙÙ ØªØ³ØªØ®Ø¯ÙÙÙØ\n\n ÙØ£ÙÙ Ø¨ÙØºØ°ÙÙ Ø´Ø¹Ø±Ù ÙÙ Ø§ÙØ¬Ø°ÙØ± ÙÙØ£Ø·Ø±Ø§Ù.\n\n Ø¨ÙØ³ÙØ¨ Ø´Ø¹Ø±Ù ÙØ§Ø¹Ù ÙØ³ÙÙ Ø§ÙØªØ³Ø±ÙØ­ ÙÙ Ø£ÙÙ ÙØ±Ø©.\n\n ÙÙØ§Ø³Ø¨ ÙÙÙ Ø£ÙÙØ§Ø¹ Ø§ÙØ´Ø¹Ø±Ø Ø­ØªÙ Ø§ÙÙØµØ¨ÙØº.\n\n .Ø±ÙØ­ØªÙ Ø®ÙÙÙØ© ÙÙÙØ¹Ø´Ø© ÙØ¨ØªØ¯ÙÙ Ø¥Ø­Ø³Ø§Ø³ Ø¨Ø§ÙÙØ¸Ø§ÙØ©",
+      "catalog": "dd86dc77",
+      "tags": "DailyHairCare, DetangleYourHair, DewSkincare, EcoFriendlyBeauty, ForAllHairTypes, HairConditioner, HealthyHair, HydratingHair, NaturalIngredients, RosemaryConditioner, SoftHair, SulfateFree, SulfateFreeConditioner",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Rosemary_Conditioner.jpg?v=1756215289",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/RosemaryConditioner.jpg?v=1756215289"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "450 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "4886eab4",
+          "options": {
+            "Size": "450 ML"
+          },
+          "price": 355,
+          "salePrice": 330,
+          "stock": 8,
+          "sku": "'6285001112",
+          "barcode": "'6285001112"
+        }
+      ],
+      "price": 355,
+      "salePrice": 330,
+      "stock": 8
+    },
+    {
+      "id": "6c043d33",
+      "name": "Rosemary Shampoo",
+      "shopifyHandle": "rosemary-shampoo",
+      "description": "!ÙØ¯ÙØ¹Ù ØªØ³Ø§ÙØ· Ø§ÙØ´Ø¹Ø± ÙØ§Ø³ØªÙØªØ¹Ù Ø¨ÙØ±ÙØ© Ø±Ø§Ø³ ØµØ­ÙØ©   .Ø´Ø§ÙØ¨Ù Ø·Ø¨ÙØ¹Ù Ø¨Ø®ÙØ§ØµØ© Ø§ÙØ±ÙØ²ÙØ§Ø±ÙØ Ø¨ÙÙØ¶Ù ÙØ±ÙØ© Ø§ÙØ±Ø§Ø³ Ø¨ÙÙØ·ÙØ ÙÙØ´ÙØ· Ø§ÙØ¯ÙØ±Ø© Ø§ÙØ¯ÙÙÙØ©Ø ÙÙÙÙÙ Ø§ÙØªØ³Ø§ÙØ·   .Ø±ÙØ­ØªÙ ÙÙØ¹Ø´Ø©Ø ÙÙÙØ§Ø³Ø¨ ÙÙÙ Ø£ÙÙØ§Ø¹ Ø§ÙØ´Ø¹Ø±   .Ø­Ø¬Ù Ø§ÙØ¹Ø¨ÙØ© 480 ÙÙ â Ø¹ÙÙÙ ÙÙÙÙÙØ± ÙØ¹Ø§ÙÙ\n\n ð¿  Ø¬Ø±Ø¨ÙÙ ÙØ¹ Ø§ÙØ¨ÙØ³Ù ÙÙØªØ­Ø³Ù Ø¨ÙØ±Ù Ø­ÙÙÙÙ ÙÙ Ø£ÙÙ Ø§Ø³ØªØ®Ø¯Ø§Ù",
+      "catalog": "dd86dc77",
+      "tags": "Cleansing, DailyHairCare, ForAllHairTypes, HairCareRoutine, HairStrength, HealthyHair, Hydrating, HydratingShampoo, Moisturizing, MoisturizingShampoo, Natural, NaturalShampoo, RosemaryShampoo, Shampoo, ShinyHair, SulfateFreeShampoo",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Rosemary_Shampoo.jpg?v=1756215290",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/RosemaryShampoo.jpg?v=1756215290"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Size",
+          "values": [
+            "450 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "acaf2de7",
+          "options": {
+            "Size": "450 ML"
+          },
+          "price": 330,
+          "salePrice": 310,
+          "stock": 5,
+          "sku": "'62285001111",
+          "barcode": "'62285001111"
+        }
+      ],
+      "price": 330,
+      "salePrice": 310,
+      "stock": 5
+    },
+    {
+      "id": "4ae993e5",
+      "name": "Lip Balm Coconut",
+      "shopifyHandle": "dew-coconut-lip-balm",
+      "description": "Indulge your lips with the creamy, tropical goodness of our  Coconut Lip Balm . This nourishing balm hydrates and protects your lips, leaving them soft, smooth, and beautifully scented.\n\n  How to Use : Apply a small amount to your lips as needed, particularly when they feel dry or chapped. For best results, use before bed and throughout the day for continuous hydration.\n\n Â \n\n   Keywords : coconut lip balm, hydrating lip balm, natural lip care, coconut-scented lip balm",
+      "catalog": "c4dcfef1",
+      "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/coc_2.jpg?v=1756215291",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/coco1.jpg?v=1756215291"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "d74bab00",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 110,
+          "salePrice": 90,
+          "stock": 14,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 110,
+      "salePrice": 90,
+      "stock": 14
+    },
+    {
+      "id": "3280bf12",
+      "name": "Lip Balm Chocolate",
+      "shopifyHandle": "dew-chocolate-lip-balm",
+      "description": "Treat your lips to the sweet indulgence of chocolate with our  Chocolate Lip Balm . Formulated to hydrate and protect, this balm leaves your lips soft, smooth, and irresistibly scented.\n\n Â \n\n   Keywords : chocolate lip balm, hydrating lip balm, natural lip care, chocolate-scented lip balm.",
+      "catalog": "c4dcfef1",
+      "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_a990342c-23b9-4d3d-867a-9d79ac491d18.jpg?v=1770633660",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Chocolate2.jpg?v=1770633660",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Chocolate3.jpg?v=1770633660"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "eefdeeae",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 110,
+          "salePrice": 90,
+          "stock": 6,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 110,
+      "salePrice": 90,
+      "stock": 6
+    },
+    {
+      "id": "2aece5ff",
+      "name": "Strawberry Shower Gel",
+      "shopifyHandle": "strawberry-shower-gel",
+      "description": "Experience the refreshing burst of fresh strawberries with our natural  Strawberry Shower Gel . Designed for  all skin types , this gel gently cleanses while leaving your skin moisturized and fragrant. Ideal for those looking for a natural, sulfate-free body wash that soothes and nourishes the skin. Perfect for daily use, the gel keeps your skin feeling smooth, refreshed, and smelling great all day.",
+      "catalog": "ed4077f0",
+      "tags": "all skin types, body wash for all skin types, cleans, Cleansing, Hydrating, Moisturizing, moisturizing shower gel, Natural, Nourishing, refreshes your skin, Refreshing, Self-care, Shower Essentials, Shower Gel, Strawberry",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Strawberry_Shower_Gel.jpg?v=1756215292",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Strawberry_Shower_Gel.jpg?v=1756215292"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Strawberry - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "462f540f",
+          "options": {
+            "Fragrance & Size": "Strawberry - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 7,
+          "sku": "'62280001118",
+          "barcode": "'62280001118"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 7
+    },
+    {
+      "id": "289d19e5",
+      "name": "Tropical Shower Gel",
+      "shopifyHandle": "tropical-shower-gel",
+      "description": "Transport yourself to a tropical paradise with our  Tropical Shower Gel . This natural, invigorating formula gently cleanses while keeping your skin hydrated and refreshed. Perfect for  daily use , it suits all skin types and offers a long-lasting fruity fragrance that keeps you feeling fresh throughout the day.\n\n Â \n\n Â \n\n   Keywords :\n\n  Tropical shower gel, Long-lasting fruity body wash, Natural body wash for hydration, All skin types shower gel.",
+      "catalog": "ed4077f0",
+      "tags": "all skin types, Chemicals Free, Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Tropical",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Tropical_Shower_Gel.jpg?v=1756215293",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Tropical_Shower_Gel.jpg?v=1756215293"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Tropical - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "12d24f09",
+          "options": {
+            "Fragrance & Size": "Tropical - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 8,
+          "sku": "'62280001119",
+          "barcode": "'62280001119"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 8
+    },
+    {
+      "id": "b8b23b95",
+      "name": "Sunshine Splash Shower Gel",
+      "shopifyHandle": "sunshine-splash-shower-gel",
+      "description": "Brighten your day with our  Sunshine Splash Shower Gel , infused with the iconic  Girl of Now fragrance . This moisturizing gel is perfect for all skin types, offering a radiant, long-lasting scent and a smooth, refreshing cleanse.\n\n Â \n\n   Keywords : Girl of Now shower gel, radiant body wash, long-lasting fragrance body wash, sulfate-free shower gel.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Girl of Now, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Sunshine Splash",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Shower_Gel.jpg?v=1756215294",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-SunshineSplash.jpg?v=1756215294"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Girl of Now - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "6298e42f",
+          "options": {
+            "Fragrance & Size": "Girl of Now - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 15,
+          "sku": "'62280001111",
+          "barcode": "'62280001111"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 15
+    },
+    {
+      "id": "c7793f18",
+      "name": "Kiwi Shower Gel",
+      "shopifyHandle": "kiwi-shower-gel",
+      "description": "Refresh your skin with the bright, zesty scent of kiwi in our  Kiwi Shower Gel . This natural formula cleanses, energizes, and leaves your skin feeling smooth and moisturized. Perfect for  all skin types , it offers a tropical burst of fragrance that lasts all day.\n\n Â \n\n   Keywords : kiwi shower gel, natural body wash for all skin types, revitalizing body wash, long-lasting kiwi fragrance",
+      "catalog": "ed4077f0",
+      "tags": "all skin types, Cleansing, Hydrating, Kiwi, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Kiwi_Shower_Gel.jpg?v=1756215295",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Kiwi_Shower_Gel.jpg?v=1756215295"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Kiwi - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "1cd36ed3",
+          "options": {
+            "Fragrance & Size": "Kiwi - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 2,
+          "sku": "'62280001114",
+          "barcode": "'62280001114"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 2
+    },
+    {
+      "id": "70424d62",
+      "name": "Harmony Shower Gel",
+      "shopifyHandle": "harmony-shower-gel",
+      "description": "Experience luxury with our  Harmony Shower Gel , inspired by the iconic  Versace Dylan Blue fragrance . This sulfate-free, natural formula cleanses and hydrates your skin while leaving a sophisticated scent that lasts. Perfect for anyone who wants to feel refreshed and elegant.\n\n Â \n\n   Keywords : Versace Dylan Blue shower gel, luxury body wash, natural body wash for hydration, long-lasting fragrance body wash.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Harmony, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Versace Dylan Blue",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Harmony_Shower_Gel.jpg?v=1756215296",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-Harmony.jpg?v=1756215296"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Versace Dylan Blue F - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e95ce6ce",
+          "options": {
+            "Fragrance & Size": "Versace Dylan Blue F - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 1,
+          "sku": "'62280001120",
+          "barcode": "'62280001120"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 1
+    },
+    {
+      "id": "3aa54356",
+      "name": "Freshly Squeezed Shower Gel",
+      "shopifyHandle": "freshly-squeezed-shower-gel",
+      "description": "Elevate your shower experience with the invigorating, citrusy scent of  Y Perfume  in our  Freshly Squeezed Shower Gel . Perfect for  daily use , this natural body wash cleanses deeply while leaving your skin moisturized and smelling amazing.\n\n Â \n\n   Keywords : Y perfume shower gel, citrus body wash, long-lasting fresh body wash, sulfate-free body wash.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Freshly_Squeezed_Shower_Gel.jpg?v=1756215296",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FreshlySqueezed.jpg?v=1756215296"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Y Perfume - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e8987166",
+          "options": {
+            "Fragrance & Size": "Y Perfume - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 15,
+          "sku": "'62280001121",
+          "barcode": "'62280001121"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 15
+    },
+    {
+      "id": "7797d362",
+      "name": "Fresh Mint Shower Gel",
+      "shopifyHandle": "fresh-mint-shower-gel",
+      "description": "Awaken your senses with the cooling sensation of our  Fresh Mint Shower Gel . Ideal for  all skin types , this natural formula cleanses while leaving a refreshing minty fragrance. Perfect for invigorating your skin after a long day or refreshing your morning routine.\n\n Â \n\n   Keywords : fresh mint shower gel, cooling body wash, energizing mint body wash, natural shower gel for all skin types",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Fresh Mint, Hydrating, mint scent, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Mint_Shower_Gel.jpg?v=1756215297",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Fresh_Mint_Shower_Gel.jpg?v=1756215297"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Fresh Mint - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "f57e8d7b",
+          "options": {
+            "Fragrance & Size": "Fresh Mint - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 11,
+          "sku": "'62280001115",
+          "barcode": "'62280001115"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 11
+    },
+    {
+      "id": "3a057abb",
+      "name": "Fresh Breeze Shower Gel",
+      "shopifyHandle": "fresh-breeze-shower-gel",
+      "description": "Stay fresh all day with our  Fresh Breeze Shower Gel , inspired by the  Stronger With You fragrance . This sulfate-free, moisturizing formula cleanses gently while leaving an invigorating scent perfect for those who seek a lasting, bold fragrance.\n\n Â \n\n   Keywords : stronger with you shower gel, fresh men's body wash, long-lasting fresh body wash, sulfate-free shower gel.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Dew, Fresh Breeze, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Shower Essentials, Shower Gel, Skin care, Stronger with you",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Breeze_Shower_Gel.jpg?v=1756215298",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FreshBreeze.jpg?v=1756215298"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Stronger with you - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e4ff2d32",
+          "options": {
+            "Fragrance & Size": "Stronger with you - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 15,
+          "sku": "'62280001117",
+          "barcode": "'62280001117"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 15
+    },
+    {
+      "id": "44ce24bf",
+      "name": "Crystal Waves Shower Gel",
+      "shopifyHandle": "crystal-waves-shower-gel",
+      "description": "Our  Crystal Waves Shower Gel  brings the fresh, masculine scent of the  Gentleman cologne  to your daily shower. This moisturizing gel is perfect for  all skin types , offering a luxurious, long-lasting fragrance while gently cleansing your skin.\n\n Â \n\n   Keywords : gentleman cologne shower gel, luxury men's body wash, natural shower gel for men, long-lasting fragrance body wash.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Crystal Waves, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Y EAU DE PARFUM",
+      "visible": false,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Crystal_Waves_Shower_Gel.jpg?v=1756215298",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-CrystalWaves.jpg?v=1756215298"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fregrance & Size",
+          "values": [
+            "Gentleman perfume - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "cd81e544",
+          "options": {
+            "Fregrance & Size": "Gentleman perfume - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 15,
+          "sku": "'62280001113",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 15
+    },
+    {
+      "id": "24ce557b",
+      "name": "Coconut Shower Gel",
+      "shopifyHandle": "coconut-shower-gel",
+      "description": "Experience the creamy richness of coconut with our  Coconut Shower Gel . Formulated to deeply hydrate and nourish, this natural body wash is ideal for  dry skin . The soothing coconut scent offers a refreshing and calming experience, leaving your skin soft and rejuvenated.\n\n Â \n\n   Keywords : coconut shower gel, body wash for dry skin, deeply hydrating body wash, natural coconut skincare",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Coconut, for all skin types, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Shower_Gel.jpg?v=1756215299",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Coconut_Shower_Gel.jpg?v=1756215299"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Coconut - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "40ca72e9",
+          "options": {
+            "Fragrance & Size": "Coconut - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 1,
+          "sku": "'62280001112",
+          "barcode": "'62280001112"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 1
+    },
+    {
+      "id": "484027a5",
+      "name": "Vanilla Moisturizer Cream",
+      "shopifyHandle": "vanillamoisturizercream",
+      "description": "Pamper your skin with our Vanilla Moisturizer Cream, crafted with natural ingredients to deeply hydrate and nourish. Ideal for dry skin, it leaves you feeling soft, smooth, and lightly scented with a warm vanilla fragrance that lasts all day. Perfect for daily use, morning and night.",
+      "catalog": "19c4466a",
+      "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Vanilla_Moisturizer_Cream.jpg?v=1756215300",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Vanilla.jpg?v=1756215300"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Vanilla - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "8a088762",
+          "options": {
+            "Fragrance & Size": "Vanilla - 150 ML"
+          },
+          "price": 245,
+          "salePrice": 170,
+          "stock": 14,
+          "sku": "'62284001112",
+          "barcode": "'62284001112"
+        }
+      ],
+      "price": 245,
+      "salePrice": 170,
+      "stock": 14
+    },
+    {
+      "id": "c7609040",
+      "name": "Sunshine Splash Moisturizer Cream",
+      "shopifyHandle": "sunshine-splash-moisturizer-cream",
+      "description": "Experience the radiant floral scent of  Girl of Now  with our  Sunshine Splash Moisturizer . This hydrating cream nourishes, softens, and leaves your skin with a long-lasting, luxurious fragrance.\n\n  How to Use:\n\n Cleanse and dry your skin.\n\n Apply a small amount and massage gently.\n\n Use morning and night for deep hydration and all-day freshness.\n\n  Keywords:   Girl of Now  moisturizer, hydrating body cream, luxury scented moisturizer, natural body lotion.",
+      "catalog": "19c4466a",
+      "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Moisturizer_Cream.jpg?v=1756215301",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Sunshine.jpg?v=1756215301"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Girl of Now - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "9ddaf8b2",
+          "options": {
+            "Fragrance & Size": "Girl of Now - 150 ML"
+          },
+          "price": 245,
+          "salePrice": 170,
+          "stock": 10,
+          "sku": "'62284001113",
+          "barcode": "'62284001113"
+        }
+      ],
+      "price": 245,
+      "salePrice": 170,
+      "stock": 10
+    },
+    {
+      "id": "76232b17",
+      "name": "Harmony Moisturizer Cream",
+      "shopifyHandle": "harmony-moisturizer-cream",
+      "description": "Our  Harmony Moisturizer Cream  offers long-lasting hydration with the luxurious fragrance of  Versace Dylan Blue . This rich, natural body lotion nourishes and softens your skin, leaving you feeling refreshed and elegant.\n\n  How to Use:\n1. Cleanse your face and pat dry.\n2. Dispense a small amount of Harmony moisturizer onto your fingertips.\n3. Gently massage into your skin using upward motions until fully absorbed.\n4. Use morning and night for optimal hydration and a lingering fragrance that lasts.\n\n Â \n\n   Keywords : Versace Dylan Blue moisturizer, luxury body lotion, deeply moisturizing body cream",
+      "catalog": "19c4466a",
+      "tags": "Coconut, Cream, Hand Cream, Harmony, Hydrating, Moisturizer, Moisturizing, Natural, Sunshine Splash, Vanilla, Versace Dylan",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Harmony_Moisturizer_Cream.jpg?v=1756215302",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Harmony.jpg?v=1756215302"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Tulip - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e019e8b3",
+          "options": {
+            "Fragrance & Size": "Tulip - 150 ML"
+          },
+          "price": 245,
+          "salePrice": 170,
+          "stock": 1,
+          "sku": "'62284001114",
+          "barcode": "'62284001114"
+        }
+      ],
+      "price": 245,
+      "salePrice": 170,
+      "stock": 1
+    },
+    {
+      "id": "9af52287",
+      "name": "Sunshine Splash Foot Cream",
+      "shopifyHandle": "sunshine-splash-foot-cream",
+      "description": "Pamper your feet with our  Sunshine Splash Foot Cream , infused with the luxurious  Girl of Now fragrance . This rich cream deeply moisturizes and softens, making it perfect for cracked heels and dry skin.\n\n Â \n\n   Keywords : Girl of Now foot cream, moisturizing foot cream, foot cream for cracked heels, luxury foot care.",
+      "catalog": "cfb36855",
+      "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Foot_Cream.jpg?v=1756215303",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-SunshineSplash.jpg?v=1756215304"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Girl of Now - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "70e627bd",
+          "options": {
+            "Fragrance & Size": "Girl of Now - 150 ML"
+          },
+          "price": 220,
+          "salePrice": 180,
+          "stock": 6,
+          "sku": "'62282001113",
+          "barcode": "'62282001113"
+        }
+      ],
+      "price": 220,
+      "salePrice": 180,
+      "stock": 6
+    },
+    {
+      "id": "3ffd74ff",
+      "name": "Fresh Mint Foot Cream",
+      "shopifyHandle": "fresh-mint-foot-cream",
+      "description": "Soothe and refresh tired feet with our  Fresh Mint Foot Cream . This cooling formula hydrates and repairs dry, cracked heels while leaving a refreshing minty scent. Ideal for daily use.\n\n Â \n\n   Keywords : mint foot cream, cooling foot cream, foot cream for cracked heels, refreshing foot cream.",
+      "catalog": "cfb36855",
+      "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Mint_Foot_Cream.jpg?v=1756215305",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-FreshMint.jpg?v=1756215305"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Mint - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "8e566350",
+          "options": {
+            "Fragrance & Size": "Mint - 150 ML"
+          },
+          "price": 220,
+          "salePrice": 180,
+          "stock": 14,
+          "sku": "'62282001112",
+          "barcode": "'62282001112"
+        }
+      ],
+      "price": 220,
+      "salePrice": 180,
+      "stock": 14
+    },
+    {
+      "id": "0424f67a",
+      "name": "Cherry Kiss Cheeks and Lips Tint (Red)",
+      "shopifyHandle": "cherry-kiss-cheeks-and-lips-tint",
+      "description": "Add a pop of natural color to your cheeks and lips with our  Cherry Kiss Tint . This lightweight, long-lasting formula gives you a fresh, vibrant look that lasts all day.\n\n Â \n\n   Keywords : cherry lips tint, natural cheeks and lips tint, long-lasting lip color, hydrating lip tint.",
+      "catalog": "35003259",
+      "tags": "Blush, Blusher, Cheek, kiss, Lips, love, Pink, Red, Tint",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Cherry_Kiss_Cheeks_and_Lips_Tint.jpg?v=1756215306",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Cherry_Kiss_Cheeks_and_Lips_Tint_Dew.jpg?v=1756215306"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "c027b976",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 150,
+          "salePrice": 110,
+          "stock": 4,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 150,
+      "salePrice": 110,
+      "stock": 4
+    },
+    {
+      "id": "950127fe",
+      "name": "Apricots Lip Scrub",
+      "shopifyHandle": "apricots-lip-scrub",
+      "description": "Revitalize your lips with our  Apricots Lip Scrub , made to gently exfoliate and moisturize. This natural lip scrub leaves your lips soft, smooth, and ready for your favorite balm or tint.\n\n  How to Use:\n1. Apply a small amount of scrub to your lips.\n2. Gently massage in circular motions to exfoliate.\n3. Rinse off with warm water.\n4. Pat dry and follow up with your favorite lip balm.\n\n Â \n\n   Keywords : apricots lip scrub, exfoliating lip care, natural lip exfoliator, hydrating lip scrub",
+      "catalog": "444bbcdc",
+      "tags": "Apricots, Lip care, lip Scrub, Lip treatment, scrub",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Apricots_Lip_Scrub.jpg?v=1756215307",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-Apricots.jpg?v=1756215307"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Flavor & Size",
+          "values": [
+            "Apricots - 20 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "d5efe97f",
+          "options": {
+            "Flavor & Size": "Apricots - 20 ML"
+          },
+          "price": 135,
+          "salePrice": 100,
+          "stock": 14,
+          "sku": "'62283001114",
+          "barcode": "'62283001114"
+        }
+      ],
+      "price": 135,
+      "salePrice": 100,
+      "stock": 14
+    },
+    {
+      "id": "c2b4ce28",
+      "name": "Strawberry Lip Scrub",
+      "shopifyHandle": "strawberry-lip-scrub",
+      "description": "Smooth and soften your lips with our  Strawberry Lip Scrub . This gentle, exfoliating formula removes dead skin cells while leaving a sweet strawberry scent, preparing your lips for a perfect pout.\n\n  How to Use:\n\n Apply a small amount of scrub to your lips.\n\n Gently massage in circular motions to exfoliate.\n\n Allow the scrub to sit on your lips for 1-2 minutes to enhance moisturization.\n\n Rinse off with warm water.\n\n Pat dry and follow up with your favorite lip balm.\n\n Â \n\n   Keywords : strawberry lip scrub, natural lip exfoliator, exfoliating lip care, strawberry-scented lip scrub .",
+      "catalog": "444bbcdc",
+      "tags": "Lip care, lip Scrub, Lip treatment, scrub, Strawberry",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/scrub_Strawberry.jpg?v=1756215308",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw2.jpg?v=1756215308"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Flavor & Size",
+          "values": [
+            "Strawberry - 20 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "f03e6b2b",
+          "options": {
+            "Flavor & Size": "Strawberry - 20 ML"
+          },
+          "price": 135,
+          "salePrice": 100,
+          "stock": 13,
+          "sku": "'62283001113",
+          "barcode": "'62283001113"
+        }
+      ],
+      "price": 135,
+      "salePrice": 100,
+      "stock": 13
+    },
+    {
+      "id": "dbb95a5d",
+      "name": "Vanilla Lip Scrub",
+      "shopifyHandle": "vanilla-lip-scrub",
+      "description": "OurÂ  Vanilla Lip Scrub  gently buffs away dead skin, leaving your lips soft and smooth with a sweet vanilla scent. Perfect for keeping your lips nourished and hydrated.\n\n  How to Use:\n1. Apply a small amount of scrub to your lips.\n2. Gently massage in circular motions to exfoliate.\n3. Allow the scrub to sit on your lips for 1-2 minutes to enhance moisturization.\n4. Rinse off with warm water.\n5. Pat dry and follow up with your favorite lip balm.\n\n Â \n\n   Keywords : vanilla lip scrub, natural lip exfoliator, hydrating lip scrub, vanilla-scented lip scrub.",
+      "catalog": "444bbcdc",
+      "tags": "Daily Lip Care, Lip care, lip Scrub, Lip treatment, scrub, Vanilla",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Vanilla_Lip_Scrub.jpg?v=1756215309",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-Vanilla.jpg?v=1756215309"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Flavor & Size",
+          "values": [
+            "Vanilla - 20 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e0e7b9b8",
+          "options": {
+            "Flavor & Size": "Vanilla - 20 ML"
+          },
+          "price": 135,
+          "salePrice": 100,
+          "stock": 14,
+          "sku": "'62283001112",
+          "barcode": "'62283001112"
+        }
+      ],
+      "price": 135,
+      "salePrice": 100,
+      "stock": 14
+    },
+    {
+      "id": "5082f6d9",
+      "name": "Lip Balm Strawberry",
+      "shopifyHandle": "dew-strawberry-lip-balm",
+      "description": "Keep your lips hydrated and soft with our  Strawberry Lip Balm . Infused with a delicious strawberry scent, this nourishing balm provides long-lasting moisture for dry, chapped lips.\n\n Â \n\n   Keywords : strawberry lip balm, natural lip care, hydrating lip balm, strawberry-scented lip balm",
+      "catalog": "c4dcfef1",
+      "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_1.jpg?v=1770635395",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw_2.jpg?v=1770635395",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw1.jpg?v=1770635395"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "616a7c0a",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 110,
+          "salePrice": 90,
+          "stock": 11,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 110,
+      "salePrice": 90,
+      "stock": 11
+    },
+    {
+      "id": "2cc19e9e",
+      "name": "Pink Love Cheeks and Lips Tint",
+      "shopifyHandle": "pink-love-cheeks-and-lips-tint",
+      "description": "Our  Pink Love Tint  offers a soft, rosy glow that enhances your natural beauty. Lightweight and hydrating, this tint gives you a subtle yet long-lasting flush on your cheeks and lips.\n\n Â \n\n   Keywords : pink lip tint, natural cheeks and lips color, long-lasting lip tint, hydrating cheeks tint.",
+      "catalog": "35003259",
+      "tags": "Blush, Blusher, Cheek, kiss, Lips, love, Pink, Red, Tint",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pink_Love_Cheeks_and_Lips_Tint.jpg?v=1756215311",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pink_Love_Cheeks_and_Lips_Tint_Dew.jpg?v=1756215311"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Title",
+          "values": [
+            "Default Title"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "08cf5545",
+          "options": {
+            "Title": "Default Title"
+          },
+          "price": 150,
+          "salePrice": 110,
+          "stock": 12,
+          "sku": "",
+          "barcode": "'1122334455"
+        }
+      ],
+      "price": 150,
+      "salePrice": 110,
+      "stock": 12
+    },
+    {
+      "id": "3c5c256b",
+      "name": "Coconut Dreams Moisturizer Cream",
+      "shopifyHandle": "coconut-dreams-moisturizer-cream",
+      "description": "Nourish your skin with the tropical scent of our  Coconut Dreams Moisturizer Cream . This rich, natural body lotion is perfect for  dry skin , delivering intense hydration while leaving a soft, coconut fragrance.\n\n **How to Use:**\n1. Cleanse your hands or body and pat dry.\n2. Apply a generous amount of Dew moisturizing cream to the desired areas.\n3. Gently massage into the skin until fully absorbed.\n4. Reapply as needed throughout the day for continuous hydration.\n\n   Keywords : coconut moisturizer for dry skin, natural body lotion for hydration, deeply hydrating coconut cream",
+      "catalog": "19c4466a",
+      "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Dreams_Moisturizer_Cream.jpg?v=1756215313",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Coconut.jpg?v=1756215313"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Coconut - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "37a8b9ea",
+          "options": {
+            "Fragrance & Size": "Coconut - 150 ML"
+          },
+          "price": 245,
+          "salePrice": 170,
+          "stock": 18,
+          "sku": "'62284001111",
+          "barcode": "'62284001111"
+        }
+      ],
+      "price": 245,
+      "salePrice": 170,
+      "stock": 18
+    },
+    {
+      "id": "3cf25ab8",
+      "name": "Coconut Dream Lip Scrub",
+      "shopifyHandle": "coconut-dream-lip-scrub",
+      "description": "Gently exfoliate your lips with the tropical scent of our  Coconut Dream Lip Scrub . This natural formula buffs away dry skin while nourishing and hydrating for a smooth, soft finish.\n\n  How to Use:\n1. Apply a small amount of scrub to your lips.\n2. Gently massage in circular motions to exfoliate.\n3. Leave on for 1-2 minutes to allow the moisturizing properties to sink in.\n4. Rinse off with warm water.\n5. Pat dry and follow up with your favorite lip balm.\n\n Â \n\n   Keywords : coconut lip scrub, natural lip exfoliator, hydrating lip scrub, coconut-scented lip scrub.",
+      "catalog": "444bbcdc",
+      "tags": "Coconut, Lip care, lip Scrub, Lip treatment, scrub",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Dream_Lip_Scrub.jpg?v=1756215314",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-CoconutDream.jpg?v=1756215314"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Flavor & Size",
+          "values": [
+            "Coconut - 20 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "37ce09cd",
+          "options": {
+            "Flavor & Size": "Coconut - 20 ML"
+          },
+          "price": 135,
+          "salePrice": 100,
+          "stock": 15,
+          "sku": "'62283001111",
+          "barcode": "'62283001111"
+        }
+      ],
+      "price": 135,
+      "salePrice": 100,
+      "stock": 15
+    },
+    {
+      "id": "e2a1f39f",
+      "name": "Fresh Breeze Foot Cream",
+      "shopifyHandle": "fresh-breeze-foot-cream",
+      "description": "Experience long-lasting softness and moisture with our  Fresh Breeze Foot Cream , inspired by the  Stronger With You fragrance . This rich, hydrating formula is perfect for dry, cracked feet.\n\n Â \n\n   Keywords : stronger with you foot cream, hydrating foot cream, foot cream for cracked heels, luxury foot care",
+      "catalog": "cfb36855",
+      "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Breeze_Foot_Cream.jpg?v=1756215315",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-FreshBreeze.jpg?v=1756215315"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Stronger With You - 150 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "020aab23",
+          "options": {
+            "Fragrance & Size": "Stronger With You - 150 ML"
+          },
+          "price": 220,
+          "salePrice": 180,
+          "stock": 15,
+          "sku": "'62282001111",
+          "barcode": "'62282001111"
+        }
+      ],
+      "price": 220,
+      "salePrice": 180,
+      "stock": 15
+    },
+    {
+      "id": "735c75b6",
+      "name": "French Lavender Shower Gel",
+      "shopifyHandle": "french-lavender-shower-gel",
+      "description": "Unwind with the soothing scent of French lavender in our  Lavender Shower Gel . This gentle,  natural body wash  is perfect for evening routines, helping to calm and relax your senses while nourishing your skin. Great for all skin types, it leaves your skin soft, smooth, and delicately scented.\n\n Â \n\n   Keywords : lavender shower gel, relaxing body wash, natural body wash for sensitive skin, calming shower gel.",
+      "catalog": "ed4077f0",
+      "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
+      "visible": true,
+      "featured": false,
+      "images": [
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/French_Lavender_Shower_Gel.jpg?v=1756215316",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FrenchLavender.jpg?v=1756215316"
+      ],
+      "howToUse": "",
+      "options": [
+        {
+          "name": "Fragrance & Size",
+          "values": [
+            "Lavender - 480 ML"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "2036ea23",
+          "options": {
+            "Fragrance & Size": "Lavender - 480 ML"
+          },
+          "price": 320,
+          "salePrice": 280,
+          "stock": 10,
+          "sku": "'62280001116",
+          "barcode": "'62280001116"
+        }
+      ],
+      "price": 320,
+      "salePrice": 280,
+      "stock": 10
     }
   ],
   "discounts": [
