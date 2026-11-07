@@ -418,6 +418,7 @@ function orders() {
         <td><b>${egp(o.total)}</b></td>
         <td><select data-opay="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
           <option ${o.paymentStatus === 'Unpaid (COD)' ? 'selected' : ''}>Unpaid (COD)</option>
+          <option ${o.paymentStatus === 'Awaiting InstaPay payment' ? 'selected' : ''}>Awaiting InstaPay payment</option>
           <option ${o.paymentStatus === 'Paid' ? 'selected' : ''}>Paid</option>
         </select></td>
         <td><select data-ofull="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
