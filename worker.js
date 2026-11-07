@@ -95,10 +95,16 @@ async function createOrder(request, env) {
   const customer = body.customer || {};
   const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address);
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
-  if (!["cairo","alex"].includes(body.area)) return json({ok:false,error:"Choose a valid delivery area."},400);
-  const paymentMethod=String(body.paymentMethod||"cod").toLowerCase();
   const catalogue=await getProducts(env);
-  const paymentSettings=catalogue.settings||{};
+  const settings=catalogue.settings||{};
+  const deliveryAreas=Array.isArray(settings.deliveryAreas)?settings.deliveryAreas:[
+    {id:"cairo",name:"Cairo & Giza",fee:Number(settings.deliveryCairo||0),enabled:true},
+    {id:"alex",name:"Alexandria",fee:Number(settings.deliveryAlex||0),enabled:true}
+  ];
+  const selectedArea=deliveryAreas.find(x=>String(x.id)===String(body.area)&&x.enabled!==false);
+  if (!selectedArea) return json({ok:false,error:"Choose a valid delivery area."},400);
+  const paymentMethod=String(body.paymentMethod||"cod").toLowerCase();
+  const paymentSettings=settings;
   if (!["cod","instapay"].includes(paymentMethod)) return json({ok:false,error:"Choose a valid payment method."},400);
   if (paymentMethod==="cod" && paymentSettings.codEnabled===false) return json({ok:false,error:"Cash on Delivery is currently unavailable."},400);
   if (paymentMethod==="instapay" && (paymentSettings.instapayEnabled===false || !clean(paymentSettings.instapayNumber))) return json({ok:false,error:"InstaPay is currently unavailable."},400);
@@ -113,9 +119,8 @@ async function createOrder(request, env) {
     lines.push({id:p.id,name:p.name,qty,unit,total:unit*qty});
   }
   const itemsTotal=lines.reduce((n,l)=>n+l.total,0);
-  const settings=catalogue.settings||{};
   if (itemsTotal < Number(settings.minOrder||0)) return json({ok:false,error:"Minimum order is " + money(settings.minOrder) + "."},400);
-  let delivery=body.area==="alex"?Number(settings.deliveryAlex||0):Number(settings.deliveryCairo||0);
+  let delivery=Math.max(0,Number(selectedArea.fee)||0);
   let discount=0, promoCode=null;
   const code=clean(body.promoCode).toUpperCase();
   if (code) {
@@ -135,7 +140,7 @@ async function createOrder(request, env) {
   const number = "DEW#" + sequence.last_number;
   const order={
     number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
-    lines,itemsTotal,delivery,discount,promoCode,total,area:body.area,
+    lines,itemsTotal,delivery,discount,promoCode,total,area:selectedArea.name,areaId:selectedArea.id,
     customer:{first,last,phone,address}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
