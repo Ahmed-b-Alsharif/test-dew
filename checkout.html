@@ -23,8 +23,7 @@
     <label>Full address</label><textarea id="address" rows="3" required placeholder="Street, building, floor, apartment, area"></textarea>
     <div><label>Phone</label><input id="phone" required inputmode="tel" autocomplete="tel"></div>
     <label>Delivery area</label>
-    <label class="opt" id="optCairo"><input type="radio" name="area" value="cairo"> <span id="lblCairo"></span></label>
-    <label class="opt" id="optAlex"><input type="radio" name="area" value="alex"> <span id="lblAlex"></span></label>
+    <select id="deliveryArea" name="area" required><option value="">Choose your governorate</option></select>
     <section class="payment-methods"><h3>Payment method</h3><label class="opt"><input type="radio" name="paymentMethod" value="cod" checked> <span>Cash on Delivery (COD)</span></label><label class="opt"><input type="radio" name="paymentMethod" value="instapay"> <span>InstaPay</span></label><div id="paymentDetails" class="payment-details" hidden></div></section><div class="err" id="err"></div>
     <button class="btn red" id="submit" style="width:100%;margin-top:8px">Complete order</button>
     
