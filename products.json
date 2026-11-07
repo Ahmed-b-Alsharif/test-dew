@@ -24,7 +24,7 @@
     "telegramEnabled": true,
     "telegramProxyUrl": "https://dew-telegram-proxy.vercel.app/api/telegram",
     "ordersApiUrl": "https://dew-orders-api.aalshari.workers.dev",
-    "instapayEnabled": false,
+    "instapayEnabled": true,
     "codEnabled": true,
     "instapayNumber": "01118225522",
     "instapayName": "Ahmed b. A.",
