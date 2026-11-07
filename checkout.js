@@ -12,7 +12,9 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
     {id:'alex',name:'Alexandria',fee:Number(s.deliveryAlex||0),enabled:true}
   ];
   $('#deliveryArea').innerHTML='<option value="">Choose your governorate</option>'+deliveryAreas.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+' — '+egp(x.fee)+'</option>').join('');
-  $('#deliveryArea').onchange=()=>{area=$('#deliveryArea').value||null;render();};
+  const syncDeliveryArea=()=>{const value=String($('#deliveryArea').value||'').trim();area=value||null;render();};
+  $('#deliveryArea').addEventListener('change',syncDeliveryArea);
+  $('#deliveryArea').addEventListener('input',syncDeliveryArea);
   if (s.codEnabled === false) paymentMethod = 'instapay';
   document.querySelectorAll('input[name="paymentMethod"]').forEach(r => {
     const enabled = r.value === 'cod' ? s.codEnabled !== false : s.instapayEnabled !== false && !!String(s.instapayNumber||'').trim();
@@ -129,7 +131,10 @@ $('#form').onsubmit = async e => {
   const t = totals();
   const first = $('#first').value.trim(), last = $('#last').value.trim(), address = $('#address').value.trim();
   const phone = $('#phone').value.trim();
-  if (!area || !deliveryAreas.some(x=>x.id===area)) { $('#err').textContent = 'Choose your governorate.'; return; }
+  const selectedAreaId=String($('#deliveryArea').value||'').trim();
+  const selectedArea=deliveryAreas.find(x=>String(x.id??'').trim()===selectedAreaId);
+  if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
+  area=String(selectedArea.id);
   if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8) {
     $('#err').textContent = 'Please fill in your name, address and phone number.'; return;
   }
@@ -141,7 +146,7 @@ $('#form').onsubmit = async e => {
   button.disabled=true; button.textContent='Placing your order…';
   try {
     const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
+      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
