@@ -81,7 +81,7 @@
         "text": "Thoughtful skincare, made with love in Egypt.",
         "button": "Discover the collection",
         "url": "#shop",
-        "image": ""
+        "image": "images/1794050846038-adef2ef8.jpg"
       },
       "categories": {
         "show": true,
@@ -112,7 +112,7 @@
       "products": {
         "show": true,
         "title": "Our Best Sellers",
-        "limit": 3
+        "limit": 5
       },
       "promo": {
         "show": true,
