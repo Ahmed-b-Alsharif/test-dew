@@ -135,7 +135,7 @@ function homepage() {
     if(key==='reviews')return field('reviews.title','Section heading',x.title)+field('reviews.items.0.name','Customer name',x.items?.[0]?.name)+area('reviews.items.0.text','Review text',x.items?.[0]?.text);
     if(key==='social')return field('social.title','Section heading',x.title)+field('social.handle','Instagram handle',x.handle)+(x.images||[]).map((v,i)=>photo('social.images.'+i,'Instagram photo '+(i+1),v)).join('');
     if(key==='newsletter')return field('newsletter.title','Headline',x.title)+area('newsletter.text','Supporting text',x.text)+field('newsletter.button','Button label',x.button);
-    if(key==='footer')return area('footer.about','About Dew',x.about)+field('footer.copyright','Copyright text',x.copyright);
+    if(key==='footer')return area('footer.about','About Dew',x.about)+field('footer.copyright','Copyright text',x.copyright)+(x.links||[]).map((v,i)=>field('footer.links.'+i+'.label','Footer link '+(i+1)+' label',v.label)+field('footer.links.'+i+'.url','Footer link '+(i+1)+' destination',v.url)).join('');
     return '';
   };
   const preview=()=>{
@@ -243,7 +243,7 @@ function customers() {
   const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
   $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="admin-count">${rows.length} customers</span><button class="admin-view-store" id="exportCustomers">Export Excel</button></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th>Last order</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td>${c.last?new Date(c.last).toLocaleDateString():'—'}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="6">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
@@ -418,6 +418,7 @@ function orders() {
         <td><b>${egp(o.total)}</b></td>
         <td><select data-opay="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
           <option ${o.paymentStatus === 'Unpaid (COD)' ? 'selected' : ''}>Unpaid (COD)</option>
+          <option ${o.paymentStatus === 'Awaiting InstaPay payment' ? 'selected' : ''}>Awaiting InstaPay payment</option>
           <option ${o.paymentStatus === 'Paid' ? 'selected' : ''}>Paid</option>
         </select></td>
         <td><select data-ofull="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
@@ -452,7 +453,7 @@ function orders() {
     const c = o.customer;
     modal(`<h2>Order ${esc(o.number)}</h2>
       <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleString()}</p>
-      <p><b>Payment Status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
+      <p><b>Payment method:</b> ${esc(o.paymentMethod === 'instapay' ? 'InstaPay' : 'Cash on Delivery')} | <b>Payment status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
       <p><b>Tracking Number:</b> ${esc(o.trackingNumber || 'None yet')}</p>
       <h3>Customer details</h3>
       <p><b>Name:</b> ${esc(c.first + ' ' + c.last)}<br><b>Phone:</b> ${esc(c.phone)}<br><b>WhatsApp:</b> ${esc(c.whatsapp)}<br><b>Area:</b> ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}<br><b>Address:</b> ${esc(c.address)}</p>
@@ -540,6 +541,11 @@ function discForm(id) {
 /* ---------- store settings ---------- */
 function store() {
   const s = D.settings;
+  if (s.instapayEnabled === undefined) s.instapayEnabled = true;
+  if (s.codEnabled === undefined) s.codEnabled = true;
+  if (s.instapayNumber === undefined) s.instapayNumber = '';
+  if (s.instapayName === undefined) s.instapayName = '';
+  if (s.instapayInstructions === undefined) s.instapayInstructions = '';
   const f = (k, label, type = 'text') => `<div><label>${label}</label><input id="s_${k}" type="${type}" value="${esc(s[k])}"></div>`;
   $('#view').innerHTML = `<h2>Store settings</h2><div class="box"><div class="form-grid">
     ${f('storeName', 'Store name')}${f('tagline', 'Tagline')}
@@ -549,6 +555,12 @@ function store() {
     ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
     ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
+    <div class="full"><h3>Checkout payment methods</h3></div>
+    <div class="full"><label><input type="checkbox" id="s_instapayEnabled" ${s.instapayEnabled ? 'checked' : ''} style="width:auto"> Enable InstaPay</label></div>
+    ${f('instapayNumber', 'InstaPay number / payment address')}
+    ${f('instapayName', 'InstaPay account name')}
+    <div class="full"><label>Instructions shown to customers after choosing InstaPay</label><textarea id="s_instapayInstructions" rows="3">${esc(s.instapayInstructions||'')}</textarea></div>
+    <div class="full"><label><input type="checkbox" id="s_codEnabled" ${s.codEnabled ? 'checked' : ''} style="width:auto"> Enable Cash on Delivery (COD)</label></div>
     <div class="full">${f('telegramProxyUrl', 'Telegram proxy URL (legacy notification endpoint)')}</div>
     <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable legacy Telegram order notifications</label></div>
     <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>

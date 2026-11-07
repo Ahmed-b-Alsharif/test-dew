@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let S, area = null, appliedDiscount = null;
+let S, area = null, appliedDiscount = null, paymentMethod = 'cod';
 
 (async function () {
   try { S = await (await fetch('products.json?v=' + Date.now())).json(); }
@@ -7,6 +7,14 @@ let S, area = null, appliedDiscount = null;
   S.products = S.products.filter(p => p.visible);
   if (!S.discounts) S.discounts = [];
   const s = S.settings;
+  if (s.codEnabled === false) paymentMethod = 'instapay';
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(r => {
+    const enabled = r.value === 'cod' ? s.codEnabled !== false : s.instapayEnabled !== false && !!String(s.instapayNumber||'').trim();
+    r.closest('label').hidden = !enabled; r.disabled = !enabled;
+    if (r.value === paymentMethod) r.checked = true;
+    r.onchange = () => { paymentMethod = r.value; updatePaymentDetails(); };
+  });
+  updatePaymentDetails();
   $('#lblCairo').textContent = `Cairo & Giza - ${egp(s.deliveryCairo)}`;
   $('#lblAlex').textContent = `Alexandria - ${egp(s.deliveryAlex)}`;
   try {
@@ -26,6 +34,12 @@ let S, area = null, appliedDiscount = null;
   render();
 })();
 
+function updatePaymentDetails() {
+  const box = $('#paymentDetails'); if (!box || !S) return;
+  if (paymentMethod !== 'instapay') { box.hidden = true; box.innerHTML = ''; return; }
+  const s = S.settings || {}; box.hidden = false;
+  box.innerHTML = '<b>Pay via InstaPay</b><p>'+esc(s.instapayInstructions || 'Please transfer the order total to the account below.')+'</p><p><b>Account:</b> '+esc(s.instapayNumber||'')+'</p><p><b>Name:</b> '+esc(s.instapayName||'')+'</p><small>After payment, Dew will verify your transfer and confirm your order.</small>';
+}
 function lines() {
   const cart = Cart.get();
   return Object.keys(cart).map(id => {
@@ -125,7 +139,7 @@ $('#form').onsubmit = async e => {
   button.disabled=true; button.textContent='Placing your order…';
   try {
     const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,qty:l.qty})),area,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
+      lines:t.ls.map(l=>({id:l.id,qty:l.qty})),area,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
@@ -140,7 +154,7 @@ $('#form').onsubmit = async e => {
 function done(o) {
   $('#page').innerHTML = `<div class="box ok-box" style="grid-column:1/-1;text-align:center;padding:40px">
     <h2>Order placed successfully!</h2>
-    <p>Your order reference is <b>${esc(o.number)}</b>. Total: <b>${egp(o.total)}</b> (cash on delivery).</p>
+    <p>Your order reference is <b>${esc(o.number)}</b>. Total: <b>${egp(o.total)}</b> (${paymentMethod === 'instapay' ? 'InstaPay' : 'cash on delivery'}).</p>
     <p style="color:var(--muted)">We have received your order and will contact you shortly.</p>
     <a class="btn red" href="./" style="margin-top:16px">Back to the shop</a></div>`;
 }

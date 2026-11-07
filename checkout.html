@@ -25,9 +25,9 @@
     <label>Delivery area</label>
     <label class="opt" id="optCairo"><input type="radio" name="area" value="cairo"> <span id="lblCairo"></span></label>
     <label class="opt" id="optAlex"><input type="radio" name="area" value="alex"> <span id="lblAlex"></span></label>
-    <div class="err" id="err"></div>
+    <section class="payment-methods"><h3>Payment method</h3><label class="opt"><input type="radio" name="paymentMethod" value="cod" checked> <span>Cash on Delivery (COD)</span></label><label class="opt"><input type="radio" name="paymentMethod" value="instapay"> <span>InstaPay</span></label><div id="paymentDetails" class="payment-details" hidden></div></section><div class="err" id="err"></div>
     <button class="btn red" id="submit" style="width:100%;margin-top:8px">Complete order</button>
-    <p class="note">Payment: Cash on delivery. We will confirm your order by phone.</p>
+    
   </form>
 
   <div class="box" id="summary"><h2>Order summary</h2><div id="sumBody"></div></div>
