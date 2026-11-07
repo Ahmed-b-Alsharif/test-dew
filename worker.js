@@ -83,7 +83,7 @@ async function notifyTelegram(order, env, settings) {
     "Delivery: " + money(order.delivery),
     "Discount: " + money(order.discount),
     "TOTAL: " + money(order.total),
-    "Payment: Cash on delivery"
+    "Payment: " + (order.paymentMethod==="instapay" ? "InstaPay (awaiting payment)" : "Cash on delivery")
   ].join("\n");
   await fetch("https://api.telegram.org/bot" + env.TELEGRAM_BOT_TOKEN + "/sendMessage", {
     method:"POST", headers:{"Content-Type":"application/json"},
@@ -96,6 +96,11 @@ async function createOrder(request, env) {
   const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address);
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
   if (!["cairo","alex"].includes(body.area)) return json({ok:false,error:"Choose a valid delivery area."},400);
+  const paymentMethod=String(body.paymentMethod||"cod").toLowerCase();
+  const paymentSettings=(await getProducts(env)).settings||{};
+  if (!["cod","instapay"].includes(paymentMethod)) return json({ok:false,error:"Choose a valid payment method."},400);
+  if (paymentMethod==="cod" && paymentSettings.codEnabled===false) return json({ok:false,error:"Cash on Delivery is currently unavailable."},400);
+  if (paymentMethod==="instapay" && (paymentSettings.instapayEnabled===false || !clean(paymentSettings.instapayNumber))) return json({ok:false,error:"InstaPay is currently unavailable."},400);
   if (!Array.isArray(body.lines) || !body.lines.length) return json({ok:false,error:"Your cart is empty."},400);
   const catalogue=await getProducts(env);
   const products=(catalogue.products||[]).filter(p=>p.visible);
@@ -129,7 +134,7 @@ async function createOrder(request, env) {
   const sequence = await env.DB.prepare("UPDATE order_counter SET last_number = last_number + 1 WHERE id = 1 RETURNING last_number").first();
   const number = "DEW#" + sequence.last_number;
   const order={
-    number,date:now.toISOString(),status:"Pending",paymentStatus:"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
+    number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,promoCode,total,area:body.area,
     customer:{first,last,phone,address}
   };
