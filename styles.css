@@ -313,3 +313,6 @@ th{background:var(--green);color:#fff;font-weight:600}
 .content-page-body p{margin:0 0 20px}
 .content-page-image{max-height:420px;overflow:hidden;margin:0 0 35px;background:#f1f4ed}
 .content-page-image img{width:100%;max-height:420px;object-fit:cover}
+
+.nav-link-actions .admin-danger{border:1px solid #e7c9c4;background:#fff7f5;color:#a64e43;border-radius:8px;padding:7px 11px;cursor:pointer}
+.nav-link-actions .admin-danger:hover{background:#fae9e5}
