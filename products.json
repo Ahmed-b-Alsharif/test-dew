@@ -2497,27 +2497,8 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw1.jpg?v=1770635395"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "Title",
-          "values": [
-            "Default Title"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "616a7c0a",
-          "options": {
-            "Title": "Default Title"
-          },
-          "price": 110,
-          "salePrice": 90,
-          "stock": 11,
-          "sku": "",
-          "barcode": "'1122334455"
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 110,
       "salePrice": 90,
       "stock": 11
