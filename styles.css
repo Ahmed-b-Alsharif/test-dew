@@ -418,3 +418,65 @@ th{background:var(--green);color:#fff;font-weight:600}
  .page button{min-height:48px}
  .dew-search-suggestions{max-height:55vh}
 }
+
+
+/* Unified Shopify-style theme customizer */
+.homepage-theme-editor{grid-template-columns:235px minmax(0,1fr);gap:18px}
+.homepage-section-list{max-height:calc(100vh - 155px);overflow:auto}
+.hp-section-nav{padding:13px 14px}
+.hp-section-nav.active{background:#edf5ee;box-shadow:inset 3px 0 #1c524e}
+.homepage-editor-card{min-width:0}
+.homepage-editor-title{align-items:flex-start}
+.homepage-editor-title h3{font-size:23px}
+.homepage-editor-fields{display:block}
+.homepage-editor-fields>.editor-field{margin-bottom:13px}
+.homepage-editor-fields .theme-editor-group{border:1px solid #e8eee7;border-radius:10px;padding:15px;margin:0 0 14px}
+.theme-editor-group h4{margin:0 0 12px;color:#1c524e;font-size:13px}
+.theme-editor-group .editor-two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+.theme-editor-group .editor-check{margin:7px 0}
+.homepage-preview-card{position:relative}
+.homepage-preview-browser{max-height:780px;overflow:auto}
+#homepageLivePreview{background:#fff;min-height:300px;cursor:default}
+#homepageLivePreview [data-preview-section]{position:relative;cursor:pointer;transition:outline .15s,box-shadow .15s}
+#homepageLivePreview [data-preview-section]:hover{outline:2px solid #9dbba3;outline-offset:-2px}
+#homepageLivePreview [data-preview-section].is-selected{outline:2px solid #1c524e;outline-offset:-2px}
+.hp-preview-ann{min-height:27px;display:flex;justify-content:center;align-items:center}
+.hp-preview-header{position:sticky;top:0;z-index:2}
+.hp-preview-product-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:#fff;padding:18px;text-align:left}
+.hp-preview-product-image img,.hp-preview-product-image .homepage-preview-placeholder{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:5px}
+.hp-preview-product-info{display:flex;flex-direction:column;align-items:stretch;gap:9px;min-width:0}
+.hp-preview-product-info h2{font:500 20px Georgia,serif;color:#1c524e;margin:0}
+.hp-preview-product-info>strong{display:block}
+.hp-preview-product-info>p{font-size:9px;line-height:1.5;color:#69766c;margin:0}
+.hp-preview-kicker{font-size:7px;letter-spacing:1px;color:#718576}
+.hp-preview-product-tags{font-size:8px;color:#819084}
+.hp-preview-variant,.hp-preview-quantity{padding:8px;border:1px solid #dce5dc;border-radius:3px;font-size:9px;color:#526257}
+.hp-preview-variant select{float:right;border:0;background:#fff;font-size:9px}
+.hp-preview-stock{font-size:8px;color:#3f865a}
+.hp-preview-product-info>button{width:100%;padding:8px;border:1px solid #1c524e;font-size:8px;font-weight:700;cursor:default}
+.hp-preview-product-info>.hp-preview-buy{background:#fff;color:#1c524e}
+.hp-preview-product-accordions details{padding:9px 0;border-top:1px solid #e7ece6;font-size:8px;color:#405347}
+.hp-preview-product-accordions summary{cursor:default;font-weight:600}
+.hp-preview-theme{padding:16px;background:#fff}
+.hp-preview-theme h2{font:500 18px Georgia,serif;color:#1c524e}
+.hp-preview-swatches{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.hp-preview-swatches>div{display:grid;gap:5px;font-size:8px;color:#425349;min-width:0}
+.hp-preview-swatches i{height:42px;border:1px solid #e4e9e2;border-radius:5px}
+.hp-preview-swatches small{font-size:7px;overflow-wrap:anywhere}
+.hp-preview-footer{cursor:pointer}
+@media(max-width:950px){.homepage-theme-editor{grid-template-columns:200px minmax(0,1fr)}}
+@media(max-width:700px){
+ .homepage-theme-editor{grid-template-columns:minmax(0,1fr);gap:12px}
+ .homepage-section-list{position:static;max-height:none}
+ .homepage-section-list #homepageSectionNav{display:flex;overflow-x:auto;gap:0;scroll-snap-type:x mandatory}
+ .hp-section-nav{min-width:155px;scroll-snap-align:start;border-right:1px solid #edf1ec}
+ .homepage-editor-card{padding:14px}
+ .homepage-editor-title{flex-direction:column;gap:8px}
+ .homepage-editor-fields .theme-editor-group{padding:12px}
+ .theme-editor-group .editor-two-col{grid-template-columns:1fr}
+ .hp-preview-product-layout{grid-template-columns:1fr;gap:10px}
+ .hp-preview-product-image img,.hp-preview-product-image .homepage-preview-placeholder{aspect-ratio:1/1}
+ .hp-preview-product-info h2{font-size:18px}
+ .hp-preview-swatches{grid-template-columns:repeat(2,1fr)}
+ .homepage-preview-top{gap:8px;align-items:flex-start;flex-direction:column}
+}
