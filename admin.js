@@ -546,15 +546,24 @@ function store() {
   if (s.instapayNumber === undefined) s.instapayNumber = '';
   if (s.instapayName === undefined) s.instapayName = '';
   if (s.instapayInstructions === undefined) s.instapayInstructions = '';
+  if (!Array.isArray(s.deliveryAreas)) s.deliveryAreas = [
+    {id:'cairo-giza',name:'Cairo & Giza',fee:Number(s.deliveryCairo ?? 85),enabled:true},
+    {id:'alexandria',name:'Alexandria',fee:Number(s.deliveryAlex ?? 90),enabled:true}
+  ];
+  if (s.instagramUrl === undefined) s.instagramUrl = '';
+  if (s.facebookUrl === undefined) s.facebookUrl = '';
   const f = (k, label, type = 'text') => `<div><label>${label}</label><input id="s_${k}" type="${type}" value="${esc(s[k])}"></div>`;
   $('#view').innerHTML = `<h2>Store settings</h2><div class="box"><div class="form-grid">
     ${f('storeName', 'Store name')}${f('tagline', 'Tagline')}
     ${f('heroTitle', 'Hero headline')}${f('heroText', 'Hero paragraph')}
     ${f('welcomeLine', 'Welcome screen headline')}${f('welcomeNote', 'Welcome screen note')}
     ${f('whatsapp', 'WhatsApp number (with country code)')}${f('phone', 'Phone')}
-    ${f('email', 'Email')}${f('instagram', 'Instagram handle (no @)')}
+    ${f('email', 'Email')}${f('instagramUrl', 'Instagram profile URL')}${f('facebookUrl', 'Facebook page URL')}
     ${f('minOrder', 'Minimum order (EGP)', 'number')}${f('deliveryNote', 'Delivery note')}
-    ${f('deliveryCairo', 'Cairo & Giza delivery (EGP)', 'number')}${f('deliveryAlex', 'Alexandria delivery (EGP)', 'number')}
+    <div class="full"><h3>Delivery areas and fees</h3><p class="muted">Add each governorate or area and its delivery fee. Disabled areas won't appear at checkout.</p>
+      <div id="deliveryAreaEditor">${s.deliveryAreas.map(x=>`<div class="delivery-area-row" data-area-row data-id="${esc(x.id||'')}"><input class="da-name" aria-label="Governorate name" placeholder="Governorate name" value="${esc(x.name||'')}"><input class="da-fee" aria-label="Delivery fee" type="number" min="0" value="${Math.max(0,Number(x.fee)||0)}"><label class="da-enabled"><input type="checkbox" class="da-active" ${x.enabled!==false?'checked':''}> Active</label><button type="button" class="btn small da-remove">Remove</button></div>`).join('')}</div>
+      <button type="button" class="btn small" id="addDeliveryArea">+ Add governorate</button>
+    </div>
     <div class="full"><h3>Checkout payment methods</h3></div>
     <div class="full"><label><input type="checkbox" id="s_instapayEnabled" ${s.instapayEnabled ? 'checked' : ''} style="width:auto"> Enable InstaPay</label></div>
     ${f('instapayNumber', 'InstaPay number / payment address')}
@@ -566,11 +575,22 @@ function store() {
     <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>
     <div class="full"><label>Orders API</label><input value="Secure Dew admin service" disabled></div>
     </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
+  const addAreaRow = (id='',name='',fee=0,enabled=true) => {
+    $('#deliveryAreaEditor').insertAdjacentHTML('beforeend', `<div class="delivery-area-row" data-area-row data-id="${esc(id)}"><input class="da-name" aria-label="Governorate name" placeholder="Governorate name" value="${esc(name)}"><input class="da-fee" aria-label="Delivery fee" type="number" min="0" value="${Math.max(0,Number(fee)||0)}"><label class="da-enabled"><input type="checkbox" class="da-active" ${enabled?'checked':''}> Active</label><button type="button" class="btn small da-remove">Remove</button></div>`);
+  };
+  $('#addDeliveryArea').onclick=()=>addAreaRow();
+  $('#deliveryAreaEditor').onclick=e=>{if(e.target.closest('.da-remove'))e.target.closest('[data-area-row]').remove();};
   $('#ss').onclick = () => {
     for (const k of Object.keys(s)) {
       const el=$('#s_'+k);
       if(el) { if(el.type==='checkbox') s[k]=el.checked; else s[k]=el.type==='number'?Math.max(0,Number(el.value)||0):el.value.trim(); }
     }
+    s.deliveryAreas=[...document.querySelectorAll('[data-area-row]')].map((row,i)=>{
+      const name=row.querySelector('.da-name').value.trim();
+      const fee=Math.max(0,Number(row.querySelector('.da-fee').value)||0);
+      const id=row.dataset.id||name.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'area-'+(i+1);
+      return {id,name,fee,enabled:row.querySelector('.da-active').checked};
+    }).filter(x=>x.name);
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
     save('Update store settings').then(()=>{ toast('Store settings saved.'); });
   };
