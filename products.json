@@ -50,7 +50,139 @@
       }
     ],
     "instagramUrl": "",
-    "facebookUrl": ""
+    "facebookUrl": "",
+    "homepage": {
+      "announcement": {
+        "show": true,
+        "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
+        "link": "#shop"
+      },
+      "header": {
+        "logo": "Dew",
+        "logoImage": "",
+        "links": [
+          {
+            "label": "Shop",
+            "url": "#shop"
+          },
+          {
+            "label": "Our Story",
+            "url": "#about"
+          },
+          {
+            "label": "Contact",
+            "url": "#contact"
+          }
+        ]
+      },
+      "hero": {
+        "show": true,
+        "title": "Your Skin. Your Natural Glow.",
+        "text": "Thoughtful skincare, made with love in Egypt.",
+        "button": "Discover the collection",
+        "url": "#shop",
+        "image": ""
+      },
+      "categories": {
+        "show": true,
+        "title": "Shop by category",
+        "items": [
+          {
+            "title": "Face Care",
+            "image": "",
+            "url": "#shop"
+          },
+          {
+            "title": "Lip Care",
+            "image": "",
+            "url": "#shop"
+          },
+          {
+            "title": "Body Care",
+            "image": "",
+            "url": "#shop"
+          },
+          {
+            "title": "Hair Care",
+            "image": "",
+            "url": "#shop"
+          }
+        ]
+      },
+      "products": {
+        "show": true,
+        "title": "Our Best Sellers",
+        "limit": 3
+      },
+      "promo": {
+        "show": true,
+        "title": "A little more love for your skin",
+        "text": "Explore your everyday skincare essentials.",
+        "button": "Shop now",
+        "url": "#shop",
+        "image": ""
+      },
+      "benefits": {
+        "show": true,
+        "items": [
+          "Made in Egypt",
+          "Thoughtfully selected ingredients",
+          "Cruelty-free",
+          "Delivery across Egypt"
+        ]
+      },
+      "reviews": {
+        "show": true,
+        "title": "Kind words from our customers",
+        "items": [
+          {
+            "name": "Your customer",
+            "text": "Customer feedback will appear here.",
+            "stars": 5
+          }
+        ]
+      },
+      "social": {
+        "show": true,
+        "title": "A little Dew every day",
+        "handle": "@dew_skincaree",
+        "images": [
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
+      },
+      "newsletter": {
+        "show": true,
+        "title": "Stay in the glow",
+        "text": "Get updates, skincare tips and special offers.",
+        "button": "Join us"
+      },
+      "footer": {
+        "show": true,
+        "about": "Natural skincare, made with love in Egypt.",
+        "copyright": "All rights reserved.",
+        "links": [
+          {
+            "label": "About",
+            "url": "#about"
+          },
+          {
+            "label": "Contact",
+            "url": "#contact"
+          }
+        ]
+      },
+      "theme": {
+        "green": "#1c524e",
+        "cream": "#fbf8f1",
+        "ink": "#183b35",
+        "accent": "#e7eee5"
+      }
+    }
   },
   "catalogs": [
     {
