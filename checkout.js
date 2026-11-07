@@ -40,11 +40,14 @@ function updatePaymentDetails() {
 }
 function lines() {
   const cart = Cart.get();
-  return Object.keys(cart).map(id => {
-    const p = S.products.find(x => x.id === id);
-    if (!p || p.stock < 1) return null;
-    const qty = Math.min(cart[id], p.stock);
-    return { id, name: p.name, qty, unit: eff(p), total: eff(p) * qty };
+  return Object.keys(cart).map(key => {
+    const bits=String(key).split('::'),id=bits[0],variantId=bits[1]||'';
+    const p = S.products.find(x => x.id === id),v=p?.variants?.find(x=>x.id===variantId);
+    if (!p) return null;
+    const stock=v?Number(v.stock||0):Number(p.stock||0),qty=Math.min(cart[key],stock);
+    if(stock<1||qty<1)return null;
+    const unit=v?(Number(v.salePrice)>0&&Number(v.salePrice)<Number(v.price)?Number(v.salePrice):Number(v.price)):eff(p);
+    return { id, variantId:variantId||null, name:p.name+(v?' · '+Object.values(v.options||{}).join(' / '):''), qty, unit, total:unit*qty };
   }).filter(Boolean);
 }
 
@@ -138,7 +141,7 @@ $('#form').onsubmit = async e => {
   button.disabled=true; button.textContent='Placing your order…';
   try {
     const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,qty:l.qty})),area,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
+      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
