@@ -86,7 +86,7 @@ function showLogin(msg){
 
 /* ---------- shell ---------- */
 function render() {
-  const tabs = [['overview','Overview'],['homepage','Homepage'],['products','Products'],['catalogs','Collections'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
+  const tabs = [['overview','Overview'],['homepage','Homepage'],['productPage','Product page'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
   $('#app').innerHTML = `
     <div class="admin-shell">
@@ -103,7 +103,7 @@ function render() {
     </div>`;
   document.querySelectorAll('.side-link[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
   $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
-  ({ overview, homepage, products, catalogs, orders, customers, inventory, discounts, store, help })[tab]();
+  ({ overview, homepage, productPage: productPageEditor, pages, products, catalogs, orders, customers, inventory, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -126,7 +126,11 @@ function homepage() {
   const editorFor=key=>{
     const x=h[key]||{};
     if(key==='announcement')return field('announcement.text','Announcement text',x.text)+field('announcement.link','Link destination',x.link);
-    if(key==='header')return field('header.logo','Logo text (used if no logo image)',x.logo)+photo('header.logoImage','Store logo',x.logoImage)+(x.links||[]).map((v,i)=>field('header.links.'+i+'.label','Navigation link '+(i+1),v.label)+field('header.links.'+i+'.url','Link destination',v.url)).join('');
+    if(key==='header')return field('header.logo','Logo text (used if no logo image)',x.logo)+photo('header.logoImage','Store logo',x.logoImage)+
+      '<div class="editor-two-col"><div class="editor-field"><label>Logo position</label><select data-hp="header.logoPosition"><option value="left" '+((x.logoPosition||'center')==='left'?'selected':'')+'>Left</option><option value="center" '+((x.logoPosition||'center')==='center'?'selected':'')+'>Centre</option><option value="right" '+((x.logoPosition||'center')==='right'?'selected':'')+'>Right</option></select></div><div class="editor-field"><label>Navigation position</label><select data-hp="header.navPosition"><option value="left" '+((x.navPosition||'left')==='left'?'selected':'')+'>Left</option><option value="center" '+((x.navPosition||'left')==='center'?'selected':'')+'>Centre</option><option value="right" '+((x.navPosition||'left')==='right'?'selected':'')+'>Right</option></select></div></div>'+
+      '<div class="editor-subgroup"><b>Navigation links</b><p class="editor-hint">Add your own links, reorder them, or remove links you do not need.</p>'+
+      (x.links||[]).map((v,i)=>'<div class="nav-link-editor" data-nav-row="'+i+'"><div class="editor-two-col">'+field('header.links.'+i+'.label','Link label',v.label)+field('header.links.'+i+'.url','Destination (URL or page.html?slug=...)',v.url)+'</div><div class="nav-link-actions"><button type="button" class="admin-view-store" data-nav-up="'+i+'" '+(!i?'disabled':'')+'>↑</button><button type="button" class="admin-view-store" data-nav-down="'+i+'" '+(i===(x.links||[]).length-1?'disabled':'')+'>↓</button><button type="button" class="admin-danger" data-nav-remove="'+i+'">Remove</button></div></div>').join('')+
+      '<button type="button" class="admin-view-store" id="addHeaderLink">＋ Add navigation link</button></div>';
     if(key==='hero')return field('hero.title','Headline',x.title)+area('hero.text','Supporting text',x.text)+field('hero.button','Button label',x.button)+field('hero.url','Button destination',x.url)+photo('hero.image','Hero image',x.image);
     if(key==='categories')return field('categories.title','Section heading',x.title)+(x.items||[]).map((v,i)=>'<div class="editor-subgroup"><b>Category '+(i+1)+'</b>'+field('categories.items.'+i+'.title','Name',v.title)+field('categories.items.'+i+'.url','Destination',v.url)+photo('categories.items.'+i+'.image','Category image',v.image)+'</div>').join('');
     if(key==='products')return field('products.title','Section heading',x.title)+field('products.limit','Number of products',x.limit,'number');
@@ -158,10 +162,57 @@ function homepage() {
     $('#sectionVisible').onchange=e=>{h[selected].show=e.target.checked;drawEditor();preview();};
     document.querySelectorAll('[data-hp]').forEach(el=>{const update=()=>{let v=el.value;if(el.type==='number')v=Math.min(20,Math.max(1,Number(v)||5));if(selected==='benefits'&&el.dataset.hp==='benefits.items')v=v.split('\n').map(x=>x.trim()).filter(Boolean);pathSet(h,el.dataset.hp,v);preview();};el.oninput=update;el.onchange=update;});
     $('#saveHomepage').onclick=()=>save('Update homepage');
+    $('#addHeaderLink')?.addEventListener('click',()=>{h.header.links=h.header.links||[];h.header.links.push({label:'New link',url:'./#shop'});drawEditor();preview();});
+    document.querySelectorAll('[data-nav-remove]').forEach(b=>b.onclick=()=>{h.header.links.splice(+b.dataset.navRemove,1);drawEditor();preview();});
+    document.querySelectorAll('[data-nav-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.navUp;if(i>0)[h.header.links[i-1],h.header.links[i]]=[h.header.links[i],h.header.links[i-1]];drawEditor();preview();});
+    document.querySelectorAll('[data-nav-down]').forEach(b=>b.onclick=()=>{const i=+b.dataset.navDown;if(i<h.header.links.length-1)[h.header.links[i+1],h.header.links[i]]=[h.header.links[i],h.header.links[i+1]];drawEditor();preview();});
   };
   $('#view').innerHTML=`<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / THEME EDITOR</span><h2>Edit your storefront visually.</h2><p>Select a section on the left. The preview shows exactly which part you are changing.</p></div><a class="admin-view-store" href="./" target="_blank">Open live store ↗</a></div><div class="homepage-theme-editor"><aside class="homepage-section-list"><div class="homepage-section-list-head"><b>Homepage sections</b><small>Click a section to edit it</small></div><div id="homepageSectionNav"></div></aside><section class="homepage-editor-work"><div class="homepage-editor-card" id="homepageEditorPanel"></div><div class="homepage-preview-card"><div class="homepage-preview-top"><b>Live preview</b><span>Visual guide · Desktop</span></div><div class="homepage-preview-browser"><div class="homepage-browser-dots">● ● ●</div><div id="homepageLivePreview"></div></div></div></section></div>`;
   drawEditor();preview();
   $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
+}
+
+/* ---------- Product page visual editor ---------- */
+function productPageEditor(){
+ const x=D.settings.productPage||(D.settings.productPage={});
+ const defaults={addCartText:'Add to cart',buyNowText:'Buy it now',howToUseTitle:'How to use',detailsTitle:'Product details',shippingTitle:'Shipping & payment',currencyPrefix:'EGP ',currencySuffix:'',headingColor:'#1c524e',textColor:'#65746a',priceColor:'#1d2e25',buttonColor:'#1c524e',buttonTextColor:'#ffffff',buttonBorderColor:'#1c524e',buttonRadius:3,buttonHeight:50,buttonFontSize:13,priceFontSize:21,quantityWidth:42,quantityHeight:47,quantityFontSize:13,quantityBackground:'#ffffff',quantityBorderColor:'#dce5dc',buttonLayout:'vertical'};
+ for(const [k,v] of Object.entries(defaults))if(x[k]===undefined)x[k]=v;
+ const input=(k,label,type='text')=>'<div class="editor-field"><label>'+label+'</label><input data-pp="'+k+'" type="'+type+'" value="'+esc(x[k])+'"></div>';
+ const color=(k,label)=>input(k,label,'color');
+ $('#view').innerHTML='<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / PRODUCT TEMPLATE</span><h2>Product page design</h2><p>Change the customer-facing product page without editing code.</p></div><a class="admin-view-store" href="product.html?id='+(D.products.find(p=>p.visible)?.id||'')+'" target="_blank">Preview a product ↗</a></div>'+
+ '<div class="editor-panel"><h3>Product page text</h3><div class="editor-two-col">'+input('addCartText','Add to cart button')+input('buyNowText','Buy it now button')+input('howToUseTitle','How to use heading')+input('detailsTitle','Product details heading')+input('shippingTitle','Shipping heading')+input('currencyPrefix','Price prefix (e.g. EGP )')+input('currencySuffix','Price suffix (optional)')+'</div></div>'+
+ '<div class="editor-panel"><h3>Colours</h3><div class="editor-two-col">'+color('headingColor','Product title colour')+color('textColor','Description colour')+color('priceColor','Price colour')+color('buttonColor','Button background')+color('buttonTextColor','Button text')+color('buttonBorderColor','Button border')+color('quantityBackground','Quantity box background')+color('quantityBorderColor','Quantity box border')+'</div></div>'+
+ '<div class="editor-panel"><h3>Price and button sizing</h3><div class="editor-two-col">'+input('priceFontSize','Price text size (px)','number')+input('buttonFontSize','Button text size (px)','number')+input('buttonHeight','Button height (px)','number')+input('buttonRadius','Button corner radius (px)','number')+'</div><div class="editor-field"><label>Button arrangement</label><select data-pp="buttonLayout"><option value="vertical" '+(x.buttonLayout==='vertical'?'selected':'')+'>Stack buttons vertically</option><option value="horizontal" '+(x.buttonLayout==='horizontal'?'selected':'')+'>Side by side</option></select></div></div>'+
+ '<div class="editor-panel"><h3>Quantity selector</h3><p class="editor-hint">Adjust the quantity box dimensions and number size.</p><div class="editor-two-col">'+input('quantityWidth','Number box width (px)','number')+input('quantityHeight','Quantity box height (px)','number')+input('quantityFontSize','Quantity number size (px)','number')+'</div></div>'+
+ '<div class="editor-panel"><button class="admin-primary" id="saveProductPage">Save and publish product page</button></div>';
+ document.querySelectorAll('[data-pp]').forEach(el=>el.oninput=()=>{let v=el.type==='number'?Math.max(0,Math.min(100,Number(el.value)||0)):el.value;x[el.dataset.pp]=v;});
+ $('#saveProductPage').onclick=()=>save('Update product page design');
+}
+
+/* ---------- Custom pages manager ---------- */
+function pages(){
+ if(!Array.isArray(D.pages))D.pages=[];
+ const slugify=t=>String(t||'page').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'page';
+ const draw=()=>{
+  $('#view').innerHTML='<div class="page-heading"><div><span class="admin-eyebrow">ONLINE STORE / CONTENT</span><h2>Pages</h2><p>Create About Us, FAQs, Contact, Delivery & Returns, and any custom page.</p></div><button class="admin-primary" id="newPage">＋ Add page</button></div>'+
+  '<div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Page</th><th>URL</th><th>Status</th><th>Show in navigation</th><th></th></tr></thead><tbody>'+(D.pages.map((p,i)=>'<tr><td><b>'+esc(p.title)+'</b></td><td><code>page.html?slug='+esc(p.slug)+'</code></td><td>'+(p.published?'Published':'Draft')+'</td><td>'+(p.showInHeader?'Header':p.showInFooter?'Footer':'—')+'</td><td><button class="text-link" data-page-edit="'+i+'">Edit</button> <button class="text-link" data-page-delete="'+i+'">Delete</button></td></tr>').join('')||'<tr><td colspan="5">No pages yet. Create your first page.</td></tr>')+'</tbody></table></div></div>';
+  $('#newPage').onclick=()=>editPage();
+  document.querySelectorAll('[data-page-edit]').forEach(b=>b.onclick=()=>editPage(+b.dataset.pageEdit));
+  document.querySelectorAll('[data-page-delete]').forEach(b=>b.onclick=()=>{const p=D.pages[+b.dataset.pageDelete];if(confirm('Delete '+p.title+'?')){D.pages.splice(+b.dataset.pageDelete,1);save('Delete page '+p.title);draw();}});
+ };
+ function editPage(index){
+  const old=index===undefined?null:D.pages[index],p=old?{...old}:{title:'',slug:'',intro:'',content:'',image:'',seoTitle:'',seoDescription:'',published:false,showInHeader:false,showInFooter:false};
+  modal('<h2>'+(old?'Edit page':'Create page')+'</h2><div class="editor-field"><label>Page title</label><input id="pageTitle" value="'+esc(p.title)+'" placeholder="About Us"></div><div class="editor-field"><label>URL handle</label><input id="pageSlug" value="'+esc(p.slug)+'" placeholder="about-us"><small>Customer URL: page.html?slug=about-us</small></div><div class="editor-field"><label>Short introduction</label><textarea id="pageIntro" rows="2">'+esc(p.intro)+'</textarea></div><div class="editor-field"><label>Page content</label><textarea id="pageContent" rows="10" placeholder="Write your page content here. Separate paragraphs with a blank line.">'+esc(p.content)+'</textarea></div><div class="editor-field"><label>Page image URL (optional)</label><input id="pageImage" value="'+esc(p.image)+'" placeholder="https://..."></div><div class="editor-two-col"><label><input id="pagePublished" type="checkbox" '+(p.published?'checked':'')+'> Publish page</label><label><input id="pageHeader" type="checkbox" '+(p.showInHeader?'checked':'')+'> Add to header navigation</label><label><input id="pageFooter" type="checkbox" '+(p.showInFooter?'checked':'')+'> Add to footer navigation</label></div><div class="editor-field"><label>SEO title</label><input id="pageSeoTitle" value="'+esc(p.seoTitle)+'"></div><div class="editor-field"><label>SEO description</label><textarea id="pageSeoDesc" rows="2">'+esc(p.seoDescription)+'</textarea></div><div class="modal-actions"><button class="admin-view-store" id="cancelPage">Cancel</button><button class="admin-primary" id="savePage">Save page</button></div>');
+  $('#cancelPage').onclick=closeModal;
+  $('#savePage').onclick=()=>{
+   const title=$('#pageTitle').value.trim();if(!title){toast('Page title is required.',true);return;}
+   let slug=slugify($('#pageSlug').value||title);if(D.pages.some((v,i)=>i!==index&&v.slug===slug)){toast('That URL handle is already used. Choose another.',true);return;}
+   const data={title,slug,intro:$('#pageIntro').value.trim(),content:$('#pageContent').value.trim(),image:$('#pageImage').value.trim(),published:$('#pagePublished').checked,showInHeader:$('#pageHeader').checked,showInFooter:$('#pageFooter').checked,seoTitle:$('#pageSeoTitle').value.trim(),seoDescription:$('#pageSeoDesc').value.trim()};
+   if(index===undefined)D.pages.push(data);else D.pages[index]=data;
+   closeModal();save((old?'Update ':'Create ')+title);draw();
+  };
+ }
+ draw();
 }
 
 function overview() {
