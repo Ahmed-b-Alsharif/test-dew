@@ -23,7 +23,34 @@
     "deliveryAlex": 90,
     "telegramEnabled": true,
     "telegramProxyUrl": "https://dew-telegram-proxy.vercel.app/api/telegram",
-    "ordersApiUrl": "https://dew-orders-api.aalshari.workers.dev"
+    "ordersApiUrl": "https://dew-orders-api.aalshari.workers.dev",
+    "instapayEnabled": true,
+    "codEnabled": true,
+    "instapayNumber": "",
+    "instapayName": "",
+    "instapayInstructions": "",
+    "deliveryAreas": [
+      {
+        "id": "cairo-giza",
+        "name": "Cairo & Giza",
+        "fee": 85,
+        "enabled": true
+      },
+      {
+        "id": "alexandria",
+        "name": "Alexandria",
+        "fee": 90,
+        "enabled": true
+      },
+      {
+        "id": "mnoia",
+        "name": "Mnofia",
+        "fee": 100,
+        "enabled": true
+      }
+    ],
+    "instagramUrl": "",
+    "facebookUrl": ""
   },
   "catalogs": [
     {
