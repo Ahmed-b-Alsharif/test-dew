@@ -315,24 +315,43 @@
           "values": [
             "7 cm 15 cm 8 cm"
           ]
+        },
+        {
+          "name": "Bavav",
+          "values": [
+            "Gacav"
+          ]
         }
       ],
       "variants": [
         {
           "id": "ed6fb53a",
           "options": {
-            "Size": "7 cm 15 cm 8 cm"
+            "Size": "7 cm 15 cm 8 cm",
+            "Bavav": "Gacav"
           },
           "price": 650,
-          "salePrice": 0,
-          "stock": 0,
+          "salePrice": 54,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "34068983",
+          "options": {
+            "Size": "7 cm 15 cm 8 cm",
+            "Bavav": "Gacav"
+          },
+          "price": 650,
+          "salePrice": 54,
+          "stock": 10,
           "sku": "",
           "barcode": ""
         }
       ],
       "price": 650,
-      "salePrice": 610,
-      "stock": 0
+      "salePrice": 54,
+      "stock": 20
     },
     {
       "id": "5302dec3",
