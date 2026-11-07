@@ -405,7 +405,7 @@ function exportProductsExcel(){
   const rows=[];
   D.products.forEach(p=>{
     const vars=p.variants?.length?p.variants:[{options:{},price:p.price,salePrice:p.salePrice,stock:p.stock,sku:p.sku||'',barcode:p.barcode||''}];
-    vars.forEach(v=>rows.push({productId:p.id,name:p.name,description:p.description||'',collection:p.catalog||'',tags:p.tags||'',visible:p.visible?'Active':'Draft',featured:p.featured?'Yes':'No',image1:p.images?.[0]||'',image2:p.images?.[1]||'',image3:p.images?.[2]||'',price:v.price??p.price,salePrice:v.salePrice??p.salePrice??'',stock:v.stock??p.stock,sku:v.sku||'',barcode:v.barcode||'',option1Name:p.options?.[0]?.name||'',option1Value:v.options?.[p.options?.[0]?.name]||'',option2Name:p.options?.[1]?.name||'',option2Value:v.options?.[p.options?.[1]?.name]||'',option3Name:p.options?.[2]?.name||'',option3Value:v.options?.[p.options?.[2]?.name]||''}));
+    vars.forEach(v=>rows.push({productId:p.id,name:p.name,description:p.description||'',collection:p.catalog||'',tags:p.tags||'',visible:p.visible?'Active':'Draft',featured:p.featured?'Yes':'No',image1:p.images?.[0]||'',image2:p.images?.[1]||'',image3:p.images?.[2]||'',price:v.price??p.price,salePrice:v.salePrice??p.salePrice??'',stock:v.stock??p.stock,sku:v.sku||'',barcode:v.barcode||'',variantImage:v.image||'',option1Name:p.options?.[0]?.name||'',option1Value:v.options?.[p.options?.[0]?.name]||'',option2Name:p.options?.[1]?.name||'',option2Value:v.options?.[p.options?.[1]?.name]||'',option3Name:p.options?.[2]?.name||'',option3Value:v.options?.[p.options?.[2]?.name]||''}));
   });
   const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Products');XLSX.writeFile(wb,'dew-products.xlsx');
 }
@@ -448,7 +448,7 @@ async function importProductsExcel(file){
         const on=String(col(r,'Option'+n+' Name')||'').trim(),ov=String(col(r,'Option'+n+' Value')||'').trim();
         if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}
       }
-      g.variants.push({id:uid(),options:opts,price:compare>sale?compare:sale,salePrice:compare>sale?sale:0,stock:Math.max(0,Math.floor(number(col(r,'Variant Inventory Qty','Inventory quantity'),0))),sku:String(col(r,'Variant SKU','SKU')||''),barcode:String(col(r,'Variant Barcode','Barcode')||'')});
+      g.variants.push({id:uid(),options:opts,price:compare>sale?compare:sale,salePrice:compare>sale?sale:0,stock:Math.max(0,Math.floor(number(col(r,'Variant Inventory Qty','Inventory quantity'),0))),sku:String(col(r,'Variant SKU','SKU')||''),barcode:String(col(r,'Variant Barcode','Barcode')||''),image:String(col(r,'Variant Image','Image Src')||'')});
     });
   }else{
     const required=['name','price'];if(required.some(k=>!headerMap.has(k)))throw new Error('This CSV is not a Shopify export or a Dew template. Expected Shopify columns such as Handle, Title and Variant Price, or Dew columns name and price.');
@@ -459,7 +459,7 @@ async function importProductsExcel(file){
       if(!groups.has(key))groups.set(key,{id:String(col(r,'productId')||'').trim()||uid(),name,description:String(col(r,'description')||''),tags:String(col(r,'tags')||''),visible:String(col(r,'visible')||'Active').toLowerCase()!=='draft',featured:String(col(r,'featured')||'').toLowerCase()==='yes',images:[col(r,'image1'),col(r,'image2'),col(r,'image3')].map(String).filter(Boolean),collectionNames:splitNames(col(r,'collection')),variants:[],optionNames:[]});
       const g=groups.get(key),opts={};
       for(let n=1;n<=3;n++){const on=String(col(r,'option'+n+'Name')||'').trim(),ov=String(col(r,'option'+n+'Value')||'').trim();if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}}
-      g.variants.push({id:uid(),options:opts,price,salePrice:number(col(r,'salePrice'),0),stock:Math.max(0,Math.floor(number(col(r,'stock'),0))),sku:String(col(r,'sku')||''),barcode:String(col(r,'barcode')||'')});
+      g.variants.push({id:uid(),options:opts,price,salePrice:number(col(r,'salePrice'),0),stock:Math.max(0,Math.floor(number(col(r,'stock'),0))),sku:String(col(r,'sku')||''),barcode:String(col(r,'barcode')||''),image:String(col(r,'variantImage')||'')});
     });
   }
   if(!groups.size)throw new Error('No products were found in this file.');
