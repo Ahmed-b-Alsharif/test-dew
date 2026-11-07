@@ -632,3 +632,20 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-product{display:flex;flex-direction:column;min-width:0}.dew-product>a:first-child .dew-product-info{padding:12px 12px 0}.dew-product>a:first-child .dew-product-info h3{min-height:0;margin:0;font-size:15px;line-height:1.35}.dew-product>.dew-product-info{padding:5px 12px 14px}.dew-product-prices{min-height:0;margin:0 0 9px;gap:7px;line-height:1.2}.dew-product-prices del{font-size:12px;white-space:nowrap}.dew-product-prices strong{font-size:16px;white-space:nowrap}.dew-savings{font-size:9px;padding:4px 7px;white-space:nowrap}.dew-product-actions{margin-top:0}
 @media(max-width:760px){.dew-product>a:first-child .dew-product-info{padding:9px 8px 0}.dew-product>a:first-child .dew-product-info h3{min-height:0;font-size:13px;line-height:1.3}.dew-product>.dew-product-info{padding:4px 8px 11px}.dew-product-prices{display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap;margin:0 0 8px;min-height:0}.dew-product-prices del{font-size:10px}.dew-product-prices strong{font-size:14px}.dew-savings{font-size:8px;padding:3px 6px}.dew-product-actions{margin-top:0;gap:6px}.dew-product-actions button{font-size:10px;padding:9px 4px;min-height:38px}}
 @media(min-width:761px){.dew-product>a:first-child .dew-product-info h3{font-size:15px}.dew-product-prices{margin-top:0}}
+
+
+/* Keep complete product photos visible across storefront cards and product galleries. */
+.dew-product-photo img,
+.product-recommendation-photo img,
+.product-gallery-main img,
+.product-gallery-thumbs img,
+.product-thumb img {
+  object-fit: contain;
+}
+.dew-product-photo,
+.product-recommendation-photo,
+.product-gallery-main,
+.product-gallery-thumbs button,
+.product-thumb {
+  background: #f5f6f0;
+}
