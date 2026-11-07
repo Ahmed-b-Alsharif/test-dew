@@ -97,12 +97,12 @@ async function createOrder(request, env) {
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
   if (!["cairo","alex"].includes(body.area)) return json({ok:false,error:"Choose a valid delivery area."},400);
   const paymentMethod=String(body.paymentMethod||"cod").toLowerCase();
-  const paymentSettings=(await getProducts(env)).settings||{};
+  const catalogue=await getProducts(env);
+  const paymentSettings=catalogue.settings||{};
   if (!["cod","instapay"].includes(paymentMethod)) return json({ok:false,error:"Choose a valid payment method."},400);
   if (paymentMethod==="cod" && paymentSettings.codEnabled===false) return json({ok:false,error:"Cash on Delivery is currently unavailable."},400);
   if (paymentMethod==="instapay" && (paymentSettings.instapayEnabled===false || !clean(paymentSettings.instapayNumber))) return json({ok:false,error:"InstaPay is currently unavailable."},400);
   if (!Array.isArray(body.lines) || !body.lines.length) return json({ok:false,error:"Your cart is empty."},400);
-  const catalogue=await getProducts(env);
   const products=(catalogue.products||[]).filter(p=>p.visible);
   const lines=[];
   for (const item of body.lines) {
