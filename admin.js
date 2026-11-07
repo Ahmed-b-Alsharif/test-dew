@@ -326,7 +326,7 @@ function products() {
   $('#view').innerHTML=`
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list.length} products</span></div></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list.length} products</span></div></div>
     <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
     ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
       <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
@@ -397,26 +397,96 @@ function exportProductsExcel(){
   const ws=XLSX.utils.json_to_sheet(rows),wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'Products');XLSX.writeFile(wb,'dew-products.xlsx');
 }
 async function importProductsExcel(file){
-  if(!file)return;if(!window.XLSX)throw new Error('Excel tools are still loading. Refresh and try again.');
-  const wb=XLSX.read(await file.arrayBuffer(),{type:'array'}),sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:''});
+  if(!file)return;
+  if(!window.XLSX)throw new Error('Import tools are still loading. Refresh and try again.');
+  const wb=XLSX.read(await file.arrayBuffer(),{type:'array',raw:true});
+  const sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:'',raw:false});
   if(!rows.length)throw new Error('The spreadsheet is empty.');
-  const required=['name','price'];if(required.some(k=>!(k in rows[0])))throw new Error('Use the exported Dew template; required columns: name and price.');
+  const norm=s=>String(s||'').trim().toLowerCase().replace(/[\s_-]+/g,' ');
+  const headers=Object.keys(rows[0]),headerMap=new Map(headers.map(h=>[norm(h),h]));
+  const col=(r,...names)=>{for(const n of names){const h=headerMap.get(norm(n));if(h!==undefined&&r[h]!==''&&r[h]!==null&&r[h]!==undefined)return r[h];}return '';};
+  const isShopify=headerMap.has('handle')&&headerMap.has('title')&&(headerMap.has('variant price')||headerMap.has('body (html)'));
+  const number=(v,fallback=0)=>{const n=Number(String(v??'').replace(/[, EGP$]/g,''));return Number.isFinite(n)?n:fallback;};
+  const cleanHtml=v=>String(v||'').replace(/<script[\s\S]*?<\/script>/gi,'').replace(/<style[\s\S]*?<\/style>/gi,'').replace(/<\/(p|div|li|h[1-6])>/gi,'\n').replace(/<br\s*\/?>/gi,'\n').replace(/<[^>]*>/g,' ').replace(/&nbsp;/gi,' ').replace(/&amp;/gi,'&').replace(/&lt;/gi,'<').replace(/&gt;/gi,'>').replace(/&quot;/gi,'"').replace(/&#39;/gi,"'").replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+  const splitNames=v=>String(v||'').split(/[;,|]/).map(x=>x.trim()).filter(Boolean);
   const groups=new Map();
-  rows.forEach((r,i)=>{
-    const name=String(r.name||'').trim(),price=Number(r.price);
-    if(!name||!Number.isFinite(price)||price<0)throw new Error('Invalid product name or price on spreadsheet row '+(i+2)+'.');
-    const key=String(r.productId||'').trim()||('new:'+name);
-    if(!groups.has(key))groups.set(key,{id:String(r.productId||'').trim()||uid(),name,description:String(r.description||''),catalog:String(r.collection||''),tags:String(r.tags||''),visible:String(r.visible||'Active').toLowerCase()!=='draft',featured:String(r.featured||'').toLowerCase()==='yes',images:[r.image1,r.image2,r.image3].map(String).filter(Boolean),variants:[],optionNames:[]});
-    const g=groups.get(key),opts={};
-    for(let n=1;n<=3;n++){const on=String(r['option'+n+'Name']||'').trim(),ov=String(r['option'+n+'Value']||'').trim();if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}}
-    g.variants.push({id:uid(),options:opts,price,salePrice:Number(r.salePrice)||0,stock:Math.max(0,Math.floor(Number(r.stock)||0)),sku:String(r.sku||''),barcode:String(r.barcode||'')});
-  });
-  const incoming=[...groups.values()].map(g=>{const options=g.optionNames.map(name=>({name,values:[...new Set(g.variants.map(v=>v.options[name]).filter(Boolean))]}));const first=g.variants[0];return{id:g.id,name:g.name,description:g.description,catalog:g.catalog,tags:g.tags,visible:g.visible,featured:g.featured,images:g.images,options,variants:g.variants,price:first.price,salePrice:first.salePrice,stock:g.variants.reduce((n,v)=>n+v.stock,0)};});
-  const existing=new Map(D.products.map(p=>[p.id,p]));
-  incoming.forEach(p=>{const old=existing.get(p.id);if(old){p.images=p.images.length?p.images:old.images;p.catalog=p.catalog||old.catalog;p.description=p.description||old.description;p.tags=p.tags||old.tags;}});
-  const ids=new Set(incoming.map(p=>p.id));D.products=[...D.products.filter(p=>!ids.has(p.id)),...incoming];
-  await save('Import products from Excel');toast('Imported '+incoming.length+' products.');products();
+  if(isShopify){
+    rows.forEach((r,i)=>{
+      const handle=String(col(r,'Handle')||'').trim();
+      const title=String(col(r,'Title')||'').trim();
+      if(!handle&&!title)return;
+      const key=handle||('title:'+title.toLowerCase());
+      if(!groups.has(key)){
+        const collectionValue=col(r,'Collection','Collections','Collection title','Collection name');
+        const type=String(col(r,'Type')||'').trim();
+        groups.set(key,{handle,name:title||handle,description:cleanHtml(col(r,'Body (HTML)','Body','Description')),tags:String(col(r,'Tags')||''),visible:!['false','0','draft','archived'].includes(String(col(r,'Published','Status')||'true').toLowerCase()),images:[],collectionNames:splitNames(collectionValue),type,variants:[],optionNames:[],featured:false});
+      }
+      const g=groups.get(key);
+      const image=String(col(r,'Image Src','Image URL')||'').trim();
+      if(image&&!g.images.includes(image))g.images.push(image);
+      const variantPriceRaw=col(r,'Variant Price','Price');
+      if(variantPriceRaw===''||variantPriceRaw===null||variantPriceRaw===undefined)return;
+      const sale=number(variantPriceRaw,-1);
+      if(sale<0)throw new Error('Invalid variant price on CSV row '+(i+2)+'.');
+      const compareRaw=col(r,'Variant Compare At Price','Compare At Price');
+      const compare=number(compareRaw,0);
+      const opts={};
+      for(let n=1;n<=3;n++){
+        const on=String(col(r,'Option'+n+' Name')||'').trim(),ov=String(col(r,'Option'+n+' Value')||'').trim();
+        if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}
+      }
+      g.variants.push({id:uid(),options:opts,price:compare>sale?compare:sale,salePrice:compare>sale?sale:0,stock:Math.max(0,Math.floor(number(col(r,'Variant Inventory Qty','Inventory quantity'),0))),sku:String(col(r,'Variant SKU','SKU')||''),barcode:String(col(r,'Variant Barcode','Barcode')||'')});
+    });
+  }else{
+    const required=['name','price'];if(required.some(k=>!headerMap.has(k)))throw new Error('This CSV is not a Shopify export or a Dew template. Expected Shopify columns such as Handle, Title and Variant Price, or Dew columns name and price.');
+    rows.forEach((r,i)=>{
+      const name=String(col(r,'name')||'').trim(),price=number(col(r,'price'),-1);
+      if(!name||price<0)throw new Error('Invalid product name or price on spreadsheet row '+(i+2)+'.');
+      const key=String(col(r,'productId')||'').trim()||('new:'+name);
+      if(!groups.has(key))groups.set(key,{id:String(col(r,'productId')||'').trim()||uid(),name,description:String(col(r,'description')||''),tags:String(col(r,'tags')||''),visible:String(col(r,'visible')||'Active').toLowerCase()!=='draft',featured:String(col(r,'featured')||'').toLowerCase()==='yes',images:[col(r,'image1'),col(r,'image2'),col(r,'image3')].map(String).filter(Boolean),collectionNames:splitNames(col(r,'collection')),variants:[],optionNames:[]});
+      const g=groups.get(key),opts={};
+      for(let n=1;n<=3;n++){const on=String(col(r,'option'+n+'Name')||'').trim(),ov=String(col(r,'option'+n+'Value')||'').trim();if(on&&ov){opts[on]=ov;if(!g.optionNames.includes(on))g.optionNames.push(on);}}
+      g.variants.push({id:uid(),options:opts,price,salePrice:number(col(r,'salePrice'),0),stock:Math.max(0,Math.floor(number(col(r,'stock'),0))),sku:String(col(r,'sku')||''),barcode:String(col(r,'barcode')||'')});
+    });
+  }
+  if(!groups.size)throw new Error('No products were found in this file.');
+  const incoming=[];
+  for(const g of groups.values()){
+    if(!g.variants.length)continue;
+    const options=g.optionNames.map(name=>({name,values:[...new Set(g.variants.map(v=>v.options[name]).filter(Boolean))]}));
+    const first=g.variants[0],existing=D.products.find(p=>(g.handle&&p.shopifyHandle===g.handle)||String(p.name||'').trim().toLowerCase()===String(g.name||'').trim().toLowerCase());
+    const id=g.id||existing?.id||uid();
+    const catalogNames=g.collectionNames.length?g.collectionNames:(g.type?[g.type]:[]);
+    const catalogName=catalogNames[0]||'';
+    let catalog='';
+    if(catalogName){
+      let c=D.catalogs.find(x=>String(x.name||'').trim().toLowerCase()===catalogName.toLowerCase());
+      if(!c){c={id:uid(),name:catalogName,description:'',image:''};D.catalogs.push(c);}
+      catalog=c.id;
+    }
+    incoming.push({id,name:g.name,shopifyHandle:g.handle||undefined,description:g.description||existing?.description||'',catalog:catalog||existing?.catalog||'',tags:g.tags||existing?.tags||'',visible:g.visible,featured:existing?.featured||g.featured||false,images:g.images.length?g.images:(existing?.images||[]),howToUse:existing?.howToUse||'',options,variants:g.variants,price:first.price,salePrice:first.salePrice,stock:g.variants.reduce((n,v)=>n+v.stock,0)});
+  }
+  if(!incoming.length)throw new Error('Products were found, but none had a valid variant price.');
+  const collectionCount=D.catalogs.length;
+  const preview=incoming.slice(0,8).map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(catName(p.catalog))+'</td><td>'+egp(p.salePrice>0?p.salePrice:p.price)+'</td><td>'+p.variants.length+'</td></tr>').join('');
+  const newCount=incoming.filter(p=>!D.products.some(x=>x.id===p.id||String(x.name||'').trim().toLowerCase()===p.name.trim().toLowerCase())).length;
+  const updateCount=incoming.length-newCount;
+  const note=isShopify&&!headerMap.has('collection')&&!headerMap.has('collections')&&!headerMap.has('collection title')&&!headerMap.has('collection name')?'Shopify product CSV files normally do not include collection membership. This import will use each product’s Type as its collection when available. You can edit collections afterwards.':'';
+  modal('<div class="shopify-page-head"><div><span class="admin-eyebrow">SHOPIFY CSV IMPORT</span><h2>Review products</h2><p>Check the products before saving them to your Dew store.</p></div></div><div class="shopify-metrics"><div><span>Products</span><b>'+incoming.length+'</b></div><div><span>New</span><b>'+newCount+'</b></div><div><span>Matching names to update</span><b>'+updateCount+'</b></div><div><span>Collections in store</span><b>'+D.catalogs.length+'</b></div></div>'+(note?'<p class="editor-hint">'+esc(note)+'</p>':'')+'<div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Collection</th><th>Price</th><th>Variants</th></tr></thead><tbody>'+preview+'</tbody></table></div>'+(incoming.length>8?'<p class="editor-hint">Showing the first 8 products. All '+incoming.length+' will be imported.</p>':'')+'<p class="editor-hint">Product descriptions, prices, variants, stock, SKUs, barcodes and image links will be imported. Existing products with matching names will be updated rather than duplicated.</p><div class="editor-head-actions" style="justify-content:flex-end;margin-top:18px"><button class="admin-view-store" id="cancelProductImport">Cancel</button><button class="admin-primary" id="confirmProductImport">Import '+incoming.length+' products</button></div>');
+  $('#cancelProductImport').onclick=closeModal;
+  $('#confirmProductImport').onclick=async()=>{
+    const btn=$('#confirmProductImport');btn.disabled=true;btn.textContent='Importing...';
+    try{
+      const byName=new Map(D.products.map(p=>[String(p.name||'').trim().toLowerCase(),p]));
+      const merged=incoming.map(p=>{const old=byName.get(p.name.trim().toLowerCase());if(old){p.id=old.id;p.images=p.images.length?p.images:old.images;p.catalog=p.catalog||old.catalog;p.description=p.description||old.description;p.tags=p.tags||old.tags;p.featured=old.featured||p.featured;}return p;});
+      const ids=new Set(merged.map(p=>p.id));D.products=[...D.products.filter(p=>!ids.has(p.id)),...merged];
+      const saved=await gh('PUT','contents/products.json',{message:'Import products from '+(isShopify?'Shopify CSV':'CSV/Excel'),content:enc(JSON.stringify(D,null,2)+'\n'),sha:SHA});
+      SHA=saved.content.sha;
+      closeModal();toast('Imported '+merged.length+' products successfully.');products();
+    }catch(err){btn.disabled=false;btn.textContent='Try import again';toast(err.message,true);}
+  };
 }
+
 function resize(file) {
   return new Promise((res, rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
