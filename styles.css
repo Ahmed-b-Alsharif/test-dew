@@ -668,3 +668,8 @@ th{background:var(--green);color:#fff;font-weight:600}
 .product-variant-value{min-height:38px;padding:8px 13px;border:1px solid #d8e1d8;border-radius:3px;background:#fff;color:#385347;font-size:12px;cursor:pointer}
 .product-variant-value[aria-pressed="true"]{border-color:#1c524e;background:#eaf2ec;color:#1c524e;font-weight:700;box-shadow:inset 0 0 0 1px #1c524e}
 @media(max-width:760px){.product-gallery-main img{max-height:none}.product-gallery-thumbs{grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}}
+
+
+/* Mobile storefront card actions and product purchase controls */
+.dew-product{cursor:pointer}.dew-product-link{touch-action:manipulation}.dew-product-actions button{min-height:42px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.product-purchase-actions button{display:block;min-height:50px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}.product-variant-values button{min-height:42px;touch-action:manipulation}
+@media(max-width:760px){.dew-product-actions{grid-template-columns:1fr!important}.dew-product-actions button{width:100%;min-height:42px;font-size:11px;padding:10px 6px}.product-purchase-actions{grid-template-columns:1fr!important;gap:9px}.product-purchase-actions button{min-height:52px;font-size:13px}.product-detail-grid{min-width:0}.product-detail-info{width:100%;min-width:0}}
