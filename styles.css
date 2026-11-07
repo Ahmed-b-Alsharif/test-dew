@@ -316,3 +316,20 @@ th{background:var(--green);color:#fff;font-weight:600}
 
 .nav-link-actions .admin-danger{border:1px solid #e7c9c4;background:#fff7f5;color:#a64e43;border-radius:8px;padding:7px 11px;cursor:pointer}
 .nav-link-actions .admin-danger:hover{background:#fae9e5}
+
+/* True independent header alignment controls */
+@media(min-width:761px){
+ .dew-header{display:flex;justify-content:flex-end;position:sticky}
+ .dew-header nav{position:absolute;top:50%;left:5vw;right:auto;transform:translateY(-50%);max-width:calc(100% - 300px)}
+ .dew-header.header-nav-center nav{left:50%;right:auto;transform:translate(-50%,-50%)}
+ .dew-header.header-nav-right nav{left:auto;right:145px;transform:translateY(-50%)}
+ .dew-header .dew-logo{position:absolute;top:50%;left:5vw;right:auto;transform:translateY(-50%);justify-self:auto}
+ .dew-header.header-logo-center .dew-logo{left:50%;right:auto;transform:translate(-50%,-50%)}
+ .dew-header.header-logo-right .dew-logo{left:auto;right:135px;transform:translateY(-50%)}
+ .dew-header-actions{margin-left:auto;display:flex;align-items:center;gap:12px}
+}
+@media(max-width:760px){
+ .dew-header{display:grid}
+ .dew-header nav{position:static;transform:none;max-width:100%}
+ .dew-header .dew-logo{position:static;transform:none}
+}
