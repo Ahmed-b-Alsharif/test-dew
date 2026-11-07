@@ -24,11 +24,11 @@
     "telegramEnabled": true,
     "telegramProxyUrl": "https://dew-telegram-proxy.vercel.app/api/telegram",
     "ordersApiUrl": "https://dew-orders-api.aalshari.workers.dev",
-    "instapayEnabled": true,
+    "instapayEnabled": false,
     "codEnabled": true,
-    "instapayNumber": "",
-    "instapayName": "",
-    "instapayInstructions": "",
+    "instapayNumber": "01118225522",
+    "instapayName": "Ahmed b. A.",
+    "instapayInstructions": "please send us screenshot after the payment is done\nThank you",
     "deliveryAreas": [
       {
         "id": "cairo-giza",
