@@ -296,20 +296,6 @@
   ],
   "products": [
     {
-      "catalog": "7aa4667d",
-      "description": "Gentle everyday shower gel.",
-      "featured": false,
-      "howToUse": "",
-      "id": "fad223bf",
-      "images": [],
-      "name": "Shower gel",
-      "price": 120,
-      "salePrice": 0,
-      "stock": 10,
-      "tags": "body",
-      "visible": true
-    },
-    {
       "id": "4be6283f",
       "name": "Fluffy Kashmir Pouch Set",
       "shopifyHandle": "fluffy-kashmir-pouch-set",
