@@ -480,7 +480,8 @@ async function importProductsExcel(file){
       const byName=new Map(D.products.map(p=>[String(p.name||'').trim().toLowerCase(),p]));
       const merged=incoming.map(p=>{const old=byName.get(p.name.trim().toLowerCase());if(old){p.id=old.id;p.images=p.images.length?p.images:old.images;p.catalog=p.catalog||old.catalog;p.description=p.description||old.description;p.tags=p.tags||old.tags;p.featured=old.featured||p.featured;}return p;});
       const ids=new Set(merged.map(p=>p.id));D.products=[...D.products.filter(p=>!ids.has(p.id)),...merged];
-      await save('Import products from '+(isShopify?'Shopify CSV':'CSV/Excel'));
+      const saved=await gh('PUT','contents/products.json',{message:'Import products from '+(isShopify?'Shopify CSV':'CSV/Excel'),content:enc(JSON.stringify(D,null,2)+'\n'),sha:SHA});
+      SHA=saved.content.sha;
       closeModal();toast('Imported '+merged.length+' products successfully.');products();
     }catch(err){btn.disabled=false;btn.textContent='Try import again';toast(err.message,true);}
   };
