@@ -56,7 +56,8 @@
         "show": true,
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
         "link": "#shop",
-        "mode": "marquee"
+        "mode": "scroll",
+        "speed": "fast"
       },
       "header": {
         "logo": "Dew",
@@ -74,7 +75,9 @@
             "label": "Contact",
             "url": "#contact"
           }
-        ]
+        ],
+        "logoPosition": "left",
+        "navPosition": "center"
       },
       "hero": {
         "show": true,
