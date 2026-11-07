@@ -216,7 +216,9 @@
       "salePrice": 0,
       "stock": 25,
       "tags": "chocolate, coconut, strawberry, candy",
-      "visible": true
+      "visible": true,
+      "options": [],
+      "variants": []
     },
     {
       "catalog": "bc000f32",
