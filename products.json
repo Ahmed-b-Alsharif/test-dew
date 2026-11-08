@@ -195,17 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "dd86dc77",
-      "name": "Hair Care",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "58806ff3",
-        "928936b1",
-        "6c043d33"
-      ]
-    },
-    {
       "id": "ed4077f0",
       "name": "Shower Gel",
       "description": "",
