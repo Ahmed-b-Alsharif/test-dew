@@ -5,7 +5,7 @@ const money=n=>'EGP '+Number(n||0).toLocaleString('en-US');
 const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
 const variantsOf=p=>(Array.isArray(p.variants)?p.variants:[]).filter(v=>v&&v.id);
 const availableStock=p=>p?.variants?.length?p.variants.reduce((n,v)=>n+Math.max(0,Number(v.stock||0)),0):Math.max(0,Number(p?.stock||0));
-const hasMultipleVariantValues=p=>(Array.isArray(p.variants)?p.variants.filter(v=>v&&v.id).length:0)>1||(p.options||[]).some(o=>Array.isArray(o.values)&&new Set(o.values.map(v=>String(v).trim()).filter(Boolean)).size>1);
+const hasMultipleVariantValues=p=>(Array.isArray(p.variants)?p.variants.filter(v=>v&&v.id).length:0)>0||(p.options||[]).some(o=>Array.isArray(o.values)&&new Set(o.values.map(v=>String(v).trim()).filter(Boolean)).size>1);
 function merge(a,b){if(!b||typeof b!=='object')return a;for(const k of Object.keys(b)){if(b[k]&&typeof b[k]==='object'&&!Array.isArray(b[k]))a[k]=merge(a[k]||{},b[k]);else a[k]=b[k]}return a}
 function picture(src,label){return src?'<img src="'+esc(src)+'" alt="'+esc(label)+'" loading="lazy">':'<div class="dew-placeholder"><b>DEW</b><small>Image can be uploaded in Admin → Homepage</small></div>'}
 async function boot(){try{S=await(await fetch('products.json?v='+Date.now())).json()}catch(e){$('#app').textContent='Could not load the store. Please refresh.';return}
