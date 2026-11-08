@@ -237,41 +237,8 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch2.jpg?v=1773138901"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "size",
-          "values": [
-            "100 ml",
-            "50 ml"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "73321296",
-          "options": {
-            "size": "100 ml"
-          },
-          "price": 650,
-          "salePrice": 0,
-          "stock": 20,
-          "sku": "",
-          "barcode": "",
-          "image": "images/1794133981925-0a9b9dcc.jpg"
-        },
-        {
-          "id": "39e4fd5c",
-          "options": {
-            "size": "50 ml"
-          },
-          "price": 250,
-          "salePrice": 0,
-          "stock": 0,
-          "sku": "",
-          "barcode": "",
-          "image": "images/1794133988711-1f62981f.jpg"
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 650,
       "salePrice": 0,
       "stock": 20
