@@ -955,45 +955,8 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_NOw_the_frost_in_sep_5ff409e2-98c3-4b55-b967-4fe83731ae19.png?v=1770559468"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "50 ML",
-          "values": [
-            "Dream - tulip"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "74d2d34c",
-          "options": {
-            "50 ML": "Dream - tulip"
-          },
-          "price": 220,
-          "salePrice": 200,
-          "stock": 10,
-          "sku": "",
-          "barcode": ""
-        },
-        {
-          "id": "62931622",
-          "options": {},
-          "price": 220,
-          "salePrice": 200,
-          "stock": 10,
-          "sku": "",
-          "barcode": ""
-        },
-        {
-          "id": "153900de",
-          "options": {},
-          "price": 220,
-          "salePrice": 200,
-          "stock": 10,
-          "sku": "",
-          "barcode": ""
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 220,
       "salePrice": 200,
       "stock": 30
