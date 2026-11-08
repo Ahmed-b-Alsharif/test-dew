@@ -195,20 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "c4dcfef1",
-      "name": "Lip Balm",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "757414b0",
-        "b7b6c660",
-        "1bd5e3ce",
-        "4ae993e5",
-        "3280bf12",
-        "5082f6d9"
-      ]
-    },
-    {
       "id": "8b845705",
       "name": "Makeup remover",
       "description": "",
