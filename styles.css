@@ -686,3 +686,60 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-sold-out-badge{position:absolute;z-index:3;top:12px;left:12px;display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:5px;background:#c83232;color:#fff;font-size:10px;font-weight:800;letter-spacing:1.1px;line-height:1;box-shadow:0 3px 12px rgba(90,20,20,.18)}
 .dew-sold-out-badge[hidden]{display:none}
 .product-sold-out-badge{top:16px;left:16px;padding:10px 15px;font-size:11px}
+
+
+/* Shopify-style variant option builder and compact variant inventory list */
+.shopify-option-card{border:1px solid #e0e5df;border-radius:12px;background:#fff;margin:10px 0;overflow:hidden}
+.shopify-option-heading{display:flex;align-items:flex-start;gap:12px;padding:16px 18px}
+.shopify-drag{color:#8b958d;font-size:19px;line-height:28px;cursor:grab}
+.shopify-option-body{flex:1;min-width:0;display:grid;gap:9px}
+.shopify-option-body>label,.shopify-option-values>label{display:block;color:#53645a;font-size:12px;font-weight:650}
+.shopify-option-name{width:100%;min-height:42px;padding:9px 12px;border:1px solid #cfd7d0;border-radius:9px;background:#fff;color:#183b35;font:inherit}
+.shopify-option-summary{display:flex;flex-wrap:wrap;gap:7px;margin-top:3px}
+.shopify-option-summary span,.shopify-value-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border-radius:6px;background:#eef0ee;color:#263b31;font-size:12px}
+.shopify-option-values{display:grid;gap:9px;margin-top:5px}
+.shopify-value-chips{display:flex;flex-wrap:wrap;gap:7px}
+.shopify-value-chip{padding:5px 7px 5px 10px}
+.shopify-value-chip button{border:0;background:transparent;color:#58665d;font-size:17px;line-height:14px;cursor:pointer;padding:0 1px}
+.shopify-add-value{display:flex;gap:8px;align-items:center}
+.shopify-add-value input{flex:1;min-width:0;min-height:40px;padding:8px 11px;border:1px solid #d4ddd5;border-radius:9px;background:#fff;color:#183b35}
+.shopify-option-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.shopify-option-actions .shopify-done{min-height:38px;padding:8px 17px;border-radius:999px}
+.shopify-option-actions .danger-link{white-space:nowrap}
+.shopify-option-card:not(.is-editing) .shopify-option-heading{align-items:center}
+.shopify-option-card:not(.is-editing) .shopify-option-body{gap:4px}
+.shopify-add-option{margin-top:5px}
+.shopify-variant-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 14px;border:1px solid #e0e5df;border-bottom:0;border-radius:12px 12px 0 0;background:#fafbfa;color:#243c31}
+.shopify-variant-toolbar>label{display:flex;align-items:center;gap:9px;color:#66736a;font-size:12px}
+.shopify-variant-toolbar select{min-height:34px;padding:5px 10px;border:1px solid #dce3dc;border-radius:999px;background:#fff;color:#243c31}
+.shopify-variant-list{border:1px solid #e0e5df;border-radius:0 0 12px 12px;overflow:hidden}
+.shopify-variant-group-title{padding:11px 15px;background:#f4f5f4;border-bottom:1px solid #e6eae6;color:#42564a;font-size:12px;font-weight:700}
+.shopify-variant-row{border-bottom:1px solid #e8ece8;background:#fff}
+.shopify-variant-row:last-child{border-bottom:0}
+.shopify-variant-main{display:grid;grid-template-columns:58px minmax(150px,1fr) minmax(110px,180px) minmax(90px,130px) auto auto;align-items:center;gap:12px;padding:12px 14px}
+.shopify-variant-thumb{width:54px;height:54px;min-width:54px;min-height:54px;padding:3px;font-size:9px;border-color:#e0e5df}
+.shopify-variant-thumb img{width:46px;height:46px}
+.shopify-variant-name{display:grid;gap:7px;min-width:0;color:#253c31;font-size:12px}
+.shopify-variant-selects{display:flex;flex-wrap:wrap;gap:5px}
+.shopify-variant-selects select{max-width:130px;min-width:70px;min-height:30px;padding:4px 7px;border:1px solid #dce3dc;border-radius:6px;background:#fff;color:#526257;font-size:11px}
+.shopify-variant-price,.shopify-variant-stock,.shopify-variant-details label{display:grid;gap:5px;color:#69766d;font-size:10px;font-weight:650}
+.shopify-variant-price input,.shopify-variant-stock input,.shopify-variant-details input{width:100%;min-width:0;min-height:38px;padding:7px 9px;border:1px solid #d4ddd5;border-radius:8px;background:#fff;color:#183b35;font-size:13px}
+.shopify-variant-more{border:0;background:transparent;color:#1c524e;font-size:11px;font-weight:650;white-space:nowrap;cursor:pointer}
+.shopify-variant-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0 16px 15px 84px;background:#fff}
+.shopify-add-variant{margin-top:12px}
+@media(max-width:760px){
+ .shopify-option-heading{padding:13px;gap:8px;flex-wrap:wrap}
+ .shopify-drag{font-size:17px}
+ .shopify-option-actions{width:100%;padding-left:25px}
+ .shopify-add-value{align-items:stretch}
+ .shopify-variant-toolbar{align-items:flex-start;flex-direction:column}
+ .shopify-variant-main{grid-template-columns:48px minmax(0,1fr) minmax(82px,105px);gap:9px;padding:11px}
+ .shopify-variant-thumb{width:46px;height:46px;min-width:46px;min-height:46px}
+ .shopify-variant-thumb img{width:38px;height:38px}
+ .shopify-variant-name{grid-column:2/4;grid-row:1}
+ .shopify-variant-price{grid-column:2;grid-row:2}
+ .shopify-variant-stock{grid-column:3;grid-row:2}
+ .shopify-variant-more{grid-column:2;justify-self:start}
+ .shopify-variant-main>.danger-link{grid-column:3;grid-row:3;justify-self:end}
+ .shopify-variant-details{grid-template-columns:1fr;padding:0 12px 14px}
+}
