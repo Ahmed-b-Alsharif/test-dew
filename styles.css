@@ -888,3 +888,10 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-product-actions.has-choice{grid-template-columns:1fr;justify-items:center}
 .dew-product-actions.has-choice .dew-collection-choose{grid-column:1/-1;width:min(100%,220px);display:flex;align-items:center;justify-content:center;min-height:39px;padding:9px 12px;border:1px solid var(--dew-green);border-radius:999px;background:var(--dew-green);color:#fff;text-decoration:none;font:600 11px Inter,system-ui,sans-serif}
 .dew-product-actions.has-choice .dew-collection-choose:hover{background:#123a29}
+
+/* Collection header uses the exact icon treatment from the storefront header. */
+.dew-collection-header .dew-header-actions{grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;gap:18px}
+.dew-collection-header .dew-collection-cart{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 13px;border:1px solid var(--dew-green);border-radius:30px;background:transparent;color:var(--dew-green);text-decoration:none}
+.dew-collection-header .dew-collection-cart .dew-cart-icon{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.dew-collection-header .dew-collection-cart b{font:600 11px Inter,system-ui,sans-serif;min-width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--dew-green);color:white}
+@media(max-width:760px){.dew-collection-header .dew-header-actions{gap:10px}.dew-collection-header .dew-collection-cart{padding:8px 10px}}
