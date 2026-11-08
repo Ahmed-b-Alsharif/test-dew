@@ -56,12 +56,10 @@
         "show": true,
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
         "link": "#shop",
-        "mode": "static",
-        "speed": "fast",
+        "mode": "scroll",
+        "speed": "normal",
         "messages": [
-          "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
-          "Hello",
-          "Hi"
+          "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP"
         ]
       },
       "header": {
@@ -90,7 +88,7 @@
         "text": "Thoughtful skincare, made with love in Egypt.",
         "button": "Discover the collection",
         "url": "#shop",
-        "image": "images/1794161779956-bcb561db.jpg"
+        "image": ""
       },
       "categories": {
         "show": true,
