@@ -75,7 +75,7 @@ async function notifyTelegram(order, env, settings) {
     "Order: " + order.number,
     "Customer: " + order.customer.first + " " + order.customer.last,
     "Phone: " + order.customer.phone,
-    "Area: " + (order.area === "alex" ? "Alexandria" : "Cairo & Giza"),
+    "Area: " + (order.area || order.areaName || order.areaId || "Not specified"),
     "Address: " + order.customer.address,
     "",
     lines,
@@ -84,7 +84,7 @@ async function notifyTelegram(order, env, settings) {
     "Delivery: " + money(order.delivery),
     "Discount: " + money(order.discount),
     "TOTAL: " + money(order.total),
-    "Payment: " + (order.paymentMethod==="instapay" ? "InstaPay (awaiting payment)" : "Cash on delivery")
+    "Payment: " + (String(order.paymentMethod||"cod").toLowerCase()==="instapay" ? "InstaPay (awaiting payment)" : "Cash on delivery")
   ].join("\n");
   await fetch("https://api.telegram.org/bot" + env.TELEGRAM_BOT_TOKEN + "/sendMessage", {
     method:"POST", headers:{"Content-Type":"application/json"},
