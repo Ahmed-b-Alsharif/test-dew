@@ -895,3 +895,20 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-collection-header .dew-collection-cart .dew-cart-icon{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .dew-collection-header .dew-collection-cart b{font:600 11px Inter,system-ui,sans-serif;min-width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--dew-green);color:white}
 @media(max-width:760px){.dew-collection-header .dew-header-actions{gap:10px}.dew-collection-header .dew-collection-cart{padding:8px 10px}}
+
+
+/* Product card price and action readability */
+.dew-product-prices strong,
+.dew-collection-product-copy .dew-product-prices strong{font-size:17px}
+.dew-product-prices strong.is-sale,
+.dew-collection-product-copy .dew-product-prices strong.is-sale{color:#d62828!important}
+.dew-product-actions button,
+.dew-collection-actions button,
+.dew-collection-actions a{font-size:12px;min-height:42px;padding:10px 9px}
+@media(max-width:760px){
+  .dew-product-prices strong,
+  .dew-collection-product-copy .dew-product-prices strong{font-size:15px}
+  .dew-product-actions button,
+  .dew-collection-actions button,
+  .dew-collection-actions a{font-size:11px;min-height:40px;padding:9px 6px}
+}
