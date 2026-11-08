@@ -195,16 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "cfb36855",
-      "name": "Foot Cream",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "3ffd74ff",
-        "e2a1f39f"
-      ]
-    },
-    {
       "id": "35003259",
       "name": "Lip & Cheek Tint",
       "description": "",
