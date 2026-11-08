@@ -325,7 +325,7 @@
             "size": "100 ml"
           },
           "price": 650,
-          "salePrice": 54,
+          "salePrice": 0,
           "stock": 20,
           "sku": "",
           "barcode": "",
@@ -345,7 +345,7 @@
         }
       ],
       "price": 650,
-      "salePrice": 54,
+      "salePrice": 0,
       "stock": 20
     },
     {
