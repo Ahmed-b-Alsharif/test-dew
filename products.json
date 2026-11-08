@@ -195,16 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "3f1d5004",
-      "name": "Pouch",
-      "description": "Fluffy Chasmir Pouch",
-      "image": "",
-      "productIds": [
-        "4be6283f",
-        "5302dec3"
-      ]
-    },
-    {
       "id": "be6c3d75",
       "name": "lip Gloss",
       "description": "",
