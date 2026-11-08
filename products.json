@@ -195,15 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "ed4077f0",
-      "name": "Shower Gel",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "735c75b6"
-      ]
-    },
-    {
       "id": "19c4466a",
       "name": "Moisturizer Cream",
       "description": "",
