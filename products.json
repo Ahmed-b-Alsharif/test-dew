@@ -238,6 +238,17 @@
         "5082f6d9",
         "3cf25ab8"
       ]
+    },
+    {
+      "id": "06c30362",
+      "name": "Foot Care",
+      "description": "",
+      "image": "",
+      "productIds": [
+        "9af52287",
+        "3ffd74ff",
+        "e2a1f39f"
+      ]
     }
   ],
   "products": [
