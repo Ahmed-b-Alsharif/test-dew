@@ -193,20 +193,7 @@
       }
     }
   },
-  "catalogs": [
-    {
-      "id": "444bbcdc",
-      "name": "Lip Scrub",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "950127fe",
-        "c2b4ce28",
-        "dbb95a5d",
-        "3cf25ab8"
-      ]
-    }
-  ],
+  "catalogs": [],
   "products": [
     {
       "id": "4be6283f",
