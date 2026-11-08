@@ -64,7 +64,7 @@
       },
       "header": {
         "logo": "Dew",
-        "logoImage": "images/1794174404790-3bacf2bb.jpg",
+        "logoImage": "",
         "links": [
           {
             "label": "Shop",
@@ -88,7 +88,9 @@
         "text": "Thoughtful skincare, made with love in Egypt.",
         "button": "Discover the collection",
         "url": "#shop",
-        "image": "images/1794174383786-72785045.jpg"
+        "image": "",
+        "showButton": true,
+        "buttonPosition": "left"
       },
       "categories": {
         "show": true,
@@ -127,7 +129,9 @@
         "text": "Explore your everyday skincare essentials.",
         "button": "Shop now",
         "url": "#shop",
-        "image": ""
+        "image": "",
+        "showButton": true,
+        "buttonPosition": "left"
       },
       "benefits": {
         "show": true,
@@ -188,6 +192,10 @@
         "cream": "#fbf8f1",
         "ink": "#183b35",
         "accent": "#e7eee5"
+      },
+      "customBanners": {
+        "show": true,
+        "items": []
       }
     }
   },
@@ -196,7 +204,7 @@
       "id": "a33bf143",
       "name": "Body Care",
       "description": "",
-      "image": "",
+      "image": "images/1794176181136-b10b1025.jpg",
       "productIds": [
         "95e54cca",
         "561a22fa",
