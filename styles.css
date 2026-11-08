@@ -770,3 +770,86 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-collection-page .dew-empty{padding:30px;text-align:center}
 @media(max-width:900px){.dew-collection-page .dew-products{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}
 @media(max-width:600px){.dew-collection-page{padding:25px 15px 50px}.dew-collection-page .dew-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.dew-collection-page .dew-product-info h3{font-size:12px}.dew-collection-page .dew-product-actions .dew-add{width:100%;padding:9px 8px}}
+
+
+/* Collection pages: editorial Dew look, aligned header and direct purchase actions */
+.dew-collection-header{grid-template-columns:1fr auto 1fr;gap:20px;min-height:76px;height:auto}
+.dew-collection-header .dew-collection-nav{grid-column:1;grid-row:1;justify-self:start;align-items:center}
+.dew-collection-header>.dew-logo{grid-column:2;grid-row:1;justify-self:center;display:block}
+.dew-collection-header .dew-collection-cart{grid-column:3;grid-row:1;justify-self:end;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid #1c524e;border-radius:999px;color:#1c524e;text-decoration:none;font-size:12px;font-weight:650}
+.dew-collection-cart span{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 5px;border-radius:50%;background:#1c524e;color:white;font-size:10px}
+.dew-collection-header .dew-logo{font-size:32px}
+.dew-collection-page{padding-top:28px;padding-bottom:76px}
+.dew-collection-hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);min-height:310px;margin:0 0 55px;overflow:hidden;border-radius:20px;background:#edf2e9}
+.dew-collection-hero-art{min-height:310px;overflow:hidden;background:#e2e9df}
+.dew-collection-hero-art>img{width:100%;height:100%;min-height:310px;object-fit:cover;display:block}
+.dew-collection-art-fallback{height:100%;min-height:310px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:15px;padding:30px;background:radial-gradient(ellipse at 30% 25%,#f8f5e9 0,#e5ecdf 48%,#cbdccf 100%);color:#1c524e;text-align:center}
+.dew-collection-art-fallback span{font-size:10px;letter-spacing:.22em;font-weight:700}
+.dew-collection-art-fallback b{font:clamp(32px,4vw,54px) Georgia,serif}
+.dew-collection-hero-copy{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:40px clamp(25px,5vw,65px);color:#1c524e}
+.dew-collection-hero-copy .dew-collection-back{margin:0 0 35px;color:#527466;font-size:12px;text-decoration:none}
+.dew-collection-hero-copy .dew-kicker{font-size:10px;letter-spacing:.2em}
+.dew-collection-hero-copy h1{margin:12px 0 14px;font:clamp(34px,4.2vw,54px)/1.08 Georgia,serif;color:#1c524e}
+.dew-collection-hero-copy>p{max-width:440px;margin:0;color:#65766b;font-size:14px;line-height:1.8}
+.dew-collection-meta{display:flex;align-items:center;gap:9px;margin-top:25px;color:#456a58;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.dew-collection-meta span{width:24px;height:1px;background:#8da995}
+.dew-collection-section-heading{display:flex;align-items:end;justify-content:space-between;gap:15px;margin:0 0 23px}
+.dew-collection-section-heading .dew-kicker{font-size:10px;letter-spacing:.2em}
+.dew-collection-section-heading h2{margin:8px 0 0;color:#1c524e;font:clamp(25px,3vw,36px) Georgia,serif}
+.dew-collection-count{padding:7px 12px;border:1px solid #dce6dc;border-radius:999px;color:#63766a;font-size:10px;letter-spacing:.1em}
+.dew-collection-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px 18px}
+.dew-collection-card{display:flex;flex-direction:column;min-width:0;padding:0 0 13px;border:1px solid #edf0e9;border-radius:14px;background:#fff;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease}
+.dew-collection-card:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(31,67,49,.09)}
+.dew-collection-product-link{display:block;color:inherit;text-decoration:none}
+.dew-collection-product-photo{position:relative;aspect-ratio:4/4.6;overflow:hidden;background:#f1f3ed}
+.dew-collection-product-photo>img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s ease}
+.dew-collection-card:hover .dew-collection-product-photo>img{transform:scale(1.045)}
+.dew-collection-photo-tag{position:absolute;left:11px;top:11px;padding:6px 8px;border-radius:999px;background:rgba(255,253,248,.88);color:#42634f;font-size:8px;letter-spacing:.15em}
+.dew-collection-product-copy{padding:15px 14px 2px;text-align:center}
+.dew-collection-product-copy h3{min-height:0;margin:0 0 9px;color:#25483b;font:16px/1.35 Georgia,serif}
+.dew-collection-product-copy .dew-product-prices{display:flex;justify-content:center;align-items:center;gap:7px;min-height:23px;margin:0;color:#1c524e}
+.dew-collection-product-copy .dew-product-prices strong{font-size:14px;font-weight:700}
+.dew-collection-product-copy .dew-product-prices del{color:#929b92;font-size:11px}
+.dew-collection-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:auto 13px 0;padding-top:14px}
+.dew-collection-actions button,.dew-collection-actions a{display:flex;align-items:center;justify-content:center;min-height:39px;padding:9px 7px;border:1px solid #1c524e;border-radius:999px;text-align:center;text-decoration:none;font:600 11px Inter,system-ui,sans-serif;cursor:pointer;transition:background .18s,color .18s}
+.dew-collection-actions .dew-collection-add{background:#1c524e;color:#fff}
+.dew-collection-actions .dew-collection-buy{background:#fff;color:#1c524e}
+.dew-collection-actions .dew-collection-add:hover,.dew-collection-actions .dew-collection-buy:hover{background:#eaf1e9;color:#1c524e}
+.dew-collection-actions.has-choice{grid-template-columns:1fr}
+.dew-collection-actions .dew-collection-choose{grid-column:1/-1;width:min(100%,220px);justify-self:center;background:#1c524e;color:#fff}
+.dew-collection-actions .dew-collection-choose:hover{background:#123a29}
+.dew-collection-actions .dew-collection-disabled{grid-column:1/-1;background:#f0f1ee;border-color:#e1e5df;color:#879188;cursor:not-allowed}
+.dew-collection-empty{margin-top:20px;padding:55px 20px;border-radius:16px;background:#f2f5ef;text-align:center;color:#64756a}
+.dew-collection-empty h3{color:#1c524e;font:25px Georgia,serif}
+.dew-collection-toast{position:fixed;z-index:120;left:50%;bottom:25px;transform:translate(-50%,15px);padding:13px 22px;border-radius:999px;background:#123a29;color:#fff;font-size:13px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+.dew-collection-toast.show{opacity:1;transform:translate(-50%,0)}
+.dew-collection-header .dew-logo-image{display:block;max-width:150px;max-height:48px;object-fit:contain}
+@media(max-width:900px){.dew-collection-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 13px}.dew-collection-hero{grid-template-columns:1fr 1fr;min-height:270px}.dew-collection-hero-art,.dew-collection-hero-art>img,.dew-collection-art-fallback{min-height:270px}}
+@media(max-width:620px){
+ .dew-collection-header{grid-template-columns:1fr auto 1fr;gap:8px;min-height:64px;padding:0 14px}
+ .dew-collection-header .dew-collection-nav{gap:13px}
+ .dew-collection-header .dew-collection-nav a{font-size:11px}
+ .dew-collection-header .dew-logo{font-size:25px}
+ .dew-collection-header .dew-logo small{font-size:7px;letter-spacing:2px}
+ .dew-collection-header .dew-collection-cart{gap:5px;padding:7px 9px;font-size:10px}
+ .dew-collection-cart span{min-width:17px;height:17px;font-size:9px}
+ .dew-collection-header .dew-logo-image{max-width:95px;max-height:37px}
+ .dew-collection-page{padding:16px 13px 55px}
+ .dew-collection-hero{grid-template-columns:1fr;margin-bottom:35px;border-radius:15px}
+ .dew-collection-hero-art,.dew-collection-hero-art>img,.dew-collection-art-fallback{min-height:190px;max-height:230px}
+ .dew-collection-hero-copy{padding:23px 21px 26px}
+ .dew-collection-hero-copy .dew-collection-back{margin-bottom:19px}
+ .dew-collection-hero-copy h1{font-size:34px}
+ .dew-collection-hero-copy>p{font-size:13px}
+ .dew-collection-meta{margin-top:16px}
+ .dew-collection-section-heading{margin-bottom:16px}
+ .dew-collection-section-heading h2{font-size:26px}
+ .dew-collection-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px 10px}
+ .dew-collection-card{border-radius:11px;padding-bottom:10px}
+ .dew-collection-product-copy{padding:11px 7px 0}
+ .dew-collection-product-copy h3{font-size:13px;min-height:0}
+ .dew-collection-product-copy .dew-product-prices strong{font-size:12px}
+ .dew-collection-actions{gap:5px;margin: auto 8px 0;padding-top:11px}
+ .dew-collection-actions button,.dew-collection-actions a{min-height:36px;padding:8px 4px;font-size:9px}
+ .dew-collection-actions .dew-collection-choose{width:100%;max-width:190px}
+}
