@@ -883,3 +883,8 @@ th{background:var(--green);color:#fff;font-weight:600}
  .dew-collection-header .dew-logo{font-size:25px}
  .dew-collection-header .dew-logo-image{max-width:115px;max-height:36px}
 }
+
+/* Keep the variant choice action centered on every product-card surface. */
+.dew-product-actions.has-choice{grid-template-columns:1fr;justify-items:center}
+.dew-product-actions.has-choice .dew-collection-choose{grid-column:1/-1;width:min(100%,220px);display:flex;align-items:center;justify-content:center;min-height:39px;padding:9px 12px;border:1px solid var(--dew-green);border-radius:999px;background:var(--dew-green);color:#fff;text-decoration:none;font:600 11px Inter,system-ui,sans-serif}
+.dew-product-actions.has-choice .dew-collection-choose:hover{background:#123a29}
