@@ -3,7 +3,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const money=n=>'EGP '+Number(n||0).toLocaleString('en-US');
 const variants=p=>(Array.isArray(p.variants)?p.variants:[]).filter(v=>v&&v.id);
 const multiOptions=p=>(p.options||[]).some(o=>Array.isArray(o.values)&&new Set(o.values.map(v=>String(v).trim()).filter(Boolean)).size>1);
-const hasChoices=p=>multiOptions(p)||variants(p).length>1;
+const hasChoices=p=>variants(p).length>0||multiOptions(p);
 const stock=p=>variants(p).length?variants(p).reduce((n,v)=>n+Math.max(0,Number(v.stock||0)),0):Math.max(0,Number(p.stock||0));
 const effectivePrice=v=>Number(v?.salePrice)>0&&Number(v.salePrice)<Number(v.price)?Number(v.salePrice):Number(v?.price||0);
 function productPrice(p){
