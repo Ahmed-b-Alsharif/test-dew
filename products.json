@@ -81,8 +81,8 @@
             "url": "#contact"
           }
         ],
-        "logoPosition": "left",
-        "navPosition": "center"
+        "logoPosition": "center",
+        "navPosition": "left"
       },
       "hero": {
         "show": true,
