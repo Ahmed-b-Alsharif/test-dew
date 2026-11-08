@@ -936,3 +936,156 @@ th{background:var(--green);color:#fff;font-weight:600}
  #collectionCartDrawer .dew-line>img{width:58px;height:68px}
  .dew-collection-header .dew-collection-cart{min-height:42px;padding:8px 10px}
 }
+
+
+/* Dew premium editorial storefront refresh — visual styling only */
+:root{
+  --dew-green:#1c524e;
+  --dew-cream:#fbf8f1;
+  --dew-ink:#183b35;
+  --dew-accent:#e7eee5;
+  --dew-soft:#f1eee5;
+  --dew-line:#e4e6dc;
+  --dew-shadow:0 18px 48px rgba(24,59,53,.09);
+}
+body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inter,system-ui,sans-serif}
+.dew-ann{background:var(--dew-green);color:#fff;font-size:11px;letter-spacing:.09em;text-transform:uppercase;padding:3px 0}
+.dew-ann-track{gap:34px}
+.dew-header{background:rgba(251,248,241,.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(28,82,78,.09);padding:0 5vw;min-height:78px;box-shadow:0 4px 22px rgba(24,59,53,.035)}
+.dew-header nav a{font-size:11px;letter-spacing:.11em;text-transform:uppercase;text-decoration:none;color:#526b60;transition:color .2s}
+.dew-header nav a:hover{color:var(--dew-green)}
+.dew-logo{font-family:"Playfair Display",Georgia,serif!important;font-size:34px!important;letter-spacing:.015em!important;color:var(--dew-green);line-height:1}
+.dew-logo small{font:600 8px "DM Sans",sans-serif!important;letter-spacing:.34em!important;margin-top:5px;color:#819187}
+.dew-header-actions{gap:17px}
+.dew-cart,.dew-search-toggle{border:1px solid rgba(28,82,78,.22);background:transparent;color:var(--dew-green);transition:all .2s}
+.dew-cart:hover,.dew-search-toggle:hover{background:var(--dew-green);color:#fff}
+.dew-cart b{background:#c98d75;color:#fff}
+.dew-hero{position:relative;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);min-height:570px;background:#e9eee5}
+.dew-hero-copy{position:relative;z-index:1;padding:clamp(48px,7vw,104px) clamp(28px,7vw,110px)}
+.dew-kicker,.dew-section-head>span{font-size:10px;letter-spacing:.22em;color:#9b765f;font-weight:700}
+.dew-hero h1{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:clamp(44px,5.4vw,76px);line-height:1.04;letter-spacing:-.035em;color:var(--dew-green);margin:22px 0}
+.dew-hero p{font-size:15px;line-height:1.9;color:#61756a;max-width:390px;margin-bottom:30px}
+.dew-btn{background:var(--dew-green);color:#fff;border:1px solid var(--dew-green);border-radius:2px;padding:15px 25px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;transition:background .2s,color .2s,transform .2s}
+.dew-btn:hover{background:transparent;color:var(--dew-green);transform:translateY(-2px)}
+.dew-hero-art{position:relative;min-height:570px;background:#dfe8dd}
+.dew-hero-art:after{content:"";position:absolute;inset:18px;border:1px solid rgba(255,255,255,.48);pointer-events:none}
+.dew-hero-art img{min-height:570px;object-fit:cover}
+.dew-hero-art .dew-placeholder{min-height:570px;background:radial-gradient(circle at 60% 35%,#f8f4e9 0 10%,transparent 10.5%),linear-gradient(145deg,#dce8dc,#b7cbbd);font-family:"Playfair Display",Georgia,serif;font-size:54px;letter-spacing:.08em}
+.dew-hero-art .dew-placeholder small{font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.dew-main{max-width:1440px;padding:0 clamp(18px,5vw,76px)}
+.dew-categories,.dew-products-section,.dew-reviews,.dew-social{padding:92px 0 18px}
+.dew-section-head{margin-bottom:36px}
+.dew-section-head h2{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:clamp(30px,3.5vw,44px);letter-spacing:-.025em;color:var(--dew-green);margin:11px 0}
+.dew-cat-grid{gap:18px}
+.dew-cat{height:auto;aspect-ratio:4/5;background:#e9eee5;box-shadow:none}
+.dew-cat img{transition:transform .65s cubic-bezier(.2,.7,.2,1);filter:saturate(.92)}
+.dew-cat:hover img{transform:scale(1.055)}
+.dew-cat>span{left:15px;right:15px;bottom:15px;background:rgba(251,248,241,.94);padding:15px 17px;font-size:11px;letter-spacing:.07em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center}
+.dew-cat .dew-placeholder{background:linear-gradient(145deg,#e7eee5,#cbd9cb);font-family:"Playfair Display",Georgia,serif}
+.dew-products{grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
+.dew-product{background:transparent;min-width:0}
+.dew-product-photo{height:auto;aspect-ratio:4/5;background:#f0eee6;overflow:hidden;position:relative}
+.dew-product-photo img{transition:transform .6s cubic-bezier(.2,.7,.2,1);mix-blend-mode:multiply}
+.dew-product:hover .dew-product-photo img{transform:scale(1.045)}
+.dew-product-photo .dew-placeholder{background:linear-gradient(145deg,#f1eee5,#e1e8de);font-family:"Playfair Display",Georgia,serif}
+.dew-product-info{text-align:left;padding:13px 2px 16px}
+.dew-product h3{font:500 15px/1.45 "DM Sans",sans-serif;color:#294b40;margin:0 0 7px;min-height:2.7em}
+.dew-product-prices{display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:var(--dew-ink);font-size:13px}
+.dew-product-prices strong{font-weight:700}
+.dew-product-prices del{font-size:11px;color:#9a9d91}
+.dew-product-prices .is-sale{color:#b45f4d}
+.dew-savings{background:#f2e8df;color:#a15e4d;padding:3px 7px;font-size:9px;letter-spacing:.04em}
+.dew-product-actions{gap:7px;margin-top:12px}
+.dew-product-actions button,.dew-product-actions .dew-collection-choose{min-height:42px;border-radius:2px;font:700 9px "DM Sans",sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.dew-product-actions .dew-add{background:var(--dew-green);border-color:var(--dew-green)}
+.dew-product-actions .dew-buy-now{background:transparent;border-color:#a8b8aa;color:var(--dew-green)}
+.dew-product-actions button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.dew-product-actions .dew-collection-choose{display:flex;align-items:center;justify-content:center;border:1px solid var(--dew-green);color:var(--dew-green);text-decoration:none;grid-column:1/-1;padding:10px}
+.dew-promo{margin:100px 0 65px;background:#e8eee5;min-height:360px;grid-template-columns:1.05fr .95fr}
+.dew-promo>img,.dew-promo>.dew-placeholder{height:360px}
+.dew-promo>div{padding:clamp(30px,6vw,78px)}
+.dew-promo h2{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:clamp(32px,4vw,48px);line-height:1.1;color:var(--dew-green)}
+.dew-promo p{font-size:14px;line-height:1.8;color:#62766a;margin:0 0 25px}
+.dew-benefits{padding:30px 0;border-top:1px solid var(--dew-line);border-bottom:1px solid var(--dew-line);gap:20px}
+.dew-benefits div{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#526b60}
+.dew-benefits span{font-size:20px;color:#b88770;margin-bottom:8px}
+.dew-review-grid{gap:18px}
+.dew-review-grid blockquote{background:#f1eee5;padding:30px 24px;text-align:left;border:1px solid #ebe7dc}
+.dew-review-grid p{font:italic 19px/1.55 "Playfair Display",Georgia,serif;color:#38584d}
+.dew-review-grid b{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#718176}
+.dew-stars{color:#b88770;font-size:12px}
+.dew-social-grid{gap:12px}
+.dew-social-grid img,.dew-social-grid .dew-placeholder{height:auto;aspect-ratio:1;min-height:0}
+.dew-news{margin:90px calc(-1 * clamp(18px,5vw,76px)) 0;background:var(--dew-green);padding:55px clamp(24px,8vw,120px)}
+.dew-news h2{font-family:"Playfair Display",Georgia,serif;font-weight:500;font-size:38px}
+.dew-news p{font-size:13px;color:#d6e0d7}
+.dew-news input{background:#fbf8f1;color:var(--dew-ink);border:1px solid rgba(255,255,255,.4);min-width:260px}
+.dew-news button{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.dew-footer{background:#f1eee5;padding:54px clamp(20px,5vw,76px) 28px;color:#61746a}
+.dew-footer .dew-logo{font-size:31px!important}
+.dew-footer nav a{font-size:11px;text-decoration:none;color:#526b60}
+.dew-footer nav a:hover{text-decoration:underline}
+.dew-footer small{border-color:#deded3;color:#89958a}
+.dew-search-box{border-radius:2px;border-color:#dce3d9}
+.dew-search-suggestions{border-color:#e7e9df;box-shadow:var(--dew-shadow)}
+.dew-drawer{box-shadow:-18px 0 50px rgba(24,59,53,.12)}
+/* Product detail visual refinement */
+.product-page{max-width:1320px;padding-top:24px}
+.product-gallery-main{background:#f0eee6;border-radius:2px}
+.product-gallery-thumbs button{border-radius:2px}
+.product-detail-info h1{font-family:"Playfair Display",Georgia,serif;font-weight:500;letter-spacing:-.025em}
+.product-detail-price strong{color:var(--dew-green)}
+.product-variant-selectors select{border-radius:2px;border-color:#d5dfd5}
+.product-purchase-actions button{border-radius:2px;letter-spacing:.07em;text-transform:uppercase}
+.product-accordions{border-color:var(--dew-line)}
+.product-recommendations-head h2{font-family:"Playfair Display",Georgia,serif;font-weight:500}
+.product-recommendation-photo{background:#f0eee6}
+.product-recommendation-card h3{font-family:"DM Sans",sans-serif;font-weight:500}
+/* Checkout polish without changing its fields or behavior */
+.page{max-width:1080px;gap:28px}
+.page .box{border:1px solid #e8e8df;border-radius:3px;box-shadow:0 12px 35px rgba(24,59,53,.055)}
+.page .box h1,.page .box h2,.page .box h3{font-family:"Playfair Display",Georgia,serif;color:var(--dew-green)}
+.page .box input,.page .box textarea,.page .box select{border-radius:2px;border-color:#dce3d9;background:#fff}
+.page .box input:focus,.page .box textarea:focus,.page .box select:focus{outline:2px solid rgba(28,82,78,.16);border-color:var(--dew-green)}
+.payment-methods{border-radius:2px;background:#f7f8f2;border-color:#e2e8df}
+.payment-methods .opt{border-radius:2px}
+@media(max-width:760px){
+ .dew-header{padding:9px 15px;min-height:62px}
+ .dew-logo{font-size:29px!important}
+ .dew-header nav{gap:20px;padding:7px 2px 9px}
+ .dew-hero{grid-template-columns:1fr;min-height:0}
+ .dew-hero-copy{padding:45px 7vw 40px}
+ .dew-hero h1{font-size:clamp(40px,11vw,56px);margin:17px 0}
+ .dew-hero-art,.dew-hero-art img,.dew-hero-art .dew-placeholder{min-height:0;height:auto;max-height:none}
+ .dew-hero-art img{aspect-ratio:4/3;max-height:58vh}
+ .dew-hero-art:after{inset:12px}
+ .dew-main{padding:0 16px}
+ .dew-categories,.dew-products-section,.dew-reviews,.dew-social{padding:62px 0 10px}
+ .dew-section-head{margin-bottom:24px}
+ .dew-section-head h2{font-size:31px}
+ .dew-cat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .dew-cat{aspect-ratio:4/5}
+ .dew-cat>span{left:8px;right:8px;bottom:8px;padding:10px;font-size:9px}
+ .dew-products{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 11px}
+ .dew-product-info{padding:10px 1px 12px}
+ .dew-product h3{font-size:13px;min-height:2.8em}
+ .dew-product-actions{grid-template-columns:1fr;gap:6px;margin-top:10px}
+ .dew-product-actions button,.dew-product-actions .dew-collection-choose{min-height:40px;font-size:9px}
+ .dew-promo{margin:62px 0 42px;grid-template-columns:1fr}
+ .dew-promo>img,.dew-promo>.dew-placeholder{height:auto;aspect-ratio:4/3}
+ .dew-promo>div{padding:30px 24px 34px}
+ .dew-benefits{grid-template-columns:repeat(2,minmax(0,1fr));padding:22px 0;gap:22px 10px}
+ .dew-review-grid{grid-template-columns:1fr;gap:10px}
+ .dew-review-grid blockquote{padding:23px}
+ .dew-social-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .dew-news{margin:58px -16px 0;padding:34px 22px;gap:20px}
+ .dew-news h2{font-size:31px}
+ .dew-footer{padding:36px 20px 22px}
+ .dew-footer nav{gap:12px 18px}
+ .product-page{padding-top:12px}
+ .page{margin:16px auto 35px}
+}
+@media(prefers-reduced-motion:reduce){
+ .dew-ann-track{animation:none!important}
+ .dew-cat img,.dew-product-photo img,.dew-btn{transition:none!important}
+}
