@@ -1089,3 +1089,25 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-ann-track{animation:none!important}
  .dew-cat img,.dew-product-photo img,.dew-btn{transition:none!important}
 }
+
+
+/* Responsive uploaded media: section images adapt to each screen, while product photos stay complete. */
+.dew-hero-art{min-width:0;overflow:hidden}
+.dew-hero-art img{display:block;width:100%;height:100%;min-height:460px;object-fit:cover;object-position:center}
+.dew-cat{height:auto;aspect-ratio:4/3}
+.dew-cat img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.dew-promo>img{display:block;width:100%;height:100%;min-height:280px;object-fit:cover;object-position:center}
+.dew-collection-hero-art{min-width:0;overflow:hidden}
+.dew-collection-hero-art>img{display:block;width:100%;height:100%;min-height:310px;object-fit:cover;object-position:center}
+.dew-collection-product-photo{background:#f5f6f0}
+.dew-collection-product-photo>img{object-fit:contain;object-position:center;background:#f5f6f0}
+.dew-social-grid img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+@media(max-width:760px){
+ .dew-hero-art{height:auto;min-height:0}
+ .dew-hero-art img{width:100%;height:auto;min-height:0;max-height:62vh;aspect-ratio:4/3;object-fit:cover}
+ .dew-cat{aspect-ratio:1/1}
+ .dew-promo>img{height:auto;min-height:0;aspect-ratio:4/3}
+ .dew-collection-hero-art{aspect-ratio:16/9;min-height:0;max-height:none}
+ .dew-collection-hero-art>img{width:100%;height:100%;min-height:0;max-height:none;aspect-ratio:16/9;object-fit:cover}
+ .dew-collection-product-photo>img{object-fit:contain}
+}
