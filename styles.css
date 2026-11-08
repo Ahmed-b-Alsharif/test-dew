@@ -1089,3 +1089,24 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-ann-track{animation:none!important}
  .dew-cat img,.dew-product-photo img,.dew-btn{transition:none!important}
 }
+
+
+/* Homepage product cards: align purchase controls and soften button silhouettes */
+.dew-products{align-items:stretch}
+.dew-product{display:flex;flex-direction:column;height:100%;min-height:100%}
+.dew-product-info{display:flex;flex:1 1 auto;flex-direction:column;align-items:stretch;min-height:0}
+.dew-product h3{min-height:2.9em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.dew-product-prices{min-height:22px}
+.dew-product-actions{margin-top:auto;padding-top:14px;display:grid;grid-template-columns:1fr 1fr;align-items:stretch}
+.dew-product-actions button,.dew-product-actions .dew-collection-choose{min-height:44px;border-radius:999px!important;padding:11px 13px;display:flex;align-items:center;justify-content:center;line-height:1.2;white-space:normal;text-align:center;box-sizing:border-box}
+.dew-product-actions .dew-add{box-shadow:0 5px 13px rgba(28,82,78,.14)}
+.dew-product-actions .dew-buy-now{border-width:1px;background:#fbf8f1}
+.dew-product-actions button:hover{transform:translateY(-2px);box-shadow:0 7px 16px rgba(28,82,78,.12)}
+@media(max-width:760px){
+ .dew-products{align-items:stretch}
+ .dew-product{height:100%}
+ .dew-product-info{display:flex;flex-direction:column;flex:1}
+ .dew-product h3{min-height:2.9em}
+ .dew-product-actions{margin-top:auto;padding-top:12px;grid-template-columns:1fr}
+ .dew-product-actions button,.dew-product-actions .dew-collection-choose{min-height:42px;border-radius:999px!important}
+}
