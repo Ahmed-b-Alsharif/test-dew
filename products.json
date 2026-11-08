@@ -195,15 +195,6 @@
   },
   "catalogs": [
     {
-      "id": "8b845705",
-      "name": "Makeup remover",
-      "description": "",
-      "image": "",
-      "productIds": [
-        "d4ef44f1"
-      ]
-    },
-    {
       "id": "dd86dc77",
       "name": "Hair Care",
       "description": "",
