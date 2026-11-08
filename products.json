@@ -195,76 +195,126 @@
   },
   "catalogs": [
     {
-      "description": "Moisturiser, body butter, shower gel",
-      "id": "7aa4667d",
-      "name": "Body care",
-      "image": ""
-    },
-    {
       "id": "3f1d5004",
       "name": "Pouch",
       "description": "Fluffy Chasmir Pouch",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "4be6283f",
+        "5302dec3"
+      ]
     },
     {
       "id": "be6c3d75",
       "name": "lip Gloss",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "6590f759",
+        "02155935",
+        "53e00483",
+        "5f537094",
+        "7aa07c64",
+        "daaa60ff",
+        "9fd72a4a",
+        "12724006",
+        "97518fd3",
+        "b2518901",
+        "95b42b11"
+      ]
     },
     {
       "id": "21e8c59c",
       "name": "Bundle",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "2da6a098"
+      ]
     },
     {
       "id": "c4dcfef1",
       "name": "Lip Balm",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "757414b0",
+        "b7b6c660",
+        "1bd5e3ce",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
+      ]
     },
     {
       "id": "8b845705",
       "name": "Makeup remover",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "d4ef44f1"
+      ]
     },
     {
       "id": "dd86dc77",
       "name": "Hair Care",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "58806ff3",
+        "928936b1",
+        "6c043d33"
+      ]
     },
     {
       "id": "ed4077f0",
       "name": "Shower Gel",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "735c75b6"
+      ]
     },
     {
       "id": "19c4466a",
       "name": "Moisturizer Cream",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3c5c256b"
+      ]
     },
     {
       "id": "cfb36855",
       "name": "Foot Cream",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3ffd74ff",
+        "e2a1f39f"
+      ]
     },
     {
       "id": "35003259",
       "name": "Lip & Cheek Tint",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "0424f67a",
+        "2cc19e9e"
+      ]
     },
     {
       "id": "444bbcdc",
       "name": "Lip Scrub",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "950127fe",
+        "c2b4ce28",
+        "dbb95a5d",
+        "3cf25ab8"
+      ]
     }
   ],
   "products": [
