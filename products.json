@@ -195,11 +195,6 @@
   },
   "catalogs": [
     {
-      "description": "Lip balms in 4 flavours",
-      "id": "bc000f32",
-      "name": "Lip care"
-    },
-    {
       "description": "Moisturiser, body butter, shower gel",
       "id": "7aa4667d",
       "name": "Body care",
