@@ -193,7 +193,35 @@
       }
     }
   },
-  "catalogs": [],
+  "catalogs": [
+    {
+      "id": "a33bf143",
+      "name": "Body Care",
+      "description": "",
+      "image": "",
+      "productIds": [
+        "95e54cca",
+        "561a22fa",
+        "3744b4c0",
+        "ab8882b2",
+        "2aece5ff",
+        "289d19e5",
+        "b8b23b95",
+        "c7793f18",
+        "70424d62",
+        "3aa54356",
+        "7797d362",
+        "3a057abb",
+        "44ce24bf",
+        "24ce557b",
+        "484027a5",
+        "c7609040",
+        "76232b17",
+        "3c5c256b",
+        "735c75b6"
+      ]
+    }
+  ],
   "products": [
     {
       "id": "4be6283f",
