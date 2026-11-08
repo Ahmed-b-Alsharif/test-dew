@@ -912,3 +912,27 @@ th{background:var(--green);color:#fff;font-weight:600}
   .dew-collection-actions button,
   .dew-collection-actions a{font-size:11px;min-height:40px;padding:9px 6px}
 }
+
+
+/* Collection cart drawer: same behavior and responsive layout as the main storefront */
+.dew-collection-header .dew-collection-cart{border:0;background:transparent;cursor:pointer;color:var(--dew-green)}
+.dew-collection-header .dew-collection-cart .dew-cart-icon{display:block}
+.dew-collection-header .dew-collection-cart{gap:8px}
+.dew-collection-header .dew-collection-cart b{margin:0}
+#collectionCartScrim{z-index:105}
+#collectionCartDrawer{z-index:110}
+#collectionCartDrawer #collectionCartItems{flex:1;overflow:auto}
+#collectionCartDrawer .dew-line>img{width:64px;height:76px;object-fit:cover;border-radius:7px}
+#collectionCartDrawer .dew-line-info{min-width:0;flex:1;display:grid;gap:6px}
+#collectionCartDrawer .dew-qty{display:inline-flex;align-items:center;gap:12px;width:max-content;border:1px solid #dfe6df;border-radius:30px;padding:3px 8px}
+#collectionCartDrawer .dew-qty button{width:25px;height:25px;border:0;background:transparent;font-size:17px;cursor:pointer}
+#collectionCartDrawer .dew-qty button:disabled{opacity:.35;cursor:not-allowed}
+#collectionCartDrawer .dew-remove{align-self:center;border:0;background:transparent;color:#7b847d;text-decoration:underline;font-size:11px;cursor:pointer}
+#collectionCartDrawer footer .dew-btn{display:block;text-align:center}
+@media(max-width:760px){
+ #collectionCartDrawer{width:min(420px,100vw);padding:16px;max-width:100vw}
+ #collectionCartDrawer .dew-line{align-items:flex-start;flex-wrap:wrap;gap:9px}
+ #collectionCartDrawer .dew-line-info{min-width:0;flex:1}
+ #collectionCartDrawer .dew-line>img{width:58px;height:68px}
+ .dew-collection-header .dew-collection-cart{min-height:42px;padding:8px 10px}
+}
