@@ -1151,3 +1151,80 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .hp-preview-custom-banner{grid-template-columns:1fr}
  .hp-preview-custom-banner img{height:110px}
 }
+
+
+/* Collection header: centered logo with centered navigation on a separate row. */
+.dew-collection-header{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,auto) minmax(0,1fr)!important;
+  grid-template-rows:auto auto;
+  align-items:center;
+  column-gap:20px;
+  row-gap:12px;
+  min-height:112px;
+  height:auto;
+  padding-top:14px;
+  padding-bottom:14px;
+}
+.dew-collection-header>.dew-logo{
+  position:static!important;
+  grid-column:2!important;
+  grid-row:1!important;
+  justify-self:center!important;
+  align-self:center;
+  transform:none!important;
+  text-align:center;
+}
+.dew-collection-header>nav,
+.dew-collection-header .dew-collection-nav{
+  position:static!important;
+  grid-column:2!important;
+  grid-row:2!important;
+  justify-self:center!important;
+  align-self:center;
+  justify-content:center!important;
+  text-align:center;
+  transform:none!important;
+  max-width:100%;
+  width:max-content;
+  gap:clamp(16px,2.2vw,28px);
+}
+.dew-collection-header .dew-header-actions{
+  grid-column:3!important;
+  grid-row:1 / span 2!important;
+  justify-self:end!important;
+  align-self:center;
+}
+@media(max-width:760px){
+  .dew-collection-header{
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+    grid-template-rows:auto auto;
+    min-height:0;
+    padding:12px 15px;
+    row-gap:10px;
+  }
+  .dew-collection-header>.dew-logo{
+    grid-column:2!important;
+    grid-row:1!important;
+    justify-self:center!important;
+    text-align:center!important;
+  }
+  .dew-collection-header>nav,
+  .dew-collection-header .dew-collection-nav{
+    grid-column:1 / -1!important;
+    grid-row:2!important;
+    justify-self:center!important;
+    justify-content:center!important;
+    width:100%;
+    gap:clamp(13px,4vw,20px);
+    padding:2px 0 3px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .dew-collection-header .dew-header-actions{
+    grid-column:3!important;
+    grid-row:1!important;
+    justify-self:end!important;
+    align-self:center;
+  }
+}
