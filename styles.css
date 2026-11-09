@@ -1265,3 +1265,8 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .variant-linked-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .variant-choose-photo{white-space:nowrap}
 .variant-unlink-photo{border:0;background:transparent;color:#8a5d56;font:500 9px Inter,sans-serif;cursor:pointer;padding:3px}
+
+
+/* Product detail photos: fill the image frame to remove empty side bars. */
+.product-gallery-main{overflow:hidden;background:#f0eee6}
+.product-gallery-main img{object-fit:cover!important}
