@@ -31,11 +31,13 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   setMeta('meta[name="description"]','name',seoDescription);
   setMeta('meta[property="og:title"]','property',seoTitle);
   setMeta('meta[property="og:description"]','property',seoDescription);
+  setMeta('meta[name="keywords"]','name',String(p.tags||'').split(',').map(x=>x.trim()).filter(Boolean).join(', '));
+  setMeta('meta[property="og:image"]','property',(p.images||[])[0]||'');
   setMeta('meta[property="og:type"]','property','product');
   setMeta('meta[property="og:url"]','property',canonicalUrl);
   let canonical=document.head.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical);}canonical.href=canonicalUrl;
   const productImage=(p.images||[])[0]||'';
-  const productSchema={"@context":"https://schema.org/","@type":"Product",name:p.name,description:seoDescription,sku:p.id,image:productImage?[productImage]:undefined,brand:{"@type":"Brand",name:"Dew Skincare"},offers:{"@type":"Offer",url:canonicalUrl,priceCurrency:"EGP",price:String(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price),availability:Number(p.stock||0)>0?"https://schema.org/InStock":"https://schema.org/OutOfStock",itemCondition:"https://schema.org/NewCondition"}};
+  const productSchema={"@context":"https://schema.org/","@type":"Product",name:p.name,description:seoDescription,sku:p.id,image:productImage?[productImage]:undefined,brand:{"@type":"Brand",name:"Dew Skincare"},offers:{"@type":"Offer",url:canonicalUrl,priceCurrency:"EGP",price:String(initialVariant?(Number(initialVariant.salePrice)>0&&Number(initialVariant.salePrice)<Number(initialVariant.price)?initialVariant.salePrice:initialVariant.price):(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)),availability:Number(initialVariant?initialVariant.stock:p.stock||0)>0?"https://schema.org/InStock":"https://schema.org/OutOfStock",itemCondition:"https://schema.org/NewCondition"}};
   let schema=document.getElementById('dewProductSchema');if(!schema){schema=document.createElement('script');schema.id='dewProductSchema';schema.type='application/ld+json';document.head.appendChild(schema);}schema.textContent=JSON.stringify(productSchema);
   const galleryImages=[...new Set(images)];const gallery=galleryImages.length?galleryImages.map((u,i)=>'<button type="button" class="product-thumb '+(u===(initialVariant?.image||images[0])?'active':'')+'" data-image="'+i+'" aria-label="View image '+(i+1)+'"><img src="'+esc(optimizedImage(u,240))+'" alt="'+esc(p.name)+' photo '+(i+1)+'"></button>').join(''):'';
   const mainImage=(initialVariant?.image||images[0])?'<img id="productMainPhoto" src="'+esc(optimizedImage(initialVariant?.image||images[0],1400))+'" alt="'+esc(p.name)+'" fetchpriority="high">':'<div class="product-image-empty"><b>DEW</b><span>Product photo coming soon</span></div>';
