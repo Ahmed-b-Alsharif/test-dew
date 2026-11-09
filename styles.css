@@ -1228,3 +1228,34 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
     align-self:center;
   }
 }
+
+
+/* Dew admin media library and reusable product variant photos */
+.media-library-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:18px}
+.media-library-card{min-width:0;background:#fff;border:1px solid #e5ebe5;border-radius:11px;overflow:hidden}
+.media-library-thumb{width:100%;aspect-ratio:1;background:#f4f6f1;display:grid;place-items:center;overflow:hidden}
+.media-library-thumb img{width:100%;height:100%;object-fit:contain;display:block}
+.media-library-info{display:grid;gap:7px;padding:10px;min-width:0}
+.media-library-info b{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#344a3b}
+.media-library-info .text-link{justify-self:start;font-size:10px}
+.media-upload-trigger{position:relative;display:inline-flex;align-items:center;cursor:pointer}
+.variant-media-controls{display:grid;gap:5px;justify-items:center;align-content:start}
+.variant-choose-photo{border:0;background:#edf3ed;color:#1c524e;border-radius:6px;padding:5px 7px;font:600 9px Inter,sans-serif;cursor:pointer;white-space:nowrap}
+.variant-choose-photo:hover{background:#dfeade}
+.media-picker-modal{min-width:min(640px,88vw)}
+.media-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:10px;margin-top:14px;max-height:55vh;overflow:auto}
+.media-picker-item{display:grid;gap:5px;padding:6px;border:1px solid #e4eae3;border-radius:8px;background:#fff;cursor:pointer;text-align:left;min-width:0}
+.media-picker-item:hover{border-color:#1c524e;background:#f5f8f3}
+.media-picker-item img{width:100%;aspect-ratio:1;object-fit:contain;background:#f4f6f1;border-radius:5px}
+.media-picker-item small{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#61746a}
+.dew-collection-page,.dew-collection-banner,.dew-collection-hero-art{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+.dew-collection-banner img,.dew-collection-hero-art img{display:block;max-width:100%}
+@media(max-width:760px){
+ .media-library-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .media-picker-modal{min-width:0;width:100%}
+ .media-picker-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .variant-media-controls{grid-column:1;grid-row:1 / span 2}
+ .dew-collection-page{padding-left:14px;padding-right:14px;overflow-x:hidden}
+ .dew-collection-banner,.dew-collection-hero-art{height:auto;aspect-ratio:16/9;overflow:hidden;border-radius:10px}
+ .dew-collection-banner img,.dew-collection-hero-art img{width:100%;height:100%;min-height:0;max-height:none;object-fit:contain;object-position:center;background:#f5f6f0}
+}
