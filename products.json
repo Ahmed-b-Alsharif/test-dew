@@ -267,11 +267,30 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch2.jpg?v=1773138901"
       ],
       "howToUse": "",
-      "options": [],
-      "variants": [],
+      "options": [
+        {
+          "name": "size",
+          "values": [
+            "7CM x 15CM x 8CM"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "f2a5bdb3",
+          "options": {
+            "size": "7CM x 15CM x 8CM"
+          },
+          "price": 650,
+          "salePrice": 0,
+          "stock": 3,
+          "sku": "",
+          "barcode": ""
+        }
+      ],
       "price": 650,
       "salePrice": 0,
-      "stock": 20,
+      "stock": 3,
       "seoTitle": "fluffy kashmir pouch set",
       "seoDescription": ""
     },
