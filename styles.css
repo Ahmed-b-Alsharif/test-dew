@@ -1379,3 +1379,15 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .product-media-item.is-dragging{opacity:.4;}
 .product-media-item.is-drop-target{outline:2px dashed #1c524e;outline-offset:3px;}
 .product-media-item .product-media-order{display:none!important;}
+
+
+/* Live Instagram gallery */
+.dew-instagram-status{grid-column:1/-1;text-align:center;color:#718176;font-size:13px;padding:28px 12px;margin:0}
+.dew-instagram-card{display:block;min-width:0;text-decoration:none;color:inherit;overflow:hidden}
+.dew-instagram-media{position:relative;aspect-ratio:4/5;overflow:hidden;background:#eef1e9}
+.dew-instagram-media img,.dew-instagram-media video{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.dew-instagram-fallback{display:grid;place-items:center;width:100%;height:100%;font:600 28px Georgia,serif;letter-spacing:.12em;color:#1c524e}
+.dew-instagram-open{position:absolute;right:9px;top:9px;padding:6px 9px;background:rgba(255,255,255,.92);color:#1c524e;font:700 9px 'DM Sans',sans-serif;letter-spacing:.08em}
+.dew-instagram-card>p{margin:9px 2px 0;color:#68786d;font-size:11px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.dew-instagram-card:hover .dew-instagram-media img,.dew-instagram-card:hover .dew-instagram-media video{transform:scale(1.025);transition:transform .25s ease}
+@media(max-width:760px){.dew-instagram-media{aspect-ratio:4/5}.dew-instagram-card>p{font-size:10px}}
