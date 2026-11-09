@@ -1398,3 +1398,34 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-ann.is-scroll .dew-ann-track{animation-name:dew-marquee}
 .dew-ann.is-marquee .dew-ann-track{animation-name:dew-marquee}
 @media(prefers-reduced-motion:reduce){.dew-ann-track{animation:none;transform:none}}
+
+
+/* Product page: preserve the complete original photo and remove the fixed-height frame on desktop. */
+.product-gallery-main {
+  aspect-ratio: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: block !important;
+  overflow: visible !important;
+  background: transparent !important;
+}
+.product-gallery-main img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  object-position: center top !important;
+  transform: none !important;
+}
+@media (max-width: 760px) {
+  .product-gallery-main {
+    aspect-ratio: auto !important;
+    height: auto !important;
+  }
+  .product-gallery-main img {
+    height: auto !important;
+    max-height: none !important;
+  }
+}
