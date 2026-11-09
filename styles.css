@@ -1362,3 +1362,12 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   object-fit: cover !important;
   object-position: center;
 }
+
+
+/* Product media ordering: the first photo is the cover; arrows reorder without re-uploading. */
+.product-media-item{position:relative;}
+.product-media-item.is-cover{outline:2px solid #1c524e;outline-offset:2px;}
+.product-media-order{position:absolute;left:5px;right:5px;bottom:24px;display:flex;justify-content:space-between;gap:5px;pointer-events:none;}
+.product-media-order button{pointer-events:auto;width:27px;height:27px;border:0;border-radius:50%;background:rgba(255,255,255,.94);color:#1c524e;font-size:17px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.16);cursor:pointer;}
+.product-media-order button:disabled{opacity:.3;cursor:not-allowed;}
+.product-media-item>small{display:block;text-align:center;font-size:10px;color:#1c524e;font-weight:700;}
