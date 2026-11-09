@@ -358,11 +358,59 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
       ],
       "howToUse": "",
-      "options": [],
-      "variants": [],
+      "options": [
+        {
+          "name": "color",
+          "values": [
+            "1",
+            "2",
+            "3"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "3f1d5657",
+          "options": {
+            "color": "1"
+          },
+          "price": 235,
+          "salePrice": 200,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227"
+        },
+        {
+          "id": "3fef1416",
+          "options": {
+            "color": "2"
+          },
+          "price": 235,
+          "salePrice": 0,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
+        },
+        {
+          "id": "d8d5123c",
+          "options": {
+            "color": "3"
+          },
+          "price": 235,
+          "salePrice": 0,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+        }
+      ],
       "price": 235,
       "salePrice": 200,
-      "stock": 0
+      "stock": 0,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "2da6a098",
