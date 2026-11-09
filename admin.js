@@ -39,6 +39,27 @@ function productRouteSlugs() {
   const slugOf=p=>String(p.shopifyHandle||p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   return [...new Set((D.products||[]).filter(p=>p.visible).map(slugOf).filter(Boolean))].sort();
 }
+async function putGithubFileLatest(path, payload) {
+  let lastError;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    let sha;
+    try {
+      const current = await gh('GET', 'contents/' + path);
+      sha = current.sha;
+    } catch (e) {
+      if (!/404|not found/i.test(e.message)) throw e;
+    }
+    try {
+      return await gh('PUT', 'contents/' + path, { ...payload, ...(sha ? { sha } : {}) });
+    } catch (e) {
+      lastError = e;
+      if (!/sha|409|422|does not match|expected|conflict/i.test(e.message) || attempt === 3) throw e;
+      await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+    }
+  }
+  throw lastError || new Error('Could not update ' + path);
+}
+
 async function refreshProductSitemap(previousSlugs = []) {
   const origin='https://dewskincaree.com';
   const slugs=productRouteSlugs();
@@ -46,15 +67,12 @@ async function refreshProductSitemap(previousSlugs = []) {
   const missing=slugs.filter(slug=>!previousSlugs.includes(slug));
   for(let i=0;i<missing.length;i+=5){
     await Promise.all(missing.slice(i,i+5).map(async slug=>{
-      let sha;
-      try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
-      await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
+      await putGithubFileLatest(slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page)});
     }));
   }
   const urls=[origin+'/',...slugs.map(slug=>origin+'/'+slug+'/')];
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
-  let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch(e){}
-  await gh('PUT','contents/sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml),...(sha?{sha}:{})});
+  await putGithubFileLatest('sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml)});
 }
 function save(message) {
   chain = chain.then(async () => {
@@ -197,8 +215,7 @@ function homepage() {
     const section=(key,html)=>'<section class="hp-preview-section '+(selected===key?'is-selected':'')+'" data-preview-section="'+key+'">'+html+'</section>';
     const bannerPreview=position=>{const list=h.customBanners?.show===false?[]:(h.customBanners?.items||[]).filter(b=>b.show!==false&&(b.position||'middle')===position);return list.length?section('customBanners',list.map(b=>'<div class="hp-preview-custom-banner">'+image(b.image)+'<div><b>'+esc(b.title||'Your banner headline')+'</b><p>'+esc(b.text||'')+'</p>'+(b.showButton!==false?'<span>'+esc(b.button||'Shop now')+' · '+esc(b.buttonPosition||'left')+'</span>':'')+'</div></div>').join('')):'';};
     let content='';
-    if(isProduct){
-      const sample=P[0]||{name:'Your product name',price:220,description:'Your product description appears here.',images:[],tags:'Natural, Made in Egypt',options:[],variants:[],stock:12};
+    if(isProduct){      const sample=P[0]||{name:'Your product name',price:220,description:'Your product description appears here.',images:[],tags:'Natural, Made in Egypt',options:[],variants:[],stock:12};
       const sampleImage=sample.images?.[0]?image(sample.images[0]):'<div class="hp-preview-product-placeholder">DEW<br><small>PRODUCT PHOTO</small></div>';
       const sampleOptions=(sample.options||[]).map(o=>'<label class="hp-preview-option"><b>'+esc(o.name)+'</b><span>' +esc((o.values||[])[0]||'Choose option')+'　⌄</span></label>').join('');
       const samplePrice=Number(sample.salePrice)>0&&Number(sample.salePrice)<Number(sample.price)?Number(sample.salePrice):Number(sample.price||220);
@@ -397,8 +414,7 @@ function products() {
     <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
     ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
       <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
-      <td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b>${p.salePrice>0&&p.salePrice<p.price?`<small class="old-price">${egp(p.price)}</small>`:''}</td>
-      <td><span class="${Number(p.stock||0)<=5?'inventory-low':''}">${Number(p.stock||0)} in stock</span></td>
+      <td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b>${p.salePrice>0&&p.salePrice<p.price?`<small class="old-price">${egp(p.price)}</small>`:''}</td>      <td><span class="${Number(p.stock||0)<=5?'inventory-low':''}">${Number(p.stock||0)} in stock</span></td>
       <td>${p.featured?'<span class="shopify-featured">Featured</span>':'—'}</td>
       <td><div class="table-actions"><button class="text-link" data-e="${p.id}">Edit</button><button class="text-link danger-link" data-x="${p.id}">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found. Add your first product to get started.</td></tr>'}
     </tbody></table></div></div>`;
@@ -597,13 +613,13 @@ async function importProductsExcel(file){
     }catch(err){btn.disabled=false;btn.textContent='Try import again';toast(err.message,true);}
   };
 }
-
 function resizeProductImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
-      const width = 1000, height = 1250;
-      const scale = Math.min(width / img.width, height / img.height);
+      const width = 1080, height = 1387;
+      // Fill the portrait canvas edge-to-edge; crop excess from the longer dimension.
+      const scale = Math.max(width / img.width, height / img.height);
       const drawWidth = Math.round(img.width * scale);
       const drawHeight = Math.round(img.height * scale);
       const canvas = document.createElement('canvas');
@@ -621,7 +637,7 @@ function resizeProductImage(file) {
         reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(new Error('Could not prepare the product photo.'));
         reader.readAsDataURL(blob);
-      }, 'image/webp', 0.82);
+      }, 'image/webp', 0.84);
     };
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read this product photo.')); };
     img.src = url;
@@ -797,8 +813,7 @@ function discounts() {
     const d = D.discounts.find(x => x.id === b.dataset.toggledisc);
     d.active = !d.active; render(); save('Toggle discount ' + d.code);
   });
-  document.querySelectorAll('[data-deldisc]').forEach(b => b.onclick = () => {
-    const d = D.discounts.find(x => x.id === b.dataset.deldisc);
+  document.querySelectorAll('[data-deldisc]').forEach(b => b.onclick = () => {    const d = D.discounts.find(x => x.id === b.dataset.deldisc);
     if (confirm('Delete promo code "' + d.code + '"?')) {
       D.discounts = D.discounts.filter(x => x !== d); render(); save('Delete discount ' + d.code);
     }
