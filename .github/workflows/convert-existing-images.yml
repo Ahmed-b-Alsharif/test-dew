@@ -1,0 +1,52 @@
+name: Convert existing website images to WebP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/convert-existing-images.mjs"
+      - ".github/workflows/convert-existing-images.yml"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: dew-image-webp-migration
+  cancel-in-progress: false
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out website
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install image converter
+        run: npm install --no-save --package-lock=false sharp
+      - name: Convert all referenced JPG and PNG images
+        run: node scripts/convert-existing-images.mjs
+      - name: Open conversion pull request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: \${{ secrets.GITHUB_TOKEN }}
+          branch: chore/converted-website-images-webp
+          delete-branch: true
+          commit-message: "Convert existing website photos to optimized WebP"
+          title: "Convert existing website photos to optimized WebP"
+          body: |
+            This automated migration converts existing local JPG/PNG files and Shopify-hosted JPG/PNG images referenced by the website into optimized WebP files.
+
+            - Keeps the same source photos and visual content.
+            - Applies EXIF orientation and limits the longest dimension to 2400px.
+            - Uses WebP quality 82.
+            - Updates image references throughout tracked text/data files.
+            - Removes old local JPG/PNG files only after all conversions and reference checks succeed.
+
+            Please review and merge to publish the migrated image assets.
+          labels: |
+            images
+            performance
