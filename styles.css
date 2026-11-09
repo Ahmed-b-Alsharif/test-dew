@@ -1276,3 +1276,39 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-collection-hero-art picture img,.dew-cat picture img{object-fit:cover;}
 .collection-editor-image{overflow:hidden;}
 .collection-editor-image img{display:block;width:100%;height:100%;object-fit:cover;}
+
+
+/* Consistent product photography: fixed 4:5 frames, full product visible on every screen. */
+.dew-product-photo,
+.dew-collection-product-photo,
+.product-recommendation-photo,
+.product-gallery-main {
+  aspect-ratio: 4 / 5;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #f1f3ed;
+}
+.dew-product-photo img,
+.dew-collection-product-photo > img,
+.product-recommendation-photo img,
+.product-gallery-main img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  object-position: center;
+}
+.dew-collection-card:hover .dew-collection-product-photo > img,
+.product-recommendation-card a:hover img {
+  transform: none;
+}
+@media (max-width: 700px) {
+  .dew-product-photo,
+  .dew-collection-product-photo,
+  .product-recommendation-photo,
+  .product-gallery-main {
+    aspect-ratio: 4 / 5;
+  }
+  .dew-collection-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
