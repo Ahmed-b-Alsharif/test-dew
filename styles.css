@@ -1316,7 +1316,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* Admin navigation: keep every section link stacked vertically on laptop/tablet layouts. */
 @media (min-width: 681px) {
-  .admin-shell { grid-template-columns: 248px minmax(0, 1fr); }
+  .admin-shell { grid-template-columns: clamp(190px, 20vw, 248px) minmax(0, 1fr); }
   .admin-sidebar { display: flex; flex-direction: column; }
   .admin-nav { display: grid !important; grid-template-columns: minmax(0, 1fr); align-content: start; width: 100%; }
   .admin-nav .side-link { display: flex; width: 100%; min-width: 0; justify-content: flex-start; }
