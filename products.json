@@ -61,12 +61,12 @@
         "logoImage": "",
         "links": [
           {
-            "label": "Shop",
-            "url": "#shop"
-          },
-          {
             "label": "Our Story",
             "url": "#about"
+          },
+          {
+            "label": "Shop",
+            "url": "#shop"
           },
           {
             "label": "Contact",
