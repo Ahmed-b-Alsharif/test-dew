@@ -179,12 +179,50 @@ async function createOrder(request, env) {
   try { await notifyTelegram(order,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
   return json({ok:true,order},201);
 }
+
+async function getInstagramRecent(env) {
+  const token = clean(env.INSTAGRAM_ACCESS_TOKEN);
+  if (!token) return json({ok:false,error:"Instagram access is not configured on the Worker."},503);
+  const accountId = "17841447682116140";
+  const endpoint = new URL("https://graph.facebook.com/v27.0/" + accountId + "/media");
+  endpoint.searchParams.set("fields","id,caption,media_type,media_product_type,media_url,permalink,thumbnail_url,timestamp");
+  endpoint.searchParams.set("limit","3");
+  const response = await fetch(endpoint.toString(), {
+    method:"GET",
+    headers:{Authorization:"Bearer " + token,"Accept":"application/json"}
+  });
+  let payload = {};
+  try { payload = await response.json(); } catch {}
+  if (!response.ok || payload.error) {
+    const error = payload.error || {};
+    console.error("Instagram Graph API request failed", {status:response.status,code:error.code,subcode:error.error_subcode});
+    return json({
+      ok:false,
+      error:"Instagram could not return posts. Check the Worker token and Instagram account permissions.",
+      metaCode:error.code ?? null,
+      metaSubcode:error.error_subcode ?? null
+    },502);
+  }
+  const posts = Array.isArray(payload.data) ? payload.data.slice(0,3).map(post => ({
+    id:post.id || "",
+    caption:post.caption || "",
+    mediaType:post.media_type || "",
+    mediaProductType:post.media_product_type || "",
+    mediaUrl:post.media_url || "",
+    thumbnailUrl:post.thumbnail_url || "",
+    permalink:post.permalink || "",
+    timestamp:post.timestamp || ""
+  })) : [];
+  return json({ok:true,username:"dew_skincaree",posts});
+}
+
 export default {
   async fetch(request,env) {
     if (request.method==="OPTIONS") return new Response(null,{status:204,headers:cors});
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
+      if (path==="/api/instagram/recent" && request.method==="GET") return await getInstagramRecent(env);
       if(path==="/api/admin/login"&&request.method==="POST"){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminLogin(request,env)}
       if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
       if(path==="/api/admin/logout"&&request.method==="POST")return await adminLogout(request,env);
