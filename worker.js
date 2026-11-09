@@ -186,7 +186,9 @@ async function getInstagramRecent(env) {
   const accountId = "17841447682116140";
   const endpoint = new URL("https://graph.facebook.com/v27.0/" + accountId + "/media");
   endpoint.searchParams.set("fields","id,caption,media_type,media_product_type,media_url,permalink,thumbnail_url,timestamp");
-  endpoint.searchParams.set("limit","3");
+  const requestedLimit = Number(new URLSearchParams(new URL(request.url).search).get("limit")) || 3;
+  const postLimit = Math.max(1,Math.min(25,Math.floor(requestedLimit)));
+  endpoint.searchParams.set("limit",String(postLimit));
   const response = await fetch(endpoint.toString(), {
     method:"GET",
     headers:{Authorization:"Bearer " + token,"Accept":"application/json"}
@@ -203,7 +205,7 @@ async function getInstagramRecent(env) {
       metaSubcode:error.error_subcode ?? null
     },502);
   }
-  const posts = Array.isArray(payload.data) ? payload.data.slice(0,3).map(post => ({
+  const posts = Array.isArray(payload.data) ? payload.data.slice(0,postLimit).map(post => ({
     id:post.id || "",
     caption:post.caption || "",
     mediaType:post.media_type || "",
