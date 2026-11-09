@@ -1371,3 +1371,11 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .product-media-order button{pointer-events:auto;width:27px;height:27px;border:0;border-radius:50%;background:rgba(255,255,255,.94);color:#1c524e;font-size:17px;line-height:1;box-shadow:0 2px 8px rgba(0,0,0,.16);cursor:pointer;}
 .product-media-order button:disabled{opacity:.3;cursor:not-allowed;}
 .product-media-item>small{display:block;text-align:center;font-size:10px;color:#1c524e;font-weight:700;}
+
+
+/* Drag-and-drop product photo ordering in the admin media editor. */
+.product-media-item[draggable="true"]{cursor:grab;touch-action:pan-y;}
+.product-media-item[draggable="true"]:active{cursor:grabbing;}
+.product-media-item.is-dragging{opacity:.4;}
+.product-media-item.is-drop-target{outline:2px dashed #1c524e;outline-offset:3px;}
+.product-media-item .product-media-order{display:none!important;}
