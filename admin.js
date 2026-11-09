@@ -39,6 +39,27 @@ function productRouteSlugs() {
   const slugOf=p=>String(p.shopifyHandle||p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   return [...new Set((D.products||[]).filter(p=>p.visible).map(slugOf).filter(Boolean))].sort();
 }
+async function putGithubFileLatest(path, payload) {
+  let lastError;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    let sha;
+    try {
+      const current = await gh('GET', 'contents/' + path);
+      sha = current.sha;
+    } catch (e) {
+      if (!/404|not found/i.test(e.message)) throw e;
+    }
+    try {
+      return await gh('PUT', 'contents/' + path, { ...payload, ...(sha ? { sha } : {}) });
+    } catch (e) {
+      lastError = e;
+      if (!/sha|409|422|does not match|expected|conflict/i.test(e.message) || attempt === 3) throw e;
+      await new Promise(resolve => setTimeout(resolve, 250 * (attempt + 1)));
+    }
+  }
+  throw lastError || new Error('Could not update ' + path);
+}
+
 async function refreshProductSitemap(previousSlugs = []) {
   const origin='https://dewskincaree.com';
   const slugs=productRouteSlugs();
@@ -46,15 +67,12 @@ async function refreshProductSitemap(previousSlugs = []) {
   const missing=slugs.filter(slug=>!previousSlugs.includes(slug));
   for(let i=0;i<missing.length;i+=5){
     await Promise.all(missing.slice(i,i+5).map(async slug=>{
-      let sha;
-      try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
-      await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
+      await putGithubFileLatest(slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page)});
     }));
   }
   const urls=[origin+'/',...slugs.map(slug=>origin+'/'+slug+'/')];
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
-  let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch(e){}
-  await gh('PUT','contents/sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml),...(sha?{sha}:{})});
+  await putGithubFileLatest('sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml)});
 }
 function save(message) {
   chain = chain.then(async () => {
@@ -179,9 +197,7 @@ function homepage() {
       (x.links||[]).map((v,i)=>'<div class="nav-link-editor" data-nav-row="'+i+'"><div class="editor-two-col">'+field('header.links.'+i+'.label','Link label',v.label)+field('header.links.'+i+'.url','Destination (URL or page.html?slug=...)',v.url)+'</div><div class="nav-link-actions"><button type="button" class="admin-view-store" data-nav-up="'+i+'" '+(!i?'disabled':'')+'>↑</button><button type="button" class="admin-view-store" data-nav-down="'+i+'" '+(i===(x.links||[]).length-1?'disabled':'')+'>↓</button><button type="button" class="admin-danger" data-nav-remove="'+i+'">Remove</button></div></div>').join('')+
       '<button type="button" class="admin-view-store" id="addHeaderLink">＋ Add navigation link</button></div>';
     if(key==='hero')return field('hero.title','Headline',x.title)+area('hero.text','Supporting text',x.text)+photo('hero.image','Hero image',x.image)+'<div class="editor-subgroup"><b>Hero button</b><p class="editor-hint">You can hide the button or choose where it sits under the text.</p><label class="editor-check"><input type="checkbox" data-hp="hero.showButton" '+(x.showButton===false?'':'checked')+'> Show button</label>'+field('hero.button','Button label',x.button)+field('hero.url','Button destination',x.url)+'<div class="editor-field"><label>Button alignment</label><select data-hp="hero.buttonPosition"><option value="left" '+((x.buttonPosition||'left')==='left'?'selected':'')+'>Left</option><option value="center" '+(x.buttonPosition==='center'?'selected':'')+'>Centre</option><option value="right" '+(x.buttonPosition==='right'?'selected':'')+'>Right</option></select></div></div>';
-    if(key==='customBanners'){const items=x.items||(x.items=[]);const bannerFields=items.map((b,i)=>'<div class="editor-subgroup custom-banner-editor"><div class="editor-panel-title"><b>Banner '+(i+1)+'</b><div class="nav-link-actions"><button type="button" class="admin-view-store" data-banner-up="'+i+'" '+(!i?'disabled':'')+'>↑</button><button type="button" class="admin-view-store" data-banner-down="'+i+'" '+(i===items.length-1?'disabled':'')+'>↓</button><button type="button" class="admin-danger" data-banner-remove="'+i+'">Remove</button></div></div><label class="editor-check"><input type="checkbox" data-hp="customBanners.items.'+i+'.show" '+(b.show===false?'':'checked')+'> Show this banner</label>'+field('customBanners.items.'+i+'.title','Headline',b.title)+area('customBanners.items.'+i+'.text','Supporting text',b.text)+photo('customBanners.items.'+i+'.image','Banner image',b.image)+'<div class="editor-field"><label>Show banner at</label><select data-hp="customBanners.items.'+i+'.position"><option value="top" '+((b.position||'middle')==='top'?'selected':'')+'>Top of homepage (below header)</option><option value="middle" '+(b.position==='middle'?'selected':'')+'>Middle (after best sellers)</option><option value="bottom" '+(b.position==='bottom'?'selected':'')+'>Bottom (above footer)</option></select></div><div class="editor-subgroup"><b>Banner button</b><label class="editor-check"><input type="checkbox" data-hp="customBanners.items.'+i+'.showButton" '+(b.showButton===false?'':'checked')+'> Show button</label>'+field('customBanners.items.'+i+'.button','Button label',b.button)+field('customBanners.items.'+i+'.url','Button destination',b.url)+'<div class="editor-field"><label>Button alignment</label><select data-hp="customBanners.items.'+i+'.buttonPosition"><option value="left" '+((b.buttonPosition||'left')==='left'?'selected':'')+'>Left</option><option value="center" '+(b.buttonPosition==='center'?'selected':'')+'>Centre</option><option value="right" '+(b.buttonPosition==='right'?'selected':'')+'>Right</option></select></div></div></div>').join('');return '<p class="editor-hint">Add as many banners as you like. Choose whether each appears near the top, in the middle, or at the bottom of the homepage. Move banners up or down to change their order when they share a location.</p>'+bannerFields+'<button type="button" class="admin-view-store" id="addCustomBanner">＋ Add banner</button>';}
-    if(key==='categories'){if(x.limit===undefined)x.limit=4;return field('categories.title','Section heading',x.title)+field('categories.limit','Number of collections to show',x.limit,'number')+'<p class="editor-hint">Collections are pulled automatically from Admin → Collections. Add, edit, or delete collections there; this setting only controls how many appear on the storefront.</p><p class="editor-hint">Current collections: '+D.catalogs.length+'</p>';}
-    if(key==='products')return field('products.title','Section heading',x.title)+field('products.limit','Number of products',x.limit,'number');
+    if(key==='customBanners'){const items=x.items||(x.items=[]);const bannerFields=items.map((b,i)=>'<div class="editor-subgroup custom-banner-editor"><div class="editor-panel-title"><b>Banner '+(i+1)+'</b><div class="nav-link-actions"><button type="button" class="admin-view-store" data-banner-up="'+i+'" '+(!i?'disabled':'')+'>↑</button><button type="button" class="admin-view-store" data-banner-down="'+i+'" '+(i===items.length-1?'disabled':'')+'>↓</button><button type="button" class="admin-danger" data-banner-remove="'+i+'">Remove</button></div></div><label class="editor-check"><input type="checkbox" data-hp="customBanners.items.'+i+'.show" '+(b.show===false?'':'checked')+'> Show this banner</label>'+field('customBanners.items.'+i+'.title','Headline',b.title)+area('customBanners.items.'+i+'.text','Supporting text',b.text)+photo('customBanners.items.'+i+'.image','Banner image',b.image)+'<div class="editor-field"><label>Show banner at</label><select data-hp="customBanners.items.'+i+'.position"><option value="top" '+((b.position||'middle')==='top'?'selected':'')+'>Top of homepage (below header)</option><option value="middle" '+(b.position==='middle'?'selected':'')+'>Middle (after best sellers)</option><option value="bottom" '+(b.position==='bottom'?'selected':'')+'>Bottom (above footer)</option></select></div><div class="editor-subgroup"><b>Banner button</b><label class="editor-check"><input type="checkbox" data-hp="customBanners.items.'+i+'.showButton" '+(b.showButton===false?'':'checked')+'> Show button</label>'+field('customBanners.items.'+i+'.button','Button label',b.button)+field('customBanners.items.'+i+'.url','Button destination',b.url)+'<div class="editor-field"><label>Button alignment</label><select data-hp="customBanners.items.'+i+'.buttonPosition"><option value="left" '+((b.buttonPosition||'left')==='left'?'selected':'')+'>Left</option><option value="center" '+(b.buttonPosition==='center'?'selected':'')+'>Centre</option><option value="right" '+(b.buttonPosition==='right'?'selected':'')+'>Right</option></select></div></div></div>').join('');return '<p class="editor-hint">Add as many banners as you like. Choose whether each appears near the top, in the middle, or at the bottom of the homepage. Move banners up or down to change their order when they share a location.</p>'+bannerFields+'<button type="button" class="admin-view-store" id="addCustomBanner">＋ Add banner</button>';}    if(key==='categories'){if(x.limit===undefined)x.limit=4;return field('categories.title','Section heading',x.title)+field('categories.limit','Number of collections to show',x.limit,'number')+'<p class="editor-hint">Collections are pulled automatically from Admin → Collections. Add, edit, or delete collections there; this setting only controls how many appear on the storefront.</p><p class="editor-hint">Current collections: '+D.catalogs.length+'</p>';}    if(key==='products')return field('products.title','Section heading',x.title)+field('products.limit','Number of products',x.limit,'number');
     if(key==='promo')return field('promo.title','Headline',x.title)+area('promo.text','Supporting text',x.text)+photo('promo.image','Banner image',x.image)+'<div class="editor-subgroup"><b>Banner button</b><label class="editor-check"><input type="checkbox" data-hp="promo.showButton" '+(x.showButton===false?'':'checked')+'> Show button</label>'+field('promo.button','Button label',x.button)+field('promo.url','Button destination',x.url)+'<div class="editor-field"><label>Button alignment</label><select data-hp="promo.buttonPosition"><option value="left" '+((x.buttonPosition||'left')==='left'?'selected':'')+'>Left</option><option value="center" '+(x.buttonPosition==='center'?'selected':'')+'>Centre</option><option value="right" '+(x.buttonPosition==='right'?'selected':'')+'>Right</option></select></div></div>';
     if(key==='benefits')return area('benefits.items','One benefit per line',(x.items||[]).join('\n'));
     if(key==='reviews')return field('reviews.title','Section heading',x.title)+field('reviews.items.0.name','Customer name',x.items?.[0]?.name)+area('reviews.items.0.text','Review text',x.items?.[0]?.text);
@@ -380,9 +396,7 @@ function inventory() {
   const rows=D.products.slice().sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
   $('#view').innerHTML=`<div class="page-heading"><div><h2>Inventory</h2><p>Keep track of available stock for every product.</p></div><span class="admin-count">${rows.reduce((n,p)=>n+Number(p.stock||0),0)} units in stock</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Available</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</td><td><input class="stock-input" type="number" min="0" value="${Number(p.stock||0)}" data-inv="${p.id}"></td><td><span class="stock-status ${p.stock<=0?'out':p.stock<=5?'low':''}">${p.stock<=0?'Out of stock':p.stock<=5?'Low stock':'In stock'}</span></td><td><button class="text-link" data-edit-inv="${p.id}">Edit product</button></td></tr>`).join('')}</tbody></table></div></div>`;
   document.querySelectorAll('[data-inv]').forEach(el=>el.onchange=()=>{const p=D.products.find(x=>x.id===el.dataset.inv);p.stock=Math.max(0,Math.floor(Number(el.value)||0));save('Update inventory for '+p.name);inventory();});
-  document.querySelectorAll('[data-edit-inv]').forEach(b=>b.onclick=()=>productForm(b.dataset.editInv));
-}
-
+  document.querySelectorAll('[data-edit-inv]').forEach(b=>b.onclick=()=>productForm(b.dataset.editInv));}
 /* ---------- products ---------- */
 /* ---------- products ---------- */
 function products() {
@@ -581,10 +595,8 @@ async function importProductsExcel(file){
   const collectionCount=D.catalogs.length;
   const preview=incoming.slice(0,8).map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(catName(p.catalog))+'</td><td>'+egp(p.salePrice>0?p.salePrice:p.price)+'</td><td>'+p.variants.length+'</td></tr>').join('');
   const newCount=incoming.filter(p=>!D.products.some(x=>x.id===p.id||String(x.name||'').trim().toLowerCase()===p.name.trim().toLowerCase())).length;
-  const updateCount=incoming.length-newCount;
-  const note=isShopify&&!headerMap.has('collection')&&!headerMap.has('collections')&&!headerMap.has('collection title')&&!headerMap.has('collection name')?'Shopify product CSV files normally do not include collection membership. This import will use each product’s Type as its collection when available. You can edit collections afterwards.':'';
-  modal('<div class="shopify-page-head"><div><span class="admin-eyebrow">SHOPIFY CSV IMPORT</span><h2>Review products</h2><p>Check the products before saving them to your Dew store.</p></div></div><div class="shopify-metrics"><div><span>Products</span><b>'+incoming.length+'</b></div><div><span>New</span><b>'+newCount+'</b></div><div><span>Matching names to update</span><b>'+updateCount+'</b></div><div><span>Collections in store</span><b>'+D.catalogs.length+'</b></div></div>'+(note?'<p class="editor-hint">'+esc(note)+'</p>':'')+'<div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Collection</th><th>Price</th><th>Variants</th></tr></thead><tbody>'+preview+'</tbody></table></div>'+(incoming.length>8?'<p class="editor-hint">Showing the first 8 products. All '+incoming.length+' will be imported.</p>':'')+'<p class="editor-hint">Product descriptions, prices, variants, stock, SKUs, barcodes and image links will be imported. Existing products with matching names will be updated rather than duplicated.</p><div class="editor-head-actions" style="justify-content:flex-end;margin-top:18px"><button class="admin-view-store" id="cancelProductImport">Cancel</button><button class="admin-primary" id="confirmProductImport">Import '+incoming.length+' products</button></div>');
-  $('#cancelProductImport').onclick=closeModal;
+  const updateCount=incoming.length-newCount;  const note=isShopify&&!headerMap.has('collection')&&!headerMap.has('collections')&&!headerMap.has('collection title')&&!headerMap.has('collection name')?'Shopify product CSV files normally do not include collection membership. This import will use each product’s Type as its collection when available. You can edit collections afterwards.':'';
+  modal('<div class="shopify-page-head"><div><span class="admin-eyebrow">SHOPIFY CSV IMPORT</span><h2>Review products</h2><p>Check the products before saving them to your Dew store.</p></div></div><div class="shopify-metrics"><div><span>Products</span><b>'+incoming.length+'</b></div><div><span>New</span><b>'+newCount+'</b></div><div><span>Matching names to update</span><b>'+updateCount+'</b></div><div><span>Collections in store</span><b>'+D.catalogs.length+'</b></div></div>'+(note?'<p class="editor-hint">'+esc(note)+'</p>':'')+'<div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Collection</th><th>Price</th><th>Variants</th></tr></thead><tbody>'+preview+'</tbody></table></div>'+(incoming.length>8?'<p class="editor-hint">Showing the first 8 products. All '+incoming.length+' will be imported.</p>':'')+'<p class="editor-hint">Product descriptions, prices, variants, stock, SKUs, barcodes and image links will be imported. Existing products with matching names will be updated rather than duplicated.</p><div class="editor-head-actions" style="justify-content:flex-end;margin-top:18px"><button class="admin-view-store" id="cancelProductImport">Cancel</button><button class="admin-primary" id="confirmProductImport">Import '+incoming.length+' products</button></div>');  $('#cancelProductImport').onclick=closeModal;
   $('#confirmProductImport').onclick=async()=>{
     const btn=$('#confirmProductImport');btn.disabled=true;btn.textContent='Importing...';
     try{
@@ -597,13 +609,13 @@ async function importProductsExcel(file){
     }catch(err){btn.disabled=false;btn.textContent='Try import again';toast(err.message,true);}
   };
 }
-
 function resizeProductImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
-      const width = 1000, height = 1250;
-      const scale = Math.min(width / img.width, height / img.height);
+      const width = 1080, height = 1387;
+      // Fill the portrait canvas edge-to-edge; crop excess from the longer dimension.
+      const scale = Math.max(width / img.width, height / img.height);
       const drawWidth = Math.round(img.width * scale);
       const drawHeight = Math.round(img.height * scale);
       const canvas = document.createElement('canvas');
@@ -621,7 +633,7 @@ function resizeProductImage(file) {
         reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(new Error('Could not prepare the product photo.'));
         reader.readAsDataURL(blob);
-      }, 'image/webp', 0.82);
+      }, 'image/webp', 0.84);
     };
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read this product photo.')); };
     img.src = url;
@@ -781,11 +793,9 @@ function discounts() {
   if (!D.discounts) D.discounts = [];
   $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h2>Promo Codes & Discounts</h2><button class="btn red" id="newDisc">+ New promo code</button></div>
     <p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p>
-    <div class="scroll"><table><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>
-    ${D.discounts.map(d => `<tr>
+    <div class="scroll"><table><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>    ${D.discounts.map(d => `<tr>
       <td><b>${esc(d.code)}</b></td>
-      <td>${d.type === 'percentage' ? 'Percentage (%)' : d.type === 'fixed' ? 'Fixed amount (EGP)' : 'Free Shipping'}</td>
-      <td>${d.type === 'percentage' ? d.value + '%' : d.type === 'fixed' ? egp(d.value) : 'Free delivery'}</td>
+      <td>${d.type === 'percentage' ? 'Percentage (%)' : d.type === 'fixed' ? 'Fixed amount (EGP)' : 'Free Shipping'}</td>      <td>${d.type === 'percentage' ? d.value + '%' : d.type === 'fixed' ? egp(d.value) : 'Free delivery'}</td>
       <td>${d.minSpend ? egp(d.minSpend) : 'None'}</td>
       <td><button class="pill ${d.active ? 'g' : ''}" data-toggledisc="${d.id}" style="border:0;cursor:pointer">${d.active ? 'Active' : 'Inactive'}</button></td>
       <td style="white-space:nowrap"><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}" style="color:var(--red)">Delete</button></td>
