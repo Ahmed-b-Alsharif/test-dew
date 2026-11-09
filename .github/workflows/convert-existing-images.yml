@@ -33,6 +33,9 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: \${{ secrets.GITHUB_TOKEN }}
+          add-paths: |
+            images/webp/**
+            products.json
           branch: chore/converted-website-images-webp
           delete-branch: true
           commit-message: "Convert existing website photos to optimized WebP"
