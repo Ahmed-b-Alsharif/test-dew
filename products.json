@@ -342,11 +342,70 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
       ],
       "howToUse": "",
-      "options": [],
-      "variants": [],
+      "options": [
+        {
+          "name": "Shades",
+          "values": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "e81cbedc",
+          "options": {
+            "Shades": "1"
+          },
+          "price": 235,
+          "salePrice": 200,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227"
+        },
+        {
+          "id": "9d075531",
+          "options": {
+            "Shades": "2"
+          },
+          "price": 235,
+          "salePrice": 0,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
+        },
+        {
+          "id": "2669922a",
+          "options": {
+            "Shades": "3"
+          },
+          "price": 235,
+          "salePrice": 0,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227"
+        },
+        {
+          "id": "3c02329c",
+          "options": {
+            "Shades": "4"
+          },
+          "price": 235,
+          "salePrice": 0,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227"
+        }
+      ],
       "price": 235,
       "salePrice": 200,
-      "stock": 10
+      "stock": 0
     },
     {
       "id": "2da6a098",
