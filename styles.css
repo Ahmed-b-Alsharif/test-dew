@@ -340,8 +340,10 @@ th{background:var(--green);color:#fff;font-weight:600}
 .dew-ann>a{display:block;color:inherit;overflow:hidden}
 .dew-ann.is-static{white-space:normal}
 .dew-ann.is-static a span{display:inline}
-.dew-ann-track{display:flex;width:max-content;align-items:center;gap:24px;animation:dew-marquee 30s linear infinite}
-.dew-ann-track i{font-style:normal;opacity:.75}
+.dew-ann-track{display:flex;width:max-content;align-items:stretch;gap:0;animation:dew-marquee 30s linear infinite;will-change:transform}
+.dew-ann-group{display:flex;flex:0 0 max-content;min-width:100vw;align-items:center;justify-content:space-around;gap:24px;padding:7px 24px}
+.dew-ann-group span{flex:0 0 auto}
+.dew-ann-group i{font-style:normal;opacity:.75;flex:0 0 auto}
 .dew-ann.speed-slow .dew-ann-track{animation-duration:48s}
 .dew-ann.speed-fast .dew-ann-track{animation-duration:16s}
 .dew-ann.is-scroll .dew-ann-track{animation-name:dew-scroll}
@@ -1391,3 +1393,8 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-instagram-card>p{margin:9px 2px 0;color:#68786d;font-size:11px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .dew-instagram-card:hover .dew-instagram-media img,.dew-instagram-card:hover .dew-instagram-media video{transform:scale(1.025);transition:transform .25s ease}
 @media(max-width:760px){.dew-instagram-media{aspect-ratio:4/5}.dew-instagram-card>p{font-size:10px}}
+
+/* Seamless Shopify-style announcement ticker: two equal-width message groups loop without blank gaps */
+.dew-ann.is-scroll .dew-ann-track{animation-name:dew-marquee}
+.dew-ann.is-marquee .dew-ann-track{animation-name:dew-marquee}
+@media(prefers-reduced-motion:reduce){.dew-ann-track{animation:none;transform:none}}
