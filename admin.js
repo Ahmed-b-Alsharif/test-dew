@@ -48,7 +48,7 @@ async function refreshProductSitemap() {
     try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
     await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
   }
-  const xml='<?xml version="1.0" encoding="UTF-8"?>\\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\\n')+'\\n</urlset>\\n';
+  const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
   let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch(e){}
   await gh('PUT','contents/sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml),...(sha?{sha}:{})});
 }
