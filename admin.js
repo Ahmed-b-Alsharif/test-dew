@@ -392,7 +392,7 @@ function productForm(id) {
     <div class="shopify-page-head product-editor-head"><div><span class="admin-eyebrow">PRODUCTS / ${id?'EDIT':'NEW'}</span><h2>${id?esc(p.name):'Add product'}</h2><p>Organize product details just like Shopify Admin.</p></div><div class="editor-head-actions"><button class="admin-view-store" id="cancelProduct">Discard</button><button class="admin-primary" id="saveProduct">Save</button></div></div>
     <div class="product-editor-layout">
       <div class="product-editor-main">
-        <section class="editor-panel"><div class="editor-panel-title"><h3>Media</h3><span>Up to 8 images</span></div><div class="product-media-grid" id="productMedia"></div><label class="media-add">＋ Add images<input type="file" id="pf" accept="image/*" multiple></label><p class="editor-hint">The first image is the main product photo customers see.</p></section>
+        <section class="editor-panel"><div class="editor-panel-title"><h3>Media</h3><span>Up to 8 images</span></div><div class="product-media-grid" id="productMedia"></div><label class="media-add">＋ Add images<input type="file" id="pf" accept="image/*" multiple></label><p class="editor-hint">Product photos are automatically fitted to 1000 × 1250 px (4:5). The full photo is preserved without cropping and adapts to phone and desktop screens.</p></section>
         <section class="editor-panel"><h3>Product information</h3><div class="editor-field"><label>Title</label><input id="pn" value="${esc(p.name)}" placeholder="e.g. Dew Lip Balm"></div><div class="editor-field"><label>Description</label><textarea id="pdesc" rows="6" placeholder="Describe your product">${esc(p.description)}</textarea></div></section>
         <section class="editor-panel" id="pricingPanel"><h3>Base product pricing</h3><p class="editor-hint">Used only when this product has no variants. Each variant has its own price and sale price below.</p><div class="editor-two-col"><div class="editor-field"><label>Price (EGP)</label><input id="pp" type="number" min="0" step="1" value="${esc(p.price)}"></div><div class="editor-field"><label>Compare-at price / Sale price (EGP)</label><input id="pd" type="number" min="0" step="1" value="${esc(p.salePrice||'')}"><small>Enter a lower price to show a sale.</small></div></div><div class="price-preview" id="pricePreview">${moneyLabel(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</div></section>
         <section class="editor-panel"><div class="editor-panel-title"><h3>Variants</h3><span>Options such as Size, Color, Scent or Volume</span></div><div id="variantOptions"></div><button type="button" class="admin-view-store shopify-add-option" id="addVariantOption">＋ Add another option</button><div id="variantTable" style="margin-top:14px"></div><p class="editor-hint">Each variant has its own photo, price, sale price, quantity, SKU and barcode.</p></section>
@@ -460,7 +460,7 @@ function productForm(id) {
   renderVariants();
   paint();$('#backProducts').onclick=()=>{tab='products';render();};$('#cancelProduct').onclick=()=>{tab='products';render();};
   $('#pn').oninput=refreshPreview;$('#pp').oninput=refreshPreview;$('#pd').oninput=refreshPreview;
-  $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resize(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
+  $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resizeProductImage(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
   $('#saveProduct').onclick=async()=>{const saveButton=$('#saveProduct');if(saveButton.disabled)return;saveButton.disabled=true;saveButton.textContent='Saving...';const name=$('#pn').value.trim(),enteredPrice=Number($('#pp').value);if(!name){toast('Product title is required.',true);saveButton.disabled=false;saveButton.textContent='Save';return;}const cleanOptions=optionRows.filter(o=>o.name.trim()&&o.values.length).map(o=>({name:o.name.trim(),values:[...new Set(o.values)]}));const cleanVariants=cleanOptions.length?variantRows:[];if(!cleanOptions.length&&!(enteredPrice>0)){toast('Enter a valid product price.',true);saveButton.disabled=false;saveButton.textContent='Save';return;}if(cleanOptions.length&&(!cleanVariants.length||cleanVariants.some(v=>!(Number(v.price)>0)||cleanOptions.some(o=>!o.values.includes(String(v.options?.[o.name]??'')))))){toast('Complete every variant: choose its option values and enter its own price.',true);saveButton.disabled=false;saveButton.textContent='Save';return;}const price=cleanOptions.length?Number(cleanVariants[0].price):enteredPrice;const data={name,price,salePrice:cleanOptions.length?Number(cleanVariants[0].salePrice||0):Number($('#pd').value)||0,stock:cleanOptions.length?cleanVariants.reduce((n,v)=>n+Number(v.stock||0),0):Math.max(0,Math.floor(Number($('#ps').value)||0)),description:$('#pdesc').value.trim(),howToUse:$('#phow').value.trim(),tags:$('#ptags').value.trim(),images,visible:$('#pvStatus').value==='active',featured:$('#pfe').checked,options:cleanOptions,variants:cleanVariants};let savedId=id;if(id)Object.assign(p,data);else{savedId=uid();D.products.unshift({id:savedId,...data});}save((id?'Update ':'Add ')+name).then(()=>{productForm(savedId);}).catch(()=>{}).finally(()=>{const b=$('#saveProduct');if(b){b.disabled=false;b.textContent='Save';}});};
 }
 
@@ -564,6 +564,37 @@ async function importProductsExcel(file){
   };
 }
 
+function resizeProductImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const width = 1000, height = 1250;
+      const scale = Math.min(width / img.width, height / img.height);
+      const drawWidth = Math.round(img.width * scale);
+      const drawHeight = Math.round(img.height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const context = canvas.getContext('2d', { alpha: false });
+      context.fillStyle = '#f1f3ed';
+      context.fillRect(0, 0, width, height);
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(img, Math.round((width - drawWidth) / 2), Math.round((height - drawHeight) / 2), drawWidth, drawHeight);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(blob => {
+        if (!blob) return reject(new Error('Could not optimize this product photo. Please try another image.'));
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Could not prepare the product photo.'));
+        reader.readAsDataURL(blob);
+      }, 'image/webp', 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read this product photo.')); };
+    img.src = url;
+  });
+}
+
 function resize(file) {
   return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
@@ -639,11 +670,12 @@ function orders() {
   $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
     <p class="note">View and manage customer orders, payment status, fulfillment, and tracking numbers.</p>
     <div class="scroll"><table>
-      <tr><th>Order #</th><th>Date</th><th>Customer</th><th>Total</th><th>Payment</th><th>Fulfillment</th><th>Tracking #</th><th></th></tr>
+      <tr><th>Order #</th><th>Date</th><th>Time</th><th>Customer</th><th>Total</th><th>Payment</th><th>Fulfillment</th><th>Tracking #</th><th></th></tr>
       ${ordersList.length ? ordersList.map((o, idx) => `<tr>
         <td><b>${esc(o.number)}</b></td>
         <td>${esc(new Date(o.date || Date.now()).toLocaleDateString())}</td>
-        <td>${esc(o.customer.first + ' ' + o.customer.last)}<br><small class="note">${esc(o.customer.phone)}</small></td>
+        <td>${esc(new Date(o.date || Date.now()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))}</td>
+        <td>${esc((o.customer?.first || '') + ' ' + (o.customer?.last || ''))}<br><small class="note">${esc(o.customer?.phone || '')}</small></td>
         <td><b>${egp(o.total)}</b></td>
         <td><select data-opay="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
           <option ${o.paymentStatus === 'Unpaid (COD)' ? 'selected' : ''}>Unpaid (COD)</option>
@@ -659,7 +691,7 @@ function orders() {
         </select></td>
         <td><input type="text" value="${esc(o.trackingNumber || '')}" placeholder="Tracking #" data-otrack="${idx}" style="width:110px;padding:4px 6px;border:1px solid #cfd3cc;border-radius:6px"></td>
         <td style="white-space:nowrap"><button class="btn small" data-view="${idx}">View</button> <button class="btn small ghost" data-delord="${idx}" style="color:var(--red)">Delete</button></td>
-      </tr>`).join('') : '<tr><td colspan="8" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
+      </tr>`).join('') : '<tr><td colspan="9" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
     </table></div>`;
 
   document.querySelectorAll('[data-opay]').forEach(sel => sel.onchange = () => {
@@ -681,7 +713,8 @@ function orders() {
     const o = ordersList[btn.dataset.view];
     const c = o.customer;
     modal(`<h2>Order ${esc(o.number)}</h2>
-      <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleString()}</p>
+      <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleDateString()}</p>
+      <p><b>Time:</b> ${new Date(o.date || Date.now()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</p>
       <p><b>Payment method:</b> ${esc(o.paymentMethod === 'instapay' ? 'InstaPay' : 'Cash on Delivery')} | <b>Payment status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
       <p><b>Tracking Number:</b> ${esc(o.trackingNumber || 'None yet')}</p>
       <h3>Customer details</h3>
