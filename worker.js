@@ -180,7 +180,7 @@ async function createOrder(request, env) {
   return json({ok:true,order},201);
 }
 
-async function getInstagramRecent(env) {
+async function getInstagramRecent(request, env) {
   const token = clean(env.INSTAGRAM_ACCESS_TOKEN);
   if (!token) return json({ok:false,error:"Instagram access is not configured on the Worker."},503);
   const accountId = "17841447682116140";
@@ -224,7 +224,7 @@ export default {
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
-      if (path==="/api/instagram/recent" && request.method==="GET") return await getInstagramRecent(env);
+      if (path==="/api/instagram/recent" && request.method==="GET") return await getInstagramRecent(request, env);
       if(path==="/api/admin/login"&&request.method==="POST"){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminLogin(request,env)}
       if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
       if(path==="/api/admin/logout"&&request.method==="POST")return await adminLogout(request,env);
