@@ -34,10 +34,11 @@ productSectionSlot('after-collections');
 productSectionSlot('before-best-sellers');
 if(H.products.show)out+=renderProductSection(H.products.title,H.products.productIds,H.products.limit);
 productSectionSlot('after-best-sellers');
-productSectionSlot('before-image-banner');
-out+=bannerHtml('middle');productSectionSlot('after-image-banner');
+out+=bannerHtml('middle');
 
+productSectionSlot('before-image-banner');
 if(H.promo.show)out+='<section class="dew-promo">'+picture(H.promo.image,'Dew promotion')+'<div><span class="dew-kicker">A MOMENT FOR YOU</span><h2>'+esc(H.promo.title)+'</h2><p>'+esc(H.promo.text)+'</p>'+(H.promo.showButton!==false?'<div class="dew-promo-button-row align-'+(['left','center','right'].includes(H.promo.buttonPosition)?H.promo.buttonPosition:'left')+'"><a class="dew-btn" href="'+esc(H.promo.url)+'">'+esc(H.promo.button)+' ↗</a></div>':'')+'</div></section>';
+productSectionSlot('after-image-banner');
 productSectionSlot('before-benefits');
 if(H.benefits.show)out+='<section class="dew-benefits">'+H.benefits.items.map(x=>'<div><span>✳</span>'+esc(x)+'</div>').join('')+'</section>';
 productSectionSlot('before-reviews');
