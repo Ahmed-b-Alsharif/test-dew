@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, tab = 'overview', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = 'overview', q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
@@ -32,6 +32,7 @@ async function loadData() {
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw Error(result.error||'Could not load orders.');
   ordersList=result.orders||[];ordersSHA=null;
+  try { await refreshImageLibrary(); } catch (e) { imageLibrary = []; }
 }
 
 function save(message) {
@@ -55,12 +56,19 @@ function saveOrders(message){
  });return chain.catch(()=>{});
 }
 
+async function refreshImageLibrary() {
+  const files = await gh('GET', 'contents/images');
+  imageLibrary = Array.isArray(files) ? files.filter(x => x.type === 'file' && /\.(webp|png|jpe?g|gif|avif)$/i.test(x.name || '')).map(x => ({ name: x.name, path: x.path, url: x.path })) : [];
+  return imageLibrary;
+}
 async function uploadImage(dataUrl) {
   const isWebP = /^data:image\/webp;base64,/i.test(dataUrl);
   const extension = isWebP ? 'webp' : 'jpg';
   const name = `${Date.now()}-${uid()}.${extension}`;
-  await gh('PUT', 'contents/images/' + name, { message: 'Add optimized photo ' + name, content: dataUrl.split(',')[1] });
-  return 'images/' + name;
+  const path = 'images/' + name;
+  await gh('PUT', 'contents/' + path, { message: 'Add optimized photo ' + name, content: dataUrl.split(',')[1] });
+  imageLibrary = [{ name, path, url: path }, ...imageLibrary.filter(x => x.path !== path)];
+  return path;
 }
 function toast(msg, bad) {
   const t = $('#toast'); t.textContent = msg; t.style.background = bad ? 'var(--red)' : 'var(--green)'; t.style.display = 'block';
@@ -90,7 +98,7 @@ function showLogin(msg){
 
 /* ---------- shell ---------- */
 function render() {
-  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
+  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
   $('#app').innerHTML = `
     <div class="admin-shell">
@@ -107,7 +115,7 @@ function render() {
     </div>`;
   document.querySelectorAll('.side-link[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
   $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
-  ({ overview, homepage, pages, products, catalogs, orders, customers, inventory, discounts, store, help })[tab]();
+  ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -202,6 +210,25 @@ function homepage() {
   $('#view').innerHTML=`<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / THEME CUSTOMIZER</span><h2>Customize your entire store in one place.</h2><p>Choose any section or product template on the left. Changes appear in the preview as you edit them.</p></div><a class="admin-view-store" href="./" target="_blank">Open live store ↗</a></div><div class="homepage-theme-editor"><aside class="homepage-section-list"><div class="homepage-section-list-head"><b>Theme structure</b><small>Homepage, product template and global styles</small></div><div id="homepageSectionNav"></div></aside><section class="homepage-editor-work"><div class="homepage-editor-card" id="homepageEditorPanel"></div><div class="homepage-preview-card"><div class="homepage-preview-top"><b>Store preview</b><span>Click a section in the preview to edit it</span></div><div class="homepage-preview-browser"><div class="homepage-browser-dots">● ● ●</div><div id="homepageLivePreview"></div></div></div></section></div>`;
   drawEditor();preview();
   $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
+}
+
+
+/* ---------- uploaded media library ---------- */
+function media() {
+  const draw=()=>{
+    const files=imageLibrary||[];
+    $('#view').innerHTML='<div class="shopify-page-head"><div><span class="admin-eyebrow">STORE CONTENT</span><h2>Media library</h2><p>Every photo uploaded through Admin is saved here and can be reused across your store.</p></div><label class="admin-primary media-upload-trigger">＋ Upload photos<input type="file" id="mediaUpload" accept="image/*" multiple hidden></label></div>'+
+      '<div class="shopify-metrics"><div><span>Saved images</span><b>'+files.length+'</b></div><div><span>Format</span><b>WebP</b></div><div><span>Storage</span><b>Website images</b></div></div>'+
+      '<div class="media-library-grid">'+(files.map((f,i)=>'<article class="media-library-card"><div class="media-library-thumb"><img src="'+esc(f.url)+'" alt="'+esc(f.name)+'" loading="lazy"></div><div class="media-library-info"><b title="'+esc(f.name)+'">'+esc(f.name)+'</b><button type="button" class="text-link" data-copy-media="'+i+'">Copy image path</button></div></article>').join('')||'<div class="admin-panel empty-note">No uploaded photos yet. Upload an image and it will be saved here.</div>')+'</div>';
+    $('#mediaUpload').onchange=async e=>{
+      const files=[...e.target.files||[]];if(!files.length)return;
+      const input=e.target;input.disabled=true;
+      for(const file of files){try{await uploadImage(await resize(file));}catch(err){toast(err.message,true);break;}}
+      input.disabled=false;input.value='';await refreshImageLibrary();draw();toast('Photos uploaded and saved to the website.');
+    };
+    document.querySelectorAll('[data-copy-media]').forEach(b=>b.onclick=()=>{const item=files[+b.dataset.copyMedia];if(item){navigator.clipboard?.writeText(item.path).then(()=>toast('Image path copied.')).catch(()=>toast(item.path));}});
+  };
+  draw();
 }
 
 /* ---------- Custom pages manager ---------- */
@@ -410,12 +437,20 @@ function productForm(id) {
     const groupValues=opts.find(o=>o.name===groupByOption)?.values||[];
     const grouped=groupByOption?[...groupValues.map(value=>({value,rows:variantRows.map((v,i)=>({v,i})).filter(x=>String(x.v.options?.[groupByOption]??'')===String(value))})).filter(g=>g.rows.length),{value:'Unassigned',rows:variantRows.map((v,i)=>({v,i})).filter(x=>!groupValues.includes(String(x.v.options?.[groupByOption]??'')))}].filter(g=>g.rows.length):[{value:'',rows:variantRows.map((v,i)=>({v,i}))}];
     const optionSelect=(v,oi,o,vi)=>'<select data-voption="'+vi+'" data-vo="'+oi+'" aria-label="'+esc(o.name)+'"><option value="">Choose '+esc(o.name)+'</option>'+o.values.map(x=>'<option value="'+esc(x)+'" '+(String(v.options?.[o.name]??'')===String(x)?'selected':'')+'>'+esc(x)+'</option>').join('')+'</select>';
-    const variantRow=({v,i})=>'<article class="shopify-variant-row"><div class="shopify-variant-main"><label class="variant-image-upload shopify-variant-thumb">'+(v.image?'<img src="'+esc(v.image)+'" alt="">':'＋ Photo')+'<input type="file" accept="image/*" data-vimage="'+i+'"></label><div class="shopify-variant-name"><b>'+esc(Object.values(v.options||{}).filter(Boolean).join(' / ')||'Choose options')+'</b><div class="shopify-variant-selects">'+opts.map((o,oi)=>optionSelect(v,oi,o,i)).join('')+'</div></div><label class="shopify-variant-price"><span>Price</span><input type="number" min="0" step="1" data-vfield="price" data-vi="'+i+'" value="'+Number(v.price??p.price??0)+'"></label><label class="shopify-variant-stock"><span>Available</span><input type="number" min="0" step="1" data-vfield="stock" data-vi="'+i+'" value="'+Number(v.stock||0)+'"></label><button type="button" class="shopify-variant-more" data-variant-details="'+i+'">'+(expandedVariantRows.has(i)?'Hide details':'Edit details')+'⌄</button><button type="button" class="text-link danger-link" data-vremove="'+i+'">Remove</button></div>'+(expandedVariantRows.has(i)?'<div class="shopify-variant-details"><label><span>Sale price (EGP)</span><input type="number" min="0" step="1" data-vfield="salePrice" data-vi="'+i+'" value="'+(Number(v.salePrice||0)||'')+'"></label><label><span>SKU</span><input data-vfield="sku" data-vi="'+i+'" value="'+esc(v.sku||'')+'" placeholder="SKU"></label><label><span>Barcode</span><input data-vfield="barcode" data-vi="'+i+'" value="'+esc(v.barcode||'')+'" placeholder="Barcode"></label></div>':'')+'</article>';
+    const variantRow=({v,i})=>'<article class="shopify-variant-row"><div class="shopify-variant-main"><div class="variant-media-controls"><label class="variant-image-upload shopify-variant-thumb">'+(v.image?'<img src="'+esc(v.image)+'" alt="">':'＋ Photo')+'<input type="file" accept="image/*" data-vimage="'+i+'"></label><button type="button" class="variant-choose-photo" data-vpick="'+i+'">Choose photo</button></div><div class="shopify-variant-name"><b>'+esc(Object.values(v.options||{}).filter(Boolean).join(' / ')||'Choose options')+'</b><div class="shopify-variant-selects">'+opts.map((o,oi)=>optionSelect(v,oi,o,i)).join('')+'</div></div><label class="shopify-variant-price"><span>Price</span><input type="number" min="0" step="1" data-vfield="price" data-vi="'+i+'" value="'+Number(v.price??p.price??0)+'"></label><label class="shopify-variant-stock"><span>Available</span><input type="number" min="0" step="1" data-vfield="stock" data-vi="'+i+'" value="'+Number(v.stock||0)+'"></label><button type="button" class="shopify-variant-more" data-variant-details="'+i+'">'+(expandedVariantRows.has(i)?'Hide details':'Edit details')+'⌄</button><button type="button" class="text-link danger-link" data-vremove="'+i+'">Remove</button></div>'+(expandedVariantRows.has(i)?'<div class="shopify-variant-details"><label><span>Sale price (EGP)</span><input type="number" min="0" step="1" data-vfield="salePrice" data-vi="'+i+'" value="'+(Number(v.salePrice||0)||'')+'"></label><label><span>SKU</span><input data-vfield="sku" data-vi="'+i+'" value="'+esc(v.sku||'')+'" placeholder="SKU"></label><label><span>Barcode</span><input data-vfield="barcode" data-vi="'+i+'" value="'+esc(v.barcode||'')+'" placeholder="Barcode"></label></div>':'')+'</article>';
     $('#variantTable').innerHTML=opts.length?'<div class="shopify-variant-toolbar"><b>'+variantRows.length+' variants</b><label>Group by <select id="variantGroupBy">'+opts.map(o=>'<option value="'+esc(o.name)+'" '+(groupByOption===o.name?'selected':'')+'>'+esc(o.name)+'</option>').join('')+'</select></label></div><div class="shopify-variant-list">'+grouped.map(g=>(g.value?'<div class="shopify-variant-group-title">'+(g.value==='Unassigned'?'Needs option values':esc(groupByOption)+': '+esc(g.value))+'</div>':'')+g.rows.map(variantRow).join('')).join('')+'</div><button type="button" class="admin-view-store shopify-add-variant" id="addSingleVariant">＋ Add another variant</button>':'<p class="empty-note">Add an option and its values to create variants.</p>';
     $('#variantGroupBy')?.addEventListener('change',e=>{groupByOption=e.target.value;renderVariants();});
     document.querySelectorAll('[data-vfield]').forEach(el=>el.onchange=()=>{const v=variantRows[+el.dataset.vi],k=el.dataset.vfield;v[k]=['price','salePrice','stock'].includes(k)?Math.max(0,Number(el.value||0)):el.value.trim();});
     document.querySelectorAll('[data-voption]').forEach(el=>el.onchange=()=>{const v=variantRows[+el.dataset.voption],o=opts[+el.dataset.vo];v.options={...(v.options||{}),[o.name]:el.value};renderVariants();});
     document.querySelectorAll('[data-vimage]').forEach(el=>el.onchange=async()=>{const file=el.files?.[0];if(!file)return;try{variantRows[+el.dataset.vimage].image=await uploadImage(await resize(file));renderVariants();toast('Variant photo uploaded.');}catch(err){toast(err.message,true);}});
+    document.querySelectorAll('[data-vpick]').forEach(el=>el.onclick=()=>{
+      const vi=+el.dataset.vpick;
+      const choices=[...new Set([...images,...variantRows.map(v=>v.image).filter(Boolean)])];
+      if(!choices.length){toast('Upload a product photo first, then choose it here.',true);return;}
+      modal('<div class="media-picker-modal"><div class="editor-panel-title"><h3>Choose a product photo</h3><button type="button" class="text-link" id="closeMediaPicker">Close</button></div><p class="editor-hint">Select one of this product’s uploaded photos for this variant.</p><div class="media-picker-grid">'+choices.map((src,ci)=>'<button type="button" class="media-picker-item" data-vpick-image="'+ci+'"><img src="'+esc(src)+'" alt=""><small>'+esc(src.split('/').pop())+'</small></button>').join('')+'</div></div>');
+      $('#closeMediaPicker').onclick=closeModal;
+      document.querySelectorAll('[data-vpick-image]').forEach(b=>b.onclick=()=>{variantRows[vi].image=choices[+b.dataset.vpickImage];closeModal();renderVariants();toast('Variant photo selected.');});
+    });
     document.querySelectorAll('[data-vremove]').forEach(el=>el.onclick=()=>{variantRows.splice(+el.dataset.vremove,1);renderVariants();});
     document.querySelectorAll('[data-variant-details]').forEach(b=>b.onclick=()=>{const i=+b.dataset.variantDetails;expandedVariantRows.has(i)?expandedVariantRows.delete(i):expandedVariantRows.add(i);renderVariants();});
     $('#addSingleVariant')?.addEventListener('click',()=>{variantRows.push({id:uid(),options:{},price:Number($('#pp').value||p.price||0),salePrice:0,stock:0,sku:'',barcode:''});expandedVariantRows.add(variantRows.length-1);renderVariants();});
