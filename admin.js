@@ -581,8 +581,10 @@ function resizeProductImage(file) {
   return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
-      const width = 1000, height = 1250;
-      const scale = Math.min(width / img.width, height / img.height);
+      const width = 1080, height = 1387;
+      // Fill the complete portrait canvas instead of shrinking the photo inside
+      // it and leaving empty bands around the product.
+      const scale = Math.max(width / img.width, height / img.height);
       const drawWidth = Math.round(img.width * scale);
       const drawHeight = Math.round(img.height * scale);
       const canvas = document.createElement('canvas');
@@ -601,7 +603,7 @@ function resizeProductImage(file) {
         reader.onload = () => resolve(reader.result);
         reader.onerror = () => reject(new Error('Could not prepare the product photo.'));
         reader.readAsDataURL(blob);
-      }, 'image/webp', 0.82);
+      }, 'image/webp', 0.84);
     };
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read this product photo.')); };
     img.src = url;
