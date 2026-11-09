@@ -56,8 +56,10 @@ function saveOrders(message){
 }
 
 async function uploadImage(dataUrl) {
-  const name = `${Date.now()}-${uid()}.jpg`;
-  await gh('PUT', 'contents/images/' + name, { message: 'Add photo ' + name, content: dataUrl.split(',')[1] });
+  const isWebP = /^data:image\/webp;base64,/i.test(dataUrl);
+  const extension = isWebP ? 'webp' : 'jpg';
+  const name = `${Date.now()}-${uid()}.${extension}`;
+  await gh('PUT', 'contents/images/' + name, { message: 'Add optimized photo ' + name, content: dataUrl.split(',')[1] });
   return 'images/' + name;
 }
 function toast(msg, bad) {
@@ -527,15 +529,35 @@ async function importProductsExcel(file){
 }
 
 function resize(file) {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
-      const k = Math.min(1, 1800 / Math.max(img.width, img.height));
-      const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
-      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg', 0.82));
+      const maxSide = 1600;
+      const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const context = canvas.getContext('2d', { alpha: false });
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = 'high';
+      context.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+
+      canvas.toBlob(blob => {
+        if (!blob) {
+          reject(new Error('Could not optimize this image. Please try another photo.'));
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Could not prepare the optimized image.'));
+        reader.readAsDataURL(blob);
+      }, 'image/webp', 0.78);
     };
-    img.onerror = () => rej(new Error('Could not read image.'));
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Could not read image.'));
+    };
     img.src = url;
   });
 }
