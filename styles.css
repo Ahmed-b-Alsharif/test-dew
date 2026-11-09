@@ -1429,3 +1429,13 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
     max-height: none !important;
   }
 }
+
+/* Homepage product-section editor and storefront View All actions */
+.product-section-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;max-height:300px;overflow:auto;padding:9px;border:1px solid #e1e8e1;border-radius:9px;background:#fbfcfa}
+.product-section-choice{display:flex;align-items:flex-start;gap:8px;padding:7px;border-radius:6px;background:#fff;font-size:12px;line-height:1.35;cursor:pointer}
+.product-section-choice input{margin:2px 0 0;accent-color:#1c524e;flex:0 0 auto}
+.product-section-choice span{min-width:0}
+.product-section-editor{margin-top:14px}
+.dew-products-view-all{display:flex;justify-content:center;margin:22px 0 0}
+.dew-custom-products-section{padding-top:34px}
+@media(max-width:640px){.product-section-choices{grid-template-columns:1fr}.dew-products-view-all{margin-top:16px}}
