@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = 'overview', q = '', chain = Promise.resolve();
+let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = (() => { try { return sessionStorage.getItem('dew_admin_tab') || 'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 
@@ -35,19 +35,23 @@ async function loadData() {
   try { await refreshImageLibrary(); } catch (e) { imageLibrary = []; }
 }
 
-async function refreshProductSitemap() {
-  const origin='https://dewskincaree.com';
-  const products=(D.products||[]).filter(p=>p.visible);
+function productRouteSlugs() {
   const slugOf=p=>String(p.shopifyHandle||p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  return [...new Set((D.products||[]).filter(p=>p.visible).map(slugOf).filter(Boolean))].sort();
+}
+async function refreshProductSitemap(previousSlugs = []) {
+  const origin='https://dewskincaree.com';
+  const slugs=productRouteSlugs();
   const page='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>Product | Dew Skincare</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css?v=20261109-4"></head><body><div id="productApp"><div class="dew-loading">Dew Skincare</div></div><script src="cart.js?v=20261107-3"></script><script src="product.js?v=20261109-4"></script></body></html>';
-  const urls=[origin+'/',...products.map(p=>origin+'/'+slugOf(p)+'/')];
-  for(const p of products){
-    const slug=slugOf(p);
-    if(!slug)continue;
-    let sha;
-    try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
-    await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
+  const missing=slugs.filter(slug=>!previousSlugs.includes(slug));
+  for(let i=0;i<missing.length;i+=5){
+    await Promise.all(missing.slice(i,i+5).map(async slug=>{
+      let sha;
+      try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
+      await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
+    }));
   }
+  const urls=[origin+'/',...slugs.map(slug=>origin+'/'+slug+'/')];
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
   let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch(e){}
   await gh('PUT','contents/sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml),...(sha?{sha}:{})});
@@ -57,8 +61,16 @@ function save(message) {
     try {
       const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: SHA });
       SHA = r.content.sha;
-      try { await refreshProductSitemap(); toast('Saved. Product links and search sitemap updated.'); }
-      catch (seoError) { toast('Products saved, but the SEO sitemap could not refresh: '+seoError.message,true); }
+      const currentSlugs=productRouteSlugs();
+      let previousSlugs=[];
+      try { previousSlugs=JSON.parse(localStorage.getItem('dew_published_product_routes')||'[]'); } catch {}
+      if(JSON.stringify(currentSlugs)!==JSON.stringify(previousSlugs)){
+        try {
+          await refreshProductSitemap(previousSlugs);
+          try { localStorage.setItem('dew_published_product_routes',JSON.stringify(currentSlugs)); } catch {}
+          toast('Saved. Product links and sitemap updated.');
+        } catch (seoError) { toast('Products saved, but the SEO sitemap could not refresh: '+seoError.message,true); }
+      } else toast('Saved.');
     } catch (e) { toast(e.message, true); throw e; }
   });
   return chain.catch(() => {});
@@ -116,6 +128,7 @@ function showLogin(msg){
 
 /* ---------- shell ---------- */
 function render() {
+  try { sessionStorage.setItem('dew_admin_tab',tab); } catch {}
   const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
   $('#app').innerHTML = `
@@ -197,8 +210,7 @@ function homepage() {
       (h.categories.show?section('categories','<small>EXPLORE</small><h3>'+esc(h.categories.title)+'</h3><div class="hp-preview-cats">'+D.catalogs.slice(0,Math.max(1,Math.min(100,Number(h.categories.limit)||4))).map(v=>'<div>'+image(v.image)+'<b>'+esc(v.name)+'</b></div>').join('')+'</div>'):'')+
       (h.products.show?section('products','<small>THE DEW EDIT</small><h3>'+esc(h.products.title)+'</h3><div class="hp-preview-products">'+P.slice(0,4).map(p=>'<div>'+image(p.images?.[0])+'<b>'+esc(p.name)+'</b></div>').join('')+'</div>'):'')+bannerPreview('middle')+
       (h.promo.show?section('promo','<div class="hp-preview-promo">'+image(h.promo.image)+'<div><h3>'+esc(h.promo.title)+'</h3><p>'+esc(h.promo.text)+'</p><span>'+esc(h.promo.button)+'</span></div></div>'):'')+
-      (h.benefits.show?section('benefits','<h3>Why choose Dew</h3><div class="hp-preview-cats">'+(h.benefits.items||[]).map(v=>'<b>'+esc(v)+'</b>').join('')+'</div>'):'')+
-      (h.reviews.show?section('reviews','<h3>'+esc(h.reviews.title)+'</h3><blockquote>“'+esc(h.reviews.items?.[0]?.text||'Customer reviews appear here.')+'”</blockquote>'):'')+
+      (h.benefits.show?section('benefits','<h3>Why choose Dew</h3><div class="hp-preview-cats">'+(h.benefits.items||[]).map(v=>'<b>'+esc(v)+'</b>').join('')+'</div>'):'')+      (h.reviews.show?section('reviews','<h3>'+esc(h.reviews.title)+'</h3><blockquote>“'+esc(h.reviews.items?.[0]?.text||'Customer reviews appear here.')+'”</blockquote>'):'')+
       (h.social.show?section('social','<h3>'+esc(h.social.title)+'</h3><div class="hp-preview-cats">'+(h.social.images||[]).slice(0,4).map(v=>image(v)).join('')+'</div>'):'')+
       (h.newsletter.show?section('newsletter','<h3>'+esc(h.newsletter.title)+'</h3><p>'+esc(h.newsletter.text)+'</p><span>'+esc(h.newsletter.button)+'</span>'):'')+bannerPreview('bottom');
     }
@@ -397,8 +409,7 @@ function products() {
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=q.length;products();const next=$('#q');next.focus();next.setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
   document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const p=D.products.find(x=>x.id===b.dataset.x);if(p&&confirm('Delete "'+p.name+'"?')){D.products=D.products.filter(x=>x!==p);render();save('Delete '+p.name);}});
-}
-function productForm(id) {
+}function productForm(id) {
   const p = id ? D.products.find(x => x.id === id) : { name:'', catalog:D.catalogs[0]?.id||'', price:'', salePrice:'', stock:0, description:'', howToUse:'', tags:'', images:[], visible:true, featured:false };
   if (!p) return;
   let images=[...(p.images||[])];
@@ -597,8 +608,7 @@ function resizeProductImage(file) {
       const drawHeight = Math.round(img.height * scale);
       const canvas = document.createElement('canvas');
       canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext('2d', { alpha: false });
+      canvas.height = height;      const context = canvas.getContext('2d', { alpha: false });
       context.fillStyle = '#f1f3ed';
       context.fillRect(0, 0, width, height);
       context.imageSmoothingEnabled = true;
@@ -797,8 +807,7 @@ function discounts() {
 
 function discForm(id) {
   const d = id ? D.discounts.find(x => x.id === id) : { id: uid(), code: '', type: 'percentage', value: 10, minSpend: 0, active: true };
-  modal(`<h2>${id ? 'Edit' : 'New'} promo code</h2><div class="form-grid">
-    <div class="full"><label>Promo code</label><input id="dc" value="${esc(d.code)}" placeholder="e.g. SAVE20"></div>
+  modal(`<h2>${id ? 'Edit' : 'New'} promo code</h2><div class="form-grid">    <div class="full"><label>Promo code</label><input id="dc" value="${esc(d.code)}" placeholder="e.g. SAVE20"></div>
     <div><label>Discount type</label><select id="dt">
       <option value="percentage" ${d.type === 'percentage' ? 'selected' : ''}>Percentage (%)</option>
       <option value="fixed" ${d.type === 'fixed' ? 'selected' : ''}>Fixed amount (EGP)</option>
