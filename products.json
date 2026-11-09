@@ -271,7 +271,9 @@
       "variants": [],
       "price": 650,
       "salePrice": 0,
-      "stock": 20
+      "stock": 20,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "5302dec3",
