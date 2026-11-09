@@ -8,7 +8,10 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
  const root=$('#productApp');
  try{
   const S=await(await fetch('products.json?v='+Date.now())).json();
-  const params=new URLSearchParams(location.search),id=params.get('id'),handle=params.get('handle');
+  const params=new URLSearchParams(location.search),id=params.get('id');
+  const pathParts=location.pathname.replace(/\\/+$/,'').split('/').filter(Boolean);
+  const pathHandle=pathParts.length&&pathParts[pathParts.length-1]!=='product.html'?decodeURIComponent(pathParts[pathParts.length-1]):'';
+  const handle=params.get('handle')||pathHandle;
   const products=(S.products||[]).filter(x=>x.visible);
   const p=products.find(x=>handle&&(x.shopifyHandle||String(x.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))===handle)||products.find(x=>x.id===id);
   if(!p){root.innerHTML='<main class="product-page"><a class="product-back" href="./#shop">← Back to shop</a><section class="product-not-found"><h1>Product not found</h1><p>This product may no longer be available.</p><a class="dew-btn" href="./#shop">Continue shopping</a></section></main>';return;}
@@ -26,7 +29,8 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   const seoTitle=p.seoTitle||p.name+' | '+(store.storeName||'Dew Skincare');
   const seoDescription=(p.seoDescription||String(p.description||('Shop '+p.name+' from Dew Skincare, natural skincare made in Egypt.')).replace(/\s+/g,' ').trim()).slice(0,320);
   document.title=seoTitle;
-  const canonicalUrl='https://dewskincaree.com/product.html?handle='+encodeURIComponent(p.shopifyHandle||String(p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''));
+  const productHandle=encodeURIComponent(p.shopifyHandle||String(p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''));
+  const canonicalUrl='https://dewskincaree.com/'+productHandle+'/';
   const setMeta=(selector,attribute,value,createName)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');if(createName)el.setAttribute(createName,attribute);else el.setAttribute(attribute==='property'?'property':'name',attribute);document.head.appendChild(el);}el.setAttribute('content',value);};
   setMeta('meta[name="description"]','name',seoDescription);
   setMeta('meta[property="og:title"]','property',seoTitle);
