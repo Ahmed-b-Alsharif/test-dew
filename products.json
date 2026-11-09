@@ -61,12 +61,12 @@
         "logoImage": "",
         "links": [
           {
-            "label": "Our Story",
-            "url": "#about"
-          },
-          {
             "label": "Shop",
             "url": "#shop"
+          },
+          {
+            "label": "Our Story",
+            "url": "#about"
           },
           {
             "label": "Contact",
@@ -2636,7 +2636,7 @@
       "image": "",
       "published": true,
       "showInHeader": false,
-      "showInFooter": false,
+      "showInFooter": true,
       "seoTitle": "",
       "seoDescription": ""
     }
