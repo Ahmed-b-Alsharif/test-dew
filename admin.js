@@ -626,7 +626,7 @@ function catForm(id) {
   $('#backCollections').onclick=()=>{tab='catalogs';render();};$('#cancelCollection').onclick=()=>{tab='catalogs';render();};
   document.querySelectorAll('[data-collection-product]').forEach(el=>el.onchange=updateCount);
   $('#cn').oninput=()=>$('#collectionPreviewTitle').textContent=$('#cn').value||'Collection title';$('#cd').oninput=()=>$('#collectionPreviewDesc').textContent=$('#cd').value||'Collection description';
-  const uploadCollectionImage=async(input,field,preview)=>{const file=input.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));if(field==='image')image=path;else if(field==='desktopImage')desktopImage=path;else mobileImage=path;$(preview).innerHTML='<img src="'+esc(path)+'" alt="">';}catch(err){toast(err.message,true);}};
+  const uploadCollectionImage=async(input,field,preview)=>{const file=input.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));if(field==='image')image=path;else if(field==='desktopImage'){desktopImage=path;$('#removeDesktopImage').disabled=false;}else{mobileImage=path;$('#removeMobileImage').disabled=false;}$(preview).innerHTML='<img src="'+esc(path)+'" alt="">';}catch(err){toast(err.message,true);}};
   $('#cf').onchange=e=>uploadCollectionImage(e.target,'image','#collectionPreview');
   $('#cfd').onchange=e=>uploadCollectionImage(e.target,'desktopImage','#collectionDesktopPreview');
   $('#cfm').onchange=e=>uploadCollectionImage(e.target,'mobileImage','#collectionMobilePreview');
