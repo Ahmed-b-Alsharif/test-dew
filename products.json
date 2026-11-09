@@ -53,7 +53,6 @@
         "mode": "scroll",
         "speed": "normal",
         "messages": [
-          "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
           "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP"
         ]
       },
@@ -116,7 +115,8 @@
       "products": {
         "show": true,
         "title": "Our Best Sellers",
-        "limit": 5
+        "limit": 5,
+        "productIds": []
       },
       "promo": {
         "show": true,
@@ -138,7 +138,7 @@
         ]
       },
       "reviews": {
-        "show": false,
+        "show": true,
         "title": "Kind words from our customers",
         "items": [
           {
@@ -192,7 +192,42 @@
       "customBanners": {
         "show": true,
         "items": []
-      }
+      },
+      "productSections": []
+    },
+    "productPage": {
+      "addCartText": "Add to cart",
+      "buyNowText": "Buy it now",
+      "howToUseTitle": "How to use",
+      "detailsTitle": "Product details",
+      "shippingTitle": "Shipping & payment",
+      "currencyPrefix": "EGP ",
+      "currencySuffix": "",
+      "headingColor": "#1c524e",
+      "textColor": "#65746a",
+      "priceColor": "#1d2e25",
+      "buttonColor": "#1c524e",
+      "buttonTextColor": "#ffffff",
+      "buttonBorderColor": "#1c524e",
+      "buttonRadius": 3,
+      "buttonHeight": 50,
+      "buttonFontSize": 13,
+      "priceFontSize": 21,
+      "quantityWidth": 42,
+      "quantityHeight": 47,
+      "quantityFontSize": 13,
+      "quantityBackground": "#eaf2ec",
+      "quantityBorderColor": "#9dbba7",
+      "buttonLayout": "vertical",
+      "showTags": true,
+      "tagsPosition": "under-description",
+      "showStock": true,
+      "showQuantity": true,
+      "showDeliveryNotes": true,
+      "showHowToUse": true,
+      "showDetails": true,
+      "showShipping": true,
+      "showCategory": true
     }
   },
   "catalogs": [
