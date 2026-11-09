@@ -2495,7 +2495,7 @@
       "id": "735c75b6",
       "name": "French Lavender Shower Gel",
       "shopifyHandle": "french-lavender-shower-gel",
-      "description": "Unwind with the soothing scent of French lavender in our  Lavender Shower Gel . This gentle,  natural body wash  is perfect for evening routines, helping to calm and relax your senses while nourishing your skin. Great for all skin types, it leaves your skin soft, smooth, and delicately scented.\n\n Â \n\n   Keywords : lavender shower gel, relaxing body wash, natural body wash for sensitive skin, calming shower gel.",
+      "description": "Unwind with the soothing scent of French lavender in our  Lavender Shower Gel . This gentle,  natural body wash  is perfect for evening routines, helping to calm and relax your senses while nourishing your skin. Great for all skin types, it leaves your skin soft, smooth, and delicately scented.",
       "catalog": "ed4077f0",
       "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": true,
@@ -2515,20 +2515,22 @@
       ],
       "variants": [
         {
-          "id": "2036ea23",
+          "id": "b376765b",
           "options": {
             "Fragrance & Size": "Lavender - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
-          "stock": 10,
-          "sku": "'62280001116",
-          "barcode": "'62280001116"
+          "price": 250,
+          "salePrice": 220,
+          "stock": 2,
+          "sku": "",
+          "barcode": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
-      "stock": 10
+      "price": 250,
+      "salePrice": 220,
+      "stock": 2,
+      "seoTitle": "",
+      "seoDescription": ""
     }
   ],
   "discounts": [
