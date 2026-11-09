@@ -49,7 +49,7 @@ async function adminGithub(request,env){
  if(!await validAdminSession(request,env))return adminJson(request,{ok:false,error:"Unauthorized"},401);
  if(!env.GITHUB_TOKEN)return adminJson(request,{message:"GitHub access is not configured on the secure admin service."},503);
  const url=new URL(request.url),path=(url.searchParams.get("path")||"").split("?")[0];
- if(!(path==="contents/products.json"||path==="contents/sitemap.xml"||/^contents\/images\/[A-Za-z0-9._-]+$/.test(path))||!["GET","PUT"].includes(request.method))return adminJson(request,{message:"This admin operation is not allowed."},403);
+ if(!(path==="contents/products.json"||path==="contents/sitemap.xml"||/^contents\/images\/[A-Za-z0-9._-]+$/.test(path)||/^contents\/[a-z0-9][a-z0-9-]{0,100}\/index\.html$/.test(path))||!["GET","PUT"].includes(request.method))return adminJson(request,{message:"This admin operation is not allowed."},403);
  const headers={Authorization:"Bearer "+env.GITHUB_TOKEN,Accept:"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28","User-Agent":"DewSkincareAdmin/1.0"},init={method:request.method,headers};
  if(request.method==="PUT"){headers["Content-Type"]="application/json";init.body=await request.text()}
  const response=await fetch("https://api.github.com/repos/"+ADMIN_REPO+"/"+path,init);

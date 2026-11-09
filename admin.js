@@ -37,9 +37,19 @@ async function loadData() {
 
 async function refreshProductSitemap() {
   const origin='https://dewskincaree.com';
-  const urls=[origin+'/',...(D.products||[]).filter(p=>p.visible).map(p=>origin+'/product.html?handle='+encodeURIComponent(p.shopifyHandle||String(p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')))];
+  const products=(D.products||[]).filter(p=>p.visible);
+  const slugOf=p=>String(p.shopifyHandle||p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const page='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>Product | Dew Skincare</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css?v=20261109-4"></head><body><div id="productApp"><div class="dew-loading">Dew Skincare</div></div><script src="cart.js?v=20261107-3"></script><script src="product.js?v=20261109-4"></script></body></html>';
+  const urls=[origin+'/',...products.map(p=>origin+'/'+slugOf(p)+'/')];
+  for(const p of products){
+    const slug=slugOf(p);
+    if(!slug)continue;
+    let sha;
+    try{const current=await gh('GET','contents/'+slug+'/index.html');sha=current.sha;}catch(e){}
+    await gh('PUT','contents/'+slug+'/index.html',{message:'Publish product page: '+slug,content:enc(page),...(sha?{sha}:{})});
+  }
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
-  let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch{}
+  let sha;try{const current=await gh('GET','contents/sitemap.xml');sha=current.sha;}catch(e){}
   await gh('PUT','contents/sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml),...(sha?{sha}:{})});
 }
 function save(message) {
