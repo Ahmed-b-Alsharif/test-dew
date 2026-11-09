@@ -32,7 +32,7 @@ jobs:
       - name: Open conversion pull request
         uses: peter-evans/create-pull-request@v7
         with:
-          token: \${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           add-paths: |
             images/webp/**
             products.json
