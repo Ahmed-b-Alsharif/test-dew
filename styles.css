@@ -1622,3 +1622,49 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   .dew-header .dew-logo-image{max-width:125px!important}
   .dew-mobile-menu{width:min(90vw,340px)!important}
 }
+
+ 
+/* Mobile drawer links: consistent alignment and solid, readable link surfaces. */
+@media (max-width: 760px) {
+  .dew-mobile-menu nav {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    gap: 9px !important;
+    padding: 16px 0 22px !important;
+  }
+  .dew-mobile-menu nav a {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 30px !important;
+    align-items: center !important;
+    justify-content: initial !important;
+    width: 100% !important;
+    min-height: 56px !important;
+    margin: 0 !important;
+    padding: 13px 14px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    background: #ffffff !important;
+    border: 1px solid #e4e9df !important;
+    border-radius: 10px !important;
+    color: #183b35 !important;
+    box-shadow: 0 2px 7px rgba(24, 59, 53, .045);
+  }
+  .dew-mobile-menu nav a span {
+    justify-self: end !important;
+    flex: none !important;
+    width: 27px !important;
+    height: 27px !important;
+    margin: 0 !important;
+    background: #edf3eb !important;
+    border: 1px solid #dce7da !important;
+    border-radius: 50% !important;
+    color: #1c524e !important;
+  }
+  .dew-mobile-menu nav a:active {
+    background: #f0f5ee !important;
+    border-color: #cbdcc9 !important;
+    padding-left: 14px !important;
+  }
+}
