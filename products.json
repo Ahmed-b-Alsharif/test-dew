@@ -159,7 +159,8 @@
           "",
           "",
           ""
-        ]
+        ],
+        "postsToShow": 6
       },
       "newsletter": {
         "show": true,
