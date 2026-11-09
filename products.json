@@ -342,34 +342,8 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "Shade",
-          "values": [
-            "3"
-          ]
-        },
-        {
-          "name": "shade",
-          "values": [
-            "4"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "489e35ad",
-          "options": {
-            "Shade": "3",
-            "shade": "4"
-          },
-          "price": 235,
-          "salePrice": 200,
-          "stock": 10,
-          "sku": "'00",
-          "barcode": "0"
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 235,
       "salePrice": 200,
       "stock": 10
