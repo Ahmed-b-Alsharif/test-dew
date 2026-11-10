@@ -86,7 +86,8 @@
         "showButton": false,
         "buttonPosition": "left",
         "mobileImage": "images/1794339873056-6eefed3b.jpg",
-        "showKicker": false
+        "showKicker": false,
+        "kickerText": ""
       },
       "categories": {
         "show": true,
