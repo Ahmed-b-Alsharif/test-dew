@@ -2421,3 +2421,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   .dew-hero-fullbleed p{font-size:14px!important;line-height:1.65!important;max-width:34ch!important;margin-bottom:18px!important}
   .dew-hero-fullbleed .dew-btn{background:#fff!important;color:var(--dew-green)!important;border-color:#fff!important}
 }
+
+
+/* Ensure responsive hero picture fills the banner frame */
+.dew-hero-fullbleed>.dew-hero-art>picture{display:block!important;width:100%!important;height:100%!important}
