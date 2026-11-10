@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="210" fill="#1c524e"/>
+  <circle cx="512" cy="390" r="225" fill="#ffffff" opacity=".08"/>
+  <path d="M515 520c-150-85-167-213-58-293 97 75 123 181 58 293Z" fill="#f7f5ed"/>
+  <path d="M510 514c-5-112 40-197 144-254 35 111-15 213-144 254Z" fill="#d8e9df"/>
+  <path d="M512 533c-5-91 35-171 112-237" fill="none" stroke="#1c524e" stroke-width="13" stroke-linecap="round"/>
+  <text x="512" y="790" text-anchor="middle" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="184" font-weight="700" letter-spacing="14">DEW</text>
+  <text x="512" y="865" text-anchor="middle" fill="#d8e9df" font-family="Arial, Helvetica, sans-serif" font-size="38" letter-spacing="12">SKINCARE</text>
+</svg>
