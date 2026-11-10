@@ -395,24 +395,20 @@ function exportCustomersExcel(rows) {
 
 function customers() {
   const map=new Map();
-  ordersList.forEach(o=>{
-    const c=o.customer||{},key=c.phone||c.whatsapp||((c.first||'')+(c.last||''));
-    if(!map.has(key))map.set(key,{...c,phone:c.phone||'',count:0,total:0,last:o.date,orders:[]});
-    const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);
-    if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;
-  });
+  ordersList.forEach(o=>{const c=o.customer||{},key=c.phone||c.whatsapp||((c.first||'')+(c.last||''));if(!map.has(key))map.set(key,{...c,phone:c.phone||'',count:0,total:0,last:o.date,orders:[]});const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
   const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
-  const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
-  $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="admin-count">${rows.length} customers</span><button class="admin-view-store" id="exportCustomers">Export Excel</button></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+  const filtered=()=>rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
+  const native=isNativeApp;
+  $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">RELATIONSHIPS</span><h2>Customers</h2><p>Understand your customers and their purchase history.</p></div><button class="admin-view-store" id="exportCustomers">Export Excel</button></div>
+    <div class="shopify-metrics"><div><span>Total customers</span><b>${rows.length}</b></div><div><span>Total orders</span><b>${ordersList.length}</b></div><div><span>Customer sales</span><b>${egp(rows.reduce((n,c)=>n+c.total,0))}</b></div></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted" id="customerCount">${filtered().length} customers</span></div>
+    ${native?'<div class="dew-customer-list" id="dewCustomerList"></div>':`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered().map(c=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers yet.</td></tr>'}</tbody></table></div></div>`}`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
-  const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
-  document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
-    const c=rows[Number(b.dataset.customer)];
-    const history=c.orders.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
-    modal(`<h2>${esc((c.first||'')+' '+(c.last||''))}</h2><p><b>Phone:</b> ${esc(c.phone||'—')}<br><b>Address:</b> ${esc(history[0]?.customer?.address||'—')}<br><b>Total orders:</b> ${c.count}<br><b>Total spent:</b> ${egp(c.total)}<br><b>Last order:</b> ${c.last?new Date(c.last).toLocaleString():'—'}</p><h3>Order history</h3>${history.map(o=>`<div class="overview-row"><div><b>${esc(o.number||'Order')}</b><small>${esc(new Date(o.date||0).toLocaleDateString())} · ${esc(o.fulfillmentStatus||'Pending')}</small></div><strong>${egp(o.total)}</strong></div>`).join('')||'<p>No orders found.</p>'}<button class="btn" style="margin-top:16px" onclick="document.getElementById('ov').classList.remove('open')">Close</button>`);
-  });
+  function showCustomer(index){const c=rows[index];if(!c)return;const history=c.orders.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));modal(`<h2>${esc((c.first||'')+' '+(c.last||''))}</h2><p><b>Phone:</b> ${esc(c.phone||'—')}<br><b>Address:</b> ${esc(history[0]?.customer?.address||'—')}<br><b>Total orders:</b> ${c.count}<br><b>Total spent:</b> ${egp(c.total)}<br><b>Last order:</b> ${c.last?new Date(c.last).toLocaleString():'—'}</p><h3>Order history</h3>${history.map(o=>`<div class="overview-row"><div><b>${esc(o.number||'Order')}</b><small>${esc(new Date(o.date||0).toLocaleDateString())} · ${esc(o.fulfillmentStatus||'Pending')}</small></div><strong>${egp(o.total)}</strong></div>`).join('')||'<p>No orders found.</p>'}<button class="btn" style="margin-top:16px" onclick="document.getElementById('ov').classList.remove('open')">Close</button>`);}
+  const draw=()=>{const list=filtered(),el=$('#dewCustomerList');$('#customerCount').textContent=list.length+' customers';if(el)el.innerHTML=list.map(c=>{const i=rows.indexOf(c),name=((c.first||'')+' '+(c.last||'')).trim()||'Guest customer';return `<button class="dew-customer-card" data-customer="${i}"><span class="dew-customer-avatar">${esc(name[0].toUpperCase())}</span><span class="dew-customer-main"><b>${esc(name)}</b><small>${esc(c.phone||'No phone number')}</small><small>${c.count} ${c.count===1?'order':'orders'} · Last order ${c.last?new Date(c.last).toLocaleDateString():'—'}</small></span><span class="dew-customer-spend"><b>${egp(c.total)}</b><small>Total spent</small></span><span class="dew-card-chevron">›</span></button>`;}).join('')||'<div class="dew-mobile-empty">Customers will appear here after their first order.</div>';};
+  $('#q').oninput=()=>{q=$('#q').value;draw();};
+  document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>showCustomer(Number(b.dataset.customer)));
+  if(native){draw();$('#dewCustomerList').onclick=e=>{const b=e.target.closest('[data-customer]');if(b)showCustomer(Number(b.dataset.customer));};}
 }
 function inventory() {
   const rows=D.products.slice().sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
@@ -423,29 +419,31 @@ function inventory() {
 /* ---------- products ---------- */
 function products() {
   const query=q.toLowerCase();
-  const list=D.products.filter(p=>(!query||(p.name+' '+(p.tags||'')).toLowerCase().includes(query)));
+  let activeFilter='All';
+  const list=()=>D.products.filter(p=>(!query||(p.name+' '+(p.tags||'')).toLowerCase().includes(query))&&(activeFilter==='All'||(activeFilter==='Active'?!!p.visible:!p.visible)));
   const live=D.products.filter(p=>p.visible).length;
   const low=D.products.filter(p=>Number(p.stock||0)<=5).length;
+  const native=isNativeApp;
   $('#view').innerHTML=`
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list.length} products</span></div></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
-    ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
-      <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
-      <td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b>${p.salePrice>0&&p.salePrice<p.price?`<small class="old-price">${egp(p.price)}</small>`:''}</td>
-      <td><span class="${Number(p.stock||0)<=5?'inventory-low':''}">${Number(p.stock||0)} in stock</span></td>
-      <td>${p.featured?'<span class="shopify-featured">Featured</span>':'—'}</td>
-      <td><div class="table-actions"><button class="text-link" data-e="${p.id}">Edit</button><button class="text-link danger-link" data-x="${p.id}">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found. Add your first product to get started.</td></tr>'}
-    </tbody></table></div></div>`;
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div class="dew-mobile-toolbar-actions"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list().length} products</span></div></div>
+    ${native?`<div class="dew-mobile-filter-row" id="productFilters">${['All','Active','Draft'].map(x=>`<button class="dew-mobile-filter ${x==='All'?'active':''}" data-product-filter="${x}">${x}</button>`).join('')}</div>
+    <div class="dew-product-list" id="dewProductList"></div>`:`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
+    ${list().map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td><td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td><td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b></td><td>${Number(p.stock||0)} in stock</td><td>${p.featured?'Featured':'—'}</td><td><button class="text-link" data-e="${p.id}">Edit</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found.</td></tr>'}</tbody></table></div></div>`}
+  `;
   $('#newP').onclick=()=>productForm();
   $('#exportProducts').onclick=()=>exportProductsExcel();
   $('#importProducts').onclick=()=>$('#productExcelFile').click();
   $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
-  const search=$('#q');search.oninput=()=>{q=search.value;const pos=q.length;products();const next=$('#q');next.focus();next.setSelectionRange(pos,pos);};
+  const draw=()=>{const rows=list();const el=$('#dewProductList');if(el)el.innerHTML=rows.map(p=>`
+    <article class="dew-product-card"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';};
+  const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
+  document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
   document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
-  document.querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const p=D.products.find(x=>x.id===b.dataset.x);if(p&&confirm('Delete "'+p.name+'"?')){D.products=D.products.filter(x=>x!==p);render();save('Delete '+p.name);}});
-}function productForm(id) {
+  if(native)draw();
+}
+function productForm(id) {
   const p = id ? D.products.find(x => x.id === id) : { name:'', catalog:D.catalogs[0]?.id||'', price:'', salePrice:'', stock:0, description:'', howToUse:'', tags:'', images:[], visible:true, featured:false };
   if (!p) return;
   let images=[...(p.images||[])];
@@ -835,31 +833,18 @@ function orders() {
 
 /* ---------- discounts ---------- */
 function discounts() {
-  if (!D.discounts) D.discounts = [];
-  $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h2>Promo Codes & Discounts</h2><button class="btn red" id="newDisc">+ New promo code</button></div>
-    <p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p>
-    <div class="scroll"><table class="discounts-mobile-table"><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>    ${D.discounts.map(d => `<tr>
-      <td><b>${esc(d.code)}</b></td>
-      <td>${d.type === 'percentage' ? 'Percentage (%)' : d.type === 'fixed' ? 'Fixed amount (EGP)' : 'Free Shipping'}</td>      <td>${d.type === 'percentage' ? d.value + '%' : d.type === 'fixed' ? egp(d.value) : 'Free delivery'}</td>
-      <td>${d.minSpend ? egp(d.minSpend) : 'None'}</td>
-      <td><button class="pill ${d.active ? 'g' : ''}" data-toggledisc="${d.id}" style="border:0;cursor:pointer">${d.active ? 'Active' : 'Inactive'}</button></td>
-      <td style="white-space:nowrap"><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}" style="color:var(--red)">Delete</button></td>
-    </tr>`).join('') || '<tr><td colspan="6" class="note">No promo codes created yet.</td></tr>'}</table></div>`;
-
-  $('#newDisc').onclick = () => discForm();
-  document.querySelectorAll('[data-editdisc]').forEach(b => b.onclick = () => discForm(b.dataset.editdisc));
-  document.querySelectorAll('[data-toggledisc]').forEach(b => b.onclick = () => {
-    const d = D.discounts.find(x => x.id === b.dataset.toggledisc);
-    d.active = !d.active; render(); save('Toggle discount ' + d.code);
-  });
-  document.querySelectorAll('[data-deldisc]').forEach(b => b.onclick = () => {
-    const d = D.discounts.find(x => x.id === b.dataset.deldisc);
-    if (confirm('Delete promo code "' + d.code + '"?')) {
-      D.discounts = D.discounts.filter(x => x !== d); render(); save('Delete discount ' + d.code);
-    }
-  });
+  if(!D.discounts)D.discounts=[];
+  const native=isNativeApp;
+  const active=D.discounts.filter(d=>d.active).length;
+  const amount=d=>d.type==='percentage'?d.value+'% off':d.type==='fixed'?egp(d.value)+' off':'Free shipping';
+  $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">PROMOTIONS</span><h2>Discounts</h2><p>Create and manage offers for your customers.</p></div><button class="admin-primary" id="newDisc">＋ Create discount</button></div>
+    <div class="shopify-metrics"><div><span>All discounts</span><b>${D.discounts.length}</b></div><div><span>Active</span><b>${active}</b></div><div><span>Inactive</span><b>${D.discounts.length-active}</b></div></div>
+    ${native?`<div class="dew-discount-list">${D.discounts.map(d=>`<article class="dew-discount-card"><div class="dew-discount-icon">％</div><div class="dew-discount-info"><b>${esc(d.code)}</b><strong>${amount(d)}</strong><small>${d.minSpend?'Minimum spend '+egp(d.minSpend):'No minimum spend'}</small><span class="dew-product-status ${d.active?'active':'draft'}">${d.active?'Active':'Inactive'}</span></div><div class="dew-discount-actions"><button data-editdisc="${d.id}">Edit</button><button data-toggledisc="${d.id}">${d.active?'Deactivate':'Activate'}</button><button class="danger" data-deldisc="${d.id}">Delete</button></div></article>`).join('')||'<div class="dew-mobile-empty">No discounts yet. Create your first promo code.</div>'}</div>`:`<p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p><div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="discounts-mobile-table"><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>${D.discounts.map(d=>`<tr><td><b>${esc(d.code)}</b></td><td>${d.type==='percentage'?'Percentage (%)':d.type==='fixed'?'Fixed amount (EGP)':'Free Shipping'}</td><td>${amount(d)}</td><td>${d.minSpend?egp(d.minSpend):'None'}</td><td><button class="pill ${d.active?'g':''}" data-toggledisc="${d.id}">${d.active?'Active':'Inactive'}</button></td><td><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No promo codes created yet.</td></tr>'}</table></div></div>`}`;
+  $('#newDisc').onclick=()=>discForm();
+  document.querySelectorAll('[data-editdisc]').forEach(b=>b.onclick=()=>discForm(b.dataset.editdisc));
+  document.querySelectorAll('[data-toggledisc]').forEach(b=>b.onclick=()=>{const d=D.discounts.find(x=>x.id===b.dataset.toggledisc);d.active=!d.active;render();save('Toggle discount '+d.code);});
+  document.querySelectorAll('[data-deldisc]').forEach(b=>b.onclick=()=>{const d=D.discounts.find(x=>x.id===b.dataset.deldisc);if(confirm('Delete promo code "'+d.code+'"?')){D.discounts=D.discounts.filter(x=>x!==d);render();save('Delete discount '+d.code);}});
 }
-
 function discForm(id) {
   const d = id ? D.discounts.find(x => x.id === id) : { id: uid(), code: '', type: 'percentage', value: 10, minSpend: 0, active: true };
   modal(`<h2>${id ? 'Edit' : 'New'} promo code</h2><div class="form-grid">    <div class="full"><label>Promo code</label><input id="dc" value="${esc(d.code)}" placeholder="e.g. SAVE20"></div>
