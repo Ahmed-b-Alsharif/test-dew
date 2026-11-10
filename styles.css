@@ -1668,3 +1668,68 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
     padding-left: 14px !important;
   }
 }
+
+
+/* Dew Admin native iPhone app shell — scoped so the storefront and desktop admin stay unchanged */
+.dew-native-app,.dew-native-app body{min-height:100%;background:#f6f7f5}
+.dew-native-app body{margin:0;overscroll-behavior-y:contain}
+.dew-native-app .admin-shell{display:block;min-height:100dvh;padding-bottom:calc(76px + env(safe-area-inset-bottom));background:#f6f7f5}
+.dew-native-app .admin-sidebar{display:none!important}
+.dew-native-app .admin-main{min-height:100dvh}
+.dew-native-app .admin-topbar{position:sticky;top:0;z-index:30;height:auto;min-height:66px;padding:10px 17px;background:#fff;border-bottom:1px solid #e9ede9;box-shadow:0 2px 10px #163d2b08}
+.dew-native-app .admin-topbar .admin-eyebrow{font-size:8px;letter-spacing:1.35px}
+.dew-native-app .admin-topbar h1{font-size:19px;margin-top:3px}
+.dew-native-app .admin-view-store{display:none}
+.dew-native-app .admin-signout{padding:8px 10px;font-size:10px}
+.dew-native-app .admin-content{max-width:none;padding:18px 14px 28px}
+.dew-native-app .app-bottom-nav{position:fixed;z-index:100;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;padding:7px 8px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e5eae5;box-shadow:0 -5px 20px #173e2c0c}
+.dew-native-app .app-tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:49px;border:0;border-radius:10px;background:transparent;color:#7a857d;font:600 10px Inter,sans-serif;cursor:pointer}
+.dew-native-app .app-tab.active{color:#1c524e;background:#edf4ef}
+.dew-native-app .app-tab-icon{font-size:21px;line-height:22px;font-weight:400}
+.dew-native-app .app-tab i{position:absolute;top:0;left:calc(50% + 7px);min-width:15px;padding:2px 4px;border-radius:12px;background:#1c524e;color:white;font:700 8px Inter,sans-serif}
+.dew-native-app .welcome-strip{display:block;margin-bottom:17px}
+.dew-native-app .welcome-strip h2{font-size:26px;margin:5px 0}
+.dew-native-app .welcome-strip p{font-size:12px;line-height:1.5}
+.dew-native-app .overview-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.dew-native-app .overview-stats article{border-radius:13px;padding:14px}
+.dew-native-app .overview-stats article b{font-size:23px;margin:7px 0 3px}
+.dew-native-app .overview-columns{grid-template-columns:1fr;gap:11px}
+.dew-native-app .admin-panel,.dew-native-app .overview-stats article{box-shadow:0 2px 8px #163d2b06}
+.dew-native-app .page-heading,.dew-native-app .shopify-page-head{align-items:flex-start;flex-direction:column;gap:11px}
+.dew-native-app .page-heading h2,.dew-native-app .shopify-page-head h2{font-size:25px}
+.dew-native-app .page-heading .admin-primary,.dew-native-app .shopify-page-head .admin-primary{width:100%}
+.dew-native-app .shopify-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.dew-native-app .shopify-metrics>div{padding:10px 8px;border-radius:10px}
+.dew-native-app .shopify-metrics b{font-size:16px}
+.dew-native-app .shopify-toolbar{padding:10px;border-radius:11px 11px 0 0}
+.dew-native-app .shopify-search{max-width:none}
+.dew-native-app .admin-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dew-native-app .admin-content button,.dew-native-app .admin-content a,.dew-native-app .admin-content input,.dew-native-app .admin-content select,.dew-native-app .admin-content textarea{touch-action:manipulation}
+.dew-native-app .admin-content input,.dew-native-app .admin-content select,.dew-native-app .admin-content textarea{font-size:16px;max-width:100%}
+.dew-native-app .admin-content button,.dew-native-app .admin-content .btn,.dew-native-app .admin-content .admin-primary{min-height:42px}
+.dew-native-app .homepage-theme-editor{grid-template-columns:minmax(0,1fr);gap:11px}
+.dew-native-app .homepage-section-list{position:static}
+.dew-native-app .homepage-section-list #homepageSectionNav{display:flex;overflow-x:auto;gap:6px;padding-bottom:5px}
+.dew-native-app .hp-section-nav{min-width:145px}
+.dew-native-app .homepage-editor-fields .theme-editor-group{padding:13px}
+.dew-native-app .theme-editor-group .editor-two-col{grid-template-columns:1fr}
+.dew-native-app .hp-card-body,.dew-native-app .form-grid,.dew-native-app .product-editor-layout,.dew-native-app .collection-form{grid-template-columns:1fr}
+.dew-native-app .hp-card-body>* ,.dew-native-app .collection-form .full{grid-column:1}
+.dew-native-app .hp-savebar{position:sticky;top:72px;z-index:20}
+.dew-native-app .app-menu-intro{margin:3px 2px 17px}
+.dew-native-app .app-menu-intro h2{font:500 25px Georgia,serif;color:#1c524e;margin:6px 0}
+.dew-native-app .app-menu-intro p{font-size:12px;color:#849087;margin:0}
+.dew-native-app .app-menu-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.dew-native-app .app-menu-item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:13px;border:1px solid #e7ece7;border-radius:13px;background:#fff;color:#30483a;min-height:70px;box-shadow:0 2px 7px #163d2b05}
+.dew-native-app .app-menu-icon{width:39px;height:39px;display:grid;place-items:center;flex:none;border-radius:11px;background:#edf4ee;color:#1c524e;font-size:20px}
+.dew-native-app .app-menu-copy{display:block;flex:1;min-width:0}
+.dew-native-app .app-menu-copy b{display:block;font-size:12px;color:#29483b}
+.dew-native-app .app-menu-copy small{display:block;margin-top:4px;font-size:10px;line-height:1.4;color:#879188}
+.dew-native-app .app-menu-arrow{font-size:24px;color:#9aa59c}
+.dew-native-app .app-storefront-link,.dew-native-app .app-signout-link{display:block;width:100%;margin-top:12px;padding:13px;border:1px solid #dfe7df;border-radius:11px;background:#fff;color:#1c524e;text-align:center;text-decoration:none;font:600 12px Inter,sans-serif}
+.dew-native-app .app-signout-link{color:#a34c43}
+.dew-native-app .login{width:min(100% - 28px,420px);margin:12vh auto 0;padding:22px;border-radius:16px}
+@media(min-width:700px){
+ .dew-native-app .admin-content{padding:24px 22px 34px}
+ .dew-native-app .app-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
