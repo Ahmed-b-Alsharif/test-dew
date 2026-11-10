@@ -454,12 +454,21 @@ function products() {
   $('#exportProducts').onclick=()=>exportProductsExcel();
   $('#importProducts').onclick=()=>$('#productExcelFile').click();
   $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
-  const draw=()=>{const rows=list();const el=$('#dewProductList');if(el)el.innerHTML=rows.map(p=>`
-    <article class="dew-product-card" data-open-product="${esc(p.id)}" role="button" tabindex="0" aria-label="Edit ${esc(p.name)}"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';};
+  const draw=()=>{
+    const rows=list();const el=$('#dewProductList');
+    if(el)el.innerHTML=rows.map(p=>`
+    <article class="dew-product-card" data-open-product="${esc(p.id)}" role="button" tabindex="0" aria-label="Edit ${esc(p.name)}"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';
+    document.querySelectorAll('[data-open-product]').forEach(card=>{
+      const open=()=>productForm(card.dataset.openProduct);
+      card.onclick=open;
+      card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};
+      const edit=card.querySelector('[data-e]');
+      if(edit)edit.onclick=e=>{e.stopPropagation();open();};
+    });
+  };
   const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
   document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
-  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=e=>{e.stopPropagation();productForm(b.dataset.e);});
-  document.querySelectorAll('[data-open-product]').forEach(card=>{const open=()=>productForm(card.dataset.openProduct);card.onclick=open;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};});
+  if(!native)document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
   if(native)draw();
 }
 function productForm(id) {
@@ -1041,7 +1050,7 @@ if (isNativeApp) {
   let pullStartY=0, pullStartX=0, pullActive=false, refreshing=false;
   const pullThreshold=115;
   document.addEventListener('touchstart',e=>{
-    if(refreshing||!e.touches?.length)return;
+    if(refreshing||!adminToken()||!e.touches?.length)return;
     const scroller=document.scrollingElement||document.documentElement;
     if(scroller.scrollTop>0)return;
     pullStartY=e.touches[0].clientY;pullStartX=e.touches[0].clientX;pullActive=true;
