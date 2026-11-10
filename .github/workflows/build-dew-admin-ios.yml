@@ -97,3 +97,5 @@ jobs:
 # Rebuild app with latest Shopify-inspired admin screens.
 
 # Rebuild with Shopify-style product, customer and discount screens.
+
+# Rebuild after native product tap, tab navigation and pull-to-refresh fixes.
