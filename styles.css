@@ -1860,3 +1860,41 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* The sticky admin header itself owns the iPhone top inset; do not add it twice. */
 .dew-native-app .admin-main{padding-top:0!important}
+
+
+/* iPhone responsive sizing: use the actual device viewport, not desktop-sized controls. */
+@media(max-width:699px){
+ .dew-native-app{font-size:14px!important}
+ .dew-native-app body{font-size:14px!important;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+ .dew-native-app .admin-topbar{padding-left:14px!important;padding-right:14px!important}
+ .dew-native-app .admin-topbar h1{font-size:18px!important;line-height:1.2!important}
+ .dew-native-app .admin-topbar .admin-eyebrow{font-size:9px!important}
+ .dew-native-app .admin-content{padding:14px 12px 24px!important}
+ .dew-native-app .welcome-strip h2{font-size:22px!important}
+ .dew-native-app .welcome-strip p{font-size:12px!important}
+ .dew-native-app .page-heading h2,.dew-native-app .shopify-page-head h2{font-size:20px!important;line-height:1.2!important}
+ .dew-native-app .admin-content p,.dew-native-app .admin-content label,
+ .dew-native-app .admin-content .muted,.dew-native-app .admin-content small{font-size:12px}
+ .dew-native-app .admin-content td,.dew-native-app .admin-content th{font-size:12px}
+ .dew-native-app .admin-content button,.dew-native-app .admin-content .btn,
+ .dew-native-app .admin-content .admin-primary{font-size:12px!important;min-height:40px!important;padding:9px 12px}
+ .dew-native-app .overview-stats article{padding:11px!important}
+ .dew-native-app .overview-stats article b{font-size:21px!important}
+ .dew-native-app .shopify-metrics>div{padding:8px 6px!important}
+ .dew-native-app .shopify-metrics b{font-size:14px!important}
+ .dew-native-app .app-menu-intro h2{font-size:22px!important}
+ .dew-native-app .app-menu-item{min-height:64px!important;padding:11px!important}
+ .dew-native-app .app-menu-icon{width:34px!important;height:34px!important;font-size:18px!important}
+ .dew-native-app .app-menu-copy b{font-size:13px!important}
+ .dew-native-app .app-menu-copy small{font-size:11px!important}
+ .dew-native-app .app-bottom-nav{left:8px!important;right:8px!important;min-height:64px!important;padding:5px 6px!important}
+ .dew-native-app .app-tab{min-height:52px!important;font-size:11px!important;gap:2px!important}
+ .dew-native-app .app-tab-icon{font-size:21px!important;line-height:22px!important}
+ .dew-native-app .admin-shell{padding-bottom:calc(92px + env(safe-area-inset-bottom))!important}
+ .dew-native-app .editor-panel,.dew-native-app .admin-panel{padding:12px!important}
+ .dew-native-app .hp-card-head{padding:12px!important}
+ .dew-native-app .hp-card-body{padding:12px!important;gap:10px!important}
+ .dew-native-app .modal{padding:14px!important}
+ .dew-native-app .admin-content input,.dew-native-app .admin-content select,
+ .dew-native-app .admin-content textarea{font-size:16px!important}
+}
