@@ -2330,3 +2330,27 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-checkout-search-panel .dew-search-suggestions:not([hidden]){display:block}
 .dew-search-loading,.dew-search-no-results{padding:12px;margin:0;color:#718075;font-size:13px}
 @media(max-width:600px){.dew-checkout-search-toggle{width:36px;height:36px}.dew-checkout-search-panel{top:70px;left:8px;right:8px}}
+
+
+/* Keep the storefront slide-out navigation above every banner and page layer */
+@media(max-width:760px){
+  .dew-mobile-menu-scrim{
+    position:fixed!important;
+    z-index:2147483646!important;
+    inset:0!important;
+  }
+  .dew-mobile-menu{
+    position:fixed!important;
+    z-index:2147483647!important;
+    top:0!important;
+    bottom:0!important;
+    left:0!important;
+    right:auto!important;
+    isolation:isolate!important;
+    transform:translate3d(-105%,0,0)!important;
+  }
+  .dew-mobile-menu.is-open{
+    transform:translate3d(0,0,0)!important;
+    visibility:visible!important;
+  }
+}
