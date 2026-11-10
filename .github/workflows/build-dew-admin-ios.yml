@@ -99,3 +99,5 @@ jobs:
 # Rebuild with Shopify-style product, customer and discount screens.
 
 # Rebuild after native product tap, tab navigation and pull-to-refresh fixes.
+
+# Rebuild with final native-only tab reset scope.
