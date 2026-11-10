@@ -22,6 +22,9 @@
     </div>
     <label>Full address</label><textarea id="address" rows="3" required placeholder="Street, building, floor, apartment, area"></textarea>
     <div><label>Phone</label><input id="phone" required inputmode="tel" autocomplete="tel"></div>
+    <label for="customerNote">Order note (optional)</label>
+    <textarea id="customerNote" rows="3" maxlength="500" placeholder="Add a note for Dew Skincare (delivery instructions, preferences, etc.)"></textarea>
+    <small class="note">This note will be included with your order for our team.</small>
     <label>Delivery area</label>
     <select id="deliveryArea" name="area" required><option value="">Choose your governorate</option></select>
     <section class="payment-methods"><h3>Payment method</h3><label class="opt"><input type="radio" name="paymentMethod" value="cod" checked> <span>Cash on Delivery (COD)</span></label><label class="opt"><input type="radio" name="paymentMethod" value="instapay"> <span>InstaPay</span></label><div id="paymentDetails" class="payment-details" hidden></div></section><div class="err" id="err"></div>
