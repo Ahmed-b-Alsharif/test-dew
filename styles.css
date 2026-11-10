@@ -2354,3 +2354,20 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
     visibility:visible!important;
   }
 }
+
+
+/* Use the native dialog top layer so mobile navigation always sits above the hero */
+@media(max-width:760px){
+  dialog.dew-mobile-menu:not([open]){display:none!important}
+  dialog.dew-mobile-menu[open]{
+    display:flex!important;position:fixed!important;inset:0 auto 0 0!important;
+    width:min(88vw,380px)!important;max-width:100vw!important;height:100dvh!important;
+    max-height:100dvh!important;margin:0!important;padding:0 23px 28px!important;
+    border:0!important;border-radius:0!important;overflow-y:auto!important;
+    transform:none!important;visibility:visible!important;z-index:auto!important;
+    background:#fbf8f1!important;box-shadow:18px 0 50px rgba(18,42,32,.18)!important;
+  }
+  dialog.dew-mobile-menu::backdrop{background:rgba(14,31,25,.52);backdrop-filter:blur(2px)}
+  dialog.dew-mobile-menu .dew-mobile-menu-head{flex:none}
+  dialog.dew-mobile-menu nav{flex:1;overflow-y:auto}
+}
