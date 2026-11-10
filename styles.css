@@ -1771,3 +1771,89 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-native-app .welcome-strip p{font-size:14px!important}
 .dew-native-app .overview-stats article b{font-size:25px!important}
 .dew-native-app .overview-stats article{font-size:13px}
+
+
+/* Native iPhone: keep every admin screen inside the viewport without horizontal panning. */
+@media(max-width:699px){
+ .dew-native-app,.dew-native-app body{width:100%;max-width:100%;overflow-x:hidden}
+ .dew-native-app #app,.dew-native-app .admin-shell,.dew-native-app .admin-main,.dew-native-app #view{width:100%;max-width:100%;min-width:0;overflow-x:clip}
+ .dew-native-app .admin-content{width:100%;min-width:0;padding-left:12px!important;padding-right:12px!important}
+ .dew-native-app .admin-content *{min-width:0}
+ .dew-native-app .admin-content img{max-width:100%;height:auto}
+ .dew-native-app .page-heading,.dew-native-app .shopify-page-head{width:100%;min-width:0}
+ .dew-native-app .shopify-toolbar{width:100%;min-width:0}
+ .dew-native-app .shopify-search,.dew-native-app .shopify-search input{width:100%;max-width:100%;min-width:0}
+ .dew-native-app .product-editor-layout,.dew-native-app .collection-editor-layout,.dew-native-app .product-editor-main,.dew-native-app .product-editor-side{display:grid;grid-template-columns:minmax(0,1fr)!important;width:100%;min-width:0}
+ .dew-native-app .editor-head-actions{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .dew-native-app .editor-head-actions button{width:100%;min-width:0}
+ .dew-native-app .editor-panel,.dew-native-app .admin-panel{width:100%;min-width:0;max-width:100%;padding:14px!important}
+ .dew-native-app .editor-field input,.dew-native-app .editor-field textarea,.dew-native-app .editor-field select,
+ .dew-native-app .editor-panel input,.dew-native-app .editor-panel textarea,.dew-native-app .editor-panel select{width:100%;max-width:100%;min-width:0}
+ .dew-native-app .editor-two-col,.dew-native-app .form-grid,.dew-native-app .collection-form,.dew-native-app .theme-editor-group .editor-two-col{grid-template-columns:minmax(0,1fr)!important}
+ .dew-native-app .collection-grid{grid-template-columns:minmax(0,1fr)!important}
+ .dew-native-app .collection-product-picker{width:100%;min-width:0}
+ .dew-native-app .collection-product-option{display:grid;grid-template-columns:20px 42px minmax(0,1fr);gap:9px;align-items:center;width:100%;min-width:0}
+ .dew-native-app .collection-product-option>span:last-child{min-width:0;overflow-wrap:anywhere}
+ .dew-native-app .product-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .dew-native-app .product-media-item{width:100%;min-width:0}
+ .dew-native-app .hp-savebar{top:calc(78px + env(safe-area-inset-top));flex-wrap:wrap}
+ .dew-native-app .hp-savebar button{max-width:100%}
+ .dew-native-app .overlay{align-items:flex-end;padding:0!important}
+ .dew-native-app .modal{width:100%!important;max-width:100%!important;max-height:calc(100dvh - env(safe-area-inset-top))!important;border-radius:18px 18px 0 0!important;padding:18px!important;padding-bottom:calc(20px + env(safe-area-inset-bottom))!important;overflow-y:auto!important;overscroll-behavior:contain}
+ .dew-native-app .detail{grid-template-columns:minmax(0,1fr)!important;padding:12px!important}
+ .dew-native-app .scroll,.dew-native-app .admin-table-wrap{overflow:visible!important;width:100%;max-width:100%;min-width:0}
+ .dew-native-app .admin-content table,
+ .dew-native-app .admin-content table tbody,
+ .dew-native-app .admin-content table tr{display:block!important;width:100%!important;max-width:100%!important}
+ .dew-native-app .admin-content table thead{display:none!important}
+ .dew-native-app .admin-content table td{display:flex!important;align-items:flex-start;justify-content:space-between;gap:12px;width:100%!important;max-width:100%!important;padding:9px 0!important;border-bottom:1px solid #edf0ed!important;text-align:right!important;overflow-wrap:anywhere;white-space:normal!important}
+ .dew-native-app .admin-content table td:before{content:attr(data-label);font-size:11px;font-weight:700;color:#758178;text-align:left;flex:0 0 37%;max-width:37%}
+ .dew-native-app .admin-content table td[colspan]:before{content:none}
+ .dew-native-app .admin-content table tr:has(td[colspan]) td{display:block!important;text-align:left!important}
+ .dew-native-app .admin-content table tr:has(td[colspan]) td:before{content:none}
+ .dew-native-app .admin-content table td button{max-width:100%;white-space:normal}
+ .dew-native-app .admin-content table td input,.dew-native-app .admin-content table td select{width:60%!important;max-width:60%!important;min-width:0!important}
+ .dew-native-app .admin-content .orders-mobile-table tr,
+ .dew-native-app .admin-content .products-mobile-table tr,
+ .dew-native-app .admin-content .customers-mobile-table tr,
+ .dew-native-app .admin-content .inventory-mobile-table tr,
+ .dew-native-app .admin-content .discounts-mobile-table tr{padding:11px 13px;margin:0 0 12px;background:#fff;border:1px solid #e7ece7;border-radius:12px;box-shadow:0 2px 8px #163d2b08}
+ .dew-native-app .orders-mobile-table td:nth-child(1):before{content:"Order"}
+ .dew-native-app .orders-mobile-table td:nth-child(2):before{content:"Date"}
+ .dew-native-app .orders-mobile-table td:nth-child(3):before{content:"Time"}
+ .dew-native-app .orders-mobile-table td:nth-child(4):before{content:"Customer"}
+ .dew-native-app .orders-mobile-table td:nth-child(5):before{content:"Total"}
+ .dew-native-app .orders-mobile-table td:nth-child(6):before{content:"Payment"}
+ .dew-native-app .orders-mobile-table td:nth-child(7):before{content:"Fulfillment"}
+ .dew-native-app .orders-mobile-table td:nth-child(8):before{content:"Tracking"}
+ .dew-native-app .orders-mobile-table td:nth-child(9):before{content:"Actions"}
+ .dew-native-app .orders-mobile-table td:nth-child(9){display:flex!important;justify-content:flex-end;flex-wrap:wrap}
+ .dew-native-app .orders-mobile-table td:nth-child(9):before{margin-right:auto}
+ .dew-native-app .products-mobile-table td:nth-child(1):before{content:"Product"}
+ .dew-native-app .products-mobile-table td:nth-child(2):before{content:"Status"}
+ .dew-native-app .products-mobile-table td:nth-child(3):before{content:"Collection"}
+ .dew-native-app .products-mobile-table td:nth-child(4):before{content:"Price"}
+ .dew-native-app .products-mobile-table td:nth-child(5):before{content:"Inventory"}
+ .dew-native-app .products-mobile-table td:nth-child(6):before{content:"Homepage"}
+ .dew-native-app .products-mobile-table td:nth-child(7):before{content:"Actions"}
+ .dew-native-app .products-mobile-table td:nth-child(1){display:block!important;text-align:left!important}
+ .dew-native-app .products-mobile-table td:nth-child(1):before{display:block;max-width:none;margin-bottom:5px}
+ .dew-native-app .customers-mobile-table td:nth-child(1):before{content:"Customer"}
+ .dew-native-app .customers-mobile-table td:nth-child(2):before{content:"Phone"}
+ .dew-native-app .customers-mobile-table td:nth-child(3):before{content:"Orders"}
+ .dew-native-app .customers-mobile-table td:nth-child(4):before{content:"Total spent"}
+ .dew-native-app .customers-mobile-table td:nth-child(5):before{content:"Details"}
+ .dew-native-app .inventory-mobile-table td:nth-child(1):before{content:"Product"}
+ .dew-native-app .inventory-mobile-table td:nth-child(2):before{content:"Price"}
+ .dew-native-app .inventory-mobile-table td:nth-child(3):before{content:"Available"}
+ .dew-native-app .inventory-mobile-table td:nth-child(4):before{content:"Status"}
+ .dew-native-app .inventory-mobile-table td:nth-child(5):before{content:"Edit"}
+ .dew-native-app .discounts-mobile-table td:nth-child(1):before{content:"Code"}
+ .dew-native-app .discounts-mobile-table td:nth-child(2):before{content:"Type"}
+ .dew-native-app .discounts-mobile-table td:nth-child(3):before{content:"Value"}
+ .dew-native-app .discounts-mobile-table td:nth-child(4):before{content:"Minimum spend"}
+ .dew-native-app .discounts-mobile-table td:nth-child(5):before{content:"Status"}
+ .dew-native-app .discounts-mobile-table td:nth-child(6):before{content:"Actions"}
+ .dew-native-app .admin-content .table-actions{display:flex;flex-wrap:wrap;gap:8px}
+ .dew-native-app .admin-content .table-actions button{min-height:38px}
+}
