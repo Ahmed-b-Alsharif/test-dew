@@ -38,6 +38,6 @@
    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
   }
  }
- if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-7';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
+ if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-8';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
