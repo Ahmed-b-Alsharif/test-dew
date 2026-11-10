@@ -21,7 +21,7 @@ function productCard(p){
 }
 async function boot(){
  try{
-  const S=await(await fetch('products.json?v='+Date.now(),{cache:'no-store'})).json();
+  const S=await(await fetch('products.json',{cache:'no-cache'})).json();
   const id=new URLSearchParams(location.search).get('id');
   const c=(S.catalogs||[]).find(x=>String(x.id)===String(id));
   if(!c){root.innerHTML='<main class="dew-main"><p><a href="./">← Back to store</a></p><h1>Collection not found</h1><p>This collection may have been removed.</p></main>';return;}
