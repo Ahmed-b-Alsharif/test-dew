@@ -149,7 +149,7 @@ $('#form').onsubmit = async e => {
   button.disabled=true; button.textContent='Placing your order…';
   try {
     const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address}
+      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address,note:$('#customerNote').value.trim()}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
