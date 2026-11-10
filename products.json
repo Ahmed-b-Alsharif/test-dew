@@ -73,7 +73,7 @@
             "url": "#contact"
           }
         ],
-        "logoPosition": "right",
+        "logoPosition": "center",
         "navPosition": "left"
       },
       "hero": {
@@ -110,7 +110,8 @@
             "image": "",
             "url": "#shop"
           }
-        ]
+        ],
+        "limit": 4
       },
       "products": {
         "show": true,
