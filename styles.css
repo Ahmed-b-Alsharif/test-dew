@@ -2485,3 +2485,18 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-products-view-all{margin-top:23px}
  .dew-view-all-button{gap:17px;padding-left:20px}
 }
+
+
+/* Shopify-inspired frame around each independently configured homepage collection */
+.dew-products-section.dew-collection-frame{
+  box-sizing:border-box;margin:clamp(28px,4vw,54px) 0;padding:clamp(20px,3vw,38px);
+  border:1px solid rgba(28,82,78,.18);border-radius:18px;background:#fffefa;
+  box-shadow:0 8px 28px rgba(18,58,41,.045);
+}
+.dew-products-section.dew-collection-frame .dew-section-head{margin-bottom:22px}
+.dew-products-section.dew-collection-frame .dew-products-view-all{margin-top:26px}
+@media(max-width:760px){
+ .dew-products-section.dew-collection-frame{margin:24px 0;padding:17px 13px 20px;border-radius:14px}
+ .dew-products-section.dew-collection-frame .dew-section-head{margin-bottom:16px}
+ .dew-products-section.dew-collection-frame .dew-products-view-all{margin-top:20px}
+}
