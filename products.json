@@ -192,7 +192,20 @@
       },
       "customBanners": {
         "show": true,
-        "items": []
+        "items": [
+          {
+            "id": "47679ff2",
+            "show": true,
+            "title": "Your banner headline",
+            "text": "Add a short message for your customers.",
+            "image": "",
+            "position": "top",
+            "showButton": true,
+            "button": "Shop now",
+            "url": "#shop",
+            "buttonPosition": "left"
+          }
+        ]
       },
       "productSections": []
     },
