@@ -749,7 +749,58 @@ function catForm(id) {
   $('#saveCollection').onclick=()=>{const name=$('#cn').value.trim();if(!name){toast('Collection title is required.',true);return;}const chosen=[...document.querySelectorAll('[data-collection-product]:checked')].map(x=>x.dataset.collectionProduct);if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;c.desktopImage=desktopImage;c.mobileImage=mobileImage;c.productIds=chosen;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image,desktopImage,mobileImage,productIds:chosen});tab='catalogs';render();save('Save collection '+name);};
 }
 
+
+function nativeOrders(){
+ const money=v=>egp(Number(v||0));
+ const dateText=v=>{const d=new Date(v||Date.now());return isNaN(d.getTime())?'—':d.toLocaleDateString([],{day:'numeric',month:'short',year:'numeric'});};
+ const timeText=v=>{const d=new Date(v||Date.now());return isNaN(d.getTime())?'':d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});};
+ const customerName=o=>[o.customer?.first,o.customer?.last].filter(Boolean).join(' ')||'Guest customer';
+ const fulfillment=o=>o.fulfillmentStatus||'Pending',payment=o=>o.paymentStatus||'Unpaid (COD)';
+ const fulfilled=o=>['Shipped','Delivered'].includes(fulfillment(o));
+ const badge=(v,k)=>'<span class="dew-order-badge '+k+'">'+esc(v)+'</span>';
+ let filter='All',term='';
+ const filters=['All','Unfulfilled','Unpaid','Paid','COD'];
+ function renderList(){
+  const rows=ordersList.map((o,i)=>({o,i})).filter(({o})=>{
+   if(term&&![o.number,customerName(o),o.customer?.phone].join(' ').toLowerCase().includes(term))return false;
+   if(filter==='Unfulfilled')return !fulfilled(o)&&fulfillment(o)!=='Cancelled';
+   if(filter==='Unpaid')return payment(o)!=='Paid';
+   if(filter==='Paid')return payment(o)==='Paid';
+   if(filter==='COD')return o.paymentMethod!=='instapay';
+   return true;
+  });
+  $('#view').innerHTML='<section class="dew-native-orders"><header class="dew-native-orders-head"><div><span class="admin-eyebrow">STORE MANAGEMENT</span><h2>Orders</h2><p>'+ordersList.length+' orders in your store</p></div><button class="dew-native-refresh" id="dewOrdersRefresh">↻</button></header>'+
+   '<div class="dew-native-order-metrics"><button class="dew-native-order-metric" data-native-filter="All"><span>Total orders</span><b>'+ordersList.length+'</b></button><button class="dew-native-order-metric" data-native-filter="Unfulfilled"><span>Unfulfilled</span><b>'+ordersList.filter(o=>!fulfilled(o)&&fulfillment(o)!=='Cancelled').length+'</b></button><button class="dew-native-order-metric" data-native-filter="Unpaid"><span>Unpaid</span><b>'+ordersList.filter(o=>payment(o)!=='Paid').length+'</b></button></div>'+
+   '<div class="dew-native-order-search"><span>⌕</span><input id="dewNativeOrderSearch" type="search" value="'+esc(term)+'" placeholder="Search orders, customers or phone"></div>'+
+   '<div class="dew-native-order-filters">'+filters.map(f=>'<button class="'+(filter===f?'active':'')+'" data-native-filter="'+f+'">'+f+'</button>').join('')+'</div>'+
+   '<div class="dew-native-order-results"><div class="dew-native-order-results-head"><b>'+rows.length+' '+(rows.length===1?'order':'orders')+'</b><span>Newest first</span></div>'+
+   (rows.length?rows.map(({o,i})=>'<button class="dew-native-order-row" data-native-open="'+i+'"><div class="dew-native-order-row-top"><b>'+esc(o.number||'Order')+'</b><span>'+dateText(o.date)+'</span></div><div class="dew-native-order-row-middle"><span class="dew-native-order-avatar">'+esc((customerName(o).trim()[0]||'G').toUpperCase())+'</span><span class="dew-native-order-customer"><b>'+esc(customerName(o))+'</b><small>'+esc(o.customer?.phone||'No phone number')+'</small></span><strong>'+money(o.total)+'</strong></div><div class="dew-native-order-row-bottom">'+badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')+badge(fulfillment(o),fulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')+'<span class="dew-native-order-chevron">›</span></div></button>').join(''):'<div class="dew-native-order-empty"><b>No orders found</b><span>Try changing the search or filter.</span></div>')+'</div></section>';
+  document.querySelectorAll('[data-native-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.nativeFilter;renderList();});
+  $('#dewNativeOrderSearch').oninput=e=>{term=e.target.value.trim().toLowerCase();renderList();const x=$('#dewNativeOrderSearch');x.focus();x.setSelectionRange(term.length,term.length);};
+  document.querySelectorAll('[data-native-open]').forEach(b=>b.onclick=()=>renderDetail(Number(b.dataset.nativeOpen)));
+  $('#dewOrdersRefresh').onclick=async()=>{const b=$('#dewOrdersRefresh');b.classList.add('loading');try{await loadOrders();renderList();toast('Orders refreshed.');}catch(e){toast(e.message||'Could not refresh orders.',true);}finally{$('#dewOrdersRefresh')?.classList.remove('loading');}};
+ }
+ function renderDetail(i){
+  const o=ordersList[i];if(!o)return;const c=o.customer||{},lines=Array.isArray(o.lines)?o.lines:[];
+  const items=lines.length?lines.map(l=>'<div class="dew-native-order-item"><div class="dew-native-order-product-thumb">'+esc((l.name||'P').trim()[0]||'P')+'</div><div class="dew-native-order-item-info"><b>'+esc(l.name||'Product')+'</b><small>Qty '+Number(l.qty||0)+' · '+money(l.unit)+' each</small></div><strong>'+money(l.total)+'</strong></div>').join(''):'<p class="note">No item details available.</p>';
+  $('#view').innerHTML='<section class="dew-native-order-detail"><div class="dew-native-detail-nav"><button id="dewNativeBackOrders">‹ Orders</button><span>Order details</span><button id="dewNativeCloseOrder">×</button></div>'+
+   '<header class="dew-native-detail-heading"><div><span class="admin-eyebrow">ORDER</span><h2>'+esc(o.number||'Order')+'</h2><p>'+dateText(o.date)+' · '+timeText(o.date)+'</p></div><div class="dew-native-detail-status">'+badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')+badge(fulfillment(o),fulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')+'</div></header>'+
+   '<section class="dew-native-detail-card"><div class="dew-native-detail-card-head"><h3>Items</h3><span>'+lines.reduce((n,l)=>n+Number(l.qty||0),0)+' items</span></div>'+items+
+   '<div class="dew-native-detail-totals"><div><span>Subtotal</span><b>'+money(o.itemsTotal)+'</b></div><div><span>Shipping</span><b>'+money(o.delivery)+'</b></div>'+(o.discount?'<div><span>Discount '+esc(o.promoCode||'')+'</span><b>−'+money(o.discount)+'</b></div>':'')+'<div class="grand"><span>Total</span><b>'+money(o.total)+'</b></div></div></section>'+
+   '<section class="dew-native-detail-card"><h3>Customer</h3><b>'+esc(customerName(o))+'</b><p>'+esc(c.phone||'No phone number')+'</p><p>'+esc(c.address||'No address supplied')+'</p>'+(c.whatsapp?'<p>WhatsApp: '+esc(c.whatsapp)+'</p>':'')+'</section>'+
+   (c.note?'<section class="dew-native-detail-card"><h3>Customer note</h3><p>'+esc(c.note)+'</p></section>':'')+
+   '<section class="dew-native-detail-card"><h3>Payment & fulfilment</h3><label class="dew-native-order-field">Payment status<select id="dewOrderPayment"><option '+(payment(o)==='Unpaid (COD)'?'selected':'')+'>Unpaid (COD)</option><option '+(payment(o)==='Awaiting InstaPay payment'?'selected':'')+'>Awaiting InstaPay payment</option><option '+(payment(o)==='Paid'?'selected':'')+'>Paid</option></select></label><label class="dew-native-order-field">Fulfilment status<select id="dewOrderFulfillment"><option '+(fulfillment(o)==='Pending'?'selected':'')+'>Pending</option><option '+(fulfillment(o)==='Processing'?'selected':'')+'>Processing</option><option '+(fulfillment(o)==='Shipped'?'selected':'')+'>Shipped</option><option '+(fulfillment(o)==='Delivered'?'selected':'')+'>Delivered</option><option '+(fulfillment(o)==='Cancelled'?'selected':'')+'>Cancelled</option></select></label><label class="dew-native-order-field">Tracking number<input id="dewOrderTracking" value="'+esc(o.trackingNumber||'')+'" placeholder="Add tracking number"></label><button class="dew-native-order-primary" id="dewSaveNativeOrder">Save changes</button></section>'+
+   '<section class="dew-native-detail-card"><h3>Order notes</h3><p class="note">Private note for your team. Customers cannot see it.</p><textarea id="orderNote" rows="3" placeholder="Add a note about this order...">'+esc(o.note||'')+'</textarea><button class="dew-native-order-secondary" id="saveNativeOrderNote">Save note</button></section><button class="dew-native-order-delete" id="dewDeleteNativeOrder">Delete order</button></section>';
+  $('#dewNativeBackOrders').onclick=renderList;$('#dewNativeCloseOrder').onclick=renderList;
+  $('#dewSaveNativeOrder').onclick=async()=>{o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();const b=$('#dewSaveNativeOrder');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Update '+o.number);toast('Order updated.');renderDetail(i);}catch(e){b.disabled=false;b.textContent='Save changes';toast(e.message||'Could not save order.',true);}};
+  $('#saveNativeOrderNote').onclick=async()=>{o.note=$('#orderNote').value.trim();const b=$('#saveNativeOrderNote');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Save note for '+o.number);toast('Order note saved.');renderDetail(i);}catch(e){b.disabled=false;b.textContent='Save note';toast(e.message||'Could not save note.',true);}};
+  $('#dewDeleteNativeOrder').onclick=()=>{if(!confirm('Delete this order record?'))return;fetch(ADMIN_API+'/api/orders/'+encodeURIComponent(o.number),{method:'DELETE',headers:{Authorization:'Bearer '+adminToken()}}).then(async r=>{const v=await r.json().catch(()=>({}));if(!r.ok||!v.ok)throw Error(v.error||'Could not delete order');ordersList.splice(i,1);toast('Order deleted.');renderList();}).catch(e=>toast(e.message,true));};
+ }
+ renderList();
+}
+
 function orders() {
+  if (isNativeApp) { nativeOrders(); return; }
   const money = value => egp(Number(value || 0));
   const dateText = value => {
     const d = new Date(value || Date.now());
