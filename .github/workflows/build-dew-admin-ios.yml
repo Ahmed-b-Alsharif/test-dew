@@ -1,0 +1,71 @@
+name: Build Dew Admin iPhone IPA
+
+on:
+  push:
+    branches:
+      - ios-app-build
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Check out build workflow
+        uses: actions/checkout@v4
+
+      - name: Check out Dew website source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Prepare Capacitor app
+        shell: bash
+        run: |
+          mkdir -p dew-iphone-app/www
+          cp site/admin.html dew-iphone-app/www/index.html
+          cp site/admin.js dew-iphone-app/www/admin.js
+          cp site/styles.css dew-iphone-app/www/styles.css
+          cp site/cart.js dew-iphone-app/www/cart.js
+          cd dew-iphone-app
+          npm init -y
+          npm install --save-exact @capacitor/core@8.6.0 @capacitor/ios@8.6.0
+          npm install --save-dev --save-exact @capacitor/cli@8.6.0
+          npx cap init "Dew Admin" "com.dewskincare.admin" --web-dir=www
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Build unsigned iOS app
+        shell: bash
+        run: |
+          cd dew-iphone-app
+          xcodebuild \
+            -project ios/App/App.xcodeproj \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+          mkdir -p build/Payload
+          cp -R build/DerivedData/Build/Products/Release-iphoneos/App.app build/Payload/App.app
+          cd build
+          /usr/bin/zip -qry DewAdmin-unsigned.ipa Payload
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: DewAdmin-unsigned-IPA
+          path: dew-iphone-app/build/DewAdmin-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
