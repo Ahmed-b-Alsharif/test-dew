@@ -97,6 +97,7 @@ async function notifyTelegram(order, env, settings) {
     "Phone: " + order.customer.phone,
     "Area: " + (order.area || order.areaName || order.areaId || "Not specified"),
     "Address: " + order.customer.address,
+    ...(order.customer.note ? ["Customer note: " + order.customer.note] : []),
     "",
     lines,
     "",
@@ -114,7 +115,7 @@ async function notifyTelegram(order, env, settings) {
 async function createOrder(request, env) {
   const body = await request.json();
   const customer = body.customer || {};
-  const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address);
+  const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address), note=clean(customer.note).slice(0,500);
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
   const catalogue=await getProducts(env);
   const settings=catalogue.settings||{};
@@ -172,7 +173,7 @@ async function createOrder(request, env) {
   const order={
     number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,promoCode,total,area:selectedArea.name,areaId:selectedArea.id,
-    customer:{first,last,phone,address}
+    customer:{first,last,phone,address,note}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
     .bind(number,order.date,total,JSON.stringify(order)).run();
