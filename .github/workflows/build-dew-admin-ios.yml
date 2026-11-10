@@ -1,4 +1,5 @@
 name: Build Dew Admin iPhone IPA
+# Rebuild after fixing the storefront links in the iPhone admin app.
 # Rebuild after mobile full-width layout, safe-area and device-responsive sizing improvements
 
 on:
