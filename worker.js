@@ -6,7 +6,7 @@ const cors = {
 const json = (data, status=200) => new Response(JSON.stringify(data), {status, headers:{...cors,"Content-Type":"application/json","Cache-Control":"no-store"}});
 const clean = v => String(v ?? "").trim();
 const money = n => "EGP " + Number(n || 0).toLocaleString("en-US");
-const ADMIN_ORIGINS=new Set(["https://ahmed-b-alsharif.github.io","https://dewskincaree.com","https://www.dewskincaree.com"]);
+const ADMIN_ORIGINS=new Set(["https://ahmed-b-alsharif.github.io","https://dewskincaree.com","https://www.dewskincaree.com","capacitor://localhost"]);
 const adminCors=request=>{const origin=request.headers.get("Origin")||"";return {...cors,"Access-Control-Allow-Origin":ADMIN_ORIGINS.has(origin)?origin:"https://ahmed-b-alsharif.github.io","Access-Control-Allow-Headers":"Content-Type,Authorization","Vary":"Origin"}};
 const adminJson=(request,data,status=200)=>new Response(JSON.stringify(data),{status,headers:{...adminCors(request),"Content-Type":"application/json","Cache-Control":"no-store"}});
 const ADMIN_SESSION_MS=12*60*60*1000, ADMIN_REPO="Ahmed-b-alsharif/test-dew";
