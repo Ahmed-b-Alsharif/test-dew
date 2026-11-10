@@ -84,7 +84,7 @@
         "url": "#shop",
         "image": "",
         "showButton": true,
-        "buttonPosition": "left"
+        "buttonPosition": "center"
       },
       "categories": {
         "show": true,
