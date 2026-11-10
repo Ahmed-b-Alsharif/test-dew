@@ -2234,3 +2234,73 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-native-app .dew-discount-info{gap:5px!important}
  .dew-native-app .dew-discount-info>small{line-height:1.35!important}
 }
+
+/* Native iPhone Orders page — isolated from desktop admin */
+.dew-native-app .dew-native-orders,.dew-native-app .dew-native-order-detail{max-width:100%;padding:0 0 28px;color:#17211d}
+.dew-native-app .dew-native-orders-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 17px}
+.dew-native-app .dew-native-orders-head h2,.dew-native-app .dew-native-detail-heading h2{font-size:25px;line-height:1.15;margin:5px 0}
+.dew-native-app .dew-native-orders-head p,.dew-native-app .dew-native-detail-heading p{font-size:12px;color:#718078;margin:0}
+.dew-native-app .dew-native-refresh{width:39px;height:39px;border:1px solid #dfe7e2;background:#fff;border-radius:12px;color:#1c524e;font-size:23px}
+.dew-native-app .dew-native-order-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.dew-native-app .dew-native-order-metric{min-width:0;text-align:left;border:1px solid #e3eae5;background:#fff;border-radius:13px;padding:12px 10px;color:#52635a}
+.dew-native-app .dew-native-order-metric span{display:block;font-size:10px;white-space:nowrap}
+.dew-native-app .dew-native-order-metric b{display:block;font-size:20px;color:#183d31;margin-top:5px}
+.dew-native-app .dew-native-order-search{height:44px;display:flex;align-items:center;gap:9px;border:1px solid #dfe7e2;background:#fff;border-radius:12px;padding:0 12px;margin-bottom:12px}
+.dew-native-app .dew-native-order-search>span{font-size:22px;color:#718078}
+.dew-native-app .dew-native-order-search input{border:0!important;outline:0!important;box-shadow:none!important;background:transparent!important;min-width:0;width:100%;font-size:13px;padding:0!important}
+.dew-native-app .dew-native-order-filters{display:flex;gap:7px;overflow-x:auto;padding:0 0 12px;scrollbar-width:none}
+.dew-native-app .dew-native-order-filters::-webkit-scrollbar{display:none}
+.dew-native-app .dew-native-order-filters button{flex:0 0 auto;border:1px solid #e1e8e3;border-radius:999px;background:#fff;color:#53635a;padding:8px 13px;font-size:11px}
+.dew-native-app .dew-native-order-filters button.active{background:#1c524e;color:#fff;border-color:#1c524e}
+.dew-native-app .dew-native-order-results{background:#fff;border:1px solid #e5ebe7;border-radius:15px;overflow:hidden}
+.dew-native-app .dew-native-order-results-head{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;border-bottom:1px solid #edf1ee}
+.dew-native-app .dew-native-order-results-head b{font-size:12px}
+.dew-native-app .dew-native-order-results-head span{font-size:10px;color:#87938c}
+.dew-native-app .dew-native-order-row{display:block;width:100%;text-align:left;padding:13px 14px;background:#fff;border:0;border-bottom:1px solid #edf1ee;color:#1c2a23}
+.dew-native-app .dew-native-order-row:last-child{border-bottom:0}
+.dew-native-app .dew-native-order-row-top,.dew-native-app .dew-native-order-row-middle,.dew-native-app .dew-native-order-row-bottom{display:flex;align-items:center}
+.dew-native-app .dew-native-order-row-top{justify-content:space-between;margin-bottom:11px}
+.dew-native-app .dew-native-order-row-top>b{font-size:13px;color:#183d31}
+.dew-native-app .dew-native-order-row-top>span{font-size:10px;color:#839087}
+.dew-native-app .dew-native-order-row-middle{gap:9px}
+.dew-native-app .dew-native-order-avatar{width:34px;height:34px;flex:0 0 34px;border-radius:50%;display:grid;place-items:center;background:#e8f0eb;color:#1c524e;font-size:13px;font-weight:700}
+.dew-native-app .dew-native-order-customer{min-width:0;flex:1;display:flex;flex-direction:column;gap:3px}
+.dew-native-app .dew-native-order-customer b{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dew-native-app .dew-native-order-customer small{font-size:10px;color:#849088}
+.dew-native-app .dew-native-order-row-middle>strong{font-size:12px;white-space:nowrap}
+.dew-native-app .dew-native-order-row-bottom{gap:6px;margin-top:10px}
+.dew-native-app .dew-native-order-row-bottom .dew-order-badge{font-size:9px;padding:4px 7px}
+.dew-native-app .dew-native-order-chevron{margin-left:auto;color:#8a9890;font-size:22px;line-height:12px}
+.dew-native-app .dew-native-order-empty{padding:30px 15px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.dew-native-app .dew-native-order-empty b{font-size:13px}
+.dew-native-app .dew-native-order-empty span{font-size:11px;color:#849088}
+.dew-native-app .dew-native-detail-nav{display:flex;align-items:center;justify-content:space-between;padding:2px 0 15px;border-bottom:1px solid #e8eee9;margin-bottom:17px}
+.dew-native-app .dew-native-detail-nav button{border:0;background:transparent;color:#1c524e;font-size:13px;padding:7px 2px}
+.dew-native-app .dew-native-detail-nav span{font-size:12px;font-weight:700;color:#637169}
+.dew-native-app .dew-native-detail-nav button:last-child{font-size:24px;color:#6c7b72}
+.dew-native-app .dew-native-detail-heading{display:flex;flex-direction:column;gap:10px;margin-bottom:15px}
+.dew-native-app .dew-native-detail-status{display:flex;gap:6px;flex-wrap:wrap}
+.dew-native-app .dew-native-detail-card{background:#fff;border:1px solid #e5ebe7;border-radius:14px;padding:15px;margin-bottom:11px}
+.dew-native-app .dew-native-detail-card h3{font-size:14px;margin:0 0 12px;color:#1d3429}
+.dew-native-app .dew-native-detail-card-head{display:flex;justify-content:space-between;align-items:center}
+.dew-native-app .dew-native-detail-card-head h3{margin-bottom:12px}
+.dew-native-app .dew-native-detail-card-head>span{font-size:10px;color:#829087}
+.dew-native-app .dew-native-order-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #eef2ef}
+.dew-native-app .dew-native-order-product-thumb{width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#edf3ef;color:#1c524e;display:grid;place-items:center;font-weight:700}
+.dew-native-app .dew-native-order-item-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.dew-native-app .dew-native-order-item-info b{font-size:11px}
+.dew-native-app .dew-native-order-item-info small{font-size:10px;color:#829087}
+.dew-native-app .dew-native-order-item>strong{font-size:11px;white-space:nowrap}
+.dew-native-app .dew-native-detail-totals{padding-top:10px}
+.dew-native-app .dew-native-detail-totals>div{display:flex;justify-content:space-between;padding:5px 0;font-size:11px;color:#66756c}
+.dew-native-app .dew-native-detail-totals .grand{border-top:1px solid #e8eee9;margin-top:5px;padding-top:10px;font-size:14px;color:#193b2f;font-weight:700}
+.dew-native-app .dew-native-detail-card>p{font-size:12px;color:#69786f;margin:6px 0;overflow-wrap:anywhere}
+.dew-native-app .dew-native-detail-card>small{font-size:10px;color:#849088}
+.dew-native-app .dew-native-order-field{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:600;color:#59685f;margin:11px 0}
+.dew-native-app .dew-native-order-field select,.dew-native-app .dew-native-order-field input{width:100%;min-height:43px;border:1px solid #dfe7e2;border-radius:10px;background:#fff;padding:0 11px;font-size:13px;color:#1d3027}
+.dew-native-app .dew-native-detail-card textarea{width:100%;border:1px solid #dfe7e2;border-radius:10px;padding:10px;font-size:12px;resize:vertical}
+.dew-native-app .dew-native-order-primary,.dew-native-app .dew-native-order-secondary{width:100%;min-height:44px;border-radius:10px;margin-top:9px;font-size:12px;font-weight:700}
+.dew-native-app .dew-native-order-primary{border:1px solid #1c524e;background:#1c524e;color:#fff}
+.dew-native-app .dew-native-order-secondary{border:1px solid #dce6df;background:#fff;color:#1c524e}
+.dew-native-app .dew-native-order-delete{width:100%;border:1px solid #f0d7d5;background:#fff;color:#b43e36;border-radius:10px;min-height:43px;font-size:12px;font-weight:700;margin:3px 0 18px}
+@media(max-width:420px){.dew-native-app .dew-native-order-metric{padding:10px 8px}.dew-native-app .dew-native-order-metric span{font-size:9px}.dew-native-app .dew-native-order-metric b{font-size:18px}.dew-native-app .dew-native-detail-card{padding:13px}}
