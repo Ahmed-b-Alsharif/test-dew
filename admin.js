@@ -939,6 +939,7 @@ function more() {
     <div class="app-menu-grid">${items.map(([key,title,desc,icon])=>`<button class="app-menu-item" data-t="${key}"><span class="app-menu-icon">${icon}</span><span class="app-menu-copy"><b>${title}</b><small>${desc}</small></span><span class="app-menu-arrow">›</span></button>`).join('')}</div>
     <a class="app-storefront-link" href="./" target="_blank">View customer storefront ↗</a>
     <button class="app-signout-link" id="appOut">Sign out of Dew Admin</button>`;
+  document.querySelectorAll('.app-menu-item[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
   $('#appOut').onclick=$('#out').onclick;
 }
 
