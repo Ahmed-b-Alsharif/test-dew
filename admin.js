@@ -396,7 +396,7 @@ function exportCustomersExcel(rows) {
 
 function customers() {
   const map=new Map();
-  const normalizePhone=value=>{let digits=String(value||'').replace(/\\D/g,'');if(digits.startsWith('0020'))digits='0'+digits.slice(4);else if(digits.startsWith('20')&&digits.length>=11)digits='0'+digits.slice(2);return digits;};
+  const normalizePhone=value=>{let digits=String(value||'').replace(/\D/g,'');if(digits.startsWith('0020'))digits='0'+digits.slice(4);else if(digits.startsWith('20')&&digits.length>=11)digits='0'+digits.slice(2);return digits;};
   ordersList.forEach(o=>{const c=o.customer||{},phone=String(c.phone||'').trim(),normalized=normalizePhone(phone),key=normalized?'phone:'+normalized:'order:'+(o.number||'unknown');if(!map.has(key))map.set(key,{...c,phone,count:0,total:0,last:o.date,orders:[],names:[]});const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);const usedName=[c.first,c.last].filter(Boolean).join(' ').trim()||'Guest customer';if(!x.names.includes(usedName))x.names.push(usedName);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
   const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
   const filtered=()=>rows.filter(c=>!q||((c.names||[]).join(' ')+' '+(c.phone||'')+' '+(c.orders||[]).map(o=>o.number||'').join(' ')).toLowerCase().includes(q.toLowerCase()));
