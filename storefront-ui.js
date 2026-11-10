@@ -4,7 +4,7 @@
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const money=(v,s={})=>String(s.currencyPrefix??'EGP ')+Number(v||0).toLocaleString('en-US')+String(s.currencySuffix||'');
  let dataPromise;
- const data=()=>dataPromise||(dataPromise=fetch('products.json?v='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Products unavailable');return r.json()}).then(x=>({products:(x.products||[]).filter(p=>p.visible!==false),settings:x.settings||{}})));
+ const data=()=>dataPromise||(dataPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Products unavailable');return r.json()}).then(x=>({products:(x.products||[]).filter(p=>p.visible!==false),settings:x.settings||{}})));
  const icon='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>';
  function addSearch(header,actions){
   if(header.querySelector('#toggleDewSearch'))return;
@@ -38,6 +38,6 @@
    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
   }
  }
- const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-5';css.dataset.dewStorefrontStyles='true';document.head.append(css);
+ if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-6';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
