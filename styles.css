@@ -1898,3 +1898,44 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-native-app .admin-content input,.dew-native-app .admin-content select,
  .dew-native-app .admin-content textarea{font-size:16px!important}
 }
+
+ 
+/* iPhone app: reduce the overall visual scale slightly and separate every record clearly. */
+@media(max-width:699px){
+ .dew-native-app{font-size:13px!important}
+ .dew-native-app body{font-size:13px!important}
+ .dew-native-app .admin-content{padding:11px 10px 22px!important}
+ .dew-native-app .admin-content p,
+ .dew-native-app .admin-content label,
+ .dew-native-app .admin-content .muted,
+ .dew-native-app .admin-content small{font-size:11.5px}
+ .dew-native-app .admin-content td,
+ .dew-native-app .admin-content th{font-size:11.5px}
+ .dew-native-app .admin-content button,
+ .dew-native-app .admin-content .btn,
+ .dew-native-app .admin-content .admin-primary{font-size:11.5px!important;min-height:36px!important;padding:7px 10px}
+ .dew-native-app .page-heading h2,
+ .dew-native-app .shopify-page-head h2{font-size:18px!important}
+ .dew-native-app .overview-stats article b{font-size:19px!important}
+ .dew-native-app .admin-content table.orders-mobile-table tr,
+ .dew-native-app .admin-content table.products-mobile-table tr,
+ .dew-native-app .admin-content table.customers-mobile-table tr,
+ .dew-native-app .admin-content table.inventory-mobile-table tr,
+ .dew-native-app .admin-content table.discounts-mobile-table tr{
+   display:block!important;
+   margin:0 0 13px!important;
+   padding:12px 13px!important;
+   background:#fff!important;
+   border:1px solid #dce6dd!important;
+   border-radius:13px!important;
+   box-shadow:0 2px 7px rgba(18,58,41,.07)!important;
+ }
+ .dew-native-app .admin-content table.orders-mobile-table tr:not(:has(td[colspan])) td:last-child,
+ .dew-native-app .admin-content table.customers-mobile-table tr:not(:has(td[colspan])) td:last-child{border-bottom:0!important}
+ .dew-native-app .admin-content table.orders-mobile-table tr+tr,
+ .dew-native-app .admin-content table.products-mobile-table tr+tr,
+ .dew-native-app .admin-content table.customers-mobile-table tr+tr,
+ .dew-native-app .admin-content table.inventory-mobile-table tr+tr,
+ .dew-native-app .admin-content table.discounts-mobile-table tr+tr{margin-top:0!important}
+ .dew-native-app .admin-content table td{padding:7px 0!important}
+}
