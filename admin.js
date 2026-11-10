@@ -172,7 +172,7 @@ function render() {
       </main>
       ${mobileNav}
     </div>`;
-  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { closeModal(); tab=b.dataset.t; q=''; render(); });
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { if(isNativeApp)closeModal(); tab=b.dataset.t; q=''; render(); });
   $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
   ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
 }
