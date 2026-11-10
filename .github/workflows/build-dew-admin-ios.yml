@@ -59,7 +59,7 @@ jobs:
             require('fs').writeFileSync(target, png);
             console.log('Verified Dew icon:', info.width + 'x' + info.height, 'corner RGB', corner.join(','), 'bytes', png.length);
           })().catch(error => { console.error(error); process.exit(1); });
-NODE
+          NODE
 
       - name: Build unsigned iOS app
         shell: bash
