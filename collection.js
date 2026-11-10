@@ -67,7 +67,7 @@ async function boot(){
   document.querySelectorAll('[data-collection-add]').forEach(b=>b.onclick=()=>addProduct(b.dataset.collectionAdd,false));
   document.querySelectorAll('[data-collection-buy]').forEach(b=>b.onclick=()=>addProduct(b.dataset.collectionBuy,true));
   renderCollectionCart();
-  const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261110-1';document.body.appendChild(storefrontUI);
+  const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261110-3';document.body.appendChild(storefrontUI);
  }catch(e){console.error(e);root.innerHTML='<main class="dew-main"><h1>Could not load this collection</h1><p>Please refresh the page.</p></main>'}
 }
 boot();
