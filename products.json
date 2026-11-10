@@ -78,14 +78,14 @@
       },
       "hero": {
         "show": true,
-        "title": "Your Skin. Your Natural Glow.",
-        "text": "Thoughtful skincare, made with love in Egypt.",
+        "title": "",
+        "text": "",
         "button": "Discover the collection",
         "url": "#shop",
-        "image": "images/1794339554593-8fafae0e.jpg",
-        "showButton": true,
+        "image": "",
+        "showButton": false,
         "buttonPosition": "left",
-        "mobileImage": "images/1794339491047-580c0d23.jpg"
+        "mobileImage": ""
       },
       "categories": {
         "show": true,
