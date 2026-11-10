@@ -7,7 +7,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
 (async()=>{
  const root=$('#productApp');
  try{
-  const S=await(await fetch('products.json?v='+Date.now())).json();
+  const S=await(await fetch('products.json',{cache:'no-cache'})).json();
   const params=new URLSearchParams(location.search),id=params.get('id');
   const pathParts=location.pathname.replace(/\/+$/,'').split('/').filter(Boolean);
   const pathHandle=pathParts.length&&pathParts[pathParts.length-1]!=='product.html'?decodeURIComponent(pathParts[pathParts.length-1]):'';
