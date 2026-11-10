@@ -77,7 +77,7 @@ async function refreshProductSitemap(previousSlugs = []) {
   const xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+urls.map(loc=>'  <url><loc>'+loc.replace(/&/g,'&amp;')+'</loc><lastmod>'+new Date().toISOString().slice(0,10)+'</lastmod></url>').join('\n')+'\n</urlset>\n';
   await putGithubFileLatest('sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml)});
 }
-function save(message) {
+function save(message, propagateError=false) {
   chain = chain.then(async () => {
     try {
       const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: SHA });
@@ -94,7 +94,7 @@ function save(message) {
       } else toast('Saved.');
     } catch (e) { toast(e.message, true); throw e; }
   });
-  return chain.catch(() => {});
+  return chain.catch(error => { if(propagateError) throw error; });
 }
 
 function saveOrders(message){
@@ -277,7 +277,7 @@ function homepage() {
   };
   $('#view').innerHTML=`<div class="hp-intro"><div><span class="admin-eyebrow">ONLINE STORE / THEME CUSTOMIZER</span><h2>Customize your entire store in one place.</h2><p>Choose any section or product template on the left. Changes appear in the preview as you edit them.</p></div><a class="admin-view-store" href="./" target="_blank">Open live store ↗</a></div><div class="homepage-theme-editor"><aside class="homepage-section-list"><div class="homepage-section-list-head"><b>Theme structure</b><small>Homepage, product template and global styles</small></div><div id="homepageSectionNav"></div></aside><section class="homepage-editor-work"><div class="homepage-editor-card" id="homepageEditorPanel"></div><div class="homepage-preview-card"><div class="homepage-preview-top"><b>Store preview</b><span>Click a section in the preview to edit it</span></div><div class="homepage-preview-browser"><div class="homepage-browser-dots">● ● ●</div><div id="homepageLivePreview"></div></div></div></section></div>`;
   drawEditor();preview();
-  $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);drawEditor();preview();toast('Image uploaded. Save and publish to show it on the storefront.');}catch(err){toast(err.message,true);}});
+  $('#homepageEditorPanel').addEventListener('change',async e=>{const el=e.target.closest('[data-hp-upload]');if(!el)return;const file=el.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));pathSet(h,el.dataset.hpUpload,path);await save('Save homepage image',true);drawEditor();preview();toast('Image uploaded, preview updated and saved to your homepage.');}catch(err){toast(err.message,true);}});
 }
 
 
