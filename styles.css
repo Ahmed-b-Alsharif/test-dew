@@ -2304,3 +2304,29 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-native-app .dew-native-order-secondary{border:1px solid #dce6df;background:#fff;color:#1c524e}
 .dew-native-app .dew-native-order-delete{width:100%;border:1px solid #f0d7d5;background:#fff;color:#b43e36;border-radius:10px;min-height:43px;font-size:12px;font-weight:700;margin:3px 0 18px}
 @media(max-width:420px){.dew-native-app .dew-native-order-metric{padding:10px 8px}.dew-native-app .dew-native-order-metric span{font-size:9px}.dew-native-app .dew-native-order-metric b{font-size:18px}.dew-native-app .dew-native-detail-card{padding:13px}}
+
+
+/* Site-wide storefront navigation and search refinements */
+@media(max-width:760px){
+ .dew-mobile-menu{overflow-x:hidden!important}
+ .dew-mobile-menu nav{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;overflow-x:hidden!important}
+ .dew-mobile-menu nav a{display:grid!important;grid-template-columns:minmax(0,1fr) 30px!important;width:100%!important;box-sizing:border-box!important;white-space:normal!important}
+ .dew-collection-header{display:grid!important;grid-template-columns:44px minmax(0,1fr) auto!important;grid-template-rows:72px!important;min-height:72px!important;height:72px!important;padding:0 14px!important;gap:8px!important;position:relative!important}
+ .dew-collection-header>nav{display:none!important}
+ .dew-collection-header>.dew-logo{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;grid-column:auto!important;grid-row:auto!important;justify-self:auto!important;max-width:calc(100% - 150px)!important;z-index:1;text-align:center!important}
+ .dew-collection-header .dew-header-actions{grid-column:3!important;grid-row:1!important;position:relative!important;z-index:3;display:flex!important;align-items:center!important;justify-self:end!important;gap:8px!important;width:auto!important}
+ .dew-collection-header .dew-header-actions>.dew-social-icon{display:none!important}
+ .dew-collection-header .dew-collection-cart{width:39px;height:39px;padding:0!important;justify-content:center;gap:4px;border:0!important;border-radius:50%!important;background:#f7f7f0!important}
+ .dew-collection-header .dew-collection-cart b{position:absolute;transform:translate(10px,-10px);min-width:16px;height:16px;font-size:9px}
+}
+.dew-checkout-search-toggle{width:40px;height:40px;display:inline-grid;place-items:center;flex:0 0 auto;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#fff;cursor:pointer}
+.dew-checkout-search-toggle svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.dew-checkout-search-panel{position:fixed;z-index:200;top:76px;left:12px;right:12px;max-width:520px;margin-left:auto;padding:12px;background:#fffdf8;border:1px solid #e3eae2;box-shadow:0 16px 36px rgba(24,59,53,.18)}
+.dew-checkout-search-panel[hidden]{display:none!important}
+.dew-checkout-search-panel .dew-search-box{display:flex;align-items:center;gap:9px;min-height:46px;padding:0 10px;border:1px solid #dfe7dd;background:#fff}
+.dew-checkout-search-panel .dew-search-box input{flex:1;min-width:0;border:0;outline:0;font:14px Inter,system-ui,sans-serif}
+.dew-checkout-search-panel .dew-search-box button{border:0;background:transparent;color:#557064;font-size:22px;cursor:pointer}
+.dew-checkout-search-panel .dew-search-suggestions{position:static;max-height:55vh;overflow:auto;margin-top:8px;border:0;border-top:1px solid #edf0eb;box-shadow:none}
+.dew-checkout-search-panel .dew-search-suggestions:not([hidden]){display:block}
+.dew-search-loading,.dew-search-no-results{padding:12px;margin:0;color:#718075;font-size:13px}
+@media(max-width:600px){.dew-checkout-search-toggle{width:36px;height:36px}.dew-checkout-search-panel{top:70px;left:8px;right:8px}}
