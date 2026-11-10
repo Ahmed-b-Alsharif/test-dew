@@ -373,18 +373,19 @@ function exportCustomersExcel(rows) {
     const history = c.orders.slice().sort((a,b) => new Date(b.date||0)-new Date(a.date||0));
     const latest = history[0] || {};
     return {
-      'Customer name': ((c.first||'')+' '+(c.last||'')).trim(),
+      'Customer names used': (c.names||[]).join(' / '),
       'Phone number': c.phone || '',
+      'Order numbers': history.map(o=>o.number||'').join(', '),
       'Address': latest.customer?.address || c.address || '',
       'Total orders': c.count,
       'Total spent (EGP)': Number(c.total||0)
     };
   });
-  const ws = XLSX.utils.json_to_sheet(data, {header:['Customer name','Phone number','Address','Total orders','Total spent (EGP)']});
-  ws['!cols'] = [{wch:26},{wch:18},{wch:48},{wch:14},{wch:20}];
-  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:E1');
+  const ws = XLSX.utils.json_to_sheet(data, {header:['Customer names used','Phone number','Order numbers','Address','Total orders','Total spent (EGP)']});
+  ws['!cols'] = [{wch:32},{wch:18},{wch:34},{wch:48},{wch:14},{wch:20}];
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:F1');
   for (let row=1; row<=range.e.r; row++) {
-    const cell=ws[XLSX.utils.encode_cell({r:row,c:4})];
+    const cell=ws[XLSX.utils.encode_cell({r:row,c:5})];
     if(cell) cell.z='#,##0.00 "EGP"';
   }
   const wb = XLSX.utils.book_new();
@@ -402,7 +403,7 @@ function customers() {
   const native=isNativeApp;
   $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">RELATIONSHIPS</span><h2>Customers</h2><p>Understand your customers and their purchase history.</p></div><button class="admin-view-store" id="exportCustomers">Export Excel</button></div>
     <div class="shopify-metrics"><div><span>Total customers</span><b>${rows.length}</b></div><div><span>Total orders</span><b>${ordersList.length}</b></div><div><span>Customer sales</span><b>${egp(rows.reduce((n,c)=>n+c.total,0))}</b></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted" id="customerCount">${filtered().length} customers</span></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search name, phone or order number"></div><span class="shopify-muted" id="customerCount">${filtered().length} customers</span></div>
     ${native?'<div class="dew-customer-list" id="dewCustomerList"></div>':`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Names used</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered().map(c=>`<tr><td><b>${esc((c.names||[]).join(' / '))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers yet.</td></tr>'}</tbody></table></div></div>`}`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   function showCustomer(index){const c=rows[index];if(!c)return;const history=c.orders.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));modal(`<h2>Customer details</h2><p><b>Phone:</b> ${esc(c.phone||'—')}<br><b>Total orders:</b> ${c.count}<br><b>Total spent:</b> ${egp(c.total)}<br><b>Last order:</b> ${c.last?new Date(c.last).toLocaleString():'—'}</p><h3>Names used on orders</h3><ul>${(c.names||[]).map(n=>'<li>'+esc(n)+'</li>').join('')}</ul><h3>All orders</h3>${history.map(o=>{const name=[o.customer?.first,o.customer?.last].filter(Boolean).join(' ')||'Guest customer';return `<div class="overview-row"><div><b>${esc(o.number||'Order')}</b><small>${esc(name)} · ${esc(new Date(o.date||0).toLocaleDateString())} · ${esc(o.fulfillmentStatus||'Pending')}</small></div><strong>${egp(o.total)}</strong></div>${o.customer?.note?`<p class="note">Customer note: ${esc(o.customer.note)}</p>`:''}`;}).join('')||'<p>No orders found.</p>'}<button class="btn" style="margin-top:16px" id="closeCustomerDetail">Close</button>`);$('#closeCustomerDetail').onclick=closeModal;}
@@ -818,7 +819,7 @@ function orders() {
         <div class="dew-order-detail-head"><div><p class="dew-orders-eyebrow">ORDER DETAILS</p><h2>${esc(o.number)}</h2><p class="note">${dateText(o.date)} at ${timeText(o.date)}</p></div><button class="btn ghost" id="mCloseBtn">Close</button></div>
         <div class="dew-order-detail-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div>
         <section class="dew-order-detail-section"><h3>Items</h3>${itemsHtml}<div class="dew-order-totals"><div><span>Subtotal</span><b>${money(o.itemsTotal)}</b></div><div><span>Shipping</span><b>${money(o.delivery)}</b></div>${o.discount?'<div><span>Discount '+esc(o.promoCode||'')+'</span><b>−'+money(o.discount)+'</b></div>':''}<div class="grand"><span>Total</span><b>${money(o.total)}</b></div></div></section>
-        <section class="dew-order-detail-section"><h3>Customer</h3><b>${esc(customerName(o))}</b><p>${esc(c.phone||'—')} ${c.whatsapp?' · WhatsApp '+esc(c.whatsapp):''}</p><p>${esc(c.address||'No address supplied')}</p><p>${o.area==='alex'?'Alexandria':'Cairo & Giza'}</p></section>
+        <section class="dew-order-detail-section"><h3>Customer</h3><b>${esc(customerName(o))}</b><p>${esc(c.phone||'—')} ${c.whatsapp?' · WhatsApp '+esc(c.whatsapp):''}</p><p>${esc(c.address||'No address supplied')}</p><p>${o.area==='alex'?'Alexandria':'Cairo & Giza'}</p></section>${c.note?`<section class="dew-order-detail-section"><h3>Customer note</h3><p>${esc(c.note)}</p></section>`:''}
         <section class="dew-order-detail-section"><h3>Payment & fulfilment</h3><label class="dew-order-field">Payment status<select id="dewOrderPayment"><option ${payment(o)==='Unpaid (COD)'?'selected':''}>Unpaid (COD)</option><option ${payment(o)==='Awaiting InstaPay payment'?'selected':''}>Awaiting InstaPay payment</option><option ${payment(o)==='Paid'?'selected':''}>Paid</option></select></label><label class="dew-order-field">Fulfilment status<select id="dewOrderFulfillment"><option ${fulfillment(o)==='Pending'?'selected':''}>Pending</option><option ${fulfillment(o)==='Processing'?'selected':''}>Processing</option><option ${fulfillment(o)==='Shipped'?'selected':''}>Shipped</option><option ${fulfillment(o)==='Delivered'?'selected':''}>Delivered</option><option ${fulfillment(o)==='Cancelled'?'selected':''}>Cancelled</option></select></label><label class="dew-order-field">Tracking number<input id="dewOrderTracking" value="${esc(o.trackingNumber||'')}" placeholder="Add tracking number"></label><button class="btn" id="dewSaveOrderStatus">Save order updates</button></section>
         <section class="dew-order-detail-section"><h3>Order notes</h3><p class="note">Private notes for your team. Customers cannot see these.</p><textarea id="orderNote" rows="3" placeholder="Add a note about this order...">${esc(o.note||'')}</textarea><button class="btn ghost" id="saveOrderNote">Save note</button></section>
         <button class="btn ghost dew-order-delete" id="dewDeleteOrder">Delete order</button>
