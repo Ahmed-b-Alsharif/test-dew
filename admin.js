@@ -778,7 +778,7 @@ function nativeOrders(){
   document.querySelectorAll('[data-native-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.nativeFilter;renderList();});
   $('#dewNativeOrderSearch').oninput=e=>{term=e.target.value.trim().toLowerCase();renderList();const x=$('#dewNativeOrderSearch');x.focus();x.setSelectionRange(term.length,term.length);};
   document.querySelectorAll('[data-native-open]').forEach(b=>b.onclick=()=>renderDetail(Number(b.dataset.nativeOpen)));
-  $('#dewOrdersRefresh').onclick=async()=>{const b=$('#dewOrdersRefresh');b.classList.add('loading');try{await loadOrders();renderList();toast('Orders refreshed.');}catch(e){toast(e.message||'Could not refresh orders.',true);}finally{$('#dewOrdersRefresh')?.classList.remove('loading');}};
+  $('#dewOrdersRefresh').onclick=async()=>{const b=$('#dewOrdersRefresh');b.classList.add('loading');try{const response=await fetch(ADMIN_API+'/api/orders',{headers:{Authorization:'Bearer '+adminToken()}});const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not load orders.');ordersList=result.orders||[];renderList();toast('Orders refreshed.');}catch(e){toast(e.message||'Could not refresh orders.',true);}finally{$('#dewOrdersRefresh')?.classList.remove('loading');}};
  }
  function renderDetail(i){
   const o=ordersList[i];if(!o)return;const c=o.customer||{},lines=Array.isArray(o.lines)?o.lines:[];
