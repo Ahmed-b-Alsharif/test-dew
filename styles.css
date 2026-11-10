@@ -2144,3 +2144,30 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-order-detail-section{padding:12px}
 }
 
+
+
+/* Desktop Orders: Shopify-style single-column order rows with distinct fields. */
+@media(min-width:901px){
+ #view .dew-orders-page{max-width:1500px}
+ #view .dew-orders-list{display:flex;flex-direction:column;gap:0;background:#fff;border:1px solid #e2e8e3;border-radius:12px;overflow:hidden}
+ #view .dew-order-card{display:grid;grid-template-columns:125px 145px minmax(190px,1.5fr) 115px minmax(180px,1.2fr) 65px;align-items:center;gap:15px;padding:14px 18px;border:0;border-bottom:1px solid #edf0ed;border-radius:0;box-shadow:none;min-height:82px}
+ #view .dew-order-card:last-child{border-bottom:0}
+ #view .dew-order-card:hover{background:#fbfdfb;box-shadow:none}
+ #view .dew-order-cell{display:flex;min-width:0;flex-direction:column;gap:4px}
+ #view .dew-order-cell-label{display:block;font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:#89948c;font-weight:700}
+ #view .dew-order-number{font-size:13px}
+ #view .dew-order-date{font-size:12px;color:#34463a;margin:0}
+ #view .dew-order-time{font-size:10px;color:#89928c}
+ #view .dew-order-customer{margin:0;min-width:0}
+ #view .dew-order-customer>div{min-width:0}
+ #view .dew-order-customer b{font-size:12px}
+ #view .dew-order-total-cell{align-items:flex-start}
+ #view .dew-order-total{font-size:13px}
+ #view .dew-order-status-cell{min-width:0}
+ #view .dew-order-badges{gap:4px}
+ #view .dew-order-badge{font-size:9px;padding:4px 7px}
+ #view .dew-order-open{justify-self:end;font-size:10px}
+}
+@media(min-width:901px) and (max-width:1150px){
+ #view .dew-order-card{grid-template-columns:95px 115px minmax(150px,1fr) 90px minmax(145px,1fr) 48px;gap:9px;padding:12px}
+}
