@@ -17,8 +17,9 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
  }
  function addMenu(header,nav){
-  if(header.querySelector('#dewMobileMenuToggle'))return;
-  const btn=document.createElement('button');btn.type='button';btn.id='dewMobileMenuToggle';btn.className='dew-mobile-menu-toggle';btn.setAttribute('aria-label','Open menu');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-controls','dewMobileMenu');btn.innerHTML='<span></span><span></span><span></span>';header.insertBefore(btn,header.firstChild);
+  let btn=header.querySelector('#dewMobileMenuToggle');
+  if(!btn){btn=document.createElement('button');btn.type='button';btn.id='dewMobileMenuToggle';btn.className='dew-mobile-menu-toggle';btn.setAttribute('aria-label','Open menu');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-controls','dewMobileMenu');btn.innerHTML='<span></span><span></span><span></span>';header.insertBefore(btn,header.firstChild);}
+  if(document.getElementById('dewMobileMenu'))return;
   const drawer=document.createElement('dialog');drawer.id='dewMobileMenu';drawer.className='dew-mobile-menu';drawer.setAttribute('aria-label','Mobile navigation');drawer.setAttribute('aria-hidden','true');drawer.innerHTML='<div class="dew-mobile-menu-head"><span>MENU</span><button type="button" id="dewMobileMenuClose" aria-label="Close menu">×</button></div><nav></nav>';
   const menuNav=drawer.querySelector('nav');[...(nav?.querySelectorAll('a')||[])].forEach(link=>{const a=document.createElement('a');a.href=link.href;a.append(document.createTextNode(link.textContent.trim()));const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');a.append(arrow);menuNav.append(a)});document.body.append(drawer);
   const close=()=>{if(drawer.open)drawer.close();drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');btn.setAttribute('aria-expanded','false');btn.setAttribute('aria-label','Open menu');document.body.classList.remove('dew-menu-open')};
