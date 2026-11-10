@@ -82,10 +82,10 @@
         "text": "",
         "button": "Discover the collection",
         "url": "#shop",
-        "image": "images/1794340446644-01e27551.jpg",
+        "image": "images/webp/local-ecce014535db4535e850.webp",
         "showButton": true,
         "buttonPosition": "right",
-        "mobileImage": "images/1794339873056-6eefed3b.jpg",
+        "mobileImage": "images/webp/local-6124d2bc10f43922097a.webp",
         "showKicker": false,
         "kickerText": "",
         "textVertical": "bottom"
@@ -240,7 +240,7 @@
       "id": "a33bf143",
       "name": "Body Care",
       "description": "",
-      "image": "images/1794176181136-b10b1025.jpg",
+      "image": "images/webp/local-6e858e58b3122b6c3863.webp",
       "productIds": [
         "95e54cca",
         "561a22fa",
@@ -304,8 +304,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch1.jpg?v=1773138901",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pouch2.jpg?v=1773138901"
+        "images/webp/shopify-511ccd1b552650daf313.webp",
+        "images/webp/shopify-b7aa9cceca2d446c1e17.webp"
       ],
       "howToUse": "",
       "options": [
@@ -345,11 +345,11 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/29.jpg?v=1773141995",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/28.jpg?v=1773141996",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/websitedew_2.jpg?v=1773141959",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/24.jpg?v=1773141959",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/25.jpg?v=1773141959"
+        "images/webp/shopify-19eba731a766581c1525.webp",
+        "images/webp/shopify-e7a722507766a436ab96.webp",
+        "images/webp/shopify-f0c277516d257489ef59.webp",
+        "images/webp/shopify-6fb7322d544b7c4ffb94.webp",
+        "images/webp/shopify-57dbbd08f9074b2fdc28.webp"
       ],
       "howToUse": "",
       "options": [
@@ -387,16 +387,16 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_6.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/06.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/05.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/02.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+        "images/webp/shopify-c638418e36883c7caefc.webp",
+        "images/webp/shopify-67da4fc41f26c3564f52.webp",
+        "images/webp/shopify-dbafba2c434d4b812851.webp",
+        "images/webp/shopify-3907627389306c95f10c.webp",
+        "images/webp/shopify-18b335449a2561cc6428.webp",
+        "images/webp/shopify-d4a1751c81c455085b61.webp",
+        "images/webp/shopify-4a8fe7634ba88bf4171f.webp",
+        "images/webp/shopify-1d52747760e42e829314.webp",
+        "images/webp/shopify-9829bd7a04e9f8bdcc8c.webp",
+        "images/webp/shopify-f492891535aea4d61a0e.webp"
       ],
       "howToUse": "",
       "options": [
@@ -420,7 +420,7 @@
           "stock": 0,
           "sku": "",
           "barcode": "",
-          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227"
+          "image": "images/webp/shopify-67da4fc41f26c3564f52.webp"
         },
         {
           "id": "3fef1416",
@@ -432,7 +432,7 @@
           "stock": 0,
           "sku": "",
           "barcode": "",
-          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
+          "image": "images/webp/shopify-dbafba2c434d4b812851.webp"
         },
         {
           "id": "d8d5123c",
@@ -444,7 +444,7 @@
           "stock": 0,
           "sku": "",
           "barcode": "",
-          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+          "image": "images/webp/shopify-f492891535aea4d61a0e.webp"
         }
       ],
       "price": 235,
@@ -720,7 +720,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
+        "images/webp/shopify-dbafba2c434d4b812851.webp"
       ],
       "howToUse": "",
       "options": [
@@ -758,7 +758,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227"
+        "images/webp/shopify-3907627389306c95f10c.webp"
       ],
       "howToUse": "",
       "options": [
@@ -796,7 +796,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227"
+        "images/webp/shopify-18b335449a2561cc6428.webp"
       ],
       "howToUse": "",
       "options": [
@@ -834,7 +834,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/06.jpg?v=1762873227"
+        "images/webp/shopify-d4a1751c81c455085b61.webp"
       ],
       "howToUse": "",
       "options": [
@@ -872,7 +872,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/05.jpg?v=1762873227"
+        "images/webp/shopify-4a8fe7634ba88bf4171f.webp"
       ],
       "howToUse": "",
       "options": [
@@ -910,7 +910,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227"
+        "images/webp/shopify-1d52747760e42e829314.webp"
       ],
       "howToUse": "",
       "options": [
@@ -948,7 +948,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/03.jpg?v=1757756752"
+        "images/webp/shopify-801ceb3428bac03b5444.webp"
       ],
       "howToUse": "",
       "options": [
@@ -986,7 +986,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/02.jpg?v=1762873227"
+        "images/webp/shopify-9829bd7a04e9f8bdcc8c.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1024,7 +1024,7 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+        "images/webp/shopify-f492891535aea4d61a0e.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1062,11 +1062,11 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_deodrant.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/11.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_Make_the_dream_in_a_12a7296a-edb0-4416-877d-941a778ab408.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_make_the_sunset_in_a_2f80aa41-c227-4a49-9798-86d74b835758.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_NOw_the_frost_in_sep_5ff409e2-98c3-4b55-b967-4fe83731ae19.png?v=1770559468"
+        "images/webp/shopify-0eba8fd8770e2d695e4c.webp",
+        "images/webp/shopify-ae1366be434fa88e43f7.webp",
+        "images/webp/shopify-30516624fd309b76a9d9.webp",
+        "images/webp/shopify-04f8cb0b84a1935345a4.webp",
+        "images/webp/shopify-a26f30d762af43a4e773.webp"
       ],
       "howToUse": "",
       "options": [],
@@ -1085,10 +1085,10 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Glosssettnobox.jpg?v=1762866793",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_3.jpg?v=1762866793",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/openbox.jpg?v=1762866793"
+        "images/webp/shopify-a8769691c0a5f939a535.webp",
+        "images/webp/shopify-9c95dc87489602892a62.webp",
+        "images/webp/shopify-ffccfb891a8e5d0efac2.webp",
+        "images/webp/shopify-b9f6ca255ad2b3e4159d.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1126,9 +1126,9 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_add_come_candy_to_th_1.png?v=1770561374",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candylipbalm1.jpg?v=1770561374",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candylipbalm2.jpg?v=1770561374"
+        "images/webp/shopify-acf817db92d48287a05b.webp",
+        "images/webp/shopify-139de04efd319588dd16.webp",
+        "images/webp/shopify-a0a5400fccdc38e371f9.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1166,9 +1166,9 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_macron.png?v=1756215281",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_macron_2.png?v=1756215281",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/BC239CEF-D8C3-405A-91AE-66224977A660.jpg?v=1756215281"
+        "images/webp/shopify-4c0df5f0ac499d8e2b5c.webp",
+        "images/webp/shopify-3abf2b4b62282851dcb0.webp",
+        "images/webp/shopify-0457a785968a1553bb59.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1206,12 +1206,12 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/balmbundle.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bundle_3.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_2.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/23.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/22.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate_5c12aeb6-3ad4-43b4-863c-7085e932b649.jpg?v=1756907490"
+        "images/webp/shopify-6e1ae19f9b563d470b77.webp",
+        "images/webp/shopify-113e2fd54b75b50628cd.webp",
+        "images/webp/shopify-f127ed124d0eb2174e1b.webp",
+        "images/webp/shopify-c449b1c97fd88fe2f4ca.webp",
+        "images/webp/shopify-ecc28c66df24e90b6b86.webp",
+        "images/webp/shopify-f2f3cf3fb934bd4b3372.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1249,8 +1249,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/IMG-1137.png?v=1756215283",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/IMG-1138.png?v=1756215283"
+        "images/webp/shopify-3f34dfdd169217a970fb.webp",
+        "images/webp/shopify-743a3f61e095422d3589.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1288,12 +1288,12 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_change_the_colorfull.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/All.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candy.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/strawberry.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.jpg?v=1770633463"
+        "images/webp/shopify-aca80cab017231e100ea.webp",
+        "images/webp/shopify-6aafedcf70d6a10484b5.webp",
+        "images/webp/shopify-c8ab02bfb04843359cd7.webp",
+        "images/webp/shopify-237d82d26b8e5874d3e5.webp",
+        "images/webp/shopify-5008337ed7da26733044.webp",
+        "images/webp/shopify-6da76c770e84e8f71e2f.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1358,9 +1358,9 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/remover2.jpg?v=1762871237",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew.jpg?v=1762871237",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/remover22.jpg?v=1756647288"
+        "images/webp/shopify-2b53281b2c781f52dc94.webp",
+        "images/webp/shopify-2bb3e6f0ae8ea75d8757.webp",
+        "images/webp/shopify-223ee43240c281e2d9cd.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1398,8 +1398,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bund1.jpg?v=1756215286",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bund2.jpg?v=1756215286"
+        "images/webp/shopify-e5b1469ea400096e54db.webp",
+        "images/webp/shopify-177ecbaeb20bc67a82fa.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1437,8 +1437,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/orcide1.jpg?v=1756215287",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/orcide2.jpg?v=1756215287"
+        "images/webp/shopify-6067c6390f2cca1e7a8d.webp",
+        "images/webp/shopify-3ec6c4472c54406712fd.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1476,8 +1476,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Honey.jpg?v=1756215288",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Honey_22.jpg?v=1756215288"
+        "images/webp/shopify-1c247fe4af4412ee81d2.webp",
+        "images/webp/shopify-0012fd76d1e61ae56a2d.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1515,8 +1515,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Rosemary_Conditioner.jpg?v=1756215289",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/RosemaryConditioner.jpg?v=1756215289"
+        "images/webp/shopify-0c4c92760b2d43353697.webp",
+        "images/webp/shopify-f133846a95f0e1c76dc7.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1554,8 +1554,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Rosemary_Shampoo.jpg?v=1756215290",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/RosemaryShampoo.jpg?v=1756215290"
+        "images/webp/shopify-2cc2ed33ce0f2c268b99.webp",
+        "images/webp/shopify-381d24e4a89805a124af.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1593,8 +1593,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/coc_2.jpg?v=1756215291",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/coco1.jpg?v=1756215291"
+        "images/webp/shopify-9863ef1a82e87ce77c2f.webp",
+        "images/webp/shopify-2e97cd464a4ba6a34a59.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1632,9 +1632,9 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_a990342c-23b9-4d3d-867a-9d79ac491d18.jpg?v=1770633660",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Chocolate2.jpg?v=1770633660",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Chocolate3.jpg?v=1770633660"
+        "images/webp/shopify-43108a1c10ca46873ce5.webp",
+        "images/webp/shopify-ef5ba61ccbc09b6301d7.webp",
+        "images/webp/shopify-468fed4dab3f7af71ee9.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1672,8 +1672,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Strawberry_Shower_Gel.jpg?v=1756215292",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Strawberry_Shower_Gel.jpg?v=1756215292"
+        "images/webp/shopify-264290b6ef785b3b1c3e.webp",
+        "images/webp/shopify-689e4170716df37ed582.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1711,8 +1711,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Tropical_Shower_Gel.jpg?v=1756215293",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Tropical_Shower_Gel.jpg?v=1756215293"
+        "images/webp/shopify-3352eff55bdfdf62edfd.webp",
+        "images/webp/shopify-a4e81798a1037d16deff.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1750,8 +1750,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Shower_Gel.jpg?v=1756215294",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-SunshineSplash.jpg?v=1756215294"
+        "images/webp/shopify-8cb48091b5dcfdadf56e.webp",
+        "images/webp/shopify-c89a6a587fe8312b019f.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1789,8 +1789,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Kiwi_Shower_Gel.jpg?v=1756215295",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Kiwi_Shower_Gel.jpg?v=1756215295"
+        "images/webp/shopify-d901904b74b3b342a706.webp",
+        "images/webp/shopify-0acaf9752ef15180deeb.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1828,8 +1828,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Harmony_Shower_Gel.jpg?v=1756215296",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-Harmony.jpg?v=1756215296"
+        "images/webp/shopify-32c4e4f9bb7b1cb2e8b8.webp",
+        "images/webp/shopify-b47e62d77c87451b9019.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1867,8 +1867,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Freshly_Squeezed_Shower_Gel.jpg?v=1756215296",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FreshlySqueezed.jpg?v=1756215296"
+        "images/webp/shopify-b35bfe260cbcc1308dbc.webp",
+        "images/webp/shopify-d00a7063412c5ecf2679.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1906,8 +1906,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Mint_Shower_Gel.jpg?v=1756215297",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Fresh_Mint_Shower_Gel.jpg?v=1756215297"
+        "images/webp/shopify-b358b88c9512fe31b037.webp",
+        "images/webp/shopify-c2a7c6439c7f5994e670.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1945,8 +1945,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Breeze_Shower_Gel.jpg?v=1756215298",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FreshBreeze.jpg?v=1756215298"
+        "images/webp/shopify-5e7225b4a46f987039bc.webp",
+        "images/webp/shopify-fb93ac42b0bd2fc9398b.webp"
       ],
       "howToUse": "",
       "options": [
@@ -1984,8 +1984,8 @@
       "visible": false,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Crystal_Waves_Shower_Gel.jpg?v=1756215298",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-CrystalWaves.jpg?v=1756215298"
+        "images/webp/shopify-a7758f84a6f500cae1a9.webp",
+        "images/webp/shopify-c058a3bc653be05fce77.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2023,8 +2023,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Shower_Gel.jpg?v=1756215299",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Dew_Coconut_Shower_Gel.jpg?v=1756215299"
+        "images/webp/shopify-2712b267eee7a4fa45a4.webp",
+        "images/webp/shopify-e28a4af3a153237f541a.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2062,8 +2062,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Vanilla_Moisturizer_Cream.jpg?v=1756215300",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Vanilla.jpg?v=1756215300"
+        "images/webp/shopify-27f0bbe88422da27a700.webp",
+        "images/webp/shopify-6e13d32cdaed2ce32f46.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2101,8 +2101,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Moisturizer_Cream.jpg?v=1756215301",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Sunshine.jpg?v=1756215301"
+        "images/webp/shopify-662c8016d30076cde98b.webp",
+        "images/webp/shopify-2fbb603dac4482355fcf.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2140,8 +2140,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Harmony_Moisturizer_Cream.jpg?v=1756215302",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Harmony.jpg?v=1756215302"
+        "images/webp/shopify-65c11fa6fdeacfba3801.webp",
+        "images/webp/shopify-323efa7dacde4d411e67.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2179,8 +2179,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Sunshine_Splash_Foot_Cream.jpg?v=1756215303",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-SunshineSplash.jpg?v=1756215304"
+        "images/webp/shopify-39b5d76e2d88a60b9ad0.webp",
+        "images/webp/shopify-2586abc007dcc543f1c0.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2218,8 +2218,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Mint_Foot_Cream.jpg?v=1756215305",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-FreshMint.jpg?v=1756215305"
+        "images/webp/shopify-0aa26498c6e4b76d808a.webp",
+        "images/webp/shopify-c87c55f5ac729922b230.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2257,8 +2257,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Cherry_Kiss_Cheeks_and_Lips_Tint.jpg?v=1756215306",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Cherry_Kiss_Cheeks_and_Lips_Tint_Dew.jpg?v=1756215306"
+        "images/webp/shopify-4bef88e785f8128864de.webp",
+        "images/webp/shopify-d1dd1803bef4497ba657.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2296,8 +2296,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Apricots_Lip_Scrub.jpg?v=1756215307",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-Apricots.jpg?v=1756215307"
+        "images/webp/shopify-7c0e325b9514ba20d54f.webp",
+        "images/webp/shopify-87b99702781e0458a711.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2335,8 +2335,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/scrub_Strawberry.jpg?v=1756215308",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw2.jpg?v=1756215308"
+        "images/webp/shopify-4f49a13148e90da9cc54.webp",
+        "images/webp/shopify-7887f874c65ed4d113d1.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2374,8 +2374,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Vanilla_Lip_Scrub.jpg?v=1756215309",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-Vanilla.jpg?v=1756215309"
+        "images/webp/shopify-96c55552c9a752d6d93e.webp",
+        "images/webp/shopify-d19006400c69f56258ce.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2413,9 +2413,9 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_1.jpg?v=1770635395",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw_2.jpg?v=1770635395",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/straw1.jpg?v=1770635395"
+        "images/webp/shopify-762ed4b464ba3f77883a.webp",
+        "images/webp/shopify-d86f8bba6c6aacaffeb6.webp",
+        "images/webp/shopify-1cc5f161673a161704f6.webp"
       ],
       "howToUse": "",
       "options": [],
@@ -2434,8 +2434,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pink_Love_Cheeks_and_Lips_Tint.jpg?v=1756215311",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Pink_Love_Cheeks_and_Lips_Tint_Dew.jpg?v=1756215311"
+        "images/webp/shopify-ca3852945fb384362255.webp",
+        "images/webp/shopify-4faa37e9a16a818181bb.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2473,8 +2473,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Dreams_Moisturizer_Cream.jpg?v=1756215313",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/MoisturizerCream150ML-Coconut.jpg?v=1756215313"
+        "images/webp/shopify-6e8fa6ee7be288d0e75f.webp",
+        "images/webp/shopify-d9c0e9fba1ff91ea4ff9.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2512,8 +2512,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Coconut_Dream_Lip_Scrub.jpg?v=1756215314",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/LipScrub20ML-CoconutDream.jpg?v=1756215314"
+        "images/webp/shopify-4afb9bfe3e9f70c72e2a.webp",
+        "images/webp/shopify-1ebc58bbc8928b3d36c3.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2551,8 +2551,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Fresh_Breeze_Foot_Cream.jpg?v=1756215315",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/FootCream150ML-FreshBreeze.jpg?v=1756215315"
+        "images/webp/shopify-2c453fc1fbb20bc014b9.webp",
+        "images/webp/shopify-e2b5c976f02311cd9207.webp"
       ],
       "howToUse": "",
       "options": [
@@ -2590,8 +2590,8 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/French_Lavender_Shower_Gel.jpg?v=1756215316",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/ShowerGel500ML-FrenchLavender.jpg?v=1756215316"
+        "images/webp/shopify-51edbd6fbe07da15b33a.webp",
+        "images/webp/shopify-503cae76587b322ac260.webp"
       ],
       "howToUse": "",
       "options": [
