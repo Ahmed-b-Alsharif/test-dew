@@ -1939,3 +1939,64 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-native-app .admin-content table.discounts-mobile-table tr+tr{margin-top:0!important}
  .dew-native-app .admin-content table td{padding:7px 0!important}
 }
+
+
+/* Shopify-inspired order management screen inside the Dew iPhone admin app. */
+@media(max-width:699px){
+ .dew-native-app .dew-orders-page{color:#202923}
+ .dew-native-app .dew-orders-heading{display:flex;align-items:flex-start;justify-content:space-between;margin:2px 0 14px}
+ .dew-native-app .dew-orders-eyebrow{font-size:9px!important;letter-spacing:1.2px;font-weight:800;color:#718078;margin:0 0 4px}
+ .dew-native-app .dew-orders-heading h2{font-size:23px!important;line-height:1.15;margin:0 0 4px}
+ .dew-native-app .dew-orders-subtitle{font-size:11px!important;color:#78847d;margin:0}
+ .dew-native-app .dew-orders-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 13px}
+ .dew-native-app .dew-order-stat{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;padding:10px 9px!important;min-width:0;min-height:62px!important;background:#fff;border:1px solid #e1e8e2;border-radius:11px;color:#526158}
+ .dew-native-app .dew-order-stat span{font-size:10px!important;white-space:nowrap}
+ .dew-native-app .dew-order-stat b{font-size:19px!important;color:#173e2c}
+ .dew-native-app .dew-order-stat.active{border-color:#1c524e;background:#f2f7f3}
+ .dew-native-app .dew-orders-toolbar{background:#fff;border:1px solid #e2e8e3;border-radius:12px;padding:10px;margin-bottom:11px}
+ .dew-native-app .dew-orders-search{height:38px;display:flex;align-items:center;gap:7px;background:#f4f6f4;border:1px solid #e7ebe7;border-radius:8px;padding:0 10px}
+ .dew-native-app .dew-orders-search span{font-size:20px;color:#738078}
+ .dew-native-app .dew-orders-search input{border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;width:100%;min-width:0;font-size:12px!important;padding:6px 0!important}
+ .dew-native-app .dew-orders-filters{display:flex;gap:6px;overflow-x:auto;padding:9px 0 0;scrollbar-width:none}
+ .dew-native-app .dew-orders-filters button{white-space:nowrap;min-height:30px!important;padding:5px 10px!important;border:1px solid #e0e7e1!important;border-radius:20px!important;background:#fff!important;color:#536158!important;font-size:10px!important}
+ .dew-native-app .dew-orders-filters button.active{background:#1c524e!important;color:#fff!important;border-color:#1c524e!important}
+ .dew-native-app .dew-orders-list{display:flex;flex-direction:column;gap:9px}
+ .dew-native-app .dew-order-card{background:#fff;border:1px solid #e1e8e2;border-radius:13px;padding:12px;box-shadow:0 2px 7px rgba(18,58,41,.045);cursor:pointer}
+ .dew-native-app .dew-order-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+ .dew-native-app .dew-order-number{display:block;font-size:13px!important;color:#183e2c}
+ .dew-native-app .dew-order-date{display:block;font-size:10px!important;color:#89928c;margin-top:3px}
+ .dew-native-app .dew-order-total{font-size:14px!important;color:#1b3828;white-space:nowrap}
+ .dew-native-app .dew-order-customer{display:flex;align-items:center;gap:9px;margin:11px 0}
+ .dew-native-app .dew-order-avatar{width:31px;height:31px;flex:0 0 31px;border-radius:50%;display:grid;place-items:center;background:#edf4ef;color:#1c524e;font-size:12px;font-weight:800}
+ .dew-native-app .dew-order-customer div{min-width:0}
+ .dew-native-app .dew-order-customer b{display:block;font-size:11px!important;color:#303b33}
+ .dew-native-app .dew-order-customer small{display:block;font-size:10px!important;color:#87918a;margin-top:2px}
+ .dew-native-app .dew-order-card-bottom{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid #edf0ed;padding-top:9px}
+ .dew-native-app .dew-order-badges,.dew-native-app .dew-order-detail-badges{display:flex;flex-wrap:wrap;gap:5px}
+ .dew-native-app .dew-order-badge{display:inline-flex;align-items:center;border-radius:20px;padding:4px 8px;font-size:9px!important;font-weight:700;line-height:1.2;background:#f0f2f0;color:#59645d}
+ .dew-native-app .dew-order-badge.paid{background:#e8f4eb;color:#23623a}
+ .dew-native-app .dew-order-badge.unpaid{background:#fff3df;color:#936018}
+ .dew-native-app .dew-order-badge.fulfilled{background:#e8f1fb;color:#315d8c}
+ .dew-native-app .dew-order-badge.pending{background:#f2f0e9;color:#75633a}
+ .dew-native-app .dew-order-badge.cancelled{background:#fae9e8;color:#a23f39}
+ .dew-native-app .dew-order-open{font-size:10px!important;color:#1c524e;font-weight:700;white-space:nowrap}
+ .dew-native-app .dew-order-open span{font-size:17px;vertical-align:-1px;margin-left:3px}
+ .dew-native-app .dew-orders-empty{display:flex;flex-direction:column;gap:5px;align-items:center;text-align:center;padding:30px 16px;background:#fff;border:1px dashed #d8e2da;border-radius:12px;color:#7b877f;font-size:11px}
+ .dew-native-app .dew-orders-empty b{font-size:13px;color:#334238}
+ .dew-native-app .dew-order-detail{font-size:12px;color:#3e4941}
+ .dew-native-app .dew-order-detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+ .dew-native-app .dew-order-detail-head h2{font-size:22px!important;margin:0 0 3px}
+ .dew-native-app .dew-order-detail-section{background:#fff;border:1px solid #e3e9e4;border-radius:12px;padding:12px;margin:12px 0}
+ .dew-native-app .dew-order-detail-section h3{font-size:13px!important;margin:0 0 10px;color:#243b2d}
+ .dew-native-app .dew-order-line{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid #eef1ee}
+ .dew-native-app .dew-order-product-thumb{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:8px;background:#edf4ef;color:#1c524e;font-weight:800}
+ .dew-native-app .dew-order-line-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+ .dew-native-app .dew-order-line-info b,.dew-native-app .dew-order-line>b{font-size:11px!important}
+ .dew-native-app .dew-order-line-info small{font-size:10px!important;color:#87918a}
+ .dew-native-app .dew-order-totals{padding-top:8px}
+ .dew-native-app .dew-order-totals div{display:flex;justify-content:space-between;gap:8px;padding:4px 0;font-size:11px}
+ .dew-native-app .dew-order-totals .grand{border-top:1px solid #e8ede8;margin-top:5px;padding-top:9px;font-size:13px;font-weight:800}
+ .dew-native-app .dew-order-field{display:flex;flex-direction:column;gap:5px;margin:9px 0;font-size:11px;font-weight:700}
+ .dew-native-app .dew-order-field input,.dew-native-app .dew-order-field select,.dew-native-app #orderNote{width:100%;box-sizing:border-box;min-height:38px;border:1px solid #dce5dd;border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
+ .dew-native-app .dew-order-delete{color:#a23f39!important;width:100%;margin:4px 0 10px}
+}
