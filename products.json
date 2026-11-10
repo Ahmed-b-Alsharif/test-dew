@@ -261,7 +261,15 @@
         "76232b17",
         "3c5c256b",
         "735c75b6"
-      ]
+      ],
+      "desktopImage": "",
+      "mobileImage": "",
+      "homepageSection": {
+        "show": true,
+        "limit": 5,
+        "showViewAll": true,
+        "viewAllText": "View all Body Care"
+      }
     },
     {
       "id": "4569aaa1",
