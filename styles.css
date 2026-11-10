@@ -2171,3 +2171,11 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 @media(min-width:901px) and (max-width:1150px){
  #view .dew-order-card{grid-template-columns:95px 115px minmax(150px,1fr) 90px minmax(145px,1fr) 48px;gap:9px;padding:12px}
 }
+
+
+/* Customer history and checkout order note. */
+.dew-customer-detail h2{color:#1c524e;margin-top:0}
+.dew-customer-detail ul{margin:7px 0 16px;padding-left:20px}
+.dew-customer-detail li{margin:4px 0}
+#form #customerNote{width:100%;box-sizing:border-box;min-height:82px;padding:10px 12px;border:1.5px solid #cfd3cc;border-radius:10px;font:inherit;resize:vertical}
+#form #customerNote:focus{outline:2px solid rgba(28,82,78,.16);border-color:#1c524e}
