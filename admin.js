@@ -734,80 +734,103 @@ function catForm(id) {
 }
 
 function orders() {
-  $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
-    <p class="note">View and manage customer orders, payment status, fulfillment, and tracking numbers.</p>
-    <div class="scroll"><table class="orders-mobile-table">
-      <tr><th>Order #</th><th>Date</th><th>Time</th><th>Customer</th><th>Total</th><th>Payment</th><th>Fulfillment</th><th>Tracking #</th><th></th></tr>
-      ${ordersList.length ? ordersList.map((o, idx) => `<tr>
-        <td><b>${esc(o.number)}</b></td>
-        <td>${esc(new Date(o.date || Date.now()).toLocaleDateString())}</td>
-        <td>${esc(new Date(o.date || Date.now()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}))}</td>
-        <td>${esc((o.customer?.first || '') + ' ' + (o.customer?.last || ''))}<br><small class="note">${esc(o.customer?.phone || '')}</small></td>
-        <td><b>${egp(o.total)}</b></td>
-        <td><select data-opay="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
-          <option ${o.paymentStatus === 'Unpaid (COD)' ? 'selected' : ''}>Unpaid (COD)</option>
-          <option ${o.paymentStatus === 'Awaiting InstaPay payment' ? 'selected' : ''}>Awaiting InstaPay payment</option>
-          <option ${o.paymentStatus === 'Paid' ? 'selected' : ''}>Paid</option>
-        </select></td>
-        <td><select data-ofull="${idx}" style="padding:4px 6px;border-radius:6px;border:1px solid #cfd3cc">
-          <option ${o.fulfillmentStatus === 'Pending' ? 'selected' : ''}>Pending</option>
-          <option ${o.fulfillmentStatus === 'Processing' ? 'selected' : ''}>Processing</option>
-          <option ${o.fulfillmentStatus === 'Shipped' ? 'selected' : ''}>Shipped</option>
-          <option ${o.fulfillmentStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
-          <option ${o.fulfillmentStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
-        </select></td>
-        <td><input type="text" value="${esc(o.trackingNumber || '')}" placeholder="Tracking #" data-otrack="${idx}" style="width:110px;padding:4px 6px;border:1px solid #cfd3cc;border-radius:6px"></td>
-        <td style="white-space:nowrap"><button class="btn small" data-view="${idx}">View</button> <button class="btn small ghost" data-delord="${idx}" style="color:var(--red)">Delete</button></td>
-      </tr>`).join('') : '<tr><td colspan="9" class="note">No orders yet. Orders placed on your website will appear here automatically.</td></tr>'}
-    </table></div>`;
+  const money = value => egp(Number(value || 0));
+  const dateText = value => {
+    const d = new Date(value || Date.now());
+    return isNaN(d.getTime()) ? '—' : d.toLocaleDateString([], {day:'numeric',month:'short',year:'numeric'});
+  };
+  const timeText = value => {
+    const d = new Date(value || Date.now());
+    return isNaN(d.getTime()) ? '' : d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  };
+  const customerName = o => [o.customer?.first,o.customer?.last].filter(Boolean).join(' ') || 'Guest customer';
+  const fulfillment = o => o.fulfillmentStatus || 'Pending';
+  const payment = o => o.paymentStatus || 'Unpaid (COD)';
+  const isFulfilled = o => ['Shipped','Delivered'].includes(fulfillment(o));
+  const badge = (value, kind) => '<span class="dew-order-badge '+kind+'">'+esc(value)+'</span>';
 
-  document.querySelectorAll('[data-opay]').forEach(sel => sel.onchange = () => {
-    ordersList[sel.dataset.opay].paymentStatus = sel.value;
-    saveOrders('Update payment status');
+  $('#view').innerHTML = `
+    <section class="dew-orders-page">
+      <div class="dew-orders-heading">
+        <div><p class="dew-orders-eyebrow">STORE MANAGEMENT</p><h2>Orders</h2><p class="dew-orders-subtitle">${ordersList.length} total orders</p></div>
+      </div>
+      <div class="dew-orders-stats">
+        <button class="dew-order-stat active" data-order-filter="All"><span>All orders</span><b>${ordersList.length}</b></button>
+        <button class="dew-order-stat" data-order-filter="Unfulfilled"><span>Unfulfilled</span><b>${ordersList.filter(o=>!isFulfilled(o)&&fulfillment(o)!=='Cancelled').length}</b></button>
+        <button class="dew-order-stat" data-order-filter="Unpaid"><span>Unpaid</span><b>${ordersList.filter(o=>payment(o)!=='Paid').length}</b></button>
+      </div>
+      <div class="dew-orders-toolbar">
+        <div class="dew-orders-search"><span>⌕</span><input id="dewOrderSearch" type="search" placeholder="Search orders or customers"></div>
+        <div class="dew-orders-filters">
+          <button class="active" data-order-filter="All">All</button>
+          <button data-order-filter="Unfulfilled">Unfulfilled</button>
+          <button data-order-filter="Paid">Paid</button>
+          <button data-order-filter="COD">Cash on delivery</button>
+        </div>
+      </div>
+      <div class="dew-orders-list" id="dewOrdersList">
+        ${ordersList.length ? '' : '<div class="dew-orders-empty"><b>No orders yet</b><span>New orders from your storefront will appear here.</span></div>'}
+      </div>
+    </section>`;
+
+  let activeFilter = 'All';
+  const list = $('#dewOrdersList');
+  function drawOrderCards(){
+    const term = ($('#dewOrderSearch')?.value || '').trim().toLowerCase();
+    const filtered = ordersList.map((o,idx)=>({o,idx})).filter(({o})=>{
+      const text = [o.number,customerName(o),o.customer?.phone].join(' ').toLowerCase();
+      if(term && !text.includes(term)) return false;
+      if(activeFilter==='Unfulfilled') return !isFulfilled(o)&&fulfillment(o)!=='Cancelled';
+      if(activeFilter==='Paid') return payment(o)==='Paid';
+      if(activeFilter==='COD') return o.paymentMethod!=='instapay';
+      return true;
+    });
+    if(!filtered.length){
+      list.innerHTML='<div class="dew-orders-empty"><b>No matching orders</b><span>Try another search or filter.</span></div>';
+      return;
+    }
+    list.innerHTML=filtered.map(({o,idx})=>`
+      <article class="dew-order-card" data-open-order="${idx}">
+        <div class="dew-order-card-top"><div><b class="dew-order-number">${esc(o.number || 'Order')}</b><span class="dew-order-date">${dateText(o.date)} · ${timeText(o.date)}</span></div><b class="dew-order-total">${money(o.total)}</b></div>
+        <div class="dew-order-customer"><span class="dew-order-avatar">${esc((customerName(o).trim()[0]||'G').toUpperCase())}</span><div><b>${esc(customerName(o))}</b><small>${esc(o.customer?.phone || 'No phone number')}</small></div></div>
+        <div class="dew-order-card-bottom"><div class="dew-order-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div><span class="dew-order-open">View order <span>›</span></span></div>
+      </article>`).join('');
+    list.querySelectorAll('[data-open-order]').forEach(card=>card.onclick=()=>openOrder(Number(card.dataset.openOrder)));
+  }
+  drawOrderCards();
+  $('#dewOrderSearch').oninput=drawOrderCards;
+  document.querySelectorAll('[data-order-filter]').forEach(btn=>btn.onclick=()=>{
+    activeFilter=btn.dataset.orderFilter;
+    document.querySelectorAll('[data-order-filter]').forEach(b=>b.classList.toggle('active',b.dataset.orderFilter===activeFilter));
+    drawOrderCards();
   });
 
-  document.querySelectorAll('[data-ofull]').forEach(sel => sel.onchange = () => {
-    ordersList[sel.dataset.ofull].fulfillmentStatus = sel.value;
-    saveOrders('Update fulfillment status');
-  });
-
-  document.querySelectorAll('[data-otrack]').forEach(input => input.onchange = () => {
-    ordersList[input.dataset.otrack].trackingNumber = input.value.trim();
-    saveOrders('Update tracking number');
-  });
-
-  document.querySelectorAll('[data-view]').forEach(btn => btn.onclick = () => {
-    const o = ordersList[btn.dataset.view];
-    const c = o.customer;
-    modal(`<h2>Order ${esc(o.number)}</h2>
-      <p><b>Date:</b> ${new Date(o.date || Date.now()).toLocaleDateString()}</p>
-      <p><b>Time:</b> ${new Date(o.date || Date.now()).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</p>
-      <p><b>Payment method:</b> ${esc(o.paymentMethod === 'instapay' ? 'InstaPay' : 'Cash on Delivery')} | <b>Payment status:</b> ${esc(o.paymentStatus || 'Unpaid (COD)')} | <b>Fulfillment:</b> ${esc(o.fulfillmentStatus || 'Pending')}</p>
-      <p><b>Tracking Number:</b> ${esc(o.trackingNumber || 'None yet')}</p>
-      <h3>Customer details</h3>
-      <p><b>Name:</b> ${esc(c.first + ' ' + c.last)}<br><b>Phone:</b> ${esc(c.phone)}<br><b>WhatsApp:</b> ${esc(c.whatsapp)}<br><b>Area:</b> ${o.area === 'alex' ? 'Alexandria' : 'Cairo & Giza'}<br><b>Address:</b> ${esc(c.address)}</p>
-      <h3>Order items</h3>
-      <ul>${o.lines.map(l => `<li>${esc(l.name)} &times; ${l.qty} — ${egp(l.total)} (${egp(l.unit)} each)</li>`).join('')}</ul>
-      <p><b>Items Cost:</b> ${egp(o.itemsTotal)}<br><b>Shipping Cost:</b> ${egp(o.delivery)}<br>${o.discount ? '<b>Discount (' + esc(o.promoCode) + '):</b> -' + egp(o.discount) + '<br>' : ''}<b>Total:</b> ${egp(o.total)}</p>
-      <h3>Order notes</h3>
-      <p class="note">Private notes for your team. Customers cannot see these.</p>
-      <textarea id="orderNote" rows="4" placeholder="Add a note about this order..." style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #cfd3cc;border-radius:8px">${esc(o.note || '')}</textarea>
-      <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="saveOrderNote">Save note</button><button class="btn ghost" id="mCloseBtn">Close</button></div>`);
-    $('#saveOrderNote').onclick = () => {
-      o.note = $('#orderNote').value.trim();
-      saveOrders('Save note for ' + o.number).then(() => { closeModal(); toast('Order note saved.'); });
+  function openOrder(idx){
+    const o=ordersList[idx]; if(!o) return;
+    const c=o.customer||{};
+    const lines=Array.isArray(o.lines)?o.lines:[];
+    const itemsHtml=lines.length?lines.map(l=>`
+      <div class="dew-order-line"><div class="dew-order-product-thumb">${esc((l.name||'P').trim()[0]||'P')}</div><div class="dew-order-line-info"><b>${esc(l.name||'Product')}</b><small>Qty ${Number(l.qty||0)} · ${money(l.unit)} each</small></div><b>${money(l.total)}</b></div>`).join(''):'<p class="note">No item details available.</p>';
+    modal(`
+      <div class="dew-order-detail">
+        <div class="dew-order-detail-head"><div><p class="dew-orders-eyebrow">ORDER DETAILS</p><h2>${esc(o.number)}</h2><p class="note">${dateText(o.date)} at ${timeText(o.date)}</p></div><button class="btn ghost" id="mCloseBtn">Close</button></div>
+        <div class="dew-order-detail-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div>
+        <section class="dew-order-detail-section"><h3>Items</h3>${itemsHtml}<div class="dew-order-totals"><div><span>Subtotal</span><b>${money(o.itemsTotal)}</b></div><div><span>Shipping</span><b>${money(o.delivery)}</b></div>${o.discount?'<div><span>Discount '+esc(o.promoCode||'')+'</span><b>−'+money(o.discount)+'</b></div>':''}<div class="grand"><span>Total</span><b>${money(o.total)}</b></div></div></section>
+        <section class="dew-order-detail-section"><h3>Customer</h3><b>${esc(customerName(o))}</b><p>${esc(c.phone||'—')} ${c.whatsapp?' · WhatsApp '+esc(c.whatsapp):''}</p><p>${esc(c.address||'No address supplied')}</p><p>${o.area==='alex'?'Alexandria':'Cairo & Giza'}</p></section>
+        <section class="dew-order-detail-section"><h3>Payment & fulfilment</h3><label class="dew-order-field">Payment status<select id="dewOrderPayment"><option ${payment(o)==='Unpaid (COD)'?'selected':''}>Unpaid (COD)</option><option ${payment(o)==='Awaiting InstaPay payment'?'selected':''}>Awaiting InstaPay payment</option><option ${payment(o)==='Paid'?'selected':''}>Paid</option></select></label><label class="dew-order-field">Fulfilment status<select id="dewOrderFulfillment"><option ${fulfillment(o)==='Pending'?'selected':''}>Pending</option><option ${fulfillment(o)==='Processing'?'selected':''}>Processing</option><option ${fulfillment(o)==='Shipped'?'selected':''}>Shipped</option><option ${fulfillment(o)==='Delivered'?'selected':''}>Delivered</option><option ${fulfillment(o)==='Cancelled'?'selected':''}>Cancelled</option></select></label><label class="dew-order-field">Tracking number<input id="dewOrderTracking" value="${esc(o.trackingNumber||'')}" placeholder="Add tracking number"></label><button class="btn" id="dewSaveOrderStatus">Save order updates</button></section>
+        <section class="dew-order-detail-section"><h3>Order notes</h3><p class="note">Private notes for your team. Customers cannot see these.</p><textarea id="orderNote" rows="3" placeholder="Add a note about this order...">${esc(o.note||'')}</textarea><button class="btn ghost" id="saveOrderNote">Save note</button></section>
+        <button class="btn ghost dew-order-delete" id="dewDeleteOrder">Delete order</button>
+      </div>`);
+    $('#saveOrderNote').onclick=()=>{o.note=$('#orderNote').value.trim();saveOrders('Save note for '+o.number).then(()=>{closeModal();toast('Order note saved.');});};
+    $('#dewSaveOrderStatus').onclick=()=>{o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();saveOrders('Update '+o.number).then(()=>{closeModal();orders();toast('Order updated.');});};
+    $('#mCloseBtn').onclick=closeModal;
+    $('#dewDeleteOrder').onclick=()=>{
+      if(!confirm('Delete this order record?')) return;
+      fetch(ADMIN_API+'/api/orders/'+encodeURIComponent(o.number),{method:'DELETE',headers:{Authorization:'Bearer '+adminToken()}})
+       .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not delete order');ordersList.splice(idx,1);closeModal();orders();toast('Order deleted.');})
+       .catch(err=>toast(err.message,true));
     };
-    $('#mCloseBtn').onclick = closeModal;
-  });
-
-  document.querySelectorAll('[data-delord]').forEach(btn=>btn.onclick=()=>{
-   if(confirm('Delete this order record?')){
-    const order=ordersList[btn.dataset.delord];
-    fetch(ADMIN_API+'/api/orders/'+encodeURIComponent(order.number),{method:'DELETE',headers:{Authorization:'Bearer '+adminToken()}})
-     .then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not delete order');ordersList.splice(btn.dataset.delord,1);render();toast('Order deleted.')})
-     .catch(err=>toast(err.message,true));
-   }
-  });
+  }
 }
 
 /* ---------- discounts ---------- */
