@@ -2444,3 +2444,44 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-hero-fullbleed.hero-copy-y-top>.dew-hero-copy{margin-top:0!important}
 .dew-hero-fullbleed.hero-copy-y-bottom>.dew-hero-copy{margin-top:auto!important}
 @media(max-width:760px){.dew-hero.dew-hero-fullbleed{align-items:flex-end!important;justify-content:center!important}.dew-hero-fullbleed>.dew-hero-copy{flex:0 1 100%!important;width:100%!important;text-align:inherit!important}.dew-hero-fullbleed.hero-copy-x-left{justify-content:flex-start!important}.dew-hero-fullbleed.hero-copy-x-center{justify-content:center!important}.dew-hero-fullbleed.hero-copy-x-right{justify-content:flex-end!important}.dew-hero-fullbleed.hero-copy-y-top{align-items:flex-start!important}.dew-hero-fullbleed.hero-copy-y-middle{align-items:center!important}.dew-hero-fullbleed.hero-copy-y-bottom{align-items:flex-end!important}.dew-hero-fullbleed.hero-copy-x-right>.dew-hero-copy{background:transparent!important}.dew-hero-fullbleed.hero-copy-x-center>.dew-hero-copy{background:transparent!important}.dew-hero-fullbleed.hero-copy-x-center .dew-hero-button-row{justify-content:center!important}.dew-hero-fullbleed.hero-copy-x-right .dew-hero-button-row{justify-content:flex-end!important}}
+
+
+/* Homepage collections styled to match the featured product cards */
+.dew-collection-tiles{align-items:stretch}
+.dew-collection-tile{min-width:0;background:transparent}
+.dew-collection-tile-link{display:block;color:inherit;text-decoration:none}
+.dew-collection-tiles .dew-product-photo{height:auto;aspect-ratio:1/1;overflow:hidden;background:#edf1e9}
+.dew-collection-tiles .dew-product-photo>picture{display:block;width:100%;height:100%}
+.dew-collection-tiles .dew-product-photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.dew-collection-tile:hover .dew-product-photo img{transform:scale(1.045)}
+.dew-collection-tile .dew-product-info{padding:15px 8px 10px}
+.dew-collection-tile .dew-product-info h3{font-family:"Playfair Display",Georgia,serif;font-size:clamp(15px,1.3vw,19px);font-weight:500;min-height:0;margin:0 0 10px;color:var(--dew-ink)}
+.dew-collection-tile-link-label{display:inline-flex;align-items:center;gap:8px;color:var(--dew-green);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.dew-collection-tile-link-label b{display:inline-grid;place-items:center;width:20px;height:20px;border:1px solid rgba(28,82,78,.28);border-radius:50%;font-size:12px;transition:transform .2s,background .2s,color .2s}
+.dew-collection-tile:hover .dew-collection-tile-link-label b{transform:translate(2px,-2px);background:var(--dew-green);color:#fff}
+.dew-products-view-all{display:flex;justify-content:center;margin:32px 0 0}
+.dew-view-all-button{display:inline-flex;align-items:center;gap:24px;padding:8px 9px 8px 25px;border-radius:999px;background:var(--dew-green);color:#fff;text-decoration:none;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 8px 22px rgba(28,82,78,.16);transition:transform .22s,box-shadow .22s,background .22s}
+.dew-view-all-button b{display:grid;place-items:center;width:36px;height:36px;border-radius:50%;background:#fff;color:var(--dew-green);font-size:17px;transition:transform .22s}
+.dew-view-all-button:hover{transform:translateY(-3px);box-shadow:0 13px 28px rgba(28,82,78,.23);background:#143f3c}
+.dew-view-all-button:hover b{transform:rotate(45deg)}
+.collections-page-header{display:flex;justify-content:space-between;gap:24px;padding:0 clamp(18px,5vw,76px)}
+.collections-page-header .dew-logo{flex:none}
+.collections-page-header nav{display:flex;gap:24px}
+.collections-page-header nav a,.dew-back-home{color:var(--dew-green);text-decoration:none;font-size:12px}
+.dew-back-home{border:1px solid rgba(28,82,78,.25);border-radius:999px;padding:10px 16px}
+.dew-all-collections{min-height:60vh;padding-top:65px;padding-bottom:80px}
+.dew-all-collections .dew-section-head h1{font:500 clamp(32px,4vw,48px)/1.15 "Playfair Display",Georgia,serif;color:var(--dew-green);margin:10px 0}
+.dew-all-collections .dew-section-head p{font-size:13px;color:#718078}
+.dew-collections-empty{text-align:center;padding:45px 0;color:#718078}
+@media(max-width:760px){
+ .collections-page-header{height:auto;min-height:66px;padding:12px 16px;gap:10px;flex-wrap:wrap}
+ .collections-page-header nav{display:none}
+ .collections-page-header .dew-logo{font-size:28px}
+ .dew-all-collections{padding-top:38px;padding-bottom:55px}
+ .dew-collection-tile .dew-product-info{padding:10px 2px 8px}
+ .dew-collection-tile .dew-product-info h3{font-size:14px;margin-bottom:7px}
+ .dew-collection-tile-link-label{font-size:8px;gap:5px}
+ .dew-collection-tile-link-label b{width:18px;height:18px}
+ .dew-products-view-all{margin-top:23px}
+ .dew-view-all-button{gap:17px;padding-left:20px}
+}
