@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas = [];
 
 (async function () {
-  try { S = await (await fetch('products.json?v=' + Date.now())).json(); }
+  try { S = await (await fetch('products.json',{cache:'no-cache'})).json(); }
   catch { $('#sumBody').innerHTML = '<p class="note">Could not load the shop. Please refresh.</p>'; return; }
   S.products = S.products.filter(p => p.visible);
   if (!S.discounts) S.discounts = [];
