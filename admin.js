@@ -789,9 +789,12 @@ function orders() {
     }
     list.innerHTML=filtered.map(({o,idx})=>`
       <article class="dew-order-card" data-open-order="${idx}">
-        <div class="dew-order-card-top"><div><b class="dew-order-number">${esc(o.number || 'Order')}</b><span class="dew-order-date">${dateText(o.date)} · ${timeText(o.date)}</span></div><b class="dew-order-total">${money(o.total)}</b></div>
-        <div class="dew-order-customer"><span class="dew-order-avatar">${esc((customerName(o).trim()[0]||'G').toUpperCase())}</span><div><b>${esc(customerName(o))}</b><small>${esc(o.customer?.phone || 'No phone number')}</small></div></div>
-        <div class="dew-order-card-bottom"><div class="dew-order-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div><span class="dew-order-open">View order <span>›</span></span></div>
+        <div class="dew-order-cell dew-order-number-cell"><span class="dew-order-cell-label">Order</span><b class="dew-order-number">${esc(o.number || 'Order')}</b></div>
+        <div class="dew-order-cell dew-order-date-cell"><span class="dew-order-cell-label">Date</span><b class="dew-order-date">${dateText(o.date)}</b><small class="dew-order-time">${timeText(o.date)}</small></div>
+        <div class="dew-order-customer"><span class="dew-order-avatar">${esc((customerName(o).trim()[0]||'G').toUpperCase())}</span><div><span class="dew-order-cell-label">Customer</span><b>${esc(customerName(o))}</b><small>${esc(o.customer?.phone || 'No phone number')}</small></div></div>
+        <div class="dew-order-cell dew-order-total-cell"><span class="dew-order-cell-label">Total</span><b class="dew-order-total">${money(o.total)}</b></div>
+        <div class="dew-order-cell dew-order-status-cell"><span class="dew-order-cell-label">Status</span><div class="dew-order-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div></div>
+        <div class="dew-order-open">View <span>›</span></div>
       </article>`).join('');
     list.querySelectorAll('[data-open-order]').forEach(card=>card.onclick=()=>openOrder(Number(card.dataset.openOrder)));
   }
