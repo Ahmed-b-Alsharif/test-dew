@@ -88,3 +88,5 @@ jobs:
           path: dew-iphone-app/build/DewAdmin-unsigned.ipa
           if-no-files-found: error
           retention-days: 14
+
+# Rebuild with compact iPhone sizing and separated order/customer/product cards.
