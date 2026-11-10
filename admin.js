@@ -167,7 +167,7 @@ function render() {
         <div class="sidebar-bottom"><span class="status-dot"></span><span><b>Store connected</b><small>GitHub sync enabled</small></span></div>
       </aside>
       <main class="admin-main">
-        <header class="admin-topbar"><div><div class="admin-eyebrow">DEW SKINCARE / ADMIN</div><h1>${tab==='more'?'Menu':(names[tab]||'Overview')}</h1></div><div class="top-actions"><a class="admin-view-store" href="./" target="_blank">View storefront ↗</a><button class="admin-signout" id="out">Sign out</button></div></header>
+        <header class="admin-topbar"><div><div class="admin-eyebrow">DEW SKINCARE / ADMIN</div><h1>${tab==='more'?'Menu':(names[tab]||'Overview')}</h1></div><div class="top-actions"><a class="admin-view-store" href="https://dewskincaree.com/" target="_blank" rel="noopener noreferrer">View storefront ↗</a><button class="admin-signout" id="out">Sign out</button></div></header>
         <section class="admin-content" id="view"></section>
       </main>
       ${mobileNav}
@@ -937,7 +937,7 @@ function more() {
   ];
   $('#view').innerHTML = `<div class="app-menu-intro"><span class="admin-eyebrow">DEW STORE MANAGEMENT</span><h2>Everything in one place</h2><p>Manage your storefront and business from your phone.</p></div>
     <div class="app-menu-grid">${items.map(([key,title,desc,icon])=>`<button class="app-menu-item" data-t="${key}"><span class="app-menu-icon">${icon}</span><span class="app-menu-copy"><b>${title}</b><small>${desc}</small></span><span class="app-menu-arrow">›</span></button>`).join('')}</div>
-    <a class="app-storefront-link" href="./" target="_blank">View customer storefront ↗</a>
+    <a class="app-storefront-link" href="https://dewskincaree.com/" target="_blank" rel="noopener noreferrer">View customer storefront ↗</a>
     <button class="app-signout-link" id="appOut">Sign out of Dew Admin</button>`;
   document.querySelectorAll('.app-menu-item[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
   $('#appOut').onclick=$('#out').onclick;
