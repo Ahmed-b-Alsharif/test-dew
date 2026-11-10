@@ -287,7 +287,15 @@
         "dbb95a5d",
         "5082f6d9",
         "3cf25ab8"
-      ]
+      ],
+      "desktopImage": "",
+      "mobileImage": "",
+      "homepageSection": {
+        "show": true,
+        "limit": 4,
+        "showViewAll": true,
+        "viewAllText": "View all Lip Care"
+      }
     },
     {
       "id": "06c30362",
