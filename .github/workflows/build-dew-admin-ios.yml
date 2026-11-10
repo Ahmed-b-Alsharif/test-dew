@@ -1,5 +1,5 @@
 name: Build Dew Admin iPhone IPA
-# Rebuild after mobile full-width layout and safe-area improvements
+# Rebuild after mobile full-width layout, safe-area and device-responsive sizing improvements
 
 on:
   push:
