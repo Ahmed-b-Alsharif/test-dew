@@ -4,7 +4,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 (async()=>{
  const root=$('#pageApp');
  try{
-  const S=await(await fetch('products.json?v='+Date.now())).json(),slug=new URLSearchParams(location.search).get('slug');
+  const S=await(await fetch('products.json',{cache:'no-cache'})).json(),slug=new URLSearchParams(location.search).get('slug');
   const p=(S.pages||[]).find(x=>x.slug===slug&&x.published);
   if(!p){root.innerHTML='<main class="content-page"><h1>Page not found</h1><p>This page is unavailable.</p><a href="./">Return to Dew Skincare</a></main>';return;}
   const H=S.settings?.homepage||{},header=H.header||{},footer=H.footer||{},settings=S.settings||{};
