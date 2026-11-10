@@ -266,7 +266,7 @@
       "mobileImage": "",
       "homepageSection": {
         "show": true,
-        "limit": 5,
+        "limit": 4,
         "showViewAll": true,
         "viewAllText": "View all"
       }
