@@ -2,6 +2,8 @@ const $ = s => document.querySelector(s);
 let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = (() => { try { return sessionStorage.getItem('dew_admin_tab') || 'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve();
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
+const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
+if (isNativeApp) document.documentElement.classList.add('dew-native-app');
 
 /* ---------- base64 helpers ---------- */
 const enc = s => { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); };
@@ -150,6 +152,12 @@ function render() {
   try { sessionStorage.setItem('dew_admin_tab',tab); } catch {}
   const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
+  const mobileNav = isNativeApp ? `<nav class="app-bottom-nav" aria-label="Main navigation">
+    <button class="app-tab ${tab==='overview'?'active':''}" data-t="overview"><span class="app-tab-icon">⌂</span><span>Home</span></button>
+    <button class="app-tab ${tab==='orders'?'active':''}" data-t="orders"><span class="app-tab-icon">▤</span><span>Orders</span>${ordersList.length?`<i>${ordersList.length}</i>`:''}</button>
+    <button class="app-tab ${tab==='products'?'active':''}" data-t="products"><span class="app-tab-icon">◇</span><span>Products</span></button>
+    <button class="app-tab ${tab==='more' || !['overview','orders','products'].includes(tab)?'active':''}" data-t="more"><span class="app-tab-icon">☰</span><span>Menu</span></button>
+  </nav>` : '';
   $('#app').innerHTML = `
     <div class="admin-shell">
       <aside class="admin-sidebar">
@@ -159,13 +167,14 @@ function render() {
         <div class="sidebar-bottom"><span class="status-dot"></span><span><b>Store connected</b><small>GitHub sync enabled</small></span></div>
       </aside>
       <main class="admin-main">
-        <header class="admin-topbar"><div><div class="admin-eyebrow">DEW SKINCARE / ADMIN</div><h1>${names[tab]||'Overview'}</h1></div><div class="top-actions"><a class="admin-view-store" href="./" target="_blank">View storefront ↗</a><button class="admin-signout" id="out">Sign out</button></div></header>
+        <header class="admin-topbar"><div><div class="admin-eyebrow">DEW SKINCARE / ADMIN</div><h1>${tab==='more'?'Menu':(names[tab]||'Overview')}</h1></div><div class="top-actions"><a class="admin-view-store" href="./" target="_blank">View storefront ↗</a><button class="admin-signout" id="out">Sign out</button></div></header>
         <section class="admin-content" id="view"></section>
       </main>
+      ${mobileNav}
     </div>`;
-  document.querySelectorAll('.side-link[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
   $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
-  ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help })[tab]();
+  ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -911,6 +920,26 @@ function store() {
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
     save('Update store settings').then(()=>{ toast('Store settings saved.'); });
   };
+}
+
+/* ---------- mobile app menu ---------- */
+function more() {
+  const items = [
+    ['homepage','Theme & appearance','Edit homepage sections, banners, colours, logo and product-page layout','◈'],
+    ['pages','Pages','Create and edit store pages','▧'],
+    ['catalogs','Collections','Organize products into collections','◇'],
+    ['media','Media library','Manage uploaded store images','▣'],
+    ['customers','Customers','View customer details and order history','♙'],
+    ['inventory','Inventory','Update stock quantities','▤'],
+    ['discounts','Discounts','Create and manage promo codes','%'],
+    ['store','Store settings','Payments, delivery areas, contact details and notifications','⚙'],
+    ['help','Help & information','How your Dew store works','?']
+  ];
+  $('#view').innerHTML = `<div class="app-menu-intro"><span class="admin-eyebrow">DEW STORE MANAGEMENT</span><h2>Everything in one place</h2><p>Manage your storefront and business from your phone.</p></div>
+    <div class="app-menu-grid">${items.map(([key,title,desc,icon])=>`<button class="app-menu-item" data-t="${key}"><span class="app-menu-icon">${icon}</span><span class="app-menu-copy"><b>${title}</b><small>${desc}</small></span><span class="app-menu-arrow">›</span></button>`).join('')}</div>
+    <a class="app-storefront-link" href="./" target="_blank">View customer storefront ↗</a>
+    <button class="app-signout-link" id="appOut">Sign out of Dew Admin</button>`;
+  $('#appOut').onclick=$('#out').onclick;
 }
 
 /* ---------- help ---------- */
