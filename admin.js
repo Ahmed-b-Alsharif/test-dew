@@ -405,7 +405,7 @@ function customers() {
   const filtered=rows.filter(c=>!q||((c.first||'')+' '+(c.last||'')+' '+(c.phone||'')).toLowerCase().includes(q.toLowerCase()));
   $('#view').innerHTML=`<div class="page-heading"><div><h2>Customers</h2><p>Customer profiles and purchase history from your saved orders.</p></div><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="admin-count">${rows.length} customers</span><button class="admin-view-store" id="exportCustomers">Export Excel</button></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search by customer name or phone"></div><span class="shopify-muted">${filtered.length} shown</span></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered.map((c,i)=>`<tr><td><b>${esc((c.first||'')+' '+(c.last||''))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers match your search yet.</td></tr>'}</tbody></table></div></div>`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   const search=$('#q');search.oninput=()=>{q=search.value;const pos=search.selectionStart;customers();$('#q').focus();$('#q').setSelectionRange(pos,pos);};
   document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>{
@@ -416,7 +416,7 @@ function customers() {
 }
 function inventory() {
   const rows=D.products.slice().sort((a,b)=>Number(a.stock||0)-Number(b.stock||0));
-  $('#view').innerHTML=`<div class="page-heading"><div><h2>Inventory</h2><p>Keep track of available stock for every product.</p></div><span class="admin-count">${rows.reduce((n,p)=>n+Number(p.stock||0),0)} units in stock</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Available</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</td><td><input class="stock-input" type="number" min="0" value="${Number(p.stock||0)}" data-inv="${p.id}"></td><td><span class="stock-status ${p.stock<=0?'out':p.stock<=5?'low':''}">${p.stock<=0?'Out of stock':p.stock<=5?'Low stock':'In stock'}</span></td><td><button class="text-link" data-edit-inv="${p.id}">Edit product</button></td></tr>`).join('')}</tbody></table></div></div>`;
+  $('#view').innerHTML=`<div class="page-heading"><div><h2>Inventory</h2><p>Keep track of available stock for every product.</p></div><span class="admin-count">${rows.reduce((n,p)=>n+Number(p.stock||0),0)} units in stock</span></div><div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="inventory-mobile-table"><thead><tr><th>Product</th><th>Price</th><th>Available</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(p=>`<tr><td><b>${esc(p.name)}</b></td><td>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</td><td><input class="stock-input" type="number" min="0" value="${Number(p.stock||0)}" data-inv="${p.id}"></td><td><span class="stock-status ${p.stock<=0?'out':p.stock<=5?'low':''}">${p.stock<=0?'Out of stock':p.stock<=5?'Low stock':'In stock'}</span></td><td><button class="text-link" data-edit-inv="${p.id}">Edit product</button></td></tr>`).join('')}</tbody></table></div></div>`;
   document.querySelectorAll('[data-inv]').forEach(el=>el.onchange=()=>{const p=D.products.find(x=>x.id===el.dataset.inv);p.stock=Math.max(0,Math.floor(Number(el.value)||0));save('Update inventory for '+p.name);inventory();});
   document.querySelectorAll('[data-edit-inv]').forEach(b=>b.onclick=()=>productForm(b.dataset.editInv));}
 /* ---------- products ---------- */
@@ -430,7 +430,7 @@ function products() {
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name or tag"></div><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><span class="shopify-muted">${list.length} products</span></div></div>
-    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
+    <div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
     ${list.map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td>
       <td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td>
       <td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b>${p.salePrice>0&&p.salePrice<p.price?`<small class="old-price">${egp(p.price)}</small>`:''}</td>
@@ -736,7 +736,7 @@ function catForm(id) {
 function orders() {
   $('#view').innerHTML = `<h2>Orders (${ordersList.length})</h2>
     <p class="note">View and manage customer orders, payment status, fulfillment, and tracking numbers.</p>
-    <div class="scroll"><table>
+    <div class="scroll"><table class="orders-mobile-table">
       <tr><th>Order #</th><th>Date</th><th>Time</th><th>Customer</th><th>Total</th><th>Payment</th><th>Fulfillment</th><th>Tracking #</th><th></th></tr>
       ${ordersList.length ? ordersList.map((o, idx) => `<tr>
         <td><b>${esc(o.number)}</b></td>
@@ -815,7 +815,7 @@ function discounts() {
   if (!D.discounts) D.discounts = [];
   $('#view').innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center"><h2>Promo Codes & Discounts</h2><button class="btn red" id="newDisc">+ New promo code</button></div>
     <p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p>
-    <div class="scroll"><table><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>    ${D.discounts.map(d => `<tr>
+    <div class="scroll"><table class="discounts-mobile-table"><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>    ${D.discounts.map(d => `<tr>
       <td><b>${esc(d.code)}</b></td>
       <td>${d.type === 'percentage' ? 'Percentage (%)' : d.type === 'fixed' ? 'Fixed amount (EGP)' : 'Free Shipping'}</td>      <td>${d.type === 'percentage' ? d.value + '%' : d.type === 'fixed' ? egp(d.value) : 'Free delivery'}</td>
       <td>${d.minSpend ? egp(d.minSpend) : 'None'}</td>
