@@ -1857,3 +1857,6 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-native-app .admin-content .table-actions{display:flex;flex-wrap:wrap;gap:8px}
  .dew-native-app .admin-content .table-actions button{min-height:38px}
 }
+
+/* The sticky admin header itself owns the iPhone top inset; do not add it twice. */
+.dew-native-app .admin-main{padding-top:0!important}
