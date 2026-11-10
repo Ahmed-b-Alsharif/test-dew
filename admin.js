@@ -172,7 +172,7 @@ function render() {
       </main>
       ${mobileNav}
     </div>`;
-  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { closeModal(); tab=b.dataset.t; q=''; render(); });
   $('#out').onclick=async()=>{const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
   ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
 }
@@ -455,10 +455,11 @@ function products() {
   $('#importProducts').onclick=()=>$('#productExcelFile').click();
   $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
   const draw=()=>{const rows=list();const el=$('#dewProductList');if(el)el.innerHTML=rows.map(p=>`
-    <article class="dew-product-card"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';};
+    <article class="dew-product-card" data-open-product="${esc(p.id)}" role="button" tabindex="0" aria-label="Edit ${esc(p.name)}"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';};
   const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
   document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
-  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
+  document.querySelectorAll('[data-e]').forEach(b=>b.onclick=e=>{e.stopPropagation();productForm(b.dataset.e);});
+  document.querySelectorAll('[data-open-product]').forEach(card=>{const open=()=>productForm(card.dataset.openProduct);card.onclick=open;card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};});
   if(native)draw();
 }
 function productForm(id) {
@@ -1033,6 +1034,32 @@ function help() {
     <p>The storefront is hosted on GitHub Pages. Customer orders are saved to the private Cloudflare D1 database after the Orders API is connected in Store Settings. Telegram notifications can be sent through your existing proxy URL or directly through your bot credentials stored as Cloudflare secrets.</p>
     <p><b>Orders</b> appear here after checkout receives confirmation that the backend saved them. You can update payment status, fulfillment status, and tracking numbers from this page.</p>
     <p><b>Promo Codes</b> can be created in the Discounts tab and applied by customers at checkout.</p></div>`;
+}
+
+/* ---------- native app pull-to-refresh ---------- */
+if (isNativeApp) {
+  let pullStartY=0, pullStartX=0, pullActive=false, refreshing=false;
+  const pullThreshold=115;
+  document.addEventListener('touchstart',e=>{
+    if(refreshing||!e.touches?.length)return;
+    const scroller=document.scrollingElement||document.documentElement;
+    if(scroller.scrollTop>0)return;
+    pullStartY=e.touches[0].clientY;pullStartX=e.touches[0].clientX;pullActive=true;
+  },{passive:true});
+  document.addEventListener('touchmove',e=>{
+    if(!pullActive||refreshing||!e.touches?.length)return;
+    const dy=e.touches[0].clientY-pullStartY,dx=e.touches[0].clientX-pullStartX;
+    if(Math.abs(dx)>Math.abs(dy)||dy<0){pullActive=false;return;}
+    if(dy>pullThreshold){
+      pullActive=false;refreshing=true;
+      toast('Refreshing Dew Admin…');
+      loadData().then(()=>{render();toast('Admin refreshed.');})
+        .catch(err=>toast(err.message||'Could not refresh Admin.',true))
+        .finally(()=>{refreshing=false;});
+    }
+  },{passive:true});
+  document.addEventListener('touchend',()=>{pullActive=false;},{passive:true});
+  document.addEventListener('touchcancel',()=>{pullActive=false;},{passive:true});
 }
 
 start();
