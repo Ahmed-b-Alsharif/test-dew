@@ -2371,3 +2371,53 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   dialog.dew-mobile-menu .dew-mobile-menu-head{flex:none}
   dialog.dew-mobile-menu nav{flex:1;overflow-y:auto}
 }
+
+
+/* Homepage full-width responsive hero image */
+.dew-hero.dew-hero-fullbleed{
+  position:relative!important;display:flex!important;align-items:center!important;
+  width:100%!important;min-height:clamp(480px,55vw,680px)!important;
+  overflow:hidden!important;isolation:isolate;background:#e8ecdf;
+}
+.dew-hero-fullbleed>.dew-hero-art{
+  position:absolute!important;inset:0!important;z-index:-2!important;
+  width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;
+}
+.dew-hero-fullbleed>.dew-hero-art:after{display:none!important}
+.dew-hero-fullbleed>.dew-hero-art img,
+.dew-hero-fullbleed>.dew-hero-art>.dew-placeholder{
+  display:block!important;width:100%!important;height:100%!important;
+  min-height:0!important;max-height:none!important;object-fit:cover!important;
+  object-position:center center!important;
+}
+.dew-hero-fullbleed>.dew-hero-copy{
+  position:relative!important;z-index:1!important;width:min(52%,680px)!important;
+  padding:clamp(38px,7vw,100px)!important;margin:0!important;
+  background:linear-gradient(90deg,rgba(251,248,241,.96),rgba(251,248,241,.82) 72%,rgba(251,248,241,0))!important;
+}
+.dew-hero-fullbleed .dew-hero-button-row{margin-top:22px!important}
+@media(max-width:760px){
+  .dew-hero.dew-hero-fullbleed{
+    display:flex!important;align-items:flex-end!important;min-height:0!important;
+    height:min(78svh,680px)!important;height:min(78vh,680px)!important;width:100%!important;
+  }
+  .dew-hero-fullbleed>.dew-hero-art{inset:0!important}
+  .dew-hero-fullbleed>.dew-hero-art img,
+  .dew-hero-fullbleed>.dew-hero-art>.dew-placeholder{
+    width:100%!important;height:100%!important;min-height:0!important;
+    aspect-ratio:auto!important;object-fit:cover!important;object-position:center 42%!important;
+  }
+  .dew-hero-fullbleed:before{
+    content:"";position:absolute;inset:0;z-index:-1;
+    background:linear-gradient(0deg,rgba(16,39,31,.84) 0%,rgba(16,39,31,.38) 46%,rgba(16,39,31,0) 80%);
+    pointer-events:none;
+  }
+  .dew-hero-fullbleed>.dew-hero-copy{
+    width:100%!important;max-width:none!important;padding:34px 22px 38px!important;
+    margin:0!important;background:transparent!important;color:#fff!important;
+  }
+  .dew-hero-fullbleed .dew-kicker,.dew-hero-fullbleed h1,.dew-hero-fullbleed p{color:#fff!important}
+  .dew-hero-fullbleed h1{font-size:clamp(36px,10vw,52px)!important;margin:12px 0!important}
+  .dew-hero-fullbleed p{font-size:14px!important;line-height:1.65!important;max-width:34ch!important;margin-bottom:18px!important}
+  .dew-hero-fullbleed .dew-btn{background:#fff!important;color:var(--dew-green)!important;border-color:#fff!important}
+}
