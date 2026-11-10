@@ -38,5 +38,6 @@
    document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
   }
  }
+ const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-2';css.dataset.dewStorefrontStyles='true';document.head.append(css);
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
