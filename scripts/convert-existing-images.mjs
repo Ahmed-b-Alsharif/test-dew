@@ -39,8 +39,8 @@ function hash(value) {
 async function convert(input, destination) {
   await sharp(input, { failOn: "error", limitInputPixels: 100000000 })
     .rotate()
-    .resize({ width: 2400, height: 2400, fit: "inside", withoutEnlargement: true })
-    .webp({ quality: 82, effort: 6, smartSubsample: true })
+    .resize({ width: 1800, height: 1800, fit: "inside", withoutEnlargement: true })
+    .webp({ quality: 80, effort: 6, smartSubsample: true })
     .toFile(destination);
   const stat = await fs.stat(destination);
   if (!stat.size) throw new Error("Empty WebP output: " + destination);
