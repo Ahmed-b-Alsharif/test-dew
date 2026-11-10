@@ -42,6 +42,10 @@ jobs:
           npx cap init "Dew Admin" "com.dewskincare.admin" --web-dir=www
           npx cap add ios
           npx cap sync ios
+          npm install --no-save sharp
+          mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset
+          cp ../ios-assets/Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
+          node -e "require('sharp')('../ios-assets/dew-app-icon.svg').resize(1024,1024).png().toFile('ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon.png')"
 
       - name: Build unsigned iOS app
         shell: bash
