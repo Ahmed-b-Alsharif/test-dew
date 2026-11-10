@@ -2000,3 +2000,58 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-native-app .dew-order-field input,.dew-native-app .dew-order-field select,.dew-native-app #orderNote{width:100%;box-sizing:border-box;min-height:38px;border:1px solid #dce5dd;border-radius:8px;padding:8px 10px;background:#fff;font-size:12px}
  .dew-native-app .dew-order-delete{color:#a23f39!important;width:100%;margin:4px 0 10px}
 }
+
+
+/* Compact Shopify-inspired native app layouts for Products, Customers and Discounts. */
+@media(max-width:699px){
+ .dew-native-app .shopify-page-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:9px!important;margin:0 0 12px!important}
+ .dew-native-app .shopify-page-head h2{font-size:21px!important;line-height:1.2!important;margin:0 0 3px!important}
+ .dew-native-app .shopify-page-head p{font-size:10.5px!important;line-height:1.35!important;margin:0!important}
+ .dew-native-app .shopify-page-head .admin-primary,.dew-native-app .shopify-page-head .admin-view-store{white-space:nowrap!important;min-height:34px!important;padding:7px 10px!important;font-size:10.5px!important}
+ .dew-native-app .shopify-metrics{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important;margin:0 0 11px!important}
+ .dew-native-app .shopify-metrics>div{min-width:0!important;padding:9px 8px!important;border:1px solid #e1e8e2!important;border-radius:10px!important;background:#fff!important}
+ .dew-native-app .shopify-metrics span{display:block!important;font-size:9.5px!important;color:#77837b!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+ .dew-native-app .shopify-metrics b{display:block!important;font-size:17px!important;line-height:1.25!important;margin-top:3px!important;color:#173e2c!important}
+ .dew-native-app .shopify-toolbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:9px!important;margin-bottom:9px!important;border:1px solid #e2e8e3!important;border-radius:11px!important;background:#fff!important}
+ .dew-native-app .shopify-search{width:100%!important;min-height:36px!important;box-sizing:border-box!important}
+ .dew-native-app .shopify-search input{font-size:12px!important}
+ .dew-native-app .dew-mobile-toolbar-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+ .dew-native-app .dew-mobile-toolbar-actions button{font-size:10px!important;min-height:30px!important;padding:5px 8px!important}
+ .dew-native-app .dew-mobile-toolbar-actions .shopify-muted{margin-left:auto!important;font-size:10px!important}
+ .dew-native-app .dew-mobile-filter-row{display:flex;gap:6px;overflow-x:auto;padding:1px 0 10px;scrollbar-width:none}
+ .dew-native-app .dew-mobile-filter{border:1px solid #dfe7e0!important;border-radius:20px!important;background:#fff!important;color:#526158!important;padding:6px 12px!important;min-height:30px!important;font-size:10.5px!important;white-space:nowrap}
+ .dew-native-app .dew-mobile-filter.active{background:#1c524e!important;border-color:#1c524e!important;color:#fff!important}
+ .dew-native-app .dew-product-list,.dew-native-app .dew-customer-list,.dew-native-app .dew-discount-list{display:flex;flex-direction:column;gap:8px}
+ .dew-native-app .dew-product-card{display:flex;align-items:center;gap:10px;min-width:0;padding:9px!important;background:#fff;border:1px solid #e1e8e2;border-radius:12px;box-shadow:0 1px 4px rgba(18,58,41,.04)}
+ .dew-native-app .dew-product-image{width:58px;height:58px;flex:0 0 58px;border-radius:9px;overflow:hidden;background:#f3f5f2;display:grid;place-items:center;color:#1c524e;font-size:11px;font-weight:800}
+ .dew-native-app .dew-product-image img{width:100%;height:100%;object-fit:cover}
+ .dew-native-app .dew-product-info{display:flex;flex:1;min-width:0;flex-direction:column;align-items:flex-start;gap:3px}
+ .dew-native-app .dew-product-info>b{font-size:12px!important;line-height:1.25!important;color:#24352a}
+ .dew-native-app .dew-product-info>strong{font-size:12px!important;color:#183e2c}
+ .dew-native-app .dew-product-info>small{font-size:9.5px!important;color:#7c8980;line-height:1.2}
+ .dew-native-app .dew-product-status{display:inline-flex;align-items:center;border-radius:20px;padding:3px 7px;font-size:9px!important;font-weight:700}
+ .dew-native-app .dew-product-status.active{background:#e8f4eb;color:#23623a}
+ .dew-native-app .dew-product-status.draft{background:#f0f1ef;color:#68736b}
+ .dew-native-app .dew-product-featured{color:#1c524e!important;font-weight:700}
+ .dew-native-app .dew-card-more{width:28px;min-width:28px!important;min-height:32px!important;padding:0!important;background:transparent!important;color:#607168!important;font-size:23px!important}
+ .dew-native-app .dew-customer-card{display:flex;align-items:center;gap:9px;width:100%;min-width:0;text-align:left;padding:10px!important;background:#fff;border:1px solid #e1e8e2;border-radius:12px;color:#26362c}
+ .dew-native-app .dew-customer-avatar{width:35px;height:35px;flex:0 0 35px;border-radius:50%;display:grid;place-items:center;background:#eaf3ed;color:#1c524e;font-size:13px;font-weight:800}
+ .dew-native-app .dew-customer-main{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+ .dew-native-app .dew-customer-main b{font-size:11.5px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .dew-native-app .dew-customer-main small,.dew-native-app .dew-customer-spend small{font-size:9px!important;color:#7e8981}
+ .dew-native-app .dew-customer-spend{display:flex;flex-direction:column;align-items:flex-end;gap:3px;white-space:nowrap}
+ .dew-native-app .dew-customer-spend b{font-size:10.5px!important;color:#1c524e}
+ .dew-native-app .dew-card-chevron{font-size:19px;color:#89948d}
+ .dew-native-app .dew-discount-card{display:flex;align-items:flex-start;gap:9px;padding:11px!important;background:#fff;border:1px solid #e1e8e2;border-radius:12px}
+ .dew-native-app .dew-discount-icon{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:9px;background:#edf4ef;color:#1c524e;font-size:20px;font-weight:700}
+ .dew-native-app .dew-discount-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}
+ .dew-native-app .dew-discount-info>b{font-size:12px!important;letter-spacing:.4px}
+ .dew-native-app .dew-discount-info>strong{font-size:12px!important;color:#1c524e}
+ .dew-native-app .dew-discount-info>small{font-size:9.5px!important;color:#7d8980}
+ .dew-native-app .dew-discount-actions{display:flex;flex-direction:column;gap:3px;align-items:stretch}
+ .dew-native-app .dew-discount-actions button{min-height:26px!important;padding:4px 7px!important;font-size:9px!important;background:#f4f7f4!important;color:#355442!important;border-radius:7px!important}
+ .dew-native-app .dew-discount-actions button.danger{color:#a23f39!important;background:#fbefee!important}
+ .dew-native-app .dew-mobile-empty{padding:25px 14px;text-align:center;background:#fff;border:1px dashed #d8e2da;border-radius:12px;color:#7b877f;font-size:11px}
+ .dew-native-app .product-editor-layout{display:block!important}
+ .dew-native-app .product-editor-main,.dew-native-app .product-editor-side{width:100%!important;min-width:0!important}
+}
