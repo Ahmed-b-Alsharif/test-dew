@@ -17,5 +17,6 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
   '<article><span class="dew-kicker">DEW SKINCARE</span><h1>'+esc(p.title)+'</h1>'+(p.intro?'<p class="content-page-intro">'+esc(p.intro)+'</p>':'')+'<div class="content-page-body">'+String(p.content||'').split(/\n\s*\n/).map(t=>'<p>'+esc(t).replace(/\n/g,'<br>')+'</p>').join('')+'</div></article></main>'+
   '<footer class="dew-footer"><div><a class="dew-logo" href="./">'+esc(header.logo||settings.storeName||'Dew')+'</a><p>'+esc(footer.about||'Natural skincare, made with love in Egypt.')+'</p></div><nav>'+foot.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('')+'</nav><small>© '+new Date().getFullYear()+' '+esc(settings.storeName||'Dew Skincare')+'. '+esc(footer.copyright||'All rights reserved.')+'</small></footer>';
   if(p.seoDescription){let m=document.querySelector('meta[name="description"]');if(!m){m=document.createElement('meta');m.name='description';document.head.appendChild(m)}m.content=p.seoDescription;}
+  const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261110-1';document.body.appendChild(storefrontUI);
  }catch(e){console.error(e);root.innerHTML='<main class="content-page"><h1>Could not load this page</h1><a href="./">Return to store</a></main>';}
 })();
