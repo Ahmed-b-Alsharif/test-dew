@@ -103,5 +103,6 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
     updateVariant();
   });
   $('#addProduct').onclick=()=>addToCart(false);$('#buyNow').onclick=()=>addToCart(true);$('#openCart').onclick=open;$('#closeCart').onclick=close;$('#scrim').onclick=close;renderCart();
+  const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261110-1';document.body.appendChild(storefrontUI);
  }catch(e){console.error(e);root.innerHTML='<main class="product-page"><h2>Could not load this product.</h2><p>Please refresh and try again.</p><a href="./#shop">Back to shop</a></main>';}
 })();
