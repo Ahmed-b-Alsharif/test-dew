@@ -45,7 +45,21 @@ jobs:
           npm install --no-save sharp
           mkdir -p ios/App/App/Assets.xcassets/AppIcon.appiconset
           cp ../ios-assets/Contents.json ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
-          node -e "require('sharp')('../ios-assets/dew-app-icon.svg').resize(1024,1024).png().toFile('ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon.png')"
+          node - <<'NODE'
+          const sharp = require('sharp');
+          (async () => {
+            const target = 'ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon.png';
+            const png = await sharp('../ios-assets/dew-app-icon.svg').resize(1024,1024).png().toBuffer();
+            const image = await sharp(png).raw().toBuffer({ resolveWithObject: true });
+            const { data, info } = image;
+            const corner = [...data.slice(0, info.channels)];
+            if (info.width !== 1024 || info.height !== 1024 || corner[0] > 100 || corner[1] > 130 || corner[2] > 110) {
+              throw new Error('Dew app icon did not render correctly; corner pixel=' + corner.join(','));
+            }
+            require('fs').writeFileSync(target, png);
+            console.log('Verified Dew icon:', info.width + 'x' + info.height, 'corner RGB', corner.join(','), 'bytes', png.length);
+          })().catch(error => { console.error(error); process.exit(1); });
+NODE
 
       - name: Build unsigned iOS app
         shell: bash
