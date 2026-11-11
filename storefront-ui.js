@@ -77,3 +77,38 @@
  }
  setupStickyAnnouncementBar();
  ensureAnnouncementBar();
+
+/* Apply the same editable, continuously repeating announcement bar to every storefront page. */
+(()=>{
+ 'use strict';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let settingsPromise;
+ const loadSettings=()=>settingsPromise||(settingsPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}).then(x=>x.settings||{}));
+ const apply=async()=>{
+  try{
+   const settings=await loadSettings(),a=settings.homepage?.announcement||{};
+   let bar=document.querySelector('.dew-ann');
+   if(a.show===false){bar?.remove();return;}
+   const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).map(x=>String(x||'').trim()).filter(Boolean);
+   if(!messages.length){bar?.remove();return;}
+   const repeated=Array.from({length:32},()=>messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')).join('<i aria-hidden="true">✦</i>');
+   const group='<div class="dew-ann-group">'+repeated+'</div>';
+   const speed=['slow','fast'].includes(a.speed)?a.speed:'normal';
+   const html='<div class="dew-ann-group">'+repeated+'</div>';
+   const content='<div class="dew-ann-track">'+html+html+'</div>';
+   if(!bar){
+    bar=document.createElement('div');
+    const anchor=document.querySelector('.dew-header,.top');
+    const parent=anchor?.parentNode||document.body;
+    if(anchor)parent.insertBefore(bar,anchor);else parent.insertBefore(bar,parent.firstChild);
+   }
+   bar.className='dew-ann is-marquee speed-'+speed;
+   bar.innerHTML='<a href="'+esc(a.link||'./#shop')+'">'+content+'</a>';
+   bar.dataset.dewGlobalTicker='true';
+  }catch(e){/* Keep the page usable if store settings cannot be loaded. */}
+ };
+ let queued=false;
+ const schedule=()=>{if(queued)return;queued=true;Promise.resolve().then(()=>{queued=false;apply()})};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
+ new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
+})();
