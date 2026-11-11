@@ -2571,3 +2571,18 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   box-shadow:none!important;filter:none!important;
  }
 }
+
+/* Keep the announcement bar visible while scrolling; place the sticky header directly beneath it. */
+.dew-ann{position:sticky!important;top:0!important;z-index:75!important}
+.dew-header{top:var(--dew-ann-height,0px)!important;z-index:70!important}
+@media(max-width:760px){
+ .dew-ann{position:sticky!important;top:0!important;z-index:75!important}
+ .dew-header{top:var(--dew-ann-height,0px)!important;z-index:70!important}
+}
+/* Navigation link editor: one clean, full-width field per line. */
+.nav-link-editor{display:block;padding:14px;margin:10px 0;border:1px solid #e7ece6;border-radius:10px;background:#fbfcfa}
+.nav-link-editor>.editor-two-col{display:grid;grid-template-columns:minmax(0,1fr);gap:7px}
+.nav-link-editor .editor-field{min-width:0;margin:0 0 8px}
+.nav-link-editor .editor-field label{display:block;margin-bottom:5px;font-size:11px;font-weight:650;color:#40584b}
+.nav-link-editor .editor-field input{width:100%;min-width:0}
+.nav-link-editor .nav-link-actions{display:flex;align-items:center;justify-content:flex-start;gap:7px;margin-top:5px;padding-top:9px;border-top:1px solid #edf0eb}
