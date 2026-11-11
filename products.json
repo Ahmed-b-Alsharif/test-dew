@@ -301,16 +301,16 @@
         "5082f6d9",
         "3cf25ab8"
       ],
-      "desktopImage": "",
-      "mobileImage": "",
+      "desktopImage": "images/1794398498616-f2e27b37.webp",
+      "mobileImage": "images/1794398506619-3c1215c5.webp",
       "homepageSection": {
         "show": true,
         "limit": 5,
         "showViewAll": true,
         "viewAllText": "View all Lip Care"
       },
-      "mobileImageRemoved": true,
-      "desktopImageRemoved": true
+      "mobileImageRemoved": false,
+      "desktopImageRemoved": false
     },
     {
       "id": "06c30362",
