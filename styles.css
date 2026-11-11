@@ -2701,3 +2701,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* Centre compact three-product collection rows on laptop and desktop screens. */
 @media(min-width:761px){.dew-home-three-products .dew-products{grid-template-columns:repeat(3,minmax(0,260px));justify-content:center;gap:18px;}}
+
+
+/* Keep the three-card homepage row as one centred group: the middle card aligns with the section title. */
+@media(min-width:761px){.dew-products-section.dew-home-three-products .dew-products{display:flex!important;justify-content:center!important;align-items:stretch;gap:18px!important}.dew-products-section.dew-home-three-products .dew-products>.dew-product{flex:0 1 260px!important;width:260px!important;max-width:260px!important;min-width:0!important}}
