@@ -22,8 +22,11 @@ function productCard(p){
 async function boot(){
  try{
   const S=await(await fetch('products.json',{cache:'no-cache'})).json();
-  const id=new URLSearchParams(location.search).get('id');
-  const c=(S.catalogs||[]).find(x=>String(x.id)===String(id));
+  const params=new URLSearchParams(location.search);
+  const id=params.get('id');
+  const collectionSlug=params.get('collection');
+  const slugify=value=>String(value||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const c=(S.catalogs||[]).find(x=>(id&&String(x.id)===String(id))||(collectionSlug&&slugify(x.name)===collectionSlug));
   if(!c){root.innerHTML='<main class="dew-main"><p><a href="./">← Back to store</a></p><h1>Collection not found</h1><p>This collection may have been removed.</p></main>';return;}
   const ids=Array.isArray(c.productIds)?c.productIds:(S.products||[]).filter(p=>p.catalog===c.id).map(p=>p.id);
   const products=(S.products||[]).filter(p=>p.visible&&ids.includes(p.id));
