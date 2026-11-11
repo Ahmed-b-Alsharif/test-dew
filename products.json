@@ -144,7 +144,7 @@
         ]
       },
       "reviews": {
-        "show": true,
+        "show": false,
         "title": "Kind words from our customers",
         "items": [
           {
