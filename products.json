@@ -61,12 +61,12 @@
         "logoImage": "",
         "links": [
           {
-            "label": "Shop",
+            "label": "Home",
             "url": "#shop"
           },
           {
-            "label": "Our Story",
-            "url": "#about"
+            "label": "Body Care",
+            "url": "#collection.html?id=a33bf143"
           },
           {
             "label": "Contact",
