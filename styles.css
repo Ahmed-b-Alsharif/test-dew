@@ -2836,3 +2836,44 @@ html,body{color-scheme:only light!important}
 
 /* Hide footer social links on laptop and desktop; keep mobile footer links visible */
 @media (min-width: 761px){.dew-footer-social{display:none!important}}
+
+/* Custom homepage banners: true edge-to-edge width and no empty strip below the image. */
+.dew-custom-banner.dew-custom-banner-fullbleed{
+  position:relative!important;
+  left:50%!important;
+  width:100vw!important;
+  max-width:100vw!important;
+  margin-left:-50vw!important;
+  margin-right:-50vw!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+  min-height:0!important;
+  height:auto!important;
+  aspect-ratio:var(--dew-banner-desktop-ratio,1850/708)!important;
+  overflow:hidden!important;
+}
+.dew-custom-banner.dew-custom-banner-fullbleed .dew-custom-banner-art{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+}
+.dew-custom-banner.dew-custom-banner-fullbleed .dew-custom-banner-art>picture,
+.dew-custom-banner.dew-custom-banner-fullbleed .dew-custom-banner-art>picture>img,
+.dew-custom-banner.dew-custom-banner-fullbleed .dew-custom-banner-art>img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  object-position:center!important;
+}
+.dew-custom-banner.dew-custom-banner-fullbleed .dew-custom-banner-copy{max-height:100%;overflow:hidden}
+@media(max-width:760px){
+  .dew-custom-banner.dew-custom-banner-fullbleed{
+    aspect-ratio:var(--dew-banner-mobile-ratio,1350/1080)!important;
+  }
+}
