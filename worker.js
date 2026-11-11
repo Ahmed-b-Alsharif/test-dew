@@ -73,7 +73,8 @@ async function adminGithub(request,env){
    await new Promise(resolve=>setTimeout(resolve,200*(attempt+1)));
   }
  }else{
-  const init={method:request.method,headers};
+  const init={method:request.method,headers,cache:"no-store"};
+  if(request.method==="GET"){headers["Cache-Control"]="no-cache, no-store";headers["Pragma"]="no-cache"}
   if(request.method==="PUT"){headers["Content-Type"]="application/json";init.body=await request.text()}
   if(request.method==="DELETE"){let payload;try{payload=await request.json()}catch{return adminJson(request,{message:"Image deletion requires its current file SHA."},400)}if(!payload.sha)return adminJson(request,{message:"Image deletion requires its current file SHA."},400);headers["Content-Type"]="application/json";init.body=JSON.stringify(payload)}
   response=await fetch(apiUrl,init);
