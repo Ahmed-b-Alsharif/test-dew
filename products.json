@@ -330,6 +330,27 @@
         "showViewAll": true,
         "viewAllText": "View all Foot Care"
       }
+    },
+    {
+      "id": "a775b245",
+      "name": "Hair Care",
+      "description": "",
+      "image": "",
+      "desktopImage": "",
+      "mobileImage": "",
+      "desktopImageRemoved": false,
+      "mobileImageRemoved": false,
+      "productIds": [
+        "58806ff3",
+        "928936b1",
+        "6c043d33"
+      ],
+      "homepageSection": {
+        "show": false,
+        "limit": 5,
+        "showViewAll": true,
+        "viewAllText": "View all collection"
+      }
     }
   ],
   "products": [
