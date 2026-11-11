@@ -51,7 +51,7 @@
         "text": "Hello",
         "link": "#shop",
         "mode": "scroll",
-        "speed": "fast",
+        "speed": "normal",
         "messages": [
           "Hello"
         ]
