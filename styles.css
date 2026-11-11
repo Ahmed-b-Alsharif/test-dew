@@ -2822,12 +2822,12 @@ html,body{color-scheme:only light!important}
 .dew-drawer #cartItems,#drawer #cartItems{display:block;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain;padding-top:8px!important;-webkit-overflow-scrolling:touch}
 .dew-scrim,#scrim{z-index:9998!important}
 
-/* Make the repeating announcement message move substantially more slowly. */
-.dew-ann-track{animation-duration:240s!important}
-.dew-ann.speed-slow .dew-ann-track{animation-duration:360s!important}
-.dew-ann.speed-fast .dew-ann-track{animation-duration:120s!important}
+/* Make the repeating announcement message move more slowly on all devices. */
+.dew-ann-track{animation-duration:480s!important}
+.dew-ann.speed-slow .dew-ann-track{animation-duration:600s!important}
+.dew-ann.speed-fast .dew-ann-track{animation-duration:240s!important}
 @media(max-width:760px){
- .dew-ann-track{animation-duration:300s!important}
- .dew-ann.speed-slow .dew-ann-track{animation-duration:420s!important}
- .dew-ann.speed-fast .dew-ann-track{animation-duration:150s!important}
+ .dew-ann-track{animation-duration:540s!important}
+ .dew-ann.speed-slow .dew-ann-track{animation-duration:660s!important}
+ .dew-ann.speed-fast .dew-ann-track{animation-duration:270s!important}
 }
