@@ -2549,3 +2549,14 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-collection-hero-simple .dew-collection-art-fallback{display:flex;align-items:center;justify-content:center;flex-direction:column;width:100%;height:100%;background:#e9eee7;color:#1c524e}
 .dew-collection-hero-simple .dew-collection-art-fallback b{font:500 clamp(28px,4vw,48px)/1.1 "Playfair Display",Georgia,serif}
 @media(max-width:760px){.dew-collection-hero-simple{margin-bottom:28px!important}.dew-collection-hero-heading{padding:22px 18px 16px!important}.dew-collection-hero-heading h1{font-size:clamp(30px,9vw,42px)!important}.dew-collection-hero-simple .dew-collection-hero-art{height:clamp(220px,62vw,390px)!important}}
+
+
+/* Collection banner alignment: centered title and true viewport-edge image */
+.dew-collection-hero-simple{width:100%!important;max-width:none!important}
+.dew-collection-hero-heading{width:100%!important;box-sizing:border-box!important;text-align:center!important;padding:30px 18px 24px!important}
+.dew-collection-hero-heading .dew-collection-back{display:block!important;width:max-content!important;margin:0 auto 14px!important}
+.dew-collection-hero-heading h1{text-align:center!important;margin:0 auto!important}
+.dew-collection-hero-simple .dew-collection-hero-art{position:relative!important;left:50%!important;width:100vw!important;max-width:100vw!important;margin-left:-50vw!important;margin-right:0!important;box-sizing:border-box!important}
+.dew-collection-hero-simple .dew-collection-responsive-picture{position:absolute!important;inset:0!important}
+.dew-collection-hero-simple .dew-collection-responsive-picture img{width:100%!important;height:100%!important;object-fit:cover!important}
+@media(max-width:760px){.dew-collection-hero-heading{padding:22px 16px 18px!important}}
