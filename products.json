@@ -47,7 +47,7 @@
     "facebookUrl": "",
     "homepage": {
       "announcement": {
-        "show": true,
+        "show": false,
         "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
         "link": "#shop",
         "mode": "scroll",
