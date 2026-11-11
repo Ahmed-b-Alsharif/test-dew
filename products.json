@@ -85,10 +85,11 @@
         "image": "images/1794340446644-01e27551.jpg",
         "showButton": false,
         "buttonPosition": "right",
-        "mobileImage": "images/1794339873056-6eefed3b.jpg",
+        "mobileImage": "",
         "showKicker": false,
         "kickerText": "",
-        "textVertical": "bottom"
+        "textVertical": "bottom",
+        "mobileImageRemoved": true
       },
       "categories": {
         "show": true,
