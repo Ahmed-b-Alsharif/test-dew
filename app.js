@@ -28,7 +28,7 @@ if(H.hero.show){const heroDesktop=H.hero.image||H.hero.mobileImage||'';const her
 productSectionSlot('after-hero');
 productSectionSlot('before-collections');
 out+='<main class="dew-main" id="shop">';
-const allCollections=S.catalogs||[];const collectionProductSections=allCollections.filter(c=>c.homepageSection?.show===true).map(c=>{const cfg=c.homepageSection||{};return bannerHtml('before-collection:'+c.id)+renderProductSection(c.name,c.productIds,cfg.limit,cfg.showViewAll!==false,cfg.viewAllText||('View all '+c.name),'collection.html?id='+encodeURIComponent(c.id),false,true)+bannerHtml('after-collection:'+c.id);}).join('');out+=collectionProductSections;
+const allCollections=S.catalogs||[];const collectionProductSections=allCollections.filter(c=>c.homepageSection?.show===true).map(c=>{const cfg=c.homepageSection||{};return bannerHtml('before-collection:'+c.id)+renderProductSection(c.name,c.productIds,cfg.limit,cfg.showViewAll!==false,cfg.viewAllText||('View all '+c.name),'collection.html?collection='+encodeURIComponent(String(c.name||'collection').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')),false,true)+bannerHtml('after-collection:'+c.id);}).join('');out+=collectionProductSections;
 productSectionSlot('after-collections');
 productSectionSlot('before-best-sellers');
 if(H.products.show)out+=renderProductSection(H.products.title,H.products.productIds,H.products.limit,false,'View all','#shop',true,false,true);
