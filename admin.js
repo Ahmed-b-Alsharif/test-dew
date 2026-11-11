@@ -129,8 +129,19 @@ function chooseMedia(onChoose) {
   document.querySelectorAll('[data-pick-media]').forEach(b=>b.onclick=()=>{const item=files[Number(b.dataset.pickMedia)];if(item){$('#modal').classList.remove('media-picker-modal');closeModal();onChoose(item.path,item);}});
 }
 async function deleteMediaFile(item) {
-  const current=await gh('GET','contents/'+item.path);
-  await gh('DELETE','contents/'+item.path,{message:'Delete media file '+item.name,sha:current.sha});
+  let lastError;
+  for(let attempt=0;attempt<3;attempt++){
+    const current=await gh('GET','contents/'+item.path);
+    try{
+      await gh('DELETE','contents/'+item.path,{message:'Delete media file '+item.name,sha:current.sha});
+      return;
+    }catch(err){
+      lastError=err;
+      if(!/does not match|expected|sha|409|422/i.test(String(err.message||err)))throw err;
+      await new Promise(resolve=>setTimeout(resolve,350));
+    }
+  }
+  throw lastError||Error('Could not delete the photo because its file version kept changing. Please try again.');
 }
 function toast(msg, bad) {
   const t = $('#toast'); t.textContent = msg; t.style.background = bad ? 'var(--red)' : 'var(--green)'; t.style.display = 'block';
