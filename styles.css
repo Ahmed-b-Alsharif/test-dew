@@ -2727,3 +2727,12 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-promo>img{aspect-ratio:var(--dew-banner-mobile-ratio)!important;height:auto!important}
  .dew-collection-hero-simple .dew-collection-hero-art{aspect-ratio:var(--dew-banner-mobile-ratio)!important;height:auto!important;min-height:0!important;max-height:none!important}
 }
+
+/* Centered, compact About Dew footer block */
+.dew-footer{flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:18px}
+.dew-footer-about{width:min(100%,300px);flex:0 1 300px;display:flex;flex-direction:column;align-items:center;text-align:center;margin:0 auto}
+.dew-footer-about .dew-logo{text-align:center}
+.dew-footer-about h3{margin:16px 0 7px;font:500 18px Georgia,serif;color:#1c524e}
+.dew-footer-about p{width:100%;max-width:300px;margin:0 auto;font-size:13px;line-height:1.7;text-align:center}
+.dew-footer nav{justify-content:center}
+.dew-footer small{max-width:100%;text-align:center}
