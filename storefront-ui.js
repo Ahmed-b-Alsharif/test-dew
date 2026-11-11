@@ -112,3 +112,48 @@
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 })();
+
+/* Keep the mobile social menu and every storefront footer in sync with Theme Editor settings. */
+(()=>{
+ 'use strict';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const socialMarkup=(settings,labels=true)=>{
+  const items=[
+   ['instagramUrl','Instagram','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>'],
+   ['facebookUrl','Facebook','<path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11.4 1 9.5 2.8 9.5 6.1V9H6v4h3.5v8z"/>']
+  ];
+  return items.filter(([key])=>/^https?:\/\//i.test(String(settings[key]||''))).map(([key,name,svg])=>'<a class="dew-social-icon" href="'+esc(settings[key])+'" target="_blank" rel="noopener noreferrer" aria-label="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg>'+(labels?'<span>'+name+'</span>':'')+'</a>').join('');
+ };
+ const sync=async()=>{
+  try{
+   const response=await fetch('products.json',{cache:'no-cache'});if(!response.ok)return;
+   const data=await response.json(),settings=data.settings||{},home=settings.homepage||{},footer=home.footer||{},header=home.header||{};
+   const social=socialMarkup(settings,true);
+   let menu=document.querySelector('#dewMobileMenu');
+   if(menu){
+    let area=menu.querySelector('.dew-mobile-menu-social');
+    if(!area){area=document.createElement('div');area.className='dew-mobile-menu-social';menu.append(area);}
+    area.innerHTML='<b>FOLLOW DEW</b><div class="dew-social-links">'+(social||'<span class="dew-social-empty">Follow Dew on social media</span>')+'</div>';
+   }
+   document.querySelectorAll('.dew-footer').forEach(el=>{
+    if(footer.show===false){el.hidden=true;return;}
+    el.hidden=false;
+    let about=el.querySelector('.dew-footer-about');
+    if(!about){about=document.createElement('div');about.className='dew-footer-about';el.prepend(about);}
+    const logo=header.logoImage?'<img class="dew-logo-image" src="'+esc(header.logoImage)+'" alt="'+esc(header.logo||settings.storeName||'Dew')+'">':esc(header.logo||settings.storeName||'Dew');
+    about.innerHTML='<a class="dew-logo" href="./">'+logo+'</a><h3>About Dew</h3><p>'+esc(footer.about||'')+'</p>';
+    let socials=el.querySelector('.dew-footer-social');
+    if(!socials){socials=document.createElement('div');socials.className='dew-footer-social';about.after(socials);}
+    socials.innerHTML=social;
+    let nav=el.querySelector('nav');
+    if(!nav){nav=document.createElement('nav');socials.after(nav);}
+    const links=[...(Array.isArray(footer.links)?footer.links:[]),...(data.pages||[]).filter(p=>p.published&&p.showInFooter).map(p=>({label:p.title,url:'page.html?slug='+encodeURIComponent(p.slug)}))];
+    nav.innerHTML=links.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('');
+    let small=el.querySelector('small');
+    if(!small){small=document.createElement('small');el.append(small);}
+    small.textContent='© '+new Date().getFullYear()+' '+(settings.storeName||'Dew Skincare')+'. '+(footer.copyright||'All rights reserved.');
+   });
+  }catch(e){/* Preserve the rendered page if shared settings are temporarily unavailable. */}
+ };
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
+})();
