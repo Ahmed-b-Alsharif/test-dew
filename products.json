@@ -49,7 +49,7 @@
       "announcement": {
         "show": true,
         "text": "BUY 2 Lip Balm Get 1 Free",
-        "link": "#shop",
+        "link": "collection/lip-care",
         "mode": "scroll",
         "speed": "slow",
         "messages": [
