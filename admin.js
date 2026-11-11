@@ -124,8 +124,9 @@ async function uploadImage(dataUrl) {
 function chooseMedia(onChoose) {
   const files=imageLibrary||[];
   modal('<div class="media-picker-head"><div><span class="admin-eyebrow">STORE CONTENT</span><h2>Choose from Media Library</h2><p>Select an image already uploaded to your Dew store.</p></div><button type="button" class="admin-view-store" id="closeMediaPicker">Close</button></div><div class="media-picker-grid">'+(files.map((f,i)=>'<button type="button" class="media-picker-item" data-pick-media="'+i+'"><img src="'+esc(f.url)+'" alt="'+esc(f.name)+'"><span>'+esc(f.name)+'</span></button>').join('')||'<p class="editor-hint">No saved photos yet. Upload a photo in Media Library first.</p>')+'</div>');
-  $('#closeMediaPicker').onclick=closeModal;
-  document.querySelectorAll('[data-pick-media]').forEach(b=>b.onclick=()=>{const item=files[Number(b.dataset.pickMedia)];if(item){closeModal();onChoose(item.path,item);}});
+  $('#modal').classList.add('media-picker-modal');
+  $('#closeMediaPicker').onclick=()=>{$('#modal').classList.remove('media-picker-modal');closeModal();};
+  document.querySelectorAll('[data-pick-media]').forEach(b=>b.onclick=()=>{const item=files[Number(b.dataset.pickMedia)];if(item){$('#modal').classList.remove('media-picker-modal');closeModal();onChoose(item.path,item);}});
 }
 async function deleteMediaFile(item) {
   const current=await gh('GET','contents/'+item.path);
