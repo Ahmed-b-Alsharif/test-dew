@@ -136,7 +136,8 @@
         "url": "#shop",
         "image": "",
         "showButton": true,
-        "buttonPosition": "left"
+        "buttonPosition": "left",
+        "mobileImage": ""
       },
       "benefits": {
         "show": true,
