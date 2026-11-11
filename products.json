@@ -320,7 +320,7 @@
       "desktopImage": "",
       "mobileImage": "images/1794395307901-ab8cff0f.webp",
       "homepageSection": {
-        "show": false,
+        "show": true,
         "limit": 5,
         "showViewAll": true,
         "viewAllText": "View all Foot Care"
