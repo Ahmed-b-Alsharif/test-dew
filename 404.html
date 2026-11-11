@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Dew Skincare</title>
+<script>
+(function(){
+  var path=decodeURIComponent(location.pathname);
+  var marker='/collection/';
+  var at=path.lastIndexOf(marker);
+  var slug=at>=0?path.slice(at+marker.length).replace(/^\\/+|\\/+$/g,''):'';
+  var base=at>=0?(path.slice(0,at+1)||'/'):'/';
+  var el=document.createElement('base');
+  el.href=base;
+  document.head.appendChild(el);
+  window.DEW_COLLECTION_SLUG=slug;
+  window.DEW_COLLECTION_ROUTE=!!slug;
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261111-pretty-collection-paths-1">
+<title>Dew Skincare</title>
+</head>
+<body>
+<div id="collectionApp"><div class="dew-loading">Dew Skincare</div></div>
+<script>
+(function(){
+  if(!window.DEW_COLLECTION_ROUTE){
+    document.getElementById('collectionApp').innerHTML='<main class="dew-main"><h1>Page not found</h1><p><a href="./">Return to Dew Skincare</a></p></main>';
+    return;
+  }
+  var cart=document.createElement('script');
+  cart.src='cart.js?v=20261108-1';
+  cart.onload=function(){
+    var page=document.createElement('script');
+    page.src='collection.js?v=20261111-pretty-collection-paths-1';
+    document.body.appendChild(page);
+  };
+  document.body.appendChild(cart);
+})();
+</script>
+</body>
+</html>
