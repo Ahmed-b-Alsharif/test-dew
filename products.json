@@ -50,7 +50,7 @@
         "show": true,
         "text": "Hello",
         "link": "#shop",
-        "mode": "scroll",
+        "mode": "marquee",
         "speed": "normal",
         "messages": [
           "Hello"
