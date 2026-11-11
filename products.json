@@ -351,6 +351,26 @@
         "showViewAll": true,
         "viewAllText": "View all collection"
       }
+    },
+    {
+      "id": "af04fb9e",
+      "name": "Fluffy Pouch",
+      "description": "",
+      "image": "",
+      "desktopImage": "",
+      "mobileImage": "",
+      "desktopImageRemoved": false,
+      "mobileImageRemoved": false,
+      "productIds": [
+        "4be6283f",
+        "5302dec3"
+      ],
+      "homepageSection": {
+        "show": false,
+        "limit": 5,
+        "showViewAll": true,
+        "viewAllText": "View all collection"
+      }
     }
   ],
   "products": [
