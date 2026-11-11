@@ -53,8 +53,7 @@
         "mode": "scroll",
         "speed": "fast",
         "messages": [
-          "Hello",
-          ""
+          "Hello"
         ]
       },
       "header": {
