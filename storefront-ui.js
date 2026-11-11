@@ -42,9 +42,9 @@
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
  function ensureAnnouncementBar(){
-  if(document.querySelector('.dew-ann'))return;
+  if(document.querySelector('.dew-ann')||document.getElementById('app')||document.getElementById('productApp'))return;
   data().then(({settings})=>{
-   if(document.querySelector('.dew-ann'))return;
+   if(document.querySelector('.dew-ann')||document.getElementById('app')||document.getElementById('productApp'))return;
    const h=settings.homepage||{},a=h.announcement||{};
    if(a.show===false)return;
    const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).filter(Boolean);
