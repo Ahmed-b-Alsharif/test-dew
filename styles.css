@@ -2791,3 +2791,27 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-order-customer-note,.dew-native-order-customer-note{grid-column:1/-1;margin:8px 0 0;padding:10px 12px;border-left:3px solid #1c524e;background:#f3f7f3;color:#40554a;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:0 6px 6px 0}
 .dew-native-order-customer-note{margin:10px 0 0 0}
 .dew-order-customer-note b,.dew-native-order-customer-note b{color:#1c524e;font-weight:700}
+
+
+/* Dew storefront: always retain the intended light theme, regardless of device appearance. */
+:root{color-scheme:only light!important}
+html,body{color-scheme:only light!important}
+@media(prefers-color-scheme:dark){
+ html,body{color-scheme:only light!important;background-color:#fbf8f1!important;color:#183b35!important}
+ input,select,textarea,button{color-scheme:only light!important}
+}
+
+/* Keep the cart drawer above sticky announcement/navigation bars on every screen. */
+#drawer{z-index:9999!important;top:0!important;bottom:0!important;height:100vh;height:100dvh;max-height:100dvh;overflow:hidden}
+#drawer #cartItems{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding-top:6px}
+#scrim{z-index:9998!important}
+
+/* Slower continuous announcement ticker; the slow setting is deliberately gentle. */
+.dew-ann-track{animation-duration:90s!important}
+.dew-ann.speed-slow .dew-ann-track{animation-duration:120s!important}
+.dew-ann.speed-fast .dew-ann-track{animation-duration:45s!important}
+@media(max-width:760px){
+ .dew-ann-track{animation-duration:100s!important}
+ .dew-ann.speed-slow .dew-ann-track{animation-duration:130s!important}
+ .dew-ann.speed-fast .dew-ann-track{animation-duration:50s!important}
+}
