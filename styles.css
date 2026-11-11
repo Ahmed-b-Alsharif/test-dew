@@ -2603,3 +2603,29 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
   background:none!important;box-shadow:none!important;filter:none!important;
  }
 }
+
+
+/* Homepage collection sections: show two product cards side by side with horizontal swipe on mobile. */
+@media(max-width:760px){
+ .dew-products-section.dew-collection-frame .dew-products{
+  display:grid!important;
+  grid-template-columns:none!important;
+  grid-auto-flow:column!important;
+  grid-auto-columns:calc((100% - 12px)/2)!important;
+  gap:12px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
+  scroll-padding-inline:1px;
+  padding:0 1px 8px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(28,82,78,.35) transparent;
+ }
+ .dew-products-section.dew-collection-frame .dew-products>.dew-product{
+  width:100%;min-width:0;scroll-snap-align:start;
+ }
+ .dew-products-section.dew-collection-frame .dew-products::-webkit-scrollbar{height:4px}
+ .dew-products-section.dew-collection-frame .dew-products::-webkit-scrollbar-thumb{background:rgba(28,82,78,.3);border-radius:99px}
+}
