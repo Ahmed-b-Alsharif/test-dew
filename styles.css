@@ -2785,3 +2785,9 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-ann.speed-fast .dew-ann-track{animation-duration:20s!important}
 }
 @media(prefers-reduced-motion:reduce){.dew-ann-track{animation:none!important;transform:none!important}}
+
+
+/* Customer checkout notes are shown with their own order in the admin order lists. */
+.dew-order-customer-note,.dew-native-order-customer-note{grid-column:1/-1;margin:8px 0 0;padding:10px 12px;border-left:3px solid #1c524e;background:#f3f7f3;color:#40554a;font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;border-radius:0 6px 6px 0}
+.dew-native-order-customer-note{margin:10px 0 0 0}
+.dew-order-customer-note b,.dew-native-order-customer-note b{color:#1c524e;font-weight:700}
