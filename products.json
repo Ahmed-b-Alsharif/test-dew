@@ -71,6 +71,10 @@
           {
             "label": "Hair CAre",
             "url": "collection/hair-care"
+          },
+          {
+            "label": "Fluffy Pouch",
+            "url": "collection/Fluffy-Pouch"
           }
         ],
         "logoPosition": "center",
