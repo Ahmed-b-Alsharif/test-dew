@@ -29,14 +29,7 @@
  function init(){
   const header=document.querySelector('.dew-header');
   if(header){const nav=header.querySelector(':scope > nav')||header.querySelector('.dew-collection-nav');let actions=header.querySelector('.dew-header-actions');if(!actions){actions=document.createElement('div');actions.className='dew-header-actions';header.append(actions)}addMenu(header,nav);addSearch(header,actions);return}
-  const wrap=document.querySelector('.top .wrap');
-  if(wrap&&!document.querySelector('#dewCheckoutSearchToggle')){
-   const btn=document.createElement('button');btn.type='button';btn.id='dewCheckoutSearchToggle';btn.className='dew-checkout-search-toggle';btn.setAttribute('aria-label','Search products');btn.innerHTML=icon;wrap.insertBefore(btn,wrap.lastElementChild||null);
-   const panel=document.createElement('div');panel.id='dewCheckoutSearchPanel';panel.className='dew-checkout-search-panel';panel.hidden=true;panel.innerHTML='<div class="dew-search-box"><span aria-hidden="true">⌕</span><input id="dewCheckoutSearch" type="search" placeholder="Search products" autocomplete="off"><button type="button" id="dewCheckoutSearchClose" aria-label="Close search">×</button></div><div class="dew-search-suggestions" id="dewCheckoutSuggestions" hidden></div>';document.body.append(panel);
-   const input=panel.querySelector('input'),suggest=panel.querySelector('.dew-search-suggestions'),close=()=>panel.hidden=true;btn.onclick=()=>{panel.hidden=!panel.hidden;if(!panel.hidden)input.focus()};panel.querySelector('#dewCheckoutSearchClose').onclick=close;
-   input.oninput=async()=>{const term=input.value.trim().toLowerCase();if(!term){suggest.hidden=true;suggest.innerHTML='';return}suggest.hidden=false;suggest.innerHTML='<p class="dew-search-loading">Searching…</p>';try{const d=await data(),matches=d.products.filter(p=>(String(p.name||'')+' '+String(p.tags||'')).toLowerCase().includes(term)).slice(0,7);suggest.innerHTML=matches.map(p=>{const h=p.shopifyHandle||String(p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),price=Number(p.salePrice)>0&&Number(p.salePrice)<Number(p.price)?p.salePrice:p.price;return '<a href="./'+encodeURIComponent(h)+'">'+(p.images?.[0]?'<img src="'+esc(p.images[0])+'" alt="" loading="lazy">':'<span class="dew-suggest-placeholder">D</span>')+'<span><b>'+esc(p.name)+'</b><small>'+esc(money(price,d.settings))+'</small></span><i>↗</i></a>'}).join('')||'<p class="dew-search-no-results">No products found.</p>'}catch{suggest.innerHTML='<p class="dew-search-no-results">Search is temporarily unavailable.</p>'}};
-   document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
-  }
+
  }
  if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-9';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
