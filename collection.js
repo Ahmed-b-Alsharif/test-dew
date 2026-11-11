@@ -24,7 +24,7 @@ async function boot(){
   const S=await(await fetch('products.json',{cache:'no-cache'})).json();
   const params=new URLSearchParams(location.search);
   const id=params.get('id');
-  const collectionSlug=params.get('collection');
+  const collectionSlug=window.DEW_COLLECTION_SLUG||params.get('collection');
   const slugify=value=>String(value||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   const c=(S.catalogs||[]).find(x=>(id&&String(x.id)===String(id))||(collectionSlug&&slugify(x.name)===collectionSlug));
   if(!c){root.innerHTML='<main class="dew-main"><p><a href="./">← Back to store</a></p><h1>Collection not found</h1><p>This collection may have been removed.</p></main>';return;}
