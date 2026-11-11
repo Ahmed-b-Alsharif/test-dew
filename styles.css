@@ -2877,3 +2877,9 @@ html,body{color-scheme:only light!important}
     aspect-ratio:var(--dew-banner-mobile-ratio,1350/1080)!important;
   }
 }
+
+
+/* Best Sellers admin picker: align checkbox and readable product name in a single full-width row. */
+.best-seller-product-list .product-section-choice{width:100%!important;box-sizing:border-box!important;display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;gap:10px!important;text-align:left!important;padding:9px 5px!important;}
+.best-seller-product-list .product-section-choice input{display:block!important;position:static!important;float:none!important;transform:none!important;margin:0 2px 0 0!important;align-self:center!important;}
+.best-seller-product-list .product-section-choice span{flex:1 1 auto!important;width:auto!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.4!important;}
