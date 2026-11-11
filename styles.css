@@ -2736,3 +2736,11 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-footer-about p{width:100%;max-width:300px;margin:0 auto;font-size:13px;line-height:1.7;text-align:center}
 .dew-footer nav{justify-content:center}
 .dew-footer small{max-width:100%;text-align:center}
+
+
+/* Single publish control for the complete theme editor */
+.hp-theme-save-area{display:flex;align-items:center;justify-content:flex-end;gap:12px;flex-wrap:wrap}
+.hp-theme-save-area>span{font-size:11px;color:#718078}
+.hp-theme-save-area .admin-primary{min-width:170px}
+.hp-theme-save-area .admin-primary:disabled{opacity:.72;cursor:default}
+@media(max-width:680px){.hp-theme-save-area{width:100%;justify-content:stretch}.hp-theme-save-area>span{width:100%}.hp-theme-save-area .admin-primary,.hp-theme-save-area .admin-view-store{flex:1;text-align:center}}
