@@ -135,7 +135,7 @@
         "button": "Shop now",
         "url": "#shop",
         "image": "images/1794398816986-2fc3d035.webp",
-        "showButton": true,
+        "showButton": false,
         "buttonPosition": "left",
         "mobileImage": ""
       },
