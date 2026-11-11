@@ -830,7 +830,7 @@ function nativeOrders(){
  const filters=['All','Unfulfilled','Unpaid','Paid','COD'];
  function renderList(){
   const rows=ordersList.map((o,i)=>({o,i})).filter(({o})=>{
-   if(term&&![o.number,customerName(o),o.customer?.phone].join(' ').toLowerCase().includes(term))return false;
+   if(term&&![o.number,customerName(o),o.customer?.phone,o.customer?.note].join(' ').toLowerCase().includes(term))return false;
    if(filter==='Unfulfilled')return !fulfilled(o)&&fulfillment(o)!=='Cancelled';
    if(filter==='Unpaid')return payment(o)!=='Paid';
    if(filter==='Paid')return payment(o)==='Paid';
@@ -842,7 +842,7 @@ function nativeOrders(){
    '<div class="dew-native-order-search"><span>⌕</span><input id="dewNativeOrderSearch" type="search" value="'+esc(term)+'" placeholder="Search orders, customers or phone"></div>'+
    '<div class="dew-native-order-filters">'+filters.map(f=>'<button class="'+(filter===f?'active':'')+'" data-native-filter="'+f+'">'+f+'</button>').join('')+'</div>'+
    '<div class="dew-native-order-results"><div class="dew-native-order-results-head"><b>'+rows.length+' '+(rows.length===1?'order':'orders')+'</b><span>Newest first</span></div>'+
-   (rows.length?rows.map(({o,i})=>'<button class="dew-native-order-row" data-native-open="'+i+'"><div class="dew-native-order-row-top"><b>'+esc(o.number||'Order')+'</b><span>'+dateText(o.date)+'</span></div><div class="dew-native-order-row-middle"><span class="dew-native-order-avatar">'+esc((customerName(o).trim()[0]||'G').toUpperCase())+'</span><span class="dew-native-order-customer"><b>'+esc(customerName(o))+'</b><small>'+esc(o.customer?.phone||'No phone number')+'</small></span><strong>'+money(o.total)+'</strong></div><div class="dew-native-order-row-bottom">'+badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')+badge(fulfillment(o),fulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')+'<span class="dew-native-order-chevron">›</span></div></button>').join(''):'<div class="dew-native-order-empty"><b>No orders found</b><span>Try changing the search or filter.</span></div>')+'</div></section>';
+   (rows.length?rows.map(({o,i})=>'<button class="dew-native-order-row" data-native-open="'+i+'"><div class="dew-native-order-row-top"><b>'+esc(o.number||'Order')+'</b><span>'+dateText(o.date)+'</span></div><div class="dew-native-order-row-middle"><span class="dew-native-order-avatar">'+esc((customerName(o).trim()[0]||'G').toUpperCase())+'</span><span class="dew-native-order-customer"><b>'+esc(customerName(o))+'</b><small>'+esc(o.customer?.phone||'No phone number')+'</small></span><strong>'+money(o.total)+'</strong></div>'+(o.customer?.note?'<div class="dew-native-order-customer-note"><b>Customer note:</b> '+esc(o.customer.note)+'</div>':'')+'<div class="dew-native-order-row-bottom">'+badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')+badge(fulfillment(o),fulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')+'<span class="dew-native-order-chevron">›</span></div></button>').join(''):'<div class="dew-native-order-empty"><b>No orders found</b><span>Try changing the search or filter.</span></div>')+'</div></section>';
   document.querySelectorAll('[data-native-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.nativeFilter;renderList();});
   $('#dewNativeOrderSearch').oninput=e=>{term=e.target.value.trim().toLowerCase();renderList();const x=$('#dewNativeOrderSearch');x.focus();x.setSelectionRange(term.length,term.length);};
   document.querySelectorAll('[data-native-open]').forEach(b=>b.onclick=()=>renderDetail(Number(b.dataset.nativeOpen)));
@@ -932,6 +932,7 @@ function orders() {
         <div class="dew-order-cell dew-order-total-cell"><span class="dew-order-cell-label">Total</span><b class="dew-order-total">${money(o.total)}</b></div>
         <div class="dew-order-cell dew-order-status-cell"><span class="dew-order-cell-label">Status</span><div class="dew-order-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div></div>
         <div class="dew-order-open">View <span>›</span></div>
+        ${o.customer?.note ? '<div class="dew-order-customer-note"><b>Customer note:</b> '+esc(o.customer.note)+'</div>' : ''}
       </article>`).join('');
     list.querySelectorAll('[data-open-order]').forEach(card=>card.onclick=()=>openOrder(Number(card.dataset.openOrder)));
   }
