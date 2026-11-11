@@ -129,7 +129,7 @@
         "productIds": []
       },
       "promo": {
-        "show": true,
+        "show": false,
         "title": "A little more love for your skin",
         "text": "Explore your everyday skincare essentials.",
         "button": "Shop now",
@@ -202,20 +202,7 @@
       },
       "customBanners": {
         "show": true,
-        "items": [
-          {
-            "id": "48b8393d",
-            "show": true,
-            "title": "Your banner headline",
-            "text": "Add a short message for your customers.",
-            "image": "images/1794432238351-ed94c00f.webp",
-            "position": "bottom",
-            "showButton": false,
-            "button": "Shop now",
-            "url": "#shop",
-            "buttonPosition": "left"
-          }
-        ]
+        "items": []
       },
       "productSections": [],
       "collectionFrame": {
