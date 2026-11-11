@@ -13,9 +13,9 @@
     "checkoutBtnText": "Complete order",
     "checkoutTitle": "Delivery details",
     "paymentNote": "Payment is cash on delivery.",
-    "whatsapp": "+201118225522",
-    "phone": "+201118225522",
-    "email": "hello@example.com",
+    "whatsapp": "+201044620635",
+    "phone": "+201044620635",
+    "email": "dewskincaree@gmail.com",
     "instagram": "dew_skincaree",
     "minOrder": 250,
     "deliveryNote": "Cash on delivery. Delivery to All Egypt.",
@@ -27,8 +27,8 @@
     "instapayEnabled": true,
     "codEnabled": true,
     "instapayNumber": "01118225522",
-    "instapayName": "Ahmed b. A.",
-    "instapayInstructions": "please send us screenshot after the payment is done\nThank you",
+    "instapayName": "Ahmed B. A. A.",
+    "instapayInstructions": "حوّل المبلغ على رقم إنستاباي اللي فوق، وابعت سكرين شوت التحويل على واتساب ومعاه رقم الأوردر.\nهنأكد الدفع ونجهز أوردرك على طول.",
     "deliveryAreas": [
       {
         "id": "cairo-giza",
@@ -44,7 +44,7 @@
       }
     ],
     "instagramUrl": "https://www.instagram.com/dew_skincaree/",
-    "facebookUrl": "",
+    "facebookUrl": "https://www.facebook.com/dewskincaree.Egypt/",
     "homepage": {
       "announcement": {
         "show": true,
