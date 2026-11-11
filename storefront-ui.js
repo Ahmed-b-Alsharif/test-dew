@@ -41,6 +41,24 @@
  if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-9';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+ function setupStickyAnnouncementBar(){
+  const sync=()=>{
+   const bar=document.querySelector('.dew-ann');
+   const height=bar&&getComputedStyle(bar).display!=='none'?Math.ceil(bar.getBoundingClientRect().height):0;
+   document.documentElement.style.setProperty('--dew-ann-height',height+'px');
+  };
+  sync();
+  if('ResizeObserver' in window){
+   const resize=new ResizeObserver(sync);
+   const watch=()=>{const bar=document.querySelector('.dew-ann');if(bar){resize.disconnect();resize.observe(bar);}sync();};
+   watch();
+   new MutationObserver(watch).observe(document.body,{childList:true,subtree:true});
+  }else{
+   new MutationObserver(sync).observe(document.body,{childList:true,subtree:true});
+   window.addEventListener('resize',sync,{passive:true});
+  }
+  window.addEventListener('load',sync,{once:true});
+ }
  function ensureAnnouncementBar(){
   if(document.querySelector('.dew-ann')||document.getElementById('app')||document.getElementById('productApp'))return;
   data().then(({settings})=>{
@@ -57,4 +75,5 @@
    bar.append(link);document.body.insertBefore(bar,document.body.firstChild);
   }).catch(()=>{});
  }
+ setupStickyAnnouncementBar();
  ensureAnnouncementBar();
