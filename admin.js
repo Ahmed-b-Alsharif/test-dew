@@ -109,7 +109,7 @@ function saveOrders(message){
 
 async function refreshImageLibrary() {
   const files = await gh('GET', 'contents/images');
-  imageLibrary = Array.isArray(files) ? files.filter(x => x.type === 'file' && /\.(webp|png|jpe?g|gif|avif)$/i.test(x.name || '')).map(x => ({ name: x.name, path: x.path, url: x.path })) : [];
+  imageLibrary = Array.isArray(files) ? files.filter(x => x.type === 'file' && /\.(webp|png|jpe?g|gif|avif)$/i.test(x.name || '')).map(x => ({ name: x.name, path: x.path, sha:x.sha, url:'https://dewskincaree.com/'+x.path })) : [];
   return imageLibrary;
 }
 async function uploadImage(dataUrl) {
@@ -118,8 +118,18 @@ async function uploadImage(dataUrl) {
   const name = `${Date.now()}-${uid()}.${extension}`;
   const path = 'images/' + name;
   await gh('PUT', 'contents/' + path, { message: 'Add optimized photo ' + name, content: dataUrl.split(',')[1] });
-  imageLibrary = [{ name, path, url: path }, ...imageLibrary.filter(x => x.path !== path)];
+  imageLibrary = [{ name, path, url:'https://dewskincaree.com/'+path }, ...imageLibrary.filter(x => x.path !== path)];
   return path;
+}
+function chooseMedia(onChoose) {
+  const files=imageLibrary||[];
+  modal('<div class="media-picker-head"><div><span class="admin-eyebrow">STORE CONTENT</span><h2>Choose from Media Library</h2><p>Select an image already uploaded to your Dew store.</p></div><button type="button" class="admin-view-store" id="closeMediaPicker">Close</button></div><div class="media-picker-grid">'+(files.map((f,i)=>'<button type="button" class="media-picker-item" data-pick-media="'+i+'"><img src="'+esc(f.url)+'" alt="'+esc(f.name)+'"><span>'+esc(f.name)+'</span></button>').join('')||'<p class="editor-hint">No saved photos yet. Upload a photo in Media Library first.</p>')+'</div>');
+  $('#closeMediaPicker').onclick=closeModal;
+  document.querySelectorAll('[data-pick-media]').forEach(b=>b.onclick=()=>{const item=files[Number(b.dataset.pickMedia)];if(item){closeModal();onChoose(item.path,item);}});
+}
+async function deleteMediaFile(item) {
+  const current=await gh('GET','contents/'+item.path);
+  await gh('DELETE','contents/'+item.path,{message:'Delete media file '+item.name,sha:current.sha});
 }
 function toast(msg, bad) {
   const t = $('#toast'); t.textContent = msg; t.style.background = bad ? 'var(--red)' : 'var(--green)'; t.style.display = 'block';
@@ -304,7 +314,7 @@ function media() {
     const files=imageLibrary||[];
     $('#view').innerHTML='<div class="shopify-page-head"><div><span class="admin-eyebrow">STORE CONTENT</span><h2>Media library</h2><p>Every photo uploaded through Admin is saved here and can be reused across your store.</p></div><label class="admin-primary media-upload-trigger">＋ Upload photos<input type="file" id="mediaUpload" accept="image/*" multiple hidden></label></div>'+
       '<div class="shopify-metrics"><div><span>Saved images</span><b>'+files.length+'</b></div><div><span>Format</span><b>WebP</b></div><div><span>Storage</span><b>Website images</b></div></div>'+
-      '<div class="media-library-grid">'+(files.map((f,i)=>'<article class="media-library-card"><div class="media-library-thumb"><img src="'+esc(f.url)+'" alt="'+esc(f.name)+'" loading="lazy"></div><div class="media-library-info"><b title="'+esc(f.name)+'">'+esc(f.name)+'</b><button type="button" class="text-link" data-copy-media="'+i+'">Copy image path</button></div></article>').join('')||'<div class="admin-panel empty-note">No uploaded photos yet. Upload an image and it will be saved here.</div>')+'</div>';
+      '<div class="media-library-grid">'+(files.map((f,i)=>'<article class="media-library-card"><div class="media-library-thumb"><img src="'+esc(f.url)+'" alt="'+esc(f.name)+'" loading="lazy"></div><div class="media-library-info"><b title="'+esc(f.name)+'">'+esc(f.name)+'</b><button type="button" class="text-link" data-copy-media="'+i+'">Copy image path</button><button type="button" class="text-link danger-link" data-delete-media="'+i+'">Delete photo</button></div></article>').join('')||'<div class="admin-panel empty-note">No uploaded photos yet. Upload an image and it will be saved here.</div>')+'</div>';
     $('#mediaUpload').onchange=async e=>{
       const files=[...e.target.files||[]];if(!files.length)return;
       const input=e.target;input.disabled=true;
@@ -312,6 +322,7 @@ function media() {
       input.disabled=false;input.value='';await refreshImageLibrary();draw();toast('Photos uploaded and saved to the website.');
     };
     document.querySelectorAll('[data-copy-media]').forEach(b=>b.onclick=()=>{const item=files[+b.dataset.copyMedia];if(item){navigator.clipboard?.writeText(item.path).then(()=>toast('Image path copied.')).catch(()=>toast(item.path));}});
+    document.querySelectorAll('[data-delete-media]').forEach(b=>b.onclick=async()=>{const item=files[+b.dataset.deleteMedia];if(!item||!confirm('Delete '+item.name+' from the entire website? Its references in products, collections and homepage settings will also be removed.'))return;b.disabled=true;try{const clear=value=>{if(Array.isArray(value)){value.forEach(clear);return;}if(value&&typeof value==='object'){for(const key of Object.keys(value)){if(value[key]===item.path)value[key]='';else clear(value[key]);}}};clear(D);await deleteMediaFile(item);await save('Remove media file '+item.name,true);await refreshImageLibrary();draw();toast('Photo deleted from the media library and store.');}catch(err){toast('Could not fully delete this photo: '+err.message,true);await refreshImageLibrary().catch(()=>{});draw();}});
   };
   draw();
 }
@@ -770,15 +781,17 @@ function catForm(id) {
   document.querySelectorAll('[data-collection-product]').forEach(el=>el.onchange=updateCount);
   ['cShowOnHome','cHomeLimit','cHomeViewAll','cHomeButtonText'].forEach(id=>{const el=$('#'+id);el?.addEventListener('input',renderHomepagePreview);el?.addEventListener('change',renderHomepagePreview);});
   $('#cn').oninput=()=>{$('#collectionPreviewTitle').textContent=$('#cn').value||'Collection title';renderHomepagePreview();};$('#cd').oninput=()=>$('#collectionPreviewDesc').textContent=$('#cd').value||'Collection description';
-  const uploadCollectionImage=async(input,field,preview)=>{const file=input.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));if(field==='image')image=path;else if(field==='desktopImage'){desktopImage=path;$('#removeDesktopImage').disabled=false;}else{mobileImage=path;$('#removeMobileImage').disabled=false;}$(preview).innerHTML='<img src="'+esc(path)+'" alt="">';}catch(err){toast(err.message,true);}};
+  const applyCollectionImage=(field,path,preview)=>{if(field==='image')image=path;else if(field==='desktopImage'){desktopImage=path;c.desktopImageRemoved=false;$('#removeDesktopImage').disabled=false;}else{mobileImage=path;c.mobileImageRemoved=false;$('#removeMobileImage').disabled=false;}$(preview).innerHTML='<img src="'+esc('https://dewskincaree.com/'+path)+'" alt="">';};
+  const uploadCollectionImage=async(input,field,preview)=>{const file=input.files?.[0];if(!file)return;try{const path=await uploadImage(await resize(file));applyCollectionImage(field,path,preview);}catch(err){toast(err.message,true);}};
+  document.querySelectorAll('[data-media-collection]').forEach(b=>b.onclick=()=>chooseMedia(path=>applyCollectionImage(b.dataset.mediaCollection,path,b.dataset.preview)));
   $('#cf').onchange=e=>uploadCollectionImage(e.target,'image','#collectionPreview');
   $('#removeCollectionImage').onclick=()=>{image='';$('#collectionPreview').innerHTML='<span>DEW</span>';$('#removeCollectionImage').disabled=true;if(!desktopImage)$('#collectionDesktopPreview').innerHTML='<span>Desktop preview</span>';if(!mobileImage)$('#collectionMobilePreview').innerHTML='<span>Mobile preview</span>';};
   $('#cfd').onchange=e=>uploadCollectionImage(e.target,'desktopImage','#collectionDesktopPreview');
   $('#cfm').onchange=e=>uploadCollectionImage(e.target,'mobileImage','#collectionMobilePreview');
-  $('#removeDesktopImage').onclick=()=>{desktopImage='';$('#collectionDesktopPreview').innerHTML=image?'<img src="'+esc(image)+'" alt="">':'<span>Desktop preview</span>';$('#removeDesktopImage').disabled=true;};
-  $('#removeMobileImage').onclick=()=>{mobileImage='';$('#collectionMobilePreview').innerHTML=image?'<img src="'+esc(image)+'" alt="">':'<span>Mobile preview</span>';$('#removeMobileImage').disabled=true;};
+  $('#removeDesktopImage').onclick=()=>{desktopImage='';c.desktopImageRemoved=true;$('#collectionDesktopPreview').innerHTML='<span>Desktop image removed</span>';$('#removeDesktopImage').disabled=true;};
+  $('#removeMobileImage').onclick=()=>{mobileImage='';c.mobileImageRemoved=true;$('#collectionMobilePreview').innerHTML='<span>Mobile image removed</span>';$('#removeMobileImage').disabled=true;};
   renderHomepagePreview();
-  $('#saveCollection').onclick=()=>{const name=$('#cn').value.trim();if(!name){toast('Collection title is required.',true);return;}const chosen=[...document.querySelectorAll('[data-collection-product]:checked')].map(x=>x.dataset.collectionProduct);const homepageSection={show:$('#cShowOnHome').checked,limit:Math.max(1,Math.min(24,Number($('#cHomeLimit').value)||5)),showViewAll:$('#cHomeViewAll').checked,viewAllText:$('#cHomeButtonText').value.trim()||('View all '+name)};if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;c.desktopImage=desktopImage;c.mobileImage=mobileImage;c.productIds=chosen;c.homepageSection=homepageSection;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image,desktopImage,mobileImage,productIds:chosen,homepageSection});tab='catalogs';render();save('Save collection '+name);};
+  $('#saveCollection').onclick=()=>{const name=$('#cn').value.trim();if(!name){toast('Collection title is required.',true);return;}const chosen=[...document.querySelectorAll('[data-collection-product]:checked')].map(x=>x.dataset.collectionProduct);const homepageSection={show:$('#cShowOnHome').checked,limit:Math.max(1,Math.min(24,Number($('#cHomeLimit').value)||5)),showViewAll:$('#cHomeViewAll').checked,viewAllText:$('#cHomeButtonText').value.trim()||('View all '+name)};if(id){c.name=name;c.description=$('#cd').value.trim();c.image=image;c.desktopImage=desktopImage;c.mobileImage=mobileImage;c.desktopImageRemoved=!!c.desktopImageRemoved;c.mobileImageRemoved=!!c.mobileImageRemoved;c.productIds=chosen;c.homepageSection=homepageSection;}else D.catalogs.push({id:uid(),name,description:$('#cd').value.trim(),image,desktopImage,mobileImage,desktopImageRemoved:false,mobileImageRemoved:false,productIds:chosen,homepageSection});tab='catalogs';render();save('Save collection '+name);};
 }
 
 
