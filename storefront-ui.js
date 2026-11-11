@@ -92,7 +92,6 @@
    const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).map(x=>String(x||'').trim()).filter(Boolean);
    if(!messages.length){bar?.remove();return;}
    const repeated=Array.from({length:32},()=>messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')).join('<i aria-hidden="true">✦</i>');
-   const group='<div class="dew-ann-group">'+repeated+'</div>';
    const speed=['slow','fast'].includes(a.speed)?a.speed:'normal';
    const html='<div class="dew-ann-group">'+repeated+'</div>';
    const content='<div class="dew-ann-track">'+html+html+'</div>';
@@ -102,8 +101,10 @@
     const parent=anchor?.parentNode||document.body;
     if(anchor)parent.insertBefore(bar,anchor);else parent.insertBefore(bar,parent.firstChild);
    }
-   bar.className='dew-ann is-marquee speed-'+speed;
-   bar.innerHTML='<a href="'+esc(a.link||'./#shop')+'">'+content+'</a>';
+   const desiredClass='dew-ann is-marquee speed-'+speed;
+   const desiredHtml='<a href="'+esc(a.link||'./#shop')+'">'+content+'</a>';
+   if(bar.className!==desiredClass)bar.className=desiredClass;
+   if(bar.innerHTML!==desiredHtml)bar.innerHTML=desiredHtml;
    bar.dataset.dewGlobalTicker='true';
   }catch(e){/* Keep the page usable if store settings cannot be loaded. */}
  };
