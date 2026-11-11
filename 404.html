@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261111-pretty-collection-paths-1">
+<link rel="stylesheet" href="styles.css?v=20261111-announcement-global-1">
 <title>Dew Skincare</title>
 </head>
 <body>
@@ -40,6 +40,11 @@
   cart.onload=function(){
     var page=document.createElement('script');
     page.src='collection.js?v=20261111-pretty-collection-paths-1';
+    page.onload=function(){
+      var shared=document.createElement('script');
+      shared.src='storefront-ui.js?v=20261111-global-announcement-1';
+      document.body.appendChild(shared);
+    };
     document.body.appendChild(page);
   };
   document.body.appendChild(cart);
