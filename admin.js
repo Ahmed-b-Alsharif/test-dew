@@ -109,7 +109,7 @@ function saveOrders(message){
 
 async function refreshImageLibrary() {
   const files = await gh('GET', 'contents/images');
-  imageLibrary = Array.isArray(files) ? files.filter(x => x.type === 'file' && /\.(webp|png|jpe?g|gif|avif)$/i.test(x.name || '')).map(x => ({ name: x.name, path: x.path, sha:x.sha, url:'https://dewskincaree.com/'+x.path })) : [];
+  imageLibrary = Array.isArray(files) ? files.filter(x => x.type === 'file' && /\.(webp|png|jpe?g|gif|avif)$/i.test(x.name || '')).map(x => ({ name: x.name, path: x.path, sha:x.sha, url:new URL(x.path,document.baseURI).href })) : [];
   return imageLibrary;
 }
 async function uploadImage(dataUrl) {
@@ -118,7 +118,7 @@ async function uploadImage(dataUrl) {
   const name = `${Date.now()}-${uid()}.${extension}`;
   const path = 'images/' + name;
   await gh('PUT', 'contents/' + path, { message: 'Add optimized photo ' + name, content: dataUrl.split(',')[1] });
-  imageLibrary = [{ name, path, url:'https://dewskincaree.com/'+path }, ...imageLibrary.filter(x => x.path !== path)];
+  imageLibrary = [{ name, path, url:new URL(path,document.baseURI).href }, ...imageLibrary.filter(x => x.path !== path)];
   return path;
 }
 function chooseMedia(onChoose) {
