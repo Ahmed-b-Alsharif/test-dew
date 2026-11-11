@@ -41,3 +41,20 @@
  if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-9';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
+ function ensureAnnouncementBar(){
+  if(document.querySelector('.dew-ann'))return;
+  data().then(({settings})=>{
+   if(document.querySelector('.dew-ann'))return;
+   const h=settings.homepage||{},a=h.announcement||{};
+   if(a.show===false)return;
+   const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).filter(Boolean);
+   if(!messages.length)return;
+   const mode=a.mode||'static',speed=a.speed||'normal';
+   const group='<div class="dew-ann-group">'+messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')+'</div>';
+   const bar=document.createElement('div');bar.className='dew-ann '+(mode==='scroll'?'is-scroll':mode==='marquee'?'is-marquee':'is-static')+' speed-'+esc(speed);
+   const link=document.createElement('a');link.href=a.link||'./#shop';
+   link.innerHTML=mode==='static'?messages.map(m=>'<span>'+esc(m)+'</span>').join(' · '):'<div class="dew-ann-track">'+group+group+'</div>';
+   bar.append(link);document.body.insertBefore(bar,document.body.firstChild);
+  }).catch(()=>{});
+ }
+ ensureAnnouncementBar();
