@@ -76,7 +76,6 @@
   }).catch(()=>{});
  }
  setupStickyAnnouncementBar();
- ensureAnnouncementBar();
 
 /* Apply the same editable, continuously repeating announcement bar to every storefront page. */
 (()=>{
