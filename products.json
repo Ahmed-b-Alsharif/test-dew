@@ -126,7 +126,13 @@
         "show": true,
         "title": "Our Best Sellers",
         "limit": 5,
-        "productIds": []
+        "productIds": [
+          "4be6283f",
+          "5302dec3",
+          "757414b0",
+          "4ae993e5",
+          "5082f6d9"
+        ]
       },
       "promo": {
         "show": false,
