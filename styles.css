@@ -2705,3 +2705,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* Keep the three-card homepage row as one centred group: the middle card aligns with the section title. */
 @media(min-width:761px){.dew-products-section.dew-home-three-products .dew-products{display:flex!important;justify-content:center!important;align-items:stretch;gap:18px!important}.dew-products-section.dew-home-three-products .dew-products>.dew-product{flex:0 1 260px!important;width:260px!important;max-width:260px!important;min-width:0!important}}
+
+
+/* Reusable media-library picker dialog. */
+.media-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}.media-picker-head h2{margin:5px 0;font-size:24px}.media-picker-head p{margin:0;color:#68786f;font-size:12px}.media-picker-item span{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#344a3b}.media-library-info .danger-link{color:#a43e35}
