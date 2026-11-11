@@ -2693,3 +2693,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 }
 @keyframes dewSwipeCue{0%,100%{transform:translateX(0);opacity:.65}50%{transform:translateX(7px);opacity:1}}
 @media(prefers-reduced-motion:reduce){.dew-home-swipe-section .dew-scroll-hint b{animation:none!important}}
+
+
+/* The swipe instruction is for touch screens only; keep desktop storefront clean. */
+@media(min-width:761px){.dew-home-swipe-section .dew-scroll-hint,.dew-best-sellers-section .dew-scroll-hint{display:none!important}}
