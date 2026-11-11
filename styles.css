@@ -2815,3 +2815,19 @@ html,body{color-scheme:only light!important}
  .dew-ann.speed-slow .dew-ann-track{animation-duration:130s!important}
  .dew-ann.speed-fast .dew-ann-track{animation-duration:50s!important}
 }
+
+
+/* Cart drawer: keep it above sticky announcement and navigation on every storefront page and viewport. */
+.dew-drawer,#drawer{position:fixed!important;z-index:9999!important;top:0!important;right:0!important;bottom:0!important;height:100vh!important;height:100dvh!important;max-height:100dvh!important;overflow:hidden!important}
+.dew-drawer #cartItems,#drawer #cartItems{display:block;flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain;padding-top:8px!important;-webkit-overflow-scrolling:touch}
+.dew-scrim,#scrim{z-index:9998!important}
+
+/* Make the repeating announcement message move substantially more slowly. */
+.dew-ann-track{animation-duration:240s!important}
+.dew-ann.speed-slow .dew-ann-track{animation-duration:360s!important}
+.dew-ann.speed-fast .dew-ann-track{animation-duration:120s!important}
+@media(max-width:760px){
+ .dew-ann-track{animation-duration:300s!important}
+ .dew-ann.speed-slow .dew-ann-track{animation-duration:420s!important}
+ .dew-ann.speed-fast .dew-ann-track{animation-duration:150s!important}
+}
