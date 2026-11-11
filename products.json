@@ -51,7 +51,7 @@
         "text": "Hello",
         "link": "#shop",
         "mode": "marquee",
-        "speed": "normal",
+        "speed": "slow",
         "messages": [
           "Hello"
         ]
