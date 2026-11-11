@@ -2662,3 +2662,10 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 }
 @keyframes dewSwipeCue{0%,100%{transform:translateX(0);opacity:.65}50%{transform:translateX(7px);opacity:1}}
 @media(prefers-reduced-motion:reduce){.dew-best-sellers-section .dew-scroll-hint b{animation:none!important}}
+
+
+/* Mobile storefront: keep the announcement bar and navigation directly adjacent. */
+@media(max-width:760px){
+ .dew-ann{display:block!important;position:sticky!important;top:0!important;margin:0!important;padding-top:3px!important;padding-bottom:3px!important;}
+ .dew-ann + .dew-header{display:grid!important;position:sticky!important;top:var(--dew-ann-height,0px)!important;margin:0!important;padding-top:0!important;}
+}
