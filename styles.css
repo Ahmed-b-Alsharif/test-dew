@@ -1124,15 +1124,16 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-hero-button-row.align-left,.dew-promo-button-row.align-left,.dew-custom-banner-button-row.align-left{justify-content:flex-start}
 .dew-hero-button-row.align-center,.dew-promo-button-row.align-center,.dew-custom-banner-button-row.align-center{justify-content:center}
 .dew-hero-button-row.align-right,.dew-promo-button-row.align-right,.dew-custom-banner-button-row.align-right{justify-content:flex-end}
-.dew-custom-banner{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:stretch;min-height:300px;margin:48px 0;overflow:hidden;border-radius:18px;background:#edf2e9}
-.dew-custom-banner.position-top{margin:0 0 42px;border-radius:0}
+.dew-custom-banner{position:relative;display:flex;align-items:center;justify-content:flex-start;width:100%;min-height:clamp(300px,38vw,560px);margin:48px 0;overflow:hidden;background:#e8ecdf;isolation:isolate}
+.dew-custom-banner.position-top{margin:0 0 42px}
 .dew-custom-banner.position-bottom{margin-bottom:0}
-.dew-custom-banner-art{min-width:0;min-height:300px;overflow:hidden;background:#e2e9df}
-.dew-custom-banner-art>img{display:block;width:100%;height:100%;min-height:300px;object-fit:cover;object-position:center}
-.dew-custom-banner-copy{display:flex;flex-direction:column;justify-content:center;padding:clamp(24px,4vw,58px);color:var(--dew-green)}
+.dew-custom-banner-art{position:absolute;inset:0;z-index:-2;width:100%;height:100%;min-height:0;overflow:hidden;background:#e2e9df}
+.dew-custom-banner-art>picture,.dew-custom-banner-art>img,.dew-custom-banner-art>.dew-placeholder{display:block;width:100%;height:100%;min-height:0}
+.dew-custom-banner-art img{display:block;width:100%;height:100%;min-height:0;object-fit:cover;object-position:center}
+.dew-custom-banner-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;width:min(52%,680px);padding:clamp(38px,7vw,100px);margin:0;background:linear-gradient(90deg,rgba(251,248,241,.96),rgba(251,248,241,.82) 72%,rgba(251,248,241,0));color:var(--dew-green)}
 .dew-custom-banner-copy h2{font:clamp(28px,3.2vw,44px)/1.12 Georgia,serif;margin:12px 0;color:var(--dew-green)}
-.dew-custom-banner-copy p{font-size:14px;line-height:1.75;margin:0 0 22px;color:#65766b}
-.dew-custom-banner-button-row{margin-top:4px}
+.dew-custom-banner-copy p{font-size:14px;line-height:1.75;margin:0;color:#65766b}
+.dew-custom-banner-art>picture{width:100%;height:100%}
 .hp-preview-custom-banner{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:12px;padding:12px;background:#edf2e9;margin:8px 0;border-radius:8px}
 .hp-preview-custom-banner img{width:100%;height:90px;object-fit:cover}
 .hp-preview-custom-banner b{font:16px Georgia,serif;color:#1c524e}
@@ -1143,13 +1144,14 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-hero-copy{padding:34px 7vw 28px}
  .dew-hero-art{height:auto;min-height:0;aspect-ratio:16/9}
  .dew-hero-art img{width:100%;height:100%;min-height:0;max-height:none;aspect-ratio:16/9;object-fit:cover}
- .dew-custom-banner{grid-template-columns:1fr;min-height:0;margin:32px 0;border-radius:13px}
- .dew-custom-banner.position-top{margin:0 0 30px;border-radius:0}
- .dew-custom-banner-art{min-height:0;height:auto;aspect-ratio:16/9}
- .dew-custom-banner-art>img{width:100%;height:100%;min-height:0;aspect-ratio:16/9;object-fit:cover}
- .dew-custom-banner-copy{padding:24px 21px 27px}
- .dew-custom-banner-copy h2{font-size:29px}
- .dew-custom-banner-copy p{font-size:13px;margin-bottom:17px}
+ .dew-custom-banner{display:flex;align-items:flex-end;min-height:0;height:min(68svh,560px);height:min(68vh,560px);margin:32px 0;border-radius:0}
+ .dew-custom-banner.position-top{margin:0 0 30px}
+ .dew-custom-banner-art{inset:0;height:100%;min-height:0}
+ .dew-custom-banner-art>picture,.dew-custom-banner-art img{width:100%;height:100%;min-height:0;aspect-ratio:auto;object-fit:cover;object-position:center 42%}
+ .dew-custom-banner:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,rgba(16,39,31,.78) 0%,rgba(16,39,31,.28) 48%,rgba(16,39,31,0) 82%);pointer-events:none}
+ .dew-custom-banner-copy{width:100%;max-width:none;padding:30px 22px 34px;margin:0;background:transparent;color:#fff}
+ .dew-custom-banner-copy h2{font-size:clamp(28px,8vw,42px);color:#fff}
+ .dew-custom-banner-copy p{font-size:13px;color:#fff;line-height:1.6}
  .hp-preview-custom-banner{grid-template-columns:1fr}
  .hp-preview-custom-banner img{height:110px}
 }
