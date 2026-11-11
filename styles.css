@@ -2767,3 +2767,21 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-footer-social{justify-content:flex-start!important;padding:2px 0 4px}
  .dew-footer-social .dew-social-icon{min-width:118px}
 }
+/* Seamless repeating announcement ticker on desktop and mobile */
+.dew-ann:not(.is-static){display:block;overflow:hidden;white-space:nowrap}
+.dew-ann:not(.is-static)>a{display:block;width:100%;overflow:hidden}
+.dew-ann-track{display:flex!important;width:max-content!important;min-width:200%!important;align-items:center!important;animation:dew-marquee 42s linear infinite!important;will-change:transform}
+.dew-ann-group{display:flex!important;flex:0 0 max(100vw,max-content)!important;width:max-content;min-width:100vw!important;box-sizing:border-box;align-items:center;justify-content:flex-start!important;gap:30px!important;padding:8px 22px!important;white-space:nowrap}
+.dew-ann-group span{flex:0 0 auto!important;white-space:nowrap}
+.dew-ann-group i{flex:0 0 auto!important;margin:0 4px;font-style:normal;opacity:.8}
+.dew-ann.speed-slow .dew-ann-track{animation-duration:60s!important}
+.dew-ann.speed-fast .dew-ann-track{animation-duration:24s!important}
+.dew-ann:hover .dew-ann-track{animation-play-state:paused!important}
+@media(max-width:760px){
+ .dew-ann:not(.is-static){width:100%;max-width:100%;overflow:hidden}
+ .dew-ann-group{gap:22px!important;padding:8px 16px!important}
+ .dew-ann-track{animation-duration:34s!important}
+ .dew-ann.speed-slow .dew-ann-track{animation-duration:50s!important}
+ .dew-ann.speed-fast .dew-ann-track{animation-duration:20s!important}
+}
+@media(prefers-reduced-motion:reduce){.dew-ann-track{animation:none!important;transform:none!important}}
