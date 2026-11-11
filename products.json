@@ -48,12 +48,13 @@
     "homepage": {
       "announcement": {
         "show": true,
-        "text": "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP",
+        "text": "Hello",
         "link": "#shop",
         "mode": "scroll",
         "speed": "fast",
         "messages": [
-          "Buy 2 Get 1 Free | Free delivery on orders over 600 EGP"
+          "Hello",
+          ""
         ]
       },
       "header": {
