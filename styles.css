@@ -2522,3 +2522,30 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .collection-home-preview-button{width:max-content;max-width:100%;margin:12px auto 0;border:1px solid #1c524e;border-radius:3px;padding:7px 11px;color:#1c524e;font-size:8px;font-weight:700;text-align:center}
 .collection-home-preview-empty,.collection-home-preview-hidden{grid-column:1/-1;padding:15px 5px;text-align:center;font-size:9px;color:#87938a}
 .collection-home-preview-note{display:block;margin-top:8px;font-size:9px;line-height:1.5;color:#87938a}
+
+
+/* Compact, expandable Best Seller product picker in the admin theme editor */
+.best-seller-product-picker{border:1px solid #dce5dc;border-radius:10px;background:#fff;overflow:hidden}
+.best-seller-product-picker>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;cursor:pointer;list-style:none;color:#24483b;font-size:13px;font-weight:700}
+.best-seller-product-picker>summary::-webkit-details-marker{display:none}
+.best-seller-product-picker>summary:after{content:"＋";font-size:17px;color:#527565}
+.best-seller-product-picker[open]>summary:after{content:"−"}
+.best-seller-selected-count{margin-left:auto;color:#718278;font-size:11px;font-weight:600;white-space:nowrap}
+.best-seller-product-picker[open]>summary{border-bottom:1px solid #e8eee8;background:#f8faf7}
+.best-seller-product-list{display:flex!important;flex-direction:column!important;gap:0!important;max-height:270px;overflow-y:auto;overscroll-behavior:contain;padding:5px 12px!important}
+.best-seller-product-list .product-section-choice{display:flex!important;align-items:center;min-height:39px;padding:7px 3px!important;margin:0!important;border:0!important;border-bottom:1px solid #eff2ed!important;border-radius:0!important;background:transparent!important;font-size:12px!important}
+.best-seller-product-list .product-section-choice:last-child{border-bottom:0!important}
+.best-seller-product-list .product-section-choice span{display:block;min-width:0;overflow-wrap:anywhere}
+.best-seller-product-list .product-section-choice input{flex:0 0 auto}
+
+/* Collection pages: title above a full-bleed, edge-to-edge image banner */
+.dew-collection-hero-simple{display:block!important;width:100%!important;margin:0 0 38px!important;padding:0!important;overflow:visible!important;background:transparent!important}
+.dew-collection-hero-heading{padding:30px clamp(18px,5vw,76px) 22px!important}
+.dew-collection-hero-heading .dew-collection-back{display:inline-block;margin:0 0 13px!important}
+.dew-collection-hero-heading h1{margin:0!important;color:var(--dew-green,#1c524e)!important;font:500 clamp(32px,4.5vw,56px)/1.08 "Playfair Display",Georgia,serif!important}
+.dew-collection-hero-simple .dew-collection-hero-art{width:100vw!important;height:clamp(260px,38vw,520px)!important;min-height:0!important;margin-left:calc(50% - 50vw)!important;overflow:hidden!important;background:#edf1e9!important}
+.dew-collection-hero-simple .dew-collection-responsive-picture{display:block!important;width:100%!important;height:100%!important}
+.dew-collection-hero-simple .dew-collection-hero-art img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important}
+.dew-collection-hero-simple .dew-collection-art-fallback{display:flex;align-items:center;justify-content:center;flex-direction:column;width:100%;height:100%;background:#e9eee7;color:#1c524e}
+.dew-collection-hero-simple .dew-collection-art-fallback b{font:500 clamp(28px,4vw,48px)/1.1 "Playfair Display",Georgia,serif}
+@media(max-width:760px){.dew-collection-hero-simple{margin-bottom:28px!important}.dew-collection-hero-heading{padding:22px 18px 16px!important}.dew-collection-hero-heading h1{font-size:clamp(30px,9vw,42px)!important}.dew-collection-hero-simple .dew-collection-hero-art{height:clamp(220px,62vw,390px)!important}}
