@@ -48,12 +48,12 @@
     "homepage": {
       "announcement": {
         "show": true,
-        "text": "Hello",
+        "text": "BUY 2 Lip Balm Get 1 Free",
         "link": "#shop",
         "mode": "scroll",
         "speed": "slow",
         "messages": [
-          "Hello"
+          "BUY 2 Lip Balm Get 1 Free"
         ]
       },
       "header": {
