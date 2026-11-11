@@ -2560,3 +2560,14 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 .dew-collection-hero-simple .dew-collection-responsive-picture{position:absolute!important;inset:0!important}
 .dew-collection-hero-simple .dew-collection-responsive-picture img{width:100%!important;height:100%!important;object-fit:cover!important}
 @media(max-width:760px){.dew-collection-hero-heading{padding:22px 16px 18px!important}}
+
+/* Desktop hero banner: remove the white shadow/glow around the banner image */
+@media(min-width:761px){
+ .dew-hero-art,.dew-hero-fullbleed,.dew-hero-fullbleed>.dew-hero-art,
+ .dew-hero-fullbleed>.dew-hero-art img,.dew-hero-fullbleed>.dew-hero-art picture{
+  box-shadow:none!important;filter:none!important;-webkit-filter:none!important;
+ }
+ .dew-hero-fullbleed>.dew-hero-art:before,.dew-hero-fullbleed>.dew-hero-art:after{
+  box-shadow:none!important;filter:none!important;
+ }
+}
