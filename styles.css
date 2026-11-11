@@ -2833,3 +2833,6 @@ html,body{color-scheme:only light!important}
  .dew-ann.speed-slow .dew-ann-track{animation-duration:660s!important}
  .dew-ann.speed-fast .dew-ann-track{animation-duration:270s!important}
 }
+
+/* Hide footer social links on laptop and desktop; keep mobile footer links visible */
+@media (min-width: 761px){.dew-footer-social{display:none!important}}
