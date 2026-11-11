@@ -2883,3 +2883,57 @@ html,body{color-scheme:only light!important}
 .best-seller-product-list .product-section-choice{width:100%!important;box-sizing:border-box!important;display:flex!important;flex-direction:row!important;justify-content:flex-start!important;align-items:center!important;gap:10px!important;text-align:left!important;padding:9px 5px!important;}
 .best-seller-product-list .product-section-choice input{display:block!important;position:static!important;float:none!important;transform:none!important;margin:0 2px 0 0!important;align-self:center!important;}
 .best-seller-product-list .product-section-choice span{flex:1 1 auto!important;width:auto!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.4!important;}
+
+
+/* Best Sellers admin chooser: remove side gaps and force product names to remain visible. */
+.best-seller-product-list{
+  display:block!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  padding:0!important;
+  margin:0!important;
+  overflow-x:hidden!important;
+}
+.best-seller-product-list .product-section-choice{
+  display:flex!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:9px!important;
+  margin:0!important;
+  padding:10px 4px!important;
+  text-align:left!important;
+  white-space:normal!important;
+}
+.best-seller-product-list .product-section-choice input[type="checkbox"]{
+  display:block!important;
+  flex:0 0 16px!important;
+  width:16px!important;
+  min-width:16px!important;
+  max-width:16px!important;
+  height:16px!important;
+  min-height:16px!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.best-seller-product-list .product-section-choice span{
+  display:block!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0!important;
+  color:#26382d!important;
+  font-size:13px!important;
+  line-height:1.4!important;
+  text-align:left!important;
+  white-space:normal!important;
+  overflow:visible!important;
+  visibility:visible!important;
+  opacity:1!important;
+}
