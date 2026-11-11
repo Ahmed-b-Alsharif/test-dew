@@ -83,7 +83,7 @@
         "button": "Discover the collection",
         "url": "#shop",
         "image": "images/1794340446644-01e27551.jpg",
-        "showButton": true,
+        "showButton": false,
         "buttonPosition": "right",
         "mobileImage": "images/1794339873056-6eefed3b.jpg",
         "showKicker": false,
@@ -198,7 +198,17 @@
         "show": true,
         "items": []
       },
-      "productSections": []
+      "productSections": [],
+      "collectionFrame": {
+        "show": true,
+        "background": "#fffefa",
+        "borderColor": "#dce8e2",
+        "borderWidth": 1,
+        "radius": 18,
+        "padding": 30,
+        "mobilePadding": 13,
+        "shadow": true
+      }
     },
     "productPage": {
       "addCartText": "Add to cart",
