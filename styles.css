@@ -2697,3 +2697,7 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* The swipe instruction is for touch screens only; keep desktop storefront clean. */
 @media(min-width:761px){.dew-home-swipe-section .dew-scroll-hint,.dew-best-sellers-section .dew-scroll-hint{display:none!important}}
+
+
+/* Centre compact three-product collection rows on laptop and desktop screens. */
+@media(min-width:761px){.dew-home-three-products .dew-products{grid-template-columns:repeat(3,minmax(0,260px));justify-content:center;gap:18px;}}
