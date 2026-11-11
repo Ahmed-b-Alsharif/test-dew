@@ -2629,3 +2629,36 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
  .dew-products-section.dew-collection-frame .dew-products::-webkit-scrollbar{height:4px}
  .dew-products-section.dew-collection-frame .dew-products::-webkit-scrollbar-thumb{background:rgba(28,82,78,.3);border-radius:99px}
 }
+
+
+/* Homepage Best Sellers: swipeable mobile row with an animated discover-more cue. */
+@media(max-width:760px){
+ .dew-best-sellers-section .dew-products{
+  display:grid!important;
+  grid-template-columns:none!important;
+  grid-auto-flow:column!important;
+  grid-auto-columns:calc((100% - 12px)/2)!important;
+  gap:12px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  overscroll-behavior-x:contain;
+  -webkit-overflow-scrolling:touch;
+  scroll-snap-type:x mandatory;
+  scroll-padding-inline:1px;
+  padding:0 1px 8px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(28,82,78,.35) transparent;
+ }
+ .dew-best-sellers-section .dew-products>.dew-product{width:100%;min-width:0;scroll-snap-align:start}
+ .dew-best-sellers-section .dew-products::-webkit-scrollbar{height:4px}
+ .dew-best-sellers-section .dew-products::-webkit-scrollbar-thumb{background:rgba(28,82,78,.3);border-radius:99px}
+ .dew-best-sellers-section .dew-scroll-hint{
+  width:max-content;max-width:100%;box-sizing:border-box;display:flex;align-items:center;gap:12px;
+  margin:-7px auto 15px;padding:7px 13px 7px 15px;border:1px solid rgba(28,82,78,.16);
+  border-radius:999px;background:#f1f5ef;color:#1c524e;font-size:9px;font-weight:750;
+  letter-spacing:1.25px;line-height:1;box-shadow:0 3px 12px rgba(18,58,41,.06)
+ }
+ .dew-best-sellers-section .dew-scroll-hint b{font-size:20px;letter-spacing:-5px;padding-right:5px;line-height:10px;animation:dewSwipeCue 1.25s ease-in-out infinite}
+}
+@keyframes dewSwipeCue{0%,100%{transform:translateX(0);opacity:.65}50%{transform:translateX(7px);opacity:1}}
+@media(prefers-reduced-motion:reduce){.dew-best-sellers-section .dew-scroll-hint b{animation:none!important}}
