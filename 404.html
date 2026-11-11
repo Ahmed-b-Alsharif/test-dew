@@ -10,7 +10,9 @@
   var path=decodeURIComponent(location.pathname);
   var marker='/collection/';
   var at=path.lastIndexOf(marker);
-  var slug=at>=0?path.slice(at+marker.length).replace(/^\\/+|\\/+$/g,''):'';
+  var slug=at>=0?path.slice(at+marker.length):'';
+  while(slug.charAt(0)==='/') slug=slug.slice(1);
+  while(slug.charAt(slug.length-1)==='/') slug=slug.slice(0,-1);
   var base=at>=0?(path.slice(0,at+1)||'/'):'/';
   var el=document.createElement('base');
   el.href=base;
