@@ -250,7 +250,7 @@
       "id": "a33bf143",
       "name": "Body Care",
       "description": "",
-      "image": "images/1794176181136-b10b1025.jpg",
+      "image": "",
       "productIds": [
         "95e54cca",
         "561a22fa",
@@ -279,7 +279,9 @@
         "limit": 5,
         "showViewAll": true,
         "viewAllText": "View all"
-      }
+      },
+      "desktopImageRemoved": true,
+      "mobileImageRemoved": true
     },
     {
       "id": "4569aaa1",
