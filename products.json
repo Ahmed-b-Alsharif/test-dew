@@ -169,7 +169,7 @@
         "postsToShow": 6
       },
       "newsletter": {
-        "show": true,
+        "show": false,
         "title": "Stay in the glow",
         "text": "Get updates, skincare tips and special offers.",
         "button": "Join us"
