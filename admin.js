@@ -66,7 +66,7 @@ async function putGithubFileLatest(path, payload) {
 async function refreshProductSitemap(previousSlugs = []) {
   const origin='https://dewskincaree.com';
   const slugs=productRouteSlugs();
-  const page='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>Product | Dew Skincare</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css?v=20261109-4"></head><body><div id="productApp"><div class="dew-loading">Dew Skincare</div></div><script src="cart.js?v=20261107-3"></script><script src="product.js?v=20261109-4"></script></body></html>';
+  const page='<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../"><title>Product | Dew Skincare</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="styles.css?v=20261109-4"></head><body><div id="productApp"><div class="dew-loading">Dew Skincare</div></div><script src="cart.js?v=20261107-3"></script><script src="product.js?v=20261109-4"></script><script src="storefront-ui.js?v=20261111-3"></script></body></html>';
   const missing=slugs.filter(slug=>!previousSlugs.includes(slug));
   for(let i=0;i<missing.length;i+=5){
     await Promise.all(missing.slice(i,i+5).map(async slug=>{
