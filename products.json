@@ -316,7 +316,15 @@
         "9af52287",
         "3ffd74ff",
         "e2a1f39f"
-      ]
+      ],
+      "desktopImage": "",
+      "mobileImage": "images/1794395307901-ab8cff0f.webp",
+      "homepageSection": {
+        "show": false,
+        "limit": 5,
+        "showViewAll": true,
+        "viewAllText": "View all Foot Care"
+      }
     }
   ],
   "products": [
