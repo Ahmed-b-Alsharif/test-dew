@@ -2709,3 +2709,21 @@ body{background:var(--dew-cream);color:var(--dew-ink);font-family:"DM Sans",Inte
 
 /* Reusable media-library picker dialog. */
 .media-picker-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}.media-picker-head h2{margin:5px 0;font-size:24px}.media-picker-head p{margin:0;color:#68786f;font-size:12px}.media-picker-item span{font-size:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#344a3b}.media-library-info .danger-link{color:#a43e35}
+
+
+/* Dew store-wide banner image proportions: desktop 1850×708, mobile 1350×1080. */
+:root{--dew-banner-desktop-ratio:1850/708;--dew-banner-mobile-ratio:1350/1080}
+.dew-hero.dew-hero-fullbleed{aspect-ratio:var(--dew-banner-desktop-ratio);min-height:0!important;height:auto!important;overflow:hidden}
+.dew-hero-fullbleed>.dew-hero-art{position:absolute!important;inset:0!important;min-height:0!important;height:100%!important}
+.dew-hero-fullbleed>.dew-hero-art picture,.dew-hero-fullbleed>.dew-hero-art picture img,.dew-hero-fullbleed>.dew-hero-art img{display:block!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover!important;object-position:center!important}
+.dew-custom-banner-art{aspect-ratio:var(--dew-banner-desktop-ratio);min-height:0!important;height:auto!important}
+.dew-custom-banner-art>img{width:100%!important;height:100%!important;min-height:0!important;object-fit:cover!important}
+.dew-promo>img{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:var(--dew-banner-desktop-ratio);object-fit:cover!important}
+.dew-collection-hero-simple .dew-collection-hero-art{aspect-ratio:var(--dew-banner-desktop-ratio);height:auto!important;min-height:0!important}
+.dew-collection-hero-simple .dew-collection-hero-art picture,.dew-collection-hero-simple .dew-collection-hero-art picture img,.dew-collection-hero-simple .dew-collection-hero-art img{display:block!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover!important}
+@media(max-width:760px){
+ .dew-hero.dew-hero-fullbleed{aspect-ratio:var(--dew-banner-mobile-ratio)!important;min-height:0!important;height:auto!important}
+ .dew-custom-banner-art{aspect-ratio:var(--dew-banner-mobile-ratio)!important;min-height:0!important;height:auto!important}
+ .dew-promo>img{aspect-ratio:var(--dew-banner-mobile-ratio)!important;height:auto!important}
+ .dew-collection-hero-simple .dew-collection-hero-art{aspect-ratio:var(--dew-banner-mobile-ratio)!important;height:auto!important;min-height:0!important;max-height:none!important}
+}
