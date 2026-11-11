@@ -202,7 +202,17 @@
       },
       "customBanners": {
         "show": true,
-        "items": []
+        "items": [
+          {
+            "id": "834adc8e",
+            "show": true,
+            "title": "",
+            "text": "",
+            "desktopImage": "images/1794433838849-f46d1eae.webp",
+            "mobileImage": "",
+            "position": "middle"
+          }
+        ]
       },
       "productSections": [],
       "collectionFrame": {
