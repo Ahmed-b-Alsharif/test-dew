@@ -2811,7 +2811,11 @@
       "endsAt": "",
       "endTime": "",
       "updatedAt": "2026-11-15T09:56:17.331Z",
-      "createdAt": "2026-11-15T09:56:02.540Z"
+      "createdAt": "2026-11-15T09:56:02.540Z",
+      "buyProductIds": [],
+      "buyCollectionIds": [
+        "4569aaa1"
+      ]
     }
   ],
   "pages": [
