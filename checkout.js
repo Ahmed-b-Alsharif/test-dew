@@ -81,7 +81,7 @@ function previewDiscount(d,ls,items,delivery){
   }else if(d.discountKind==='buy_x_get_y'){
     const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?'products':'all',productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
     const buys=ls.filter(l=>discountProductMatch(buyRule,l));
-    if(buys.reduce((n,l)=>n+l.qty,0)<Math.max(1,Number(d.buyQuantity||1))||buys.reduce((n,l)=>n+l.total,0)<Number(d.buyAmount||0))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
+    if((d.buyMode||'quantity')==='amount'?buys.reduce((n,l)=>n+l.total,0)<Number(d.buyAmount||0):buys.reduce((n,l)=>n+l.qty,0)<Math.max(1,Number(d.buyQuantity||1)))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
     const ids=(d.getProductIds||[]).map(String);
     const rewards=ls.filter(l=>!ids.length||ids.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},()=>({unit:l.unit}))).sort((a,b)=>a.unit-b.unit);
     let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
