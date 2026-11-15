@@ -118,6 +118,59 @@ async function notifyTelegram(order, env, settings) {
     body:JSON.stringify({chat_id:env.TELEGRAM_CHAT_ID,text})
   });
 }
+function cairoNowParts(date=new Date()){
+ const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(date);
+ return Object.fromEntries(parts.filter(x=>x.type!=="literal").map(x=>[x.type,x.value]));
+}
+function discountDateState(d,now=new Date()){
+ const p=cairoNowParts(now),current=p.year+"-"+p.month+"-"+p.day+"T"+p.hour+":"+p.minute;
+ const start=d.startsAt?d.startsAt+"T"+(d.startTime||"00:00"):"";
+ const end=d.endsAt?d.endsAt+"T"+(d.endTime||"23:59"):"";
+ return (!start||current>=start)&&(!end||current<=end);
+}
+function discountProductEligible(d,line,catalogue){
+ const ids=Array.isArray(d.productIds)?d.productIds.map(String):[];
+ const cids=Array.isArray(d.collectionIds)?d.collectionIds.map(String):[];
+ if(d.scope!=="products"||(!ids.length&&!cids.length))return true;
+ const product=(catalogue.products||[]).find(p=>String(p.id)===String(line.id));
+ return !!product&&(ids.includes(String(line.id))||(cids.length&&cids.includes(String(product.catalog))));
+}
+function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorOrders,discountUses,customerDiscountUses){
+ const fail=message=>({ok:false,error:message});
+ if(!d||d.active===false)return fail("This discount is not active.");
+ if(!discountDateState(d))return fail("This discount is not currently active.");
+ if(d.method==="automatic"&&d.code)return fail("Invalid automatic discount configuration.");
+ if(d.method!=="automatic"&&!clean(d.code))return fail("This discount code is not valid.");
+ if(Number(d.minSpend||0)>itemsTotal)return fail("Minimum spend for this discount is "+money(d.minSpend)+".");
+ if(Number(d.minQuantity||0)>lines.reduce((n,l)=>n+l.qty,0))return fail("Add more items to use this discount.");
+ if(d.eligibility==="first_time"&&priorOrders>0)return fail("This offer is available to first-time customers only.");
+ if(Number(d.usageLimit||0)>0&&discountUses>=Number(d.usageLimit))return fail("This discount has reached its usage limit.");
+ if(d.onePerCustomer&&customerDiscountUses>0)return fail("This discount can only be used once per customer.");
+ let amount=0,shipping=0,discountedLines=[];
+ if(d.discountKind==="free_shipping"||d.type==="free_shipping"){
+  if(Number(d.shippingLimit||0)>0&&delivery>Number(d.shippingLimit))return fail("This discount does not apply to this shipping rate.");
+  shipping=delivery;
+ } else if(d.discountKind==="buy_x_get_y"){
+  const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?"products":"all",productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
+  const buys=lines.filter(l=>discountProductEligible(buyRule,l,catalogue));
+  const buyQty=buys.reduce((n,l)=>n+l.qty,0),buyAmount=buys.reduce((n,l)=>n+l.total,0);
+  const buyMode=d.buyMode||"quantity";
+  if(buyMode==="amount"?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return fail("Your cart does not meet the Buy X requirements.");
+  const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[];
+  let rewards=lines.filter(l=>!getIds.length||getIds.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},(_,i)=>({id:l.id,unit:l.unit,key:l.id+":"+i}))).sort((a,b)=>a.unit-b.unit);
+  let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
+  for(const item of rewards){if(remaining<=0)break;const cut=d.getValue==="free"?item.unit:d.getValue==="percentage"?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));amount+=cut;discountedLines.push(item.key);remaining--;}
+  if(!discountedLines.length)return fail("Add an eligible reward product to your cart.");
+ } else {
+  const eligible=d.discountKind==="amount_off_products"?lines.filter(l=>discountProductEligible(d,l,catalogue)):lines;
+  const base=eligible.reduce((n,l)=>n+l.total,0);
+  if(d.discountKind==="amount_off_products"&&d.scope==="products"&&!base)return fail("Your cart does not contain products eligible for this discount.");
+  const kind=d.valueType||((d.type==="fixed")?"fixed":"percentage"),value=Math.max(0,Number(d.value||0));
+  amount=kind==="fixed"?Math.min(base,value):Math.round(base*Math.min(100,value)/100);
+ }
+ return {ok:true,amount:Math.min(itemsTotal,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),discountedLines,kind:d.discountKind||d.type,title:d.title||d.code||"Discount"};
+}
+
 async function createOrder(request, env) {
   const body = await request.json();
   const customer = body.customer || {};
@@ -159,17 +212,28 @@ async function createOrder(request, env) {
   const itemsTotal=lines.reduce((n,l)=>n+l.total,0);
   if (itemsTotal < Number(settings.minOrder||0)) return json({ok:false,error:"Minimum order is " + money(settings.minOrder) + "."},400);
   let delivery=Math.max(0,Number(selectedArea.fee)||0);
-  let discount=0, promoCode=null;
   const code=clean(body.promoCode).toUpperCase();
-  if (code) {
-    const promo=(catalogue.discounts||[]).find(d=>d.active && String(d.code).toUpperCase()===code);
-    if (!promo || (Number(promo.minSpend||0)>itemsTotal)) return json({ok:false,error:"That discount code is no longer valid."},400);
-    promoCode=promo.code;
-    if (promo.type==="percentage") discount=Math.round(itemsTotal*Number(promo.value||0)/100);
-    else if (promo.type==="fixed") discount=Math.min(itemsTotal,Number(promo.value||0));
-    else if (promo.type==="free_shipping") { discount=delivery; delivery=0; }
+  const customerPhone=phone.replace(/\D/g,"");
+  const priorRows=await env.DB.prepare("SELECT order_json FROM orders").all();
+  const priorOrderList=(priorRows.results||[]).map(row=>{try{return JSON.parse(row.order_json)}catch{return null}}).filter(Boolean);
+  const priorOrders=priorOrderList.filter(o=>String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone).length;
+  const discounts=Array.isArray(catalogue.discounts)?catalogue.discounts:[];
+  let promo=code?discounts.find(d=>d.active&&d.method!=="automatic"&&String(d.code||"").toUpperCase()===code):null;
+  if(code&&!promo)return json({ok:false,error:"That discount code is invalid or inactive."},400);
+  if(!promo)promo=discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));
+  let discount=0,promoCode=null,discountInfo=null;
+  if(promo){
+    const usedThisDiscount=o=>(!!promo.id&&String(o.discountInfo?.id||"")===String(promo.id))||(!!promo.code&&String(o.promoCode||"").toUpperCase()===String(promo.code).toUpperCase());
+    const discountUses=priorOrderList.filter(usedThisDiscount).length;
+    const customerDiscountUses=priorOrderList.filter(o=>String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone&&usedThisDiscount(o)).length;
+    const result=calculateDiscount(promo,lines,itemsTotal,delivery,catalogue,{first,last,phone},priorOrders,discountUses,customerDiscountUses);
+    if(!result.ok)return json({ok:false,error:result.error},400);
+    discount=result.amount;
+    delivery=Math.max(0,delivery-result.shipping);
+    promoCode=promo.method==="automatic"?"":promo.code;
+    discountInfo={id:promo.id||"",title:result.title,kind:result.kind,method:promo.method||"code",discountedLines:result.discountedLines||[]};
   }
-  const total=Math.max(0,itemsTotal+delivery-(promoCode && (catalogue.discounts||[]).find(d=>d.code===promoCode)?.type==="free_shipping"?0:discount));
+  const total=Math.max(0,Math.round((itemsTotal+delivery-discount)*100)/100);
   const now=new Date();
   // Generate short, sequential Dew order numbers: DEW#1000, DEW#1001, ...
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS order_counter (id INTEGER PRIMARY KEY CHECK (id = 1), last_number INTEGER NOT NULL)").run();
@@ -178,7 +242,7 @@ async function createOrder(request, env) {
   const number = "DEW#" + sequence.last_number;
   const order={
     number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
-    lines,itemsTotal,delivery,discount,promoCode,total,area:selectedArea.name,areaId:selectedArea.id,
+    lines,itemsTotal,delivery,discount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
     customer:{first,last,phone,address,note}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
