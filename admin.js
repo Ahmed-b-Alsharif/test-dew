@@ -173,7 +173,9 @@ function toast(msg, bad) {
   clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', bad ? 7000 : 3500);
 }
 
-window.addEventListener('popstate',()=>{const params=new URLSearchParams(location.search);const requested=params.get('tab');const allowed=['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'];tab=allowed.includes(requested)?requested:'overview';q='';render();});\n\n/* ---------- login ---------- */
+window.addEventListener('popstate',()=>{const params=new URLSearchParams(location.search);const requested=params.get('tab');const allowed=['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'];tab=allowed.includes(requested)?requested:'overview';q='';render();});
+
+/* ---------- login ---------- */
 async function start(){
  if(!adminToken())return showLogin();
  try{await loadData();render()}catch(e){try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}showLogin(e.message)}
@@ -221,7 +223,9 @@ function render() {
     </div>`;
   document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => navigateAdmin(b.dataset.t));
   $('#out').onclick=async()=>{if(themeEditorDirty){if(!confirm('You have unsaved theme changes. Sign out and discard them?'))return;themeEditorDiscard();}const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
-  const routeParams = new URLSearchParams(location.search);\n  if (tab === 'products' && (routeParams.has('product') || routeParams.get('new') === '1')) productForm(routeParams.get('product') || '');\n  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
+  const routeParams = new URLSearchParams(location.search);
+  if (tab === 'products' && (routeParams.has('product') || routeParams.get('new') === '1')) productForm(routeParams.get('product') || '');
+  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
