@@ -6,40 +6,49 @@
 <title>Checkout | Dew Skincare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261115-order-success-1">
+<link rel="stylesheet" href="styles.css?v=20261115-checkout-visual-1">
 </head>
-<body>
+<body class="dew-checkout-page">
 <header class="top"><div class="wrap">
   <a class="brand" href="./" style="text-decoration:none">Dew<span>.</span></a>
   <a class="cart-btn" href="./" style="text-decoration:none">Continue shopping</a>
 </div></header>
 
-<div class="page" id="page">
-  <form class="box" id="form">
-    <h2>Delivery details</h2>
-    <label for="name">Full name</label>
-    <input id="name" required autocomplete="name" placeholder="Your first and last name">
-    <label for="phone">Egyptian mobile number</label>
-    <input id="phone" type="tel" required inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX">
-    <label for="deliveryArea">Governorate / delivery area</label>
-    <select id="deliveryArea" name="area" required><option value="">Choose your delivery area</option></select>
-    <label for="city">City / area</label>
-    <input id="city" required autocomplete="address-level2" placeholder="City or neighborhood">
-    <label for="street">Street address</label>
-    <input id="street" required autocomplete="street-address" placeholder="Street name and number">
-    <label for="building">Building / floor / apartment (optional)</label>
-    <input id="building" autocomplete="address-line2" placeholder="Building, floor, apartment">
-    <label for="customerNote">Order note (optional)</label>
-    <textarea id="customerNote" rows="3" maxlength="500" placeholder="Delivery instructions or other notes"></textarea>
-    <small class="note">Your note will be included with your order for our team.</small>
-    <section class="payment-methods"><h3>Payment method</h3><label class="opt"><input type="radio" name="paymentMethod" value="cod" checked> <span>Cash on Delivery (COD)</span></label><label class="opt"><input type="radio" name="paymentMethod" value="instapay"> <span>InstaPay</span></label><div id="paymentDetails" class="payment-details" hidden></div></section>
-    <div class="err" id="err"></div>
-    <button class="btn red" id="submit" style="width:100%;margin-top:8px">Complete order</button>
+<main class="page" id="page">
+  <form class="checkout-form" id="form">
+    <section class="checkout-card">
+      <div class="checkout-section-title"><span>1</span><h2>Your details</h2></div>
+      <div class="checkout-field-grid">
+        <div><label for="name">Full name</label><input id="name" required autocomplete="name" placeholder="Your first and last name"></div>
+        <div><label for="phone">Egyptian mobile number</label><input id="phone" type="tel" required inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
+      </div>
+    </section>
+    <section class="checkout-card">
+      <div class="checkout-section-title"><span>2</span><h2>Delivery address</h2></div>
+      <div class="checkout-field-grid">
+        <div><label for="deliveryArea">Governorate / delivery area</label><select id="deliveryArea" name="area" required><option value="">Choose your delivery area</option></select></div>
+        <div><label for="city">City / area</label><input id="city" required autocomplete="address-level2" placeholder="City or neighborhood"></div>
+        <div><label for="street">Street address</label><input id="street" required autocomplete="street-address" placeholder="Street name and number"></div>
+        <div><label for="building">Building / floor / apartment (optional)</label><input id="building" autocomplete="address-line2" placeholder="Building, floor, apartment"></div>
+        <div class="checkout-field-wide"><label for="customerNote">Order note (optional)</label><textarea id="customerNote" rows="3" maxlength="500" placeholder="Delivery instructions or other notes"></textarea><small class="note">Your note will be included with your order for our team.</small></div>
+      </div>
+    </section>
+    <section class="checkout-card">
+      <div class="checkout-section-title"><span>3</span><h2>Payment</h2></div>
+      <div class="payment-methods">
+        <label class="opt"><input type="radio" name="paymentMethod" value="cod" checked> <span>Cash on Delivery (COD)</span></label>
+        <label class="opt"><input type="radio" name="paymentMethod" value="instapay"> <span>InstaPay</span></label>
+        <div id="paymentDetails" class="payment-details" hidden></div>
+      </div>
+    </section>
+    <div class="err" id="err" role="alert" aria-live="polite"></div>
+    <button class="btn red checkout-submit" id="submit" type="submit">Complete order</button>
   </form>
-
-  <div class="box" id="summary"><h2>Order summary</h2><div id="sumBody"></div></div>
-</div>
-
+  <aside class="box checkout-summary" id="summary">
+    <h2>Order summary</h2>
+    <div id="sumBody"></div>
+  </aside>
+</main>
 <script src="cart.js"></script>
 <script src="checkout.js?v=20261115-egypt-checkout-1"></script>
 <script src="storefront-ui.js?v=20261111-checkout-search-removed-1"></script>
