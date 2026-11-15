@@ -210,9 +210,55 @@ $('#form').onsubmit = async e => {
 };
 
 function done(o) {
-  $('#page').innerHTML = `<div class="box ok-box" style="grid-column:1/-1;text-align:center;padding:40px">
-    <h2>Order placed successfully!</h2>
-    <p>Your order reference is <b>${esc(o.number)}</b>. Total: <b>${egp(o.total)}</b> (${paymentMethod === 'instapay' ? 'InstaPay' : 'cash on delivery'}).</p>
-    <p style="color:var(--muted)">We have received your order and will contact you shortly.</p>
-    <a class="btn red" href="./" style="margin-top:16px">Back to the shop</a></div>`;
+  const customer=o.customer||{}, lines=Array.isArray(o.lines)?o.lines:[];
+  const subtotal=Number.isFinite(Number(o.itemsTotal))?Number(o.itemsTotal):lines.reduce((n,line)=>n+Number(line.total||0),0);
+  const delivery=Math.max(0,Number(o.delivery)||0),discount=Math.max(0,Number(o.discount)||0);
+  const total=Math.max(0,Number(o.total)||0),isCod=String(o.paymentMethod||paymentMethod).toLowerCase()==='cod';
+  const itemsHtml=lines.map(line=>`<div class="dew-receipt-item"><div><b>${esc(line.name||'Dew product')}</b><small>${Math.max(0,Number(line.qty)||0)} × ${egp(line.unit)}</small></div><strong>${egp(line.total)}</strong></div>`).join('');
+  $('#page').className='page dew-success-page';
+  document.title='Order confirmed | Dew Skincare';
+  $('#page').innerHTML=`<div class="dew-success-grid">
+    <section class="dew-success-hero">
+      <div>
+        <span class="dew-success-badge"><span aria-hidden="true">✓</span> Order received</span>
+        <p class="dew-success-greeting">Hi ${esc(customer.first||'there')},</p>
+        <h1>Glow,<br><em>on the way.</em></h1>
+        <p class="dew-success-copy">We’ve received your order. Our team will contact you to confirm your delivery details.</p>
+      </div>
+      <div class="dew-success-order">
+        <span>Order number</span>
+        <strong>${esc(o.number||'')}</strong>
+        <button type="button" id="copyOrderNumber" class="dew-copy-order">Copy</button>
+      </div>
+    </section>
+    <section class="dew-success-receipt" aria-label="Order receipt">
+      <p class="dew-success-eyebrow">Dew Skincare</p>
+      <h2>Your order</h2>
+      <div class="dew-receipt-items">${itemsHtml}</div>
+      <dl class="dew-receipt-totals">
+        <div><dt>Subtotal</dt><dd>${egp(subtotal)}</dd></div>
+        ${discount>0?`<div class="dew-receipt-discount"><dt>Discount${o.promoCode?` · ${esc(o.promoCode)}`:''}</dt><dd>−${egp(discount)}</dd></div>`:''}
+        <div><dt>Delivery</dt><dd>${delivery>0?egp(delivery):'Free'}</dd></div>
+        <div class="dew-receipt-total"><dt>${isCod?'Due on delivery':'Order total'}</dt><dd>${egp(total)}</dd></div>
+      </dl>
+      <div class="dew-success-payment">
+        <strong>${isCod?'Cash on Delivery':'InstaPay'}</strong>
+        <p>${isCod?`Please pay ${egp(total)} when your order arrives.`:'We’ll contact you to confirm your InstaPay transfer.'}</p>
+      </div>
+      <div class="dew-success-address">
+        <strong>Delivery details</strong>
+        <p>${esc([customer.first,customer.last].filter(Boolean).join(' '))}<br>${esc(customer.address||'')}<br>${esc(o.area||'')}</p>
+      </div>
+      <div class="dew-success-actions">
+        <button type="button" id="printOrderReceipt" class="btn ghost">Print receipt</button>
+        <a class="btn red" href="./">Continue shopping</a>
+      </div>
+      <p class="dew-success-thanks">Thank you for choosing Dew.</p>
+    </section>
+  </div>`;
+  $('#copyOrderNumber').onclick=async()=>{
+    try{await navigator.clipboard.writeText(String(o.number||''));$('#copyOrderNumber').textContent='Copied';}
+    catch{$('#copyOrderNumber').textContent=String(o.number||'');}
+  };
+  $('#printOrderReceipt').onclick=()=>window.print();
 }
