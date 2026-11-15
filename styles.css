@@ -3009,3 +3009,6 @@ html,body{color-scheme:only light!important}
 @media(min-width:761px) and (max-width:1050px){
  .dew-disc-builder-body{grid-template-columns:minmax(0,1fr) 240px}
 }
+
+/* Automatic discount shown on the affected cart product, Shopify-style */
+.dew-line-price{display:grid;gap:3px;font-size:12px;color:#65736a}.dew-line-price>div{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.dew-line-price del{color:#89938b;font-size:11px}.dew-line-price strong{font-size:13px;font-weight:700}.dew-line-price .is-free{color:#1c524e}.dew-line-price .is-discounted{color:#1c524e}.dew-line-price small{color:#1c524e;font-size:10px;font-weight:600}
