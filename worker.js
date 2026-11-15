@@ -222,8 +222,9 @@ async function createOrder(request, env) {
   if(!promo)promo=discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));
   let discount=0,promoCode=null,discountInfo=null;
   if(promo){
-    const discountUses=priorOrderList.filter(o=>String(o.discountInfo?.id||"")===String(promo.id||"")||String(o.promoCode||"").toUpperCase()===String(promo.code||"").toUpperCase()).length;
-    const customerDiscountUses=priorOrderList.filter(o=>(String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone)&&(String(o.discountInfo?.id||"")===String(promo.id||"")||String(o.promoCode||"").toUpperCase()===String(promo.code||"").toUpperCase())).length;
+    const usedThisDiscount=o=>(!!promo.id&&String(o.discountInfo?.id||"")===String(promo.id))||(!!promo.code&&String(o.promoCode||"").toUpperCase()===String(promo.code).toUpperCase());
+    const discountUses=priorOrderList.filter(usedThisDiscount).length;
+    const customerDiscountUses=priorOrderList.filter(o=>String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone&&usedThisDiscount(o)).length;
     const result=calculateDiscount(promo,lines,itemsTotal,delivery,catalogue,{first,last,phone},priorOrders,discountUses,customerDiscountUses);
     if(!result.ok)return json({ok:false,error:result.error},400);
     discount=result.amount;
