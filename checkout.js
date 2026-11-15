@@ -26,7 +26,7 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
   try {
     const cfg=window.DEW_AUTH_CONFIG||{};
     if(window.supabase?.createClient&&cfg.supabaseUrl&&cfg.supabaseAnonKey){
-      authClient=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey);
+      authClient=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
       const sessionResult=await authClient.auth.getSession();
       currentAuthSession=sessionResult.data?.session||null;
       if(currentAuthSession?.user?.email){$('#email').value=currentAuthSession.user.email;$('#email').readOnly=true;$('#email').autocomplete='email';}
