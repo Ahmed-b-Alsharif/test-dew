@@ -11,7 +11,7 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
     {id:'cairo',name:'Cairo & Giza',fee:Number(s.deliveryCairo||0),enabled:true},
     {id:'alex',name:'Alexandria',fee:Number(s.deliveryAlex||0),enabled:true}
   ];
-  $('#deliveryArea').innerHTML='<option value="">Choose your governorate</option>'+deliveryAreas.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+' — '+egp(x.fee)+'</option>').join('');
+  $('#deliveryArea').innerHTML='<option value="">Choose your delivery area</option>'+deliveryAreas.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join('');
   const syncDeliveryArea=()=>{const value=String($('#deliveryArea').value||'').trim();area=value||null;render();};
   $('#deliveryArea').addEventListener('change',syncDeliveryArea);
   $('#deliveryArea').addEventListener('input',syncDeliveryArea);
@@ -25,7 +25,7 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
   updatePaymentDetails();
   try {
     const c = JSON.parse(localStorage.getItem('dew_customer') || 'null');
-    if (c) { $('#name').value = c.name || ''; $('#phone').value = c.phone || ''; }
+    if (c) { const parts=String(c.name||'').trim().split(/\s+/).filter(Boolean); $('#firstName').value=parts.shift()||''; $('#lastName').value=parts.join(' '); $('#phone').value=c.phone||''; }
   } catch {}
   render();
 })();
@@ -178,9 +178,8 @@ $('#form').onsubmit = async e => {
   e.preventDefault();
   $('#err').textContent = '';
   const t = totals();
-  const fullName = $('#name').value.trim().replace(/\s+/g,' ');
-  const nameParts = fullName.split(' ').filter(Boolean);
-  const first = nameParts.shift() || '', last = nameParts.join(' ');
+  const first = $('#firstName').value.trim().replace(/\s+/g,' ');
+  const last = $('#lastName').value.trim().replace(/\s+/g,' ');
   const phone = $('#phone').value.trim();
   const normalizedPhone = phone.replace(/\D/g,'').replace(/^0020/,'20').replace(/^20/,'0');
   const city = $('#city').value.trim(), street = $('#street').value.trim(), building = $('#building').value.trim();
@@ -189,7 +188,8 @@ $('#form').onsubmit = async e => {
   const selectedArea=deliveryAreas.find(x=>String(x.id??'').trim()===selectedAreaId);
   if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
   area=String(selectedArea.id);
-  if (!first || !last) { $('#err').textContent = 'Please enter your first and last name.'; $('#name').focus(); return; }
+  if (!first) { $('#err').textContent = 'Please enter your first name.'; $('#firstName').focus(); return; }
+  if (!last) { $('#err').textContent = 'Please enter your last name.'; $('#lastName').focus(); return; }
   if (!/^01[0125]\d{8}$/.test(normalizedPhone)) { $('#err').textContent = 'Enter a valid Egyptian mobile number, for example 01012345678.'; $('#phone').focus(); return; }
   if (street.length < 3 || city.length < 2) { $('#err').textContent = 'Please enter your city or area and street address.'; return; }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
