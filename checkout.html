@@ -6,7 +6,7 @@
 <title>Checkout | Dew Skincare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261115-order-success-1">
+<link rel="stylesheet" href="styles.css?v=20261115-customer-account-1">
 </head>
 <body>
 <header class="top"><div class="wrap">
@@ -23,6 +23,8 @@
     </div>
     <label>Full address</label><textarea id="address" rows="3" required placeholder="Street, building, floor, apartment, area"></textarea>
     <div><label>Phone</label><input id="phone" required inputmode="tel" autocomplete="tel"></div>
+    <div><label for="email">Email for your receipt</label><input id="email" type="email" required autocomplete="email" maxlength="254"><small class="note">We’ll email your order receipt to this address.</small></div>
+    <div class="dew-account-checkout" id="accountCheckout"><span>Have an account?</span> <a href="account.html">Sign in or create one</a></div>
     <label for="customerNote">Order note (optional)</label>
     <textarea id="customerNote" rows="3" maxlength="500" placeholder="Add a note for Dew Skincare (delivery instructions, preferences, etc.)"></textarea>
     <small class="note">This note will be included with your order for our team.</small>
@@ -36,8 +38,10 @@
   <div class="box" id="summary"><h2>Order summary</h2><div id="sumBody"></div></div>
 </div>
 
-<script src="cart.js"></script>
-<script src="checkout.js?v=20261115-order-success-1"></script>
+<script src="cart.js?v=20261109-1"></script>
+<script src="auth-config.js?v=20261115-1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="checkout.js?v=20261115-customer-account-1"></script>
 <script src="storefront-ui.js?v=20261111-checkout-search-removed-1"></script>
 </body>
 </html>
