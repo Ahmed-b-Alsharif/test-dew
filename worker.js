@@ -154,7 +154,8 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
   const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?"products":"all",productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
   const buys=lines.filter(l=>discountProductEligible(buyRule,l,catalogue));
   const buyQty=buys.reduce((n,l)=>n+l.qty,0),buyAmount=buys.reduce((n,l)=>n+l.total,0);
-  if(buyQty<Math.max(1,Number(d.buyQuantity||1))||buyAmount<Number(d.buyAmount||0))return fail("Your cart does not meet the Buy X requirements.");
+  const buyMode=d.buyMode||"quantity";
+  if(buyMode==="amount"?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return fail("Your cart does not meet the Buy X requirements.");
   const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[];
   let rewards=lines.filter(l=>!getIds.length||getIds.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},(_,i)=>({id:l.id,unit:l.unit,key:l.id+":"+i}))).sort((a,b)=>a.unit-b.unit);
   let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
