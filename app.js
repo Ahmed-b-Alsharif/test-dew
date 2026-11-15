@@ -65,14 +65,21 @@ function automaticCartDiscount(cartLines,subtotal){
  const d=(S.discounts||[]).find(x=>x.method==='automatic'&&live(x));
  if(!d||d.discountKind!=='buy_x_get_y')return {amount:0,label:'',lineDiscounts:[]};
  const collectionHas=(cid,id)=>(S.catalogs||[]).some(c=>String(c.id)===String(cid)&&(c.productIds||[]).map(String).includes(String(id)));
- const buyIds=(d.buyProductIds||[]).map(String),buyCids=(d.buyCollectionIds||[]).map(String),getIds=(d.getProductIds||[]).map(String);
- const buys=cartLines.map((line,index)=>({line,index})).filter(x=>(!buyIds.length&&!buyCids.length)||(buyIds.includes(String(x.line.p.id))||buyCids.some(cid=>collectionHas(cid,x.line.p.id)))).sort((a,b)=>Number(getIds.includes(String(a.line.p.id)))-Number(getIds.includes(String(b.line.p.id))));
+ const buyIds=(d.buyProductIds||[]).map(String),buyCids=(d.buyCollectionIds||[]).map(String),getIds=(d.getProductIds||[]).map(String),getQty=Math.max(1,Number(d.getQuantity||1));
+ const isBuyEligible=line=>(!buyIds.length&&!buyCids.length)||(buyIds.includes(String(line.p.id))||buyCids.some(cid=>collectionHas(cid,line.p.id)));
+ const buys=cartLines.map((line,index)=>({line,index})).filter(x=>isBuyEligible(x.line)).sort((a,b)=>Number(getIds.includes(String(a.line.p.id)))-Number(getIds.includes(String(b.line.p.id))));
  const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),mode=d.buyMode||'quantity',requiredQty=Math.max(1,Number(d.buyQuantity||1)),requiredAmount=Number(d.buyAmount||0);
- if(mode==='amount'?buyAmount<requiredAmount:buyQty<requiredQty)return {amount:0,label:'',lineDiscounts:[]};
- const consumed=new Map();let qtySlots=requiredQty,amountCounted=0;
- for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(mode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;take++;amountCounted+=item.line.unit;qtySlots--;}if(take)consumed.set(item.index,take);if(mode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;}
+ const rewardBuyQty=buys.reduce((n,x)=>n+(!getIds.length||getIds.includes(String(x.line.p.id))?x.line.qty:0),0);
+ const rewardOutsideBuyQty=cartLines.reduce((n,line)=>n+((!getIds.length||getIds.includes(String(line.p.id)))&&!isBuyEligible(line)?line.qty:0),0);
+ const rewardQty=rewardBuyQty+rewardOutsideBuyQty,overlap=rewardBuyQty>0,groupPool=overlap?buyQty+rewardOutsideBuyQty:buyQty;
+ const groups=mode==='amount'?Math.min(Math.floor(buyAmount/Math.max(1,requiredAmount)),Math.floor(rewardQty/getQty)):Math.min(Math.floor(groupPool/(requiredQty+getQty)),Math.floor(rewardQty/getQty));
+ if(groups<1)return {amount:0,label:'',lineDiscounts:[]};
+ const buyUnitsToConsume=mode==='amount'?null:groups*requiredQty,buyAmountToConsume=mode==='amount'?groups*requiredAmount:0;
+ const consumed=new Map();let qtySlots=buyUnitsToConsume,amountCounted=0;
+ for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(mode==='amount'?amountCounted>=buyAmountToConsume:qtySlots<=0)break;take++;amountCounted+=item.line.unit;if(mode!=='amount')qtySlots--;}if(take)consumed.set(item.index,take);if(mode==='amount'?amountCounted>=buyAmountToConsume:qtySlots<=0)break;}
  const rewards=cartLines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.p.id)))?Array.from({length:qty},()=>({index,unit:line.unit})):[];}).sort((a,b)=>a.unit-b.unit);
- let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),amount=0,count=0;const lineDiscounts=cartLines.map(()=>0);
+ const maxUses=Number(d.maxUsesPerOrder||0),targetRewards=groups*getQty;
+ let remaining=maxUses>0?Math.min(targetRewards,maxUses):targetRewards,amount=0,count=0;const lineDiscounts=cartLines.map(()=>0);
  for(const reward of rewards){if(remaining<=0)break;const value=d.getValue==='free'?reward.unit:d.getValue==='percentage'?reward.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(reward.unit,Number(d.getAmount||0));lineDiscounts[reward.index]+=value;amount+=value;remaining--;count++;}
  return count?{amount:Math.min(subtotal,Math.round(amount*100)/100),label:d.title||'Automatic discount',lineDiscounts:lineDiscounts.map(v=>Math.round(v*100)/100)}:{amount:0,label:'',lineDiscounts:[]};
 }
