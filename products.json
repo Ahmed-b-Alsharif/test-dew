@@ -2777,7 +2777,7 @@
       "minSpend": 0,
       "active": true,
       "discountKind": "buy_x_get_y",
-      "method": "code",
+      "method": "automatic",
       "title": "buy 2 get 1",
       "valueType": "percentage",
       "scope": "buy_x_get_y",
