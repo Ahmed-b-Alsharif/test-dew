@@ -18,7 +18,7 @@ Customer sign-in uses Supabase Auth. The Orders Worker verifies Supabase access 
 3. Configure Supabase Auth custom SMTP to use the verified Resend sender for confirmation and password-reset emails.
 4. Deploy the Worker after adding the variables and secrets.
 
-Order receipt email is sent after an order is persisted. If email delivery fails, the order remains saved and the page reports that the receipt could not be emailed. Receipts use an order-specific idempotency key to prevent duplicate messages on retries.
+The sign-in session is kept in the current browser tab because this store is currently on a shared GitHub Pages origin. For persistent cross-tab sessions, move the store to its own verified domain before switching authentication storage to long-lived browser storage.\n\nOrder receipt email is sent after an order is persisted. If email delivery fails, the order remains saved and the page reports that the receipt could not be emailed. Receipts use an order-specific idempotency key to prevent duplicate messages on retries.
 
 ## Customer order history
 
