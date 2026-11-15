@@ -83,12 +83,12 @@ function previewDiscount(d,ls,items,delivery){
     shipping=delivery;
   }else if(d.discountKind==='buy_x_get_y'){
     const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?'products':'all',productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
-    const buys=ls.map((line,index)=>({line,index})).filter(x=>discountProductMatch(buyRule,x.line));
-    const buyMode=d.buyMode||'quantity',buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0);
-    if(buyMode==='amount'?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
-    const consumed=new Map();let buySlots=buyMode==='amount'?Infinity:Math.max(1,Number(d.buyQuantity||1));
-    for(const item of buys){const take=Math.min(item.line.qty,buySlots);if(take>0)consumed.set(item.index,take);buySlots-=take;if(buySlots<=0)break;}
     const ids=(d.getProductIds||[]).map(String);
+    const buys=ls.map((line,index)=>({line,index})).filter(x=>discountProductMatch(buyRule,x.line)).sort((a,b)=>Number(ids.includes(String(a.line.id)))-Number(ids.includes(String(b.line.id))));
+    const buyMode=d.buyMode||'quantity',buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),requiredQty=Math.max(1,Number(d.buyQuantity||1)),requiredAmount=Number(d.buyAmount||0);
+    if(buyMode==='amount'?buyAmount<requiredAmount:buyQty<requiredQty)return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
+    const consumed=new Map();let qtySlots=requiredQty,amountCounted=0;
+    for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(buyMode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;take++;amountCounted+=Number(item.line.unit||item.line.total/Math.max(1,item.line.qty));qtySlots--;}if(take)consumed.set(item.index,take);if(buyMode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;}
     const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},()=>({unit:l.unit})):[];}).sort((a,b)=>a.unit-b.unit);
     let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),rewardCount=0;
     for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;rewardCount++;}
