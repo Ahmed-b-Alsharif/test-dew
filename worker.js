@@ -133,7 +133,10 @@ function discountProductEligible(d,line,catalogue){
  const cids=Array.isArray(d.collectionIds)?d.collectionIds.map(String):[];
  if(d.scope!=="products"||(!ids.length&&!cids.length))return true;
  const product=(catalogue.products||[]).find(p=>String(p.id)===String(line.id));
- return !!product&&(ids.includes(String(line.id))||(cids.length&&cids.includes(String(product.catalog))));
+ if(!product)return false;
+ const productMatch=ids.includes(String(line.id));
+ const collectionMatch=cids.some(cid=>String(product.catalog)===cid||(catalogue.catalogs||[]).some(c=>String(c.id)===cid&&(c.productIds||[]).map(String).includes(String(line.id))));
+ return productMatch||collectionMatch;
 }
 function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorOrders,discountUses,customerDiscountUses){
  const fail=message=>({ok:false,error:message});
@@ -152,15 +155,16 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
   shipping=delivery;
  } else if(d.discountKind==="buy_x_get_y"){
   const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?"products":"all",productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
-  const buys=lines.filter(l=>discountProductEligible(buyRule,l,catalogue));
-  const buyQty=buys.reduce((n,l)=>n+l.qty,0),buyAmount=buys.reduce((n,l)=>n+l.total,0);
-  const buyMode=d.buyMode||"quantity";
+  const buys=lines.map((line,index)=>({line,index})).filter(x=>discountProductEligible(buyRule,x.line,catalogue));
+  const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),buyMode=d.buyMode||"quantity";
   if(buyMode==="amount"?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return fail("Your cart does not meet the Buy X requirements.");
+  const consumed=new Map();let buySlots=buyMode==="amount"?Infinity:Math.max(1,Number(d.buyQuantity||1));
+  for(const item of buys){const take=Math.min(item.line.qty,buySlots);if(take>0)consumed.set(item.index,take);buySlots-=take;if(buySlots<=0)break;}
   const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[];
-  let rewards=lines.filter(l=>!getIds.length||getIds.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},(_,i)=>({id:l.id,unit:l.unit,key:l.id+":"+i}))).sort((a,b)=>a.unit-b.unit);
-  let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
-  for(const item of rewards){if(remaining<=0)break;const cut=d.getValue==="free"?item.unit:d.getValue==="percentage"?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));amount+=cut;discountedLines.push(item.key);remaining--;}
-  if(!discountedLines.length)return fail("Add an eligible reward product to your cart.");
+  const rewards=lines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.id)))?Array.from({length:qty},(_,i)=>({id:line.id,unit:line.unit,key:line.id+":"+String(line.variantId||"")+":"+i})):[];}).sort((a,b)=>a.unit-b.unit);
+  let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),rewardCount=0;
+  for(const item of rewards){if(remaining<=0)break;const cut=d.getValue==="free"?item.unit:d.getValue==="percentage"?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));amount+=cut;discountedLines.push(item.key);remaining--;rewardCount++;}
+  if(!rewardCount)return fail("Add an eligible reward product to your cart.");
  } else {
   const eligible=d.discountKind==="amount_off_products"?lines.filter(l=>discountProductEligible(d,l,catalogue)):lines;
   const base=eligible.reduce((n,l)=>n+l.total,0);
