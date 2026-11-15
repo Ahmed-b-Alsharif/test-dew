@@ -65,6 +65,9 @@ function discountIsLive(d){
   const now=cairoNowString(),start=d.startsAt?d.startsAt+'T'+(d.startTime||'00:00'):'',end=d.endsAt?d.endsAt+'T'+(d.endTime||'23:59'):'';
   return d.active!==false&&(!start||now>=start)&&(!end||now<=end);
 }
+function discountNeedsServerValidation(d){
+  return d?.eligibility==='first_time'||Number(d?.usageLimit||0)>0||d?.onePerCustomer===true;
+}
 function discountProductMatch(d,line){
   if(d.scope!=='products'||(!d.productIds?.length&&!d.collectionIds?.length))return true;
   const p=S.products.find(x=>String(x.id)===String(line.id));
@@ -113,9 +116,12 @@ function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&
 function totals(){
   const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
   let delivery=selectedArea?Number(selectedArea.fee)||0:0;
-  const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='';
-  if(chosen){const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
-  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen};
+  const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='',validationRequired=false;
+  if(chosen){
+    if(discountNeedsServerValidation(chosen))validationRequired=true;
+    else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
+  }
+  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired};
 }
 function render() {
   const t = totals();
@@ -124,12 +130,14 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const discHtml = t.chosen && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discHtml = t.chosen && !t.validationRequired && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? egp(t.delivery) : 'Choose area'}</b></div>
      ${discHtml}
+     ${discountNotice}
      <div class="sum-line total"><span>Total</span><span>${egp(t.total)}</span></div>` +
     `<div style="margin:14px 0 8px;display:flex;gap:8px">
        <input id="promoInput" placeholder="Promo code" style="flex:1;padding:8px 12px;border:1.5px solid #cfd3cc;border-radius:999px;font-size:.9rem" value="${appliedDiscount ? esc(appliedDiscount.code) : ''}">
@@ -152,12 +160,15 @@ function render() {
       $('#promoErr').style.color = 'var(--red)';
       return;
     }
-    const baseDelivery=Number(deliveryAreas.find(x=>x.id===area)?.fee||0);const check=previewDiscount(disc,t.ls,t.items,baseDelivery);
-    if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}
+    const needsServerValidation=discountNeedsServerValidation(disc);
+    if(!needsServerValidation){const baseDelivery=Number(deliveryAreas.find(x=>x.id===area)?.fee||0);const check=previewDiscount(disc,t.ls,t.items,baseDelivery);
+      if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}}
     appliedDiscount = disc;
-    $('#promoErr').textContent = 'Promo code applied successfully!';
-    $('#promoErr').style.color = 'var(--green)';
     render();
+    $('#promoErr').textContent = needsServerValidation
+      ? 'Code saved. Eligibility and usage limits will be checked when you place the order; the cart total does not include it yet.'
+      : 'Promo code applied successfully!';
+    $('#promoErr').style.color = 'var(--green)';
   };
 
   $('#submit').disabled = t.items < S.settings.minOrder;
@@ -199,9 +210,55 @@ $('#form').onsubmit = async e => {
 };
 
 function done(o) {
-  $('#page').innerHTML = `<div class="box ok-box" style="grid-column:1/-1;text-align:center;padding:40px">
-    <h2>Order placed successfully!</h2>
-    <p>Your order reference is <b>${esc(o.number)}</b>. Total: <b>${egp(o.total)}</b> (${paymentMethod === 'instapay' ? 'InstaPay' : 'cash on delivery'}).</p>
-    <p style="color:var(--muted)">We have received your order and will contact you shortly.</p>
-    <a class="btn red" href="./" style="margin-top:16px">Back to the shop</a></div>`;
+  const customer=o.customer||{}, lines=Array.isArray(o.lines)?o.lines:[];
+  const subtotal=Number.isFinite(Number(o.itemsTotal))?Number(o.itemsTotal):lines.reduce((n,line)=>n+Number(line.total||0),0);
+  const delivery=Math.max(0,Number(o.delivery)||0),discount=Math.max(0,Number(o.discount)||0);
+  const total=Math.max(0,Number(o.total)||0),isCod=String(o.paymentMethod||paymentMethod).toLowerCase()==='cod';
+  const itemsHtml=lines.map(line=>`<div class="dew-receipt-item"><div><b>${esc(line.name||'Dew product')}</b><small>${Math.max(0,Number(line.qty)||0)} × ${egp(line.unit)}</small></div><strong>${egp(line.total)}</strong></div>`).join('');
+  $('#page').className='page dew-success-page';
+  document.title='Order confirmed | Dew Skincare';
+  $('#page').innerHTML=`<div class="dew-success-grid">
+    <section class="dew-success-hero">
+      <div>
+        <span class="dew-success-badge"><span aria-hidden="true">✓</span> Order received</span>
+        <p class="dew-success-greeting">Hi ${esc(customer.first||'there')},</p>
+        <h1>Glow,<br><em>on the way.</em></h1>
+        <p class="dew-success-copy">We’ve received your order. Our team will contact you to confirm your delivery details.</p>
+      </div>
+      <div class="dew-success-order">
+        <span>Order number</span>
+        <strong>${esc(o.number||'')}</strong>
+        <button type="button" id="copyOrderNumber" class="dew-copy-order">Copy</button>
+      </div>
+    </section>
+    <section class="dew-success-receipt" aria-label="Order receipt">
+      <p class="dew-success-eyebrow">Dew Skincare</p>
+      <h2>Your order</h2>
+      <div class="dew-receipt-items">${itemsHtml}</div>
+      <dl class="dew-receipt-totals">
+        <div><dt>Subtotal</dt><dd>${egp(subtotal)}</dd></div>
+        ${discount>0?`<div class="dew-receipt-discount"><dt>Discount${o.promoCode?` · ${esc(o.promoCode)}`:''}</dt><dd>−${egp(discount)}</dd></div>`:''}
+        <div><dt>Delivery</dt><dd>${delivery>0?egp(delivery):'Free'}</dd></div>
+        <div class="dew-receipt-total"><dt>${isCod?'Due on delivery':'Order total'}</dt><dd>${egp(total)}</dd></div>
+      </dl>
+      <div class="dew-success-payment">
+        <strong>${isCod?'Cash on Delivery':'InstaPay'}</strong>
+        <p>${isCod?`Please pay ${egp(total)} when your order arrives.`:'We’ll contact you to confirm your InstaPay transfer.'}</p>
+      </div>
+      <div class="dew-success-address">
+        <strong>Delivery details</strong>
+        <p>${esc([customer.first,customer.last].filter(Boolean).join(' '))}<br>${esc(customer.address||'')}<br>${esc(o.area||'')}</p>
+      </div>
+      <div class="dew-success-actions">
+        <button type="button" id="printOrderReceipt" class="btn ghost">Print receipt</button>
+        <a class="btn red" href="./">Continue shopping</a>
+      </div>
+      <p class="dew-success-thanks">Thank you for choosing Dew.</p>
+    </section>
+  </div>`;
+  $('#copyOrderNumber').onclick=async()=>{
+    try{await navigator.clipboard.writeText(String(o.number||''));$('#copyOrderNumber').textContent='Copied';}
+    catch{$('#copyOrderNumber').textContent=String(o.number||'');}
+  };
+  $('#printOrderReceipt').onclick=()=>window.print();
 }
