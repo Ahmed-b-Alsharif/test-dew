@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas = [], authClient = null, currentAuthSession = null;
+let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas = [];
 
 (async function () {
   try { S = await (await fetch('products.json',{cache:'no-cache'})).json(); }
@@ -23,15 +23,6 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
     r.onchange = () => { paymentMethod = r.value; updatePaymentDetails(); };
   });
   updatePaymentDetails();
-  try {
-    const cfg=window.DEW_AUTH_CONFIG||{};
-    if(window.supabase?.createClient&&cfg.supabaseUrl&&cfg.supabaseAnonKey){
-      authClient=window.supabase.createClient(cfg.supabaseUrl,cfg.supabaseAnonKey,{auth:{storage:window.sessionStorage,persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-      const sessionResult=await authClient.auth.getSession();
-      currentAuthSession=sessionResult.data?.session||null;
-      if(currentAuthSession?.user?.email){$('#email').value=currentAuthSession.user.email;$('#email').readOnly=true;$('#email').autocomplete='email';}
-    }
-  } catch {}
   try {
     const c = JSON.parse(localStorage.getItem('dew_customer') || 'null');
     if (c) {
@@ -190,13 +181,13 @@ $('#form').onsubmit = async e => {
   $('#err').textContent = '';
   const t = totals();
   const first = $('#first').value.trim(), last = $('#last').value.trim(), address = $('#address').value.trim();
-  const phone = $('#phone').value.trim(), email = $('#email').value.trim().toLowerCase();
+  const phone = $('#phone').value.trim();
   const selectedAreaId=String($('#deliveryArea').value||'').trim();
   const selectedArea=deliveryAreas.find(x=>String(x.id??'').trim()===selectedAreaId);
   if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
   area=String(selectedArea.id);
-  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
-    $('#err').textContent = 'Please fill in your name, address and phone number. Check the email format if you entered one.'; return;
+  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8) {
+    $('#err').textContent = 'Please fill in your name, address and phone number.'; return;
   }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
@@ -205,10 +196,8 @@ $('#form').onsubmit = async e => {
   const button=$('#submit'), oldLabel=button.textContent;
   button.disabled=true; button.textContent='Placing your order…';
   try {
-    const requestHeaders={'Content-Type':'application/json'};
-    if(currentAuthSession?.access_token)requestHeaders.Authorization='Bearer '+currentAuthSession.access_token;
-    const response=await fetch(api+'/api/orders',{method:'POST',headers:requestHeaders,body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,email,address,note:$('#customerNote').value.trim()}
+    const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address,note:$('#customerNote').value.trim()}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
@@ -235,7 +224,6 @@ function done(o) {
         <p class="dew-success-greeting">Hi ${esc(customer.first||'there')},</p>
         <h1>Glow,<br><em>on the way.</em></h1>
         <p class="dew-success-copy">We’ve received your order. Our team will contact you to confirm your delivery details.</p>
-        
       </div>
       <div class="dew-success-order">
         <span>Order number</span>
@@ -243,7 +231,6 @@ function done(o) {
         <button type="button" id="copyOrderNumber" class="dew-copy-order">Copy</button>
       </div>
     </section>
-    <p class="dew-success-copy dew-receipt-email-status">${o.emailReceipt?.status==='sent'?'Receipt emailed to '+esc(customer.email||'your email address'):(o.emailReceipt?.status==='failed'?'We saved your order, but could not email the receipt. Please keep your order number.':(o.emailReceipt?.status==='not_requested'?'We saved your order. Add an email at checkout next time to receive an emailed receipt.':'We saved your order. Email receipts are being connected; please keep your order number.'))}</p>
     <section class="dew-success-receipt" aria-label="Order receipt">
       <p class="dew-success-eyebrow">Dew Skincare</p>
       <h2>Your order</h2>
