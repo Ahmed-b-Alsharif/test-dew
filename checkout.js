@@ -139,7 +139,7 @@ function render() {
       $('#promoErr').style.color = 'var(--red)';
       return;
     }
-    const check=previewDiscount(disc,t.ls,t.items,t.delivery);
+    const baseDelivery=Number(deliveryAreas.find(x=>x.id===area)?.fee||0);const check=previewDiscount(disc,t.ls,t.items,baseDelivery);
     if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}
     appliedDiscount = disc;
     $('#promoErr').textContent = 'Promo code applied successfully!';
