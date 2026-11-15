@@ -197,7 +197,7 @@ async function verifiedCustomer(request,env){
 }
 const htmlEscape=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function sendOrderReceipt(order,env){
- if(!order.customer?.email||!env.RESEND_API_KEY||!env.RESEND_FROM)return {status:"not_configured",sentAt:null};
+ if(!order.customer?.email)return {status:"not_requested",sentAt:null};\n if(!env.RESEND_API_KEY||!env.RESEND_FROM)return {status:"not_configured",sentAt:null};
  const rows=(order.lines||[]).map(line=>"<tr><td style=\"padding:8px 0;border-bottom:1px solid #e6ebe5\">"+htmlEscape(line.name)+" × "+Math.max(0,Number(line.qty)||0)+"</td><td style=\"padding:8px 0;border-bottom:1px solid #e6ebe5;text-align:right\">"+htmlEscape(money(line.total))+"</td></tr>").join("");
  const payment=order.paymentMethod==="instapay"?"Payment is pending until Dew confirms your InstaPay transfer.":"Payment is due on delivery.";
  const html="<div style=\"max-width:620px;margin:auto;font:16px Arial,sans-serif;color:#183b35\"><h1 style=\"color:#1c524e\">Dew Skincare</h1><p>Hi "+htmlEscape(order.customer.first||"there")+",</p><p>We received your order <strong>"+htmlEscape(order.number)+"</strong>.</p><p>"+payment+"</p><table style=\"width:100%;border-collapse:collapse\">"+rows+"</table><p>Items: "+htmlEscape(money(order.itemsTotal))+"</p><p>Delivery: "+htmlEscape(money(order.delivery))+"</p>"+(Number(order.discount)>0?"<p>Discount: −"+htmlEscape(money(order.discount))+"</p>":"")+"<p style=\"font-size:20px;font-weight:bold\">Total: "+htmlEscape(money(order.total))+"</p><p>Order status: "+htmlEscape(order.fulfillmentStatus||"Pending")+"</p><p>Thank you for choosing Dew Skincare.</p></div>";
