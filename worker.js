@@ -73,7 +73,7 @@ async function adminGithub(request,env){
    await new Promise(resolve=>setTimeout(resolve,200*(attempt+1)));
   }
  }else{
-  const init={method:request.method,headers};
+  const init={method:request.method,headers,cache:"no-store"};
   if(request.method==="GET"){headers["Cache-Control"]="no-cache, no-store";headers["Pragma"]="no-cache"}
   if(request.method==="PUT"){headers["Content-Type"]="application/json";init.body=await request.text()}
   if(request.method==="DELETE"){let payload;try{payload=await request.json()}catch{return adminJson(request,{message:"Image deletion requires its current file SHA."},400)}if(!payload.sha)return adminJson(request,{message:"Image deletion requires its current file SHA."},400);headers["Content-Type"]="application/json";init.body=JSON.stringify(payload)}
@@ -182,54 +182,11 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
  return {ok:true,amount:Math.min(itemsTotal,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),discountedLines,kind:d.discountKind||d.type,title:d.title||d.code||"Discount"};
 }
 
-async function verifiedCustomer(request,env){
- const token=bearer(request);
- if(!token)return {ok:false,status:401,error:"Sign in to view account orders."};
- const base=clean(env.SUPABASE_URL).replace(/\/+$/,""),anon=clean(env.SUPABASE_ANON_KEY);
- if(!base||!anon)return {ok:false,status:503,error:"Customer accounts are not configured yet."};
- let response,payload={};
- try{
-  response=await fetch(base+"/auth/v1/user",{headers:{Authorization:"Bearer "+token,apikey:anon,Accept:"application/json","Cache-Control":"no-store"}});
-  payload=await response.json().catch(()=>({}));
- }catch{return {ok:false,status:502,error:"Could not verify your account. Please try again."};}
- if(!response.ok||!payload.id||!payload.email||(payload.email_confirmed_at==null&&payload.confirmed_at==null))return {ok:false,status:401,error:"Please verify your email and sign in again."};
- return {ok:true,user:{id:String(payload.id),email:String(payload.email).trim().toLowerCase()}};
-}
-const htmlEscape=value=>String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-async function sendOrderReceipt(order,env){
- if(!order.customer?.email)return {status:"not_requested",sentAt:null};
- if(!env.RESEND_API_KEY||!env.RESEND_FROM)return {status:"not_configured",sentAt:null};
- const rows=(order.lines||[]).map(line=>"<tr><td style=\"padding:8px 0;border-bottom:1px solid #e6ebe5\">"+htmlEscape(line.name)+" × "+Math.max(0,Number(line.qty)||0)+"</td><td style=\"padding:8px 0;border-bottom:1px solid #e6ebe5;text-align:right\">"+htmlEscape(money(line.total))+"</td></tr>").join("");
- const payment=order.paymentMethod==="instapay"?"Payment is pending until Dew confirms your InstaPay transfer.":"Payment is due on delivery.";
- const html="<div style=\"max-width:620px;margin:auto;font:16px Arial,sans-serif;color:#183b35\"><h1 style=\"color:#1c524e\">Dew Skincare</h1><p>Hi "+htmlEscape(order.customer.first||"there")+",</p><p>We received your order <strong>"+htmlEscape(order.number)+"</strong>.</p><p>"+payment+"</p><table style=\"width:100%;border-collapse:collapse\">"+rows+"</table><p>Items: "+htmlEscape(money(order.itemsTotal))+"</p><p>Delivery: "+htmlEscape(money(order.delivery))+"</p>"+(Number(order.discount)>0?"<p>Discount: −"+htmlEscape(money(order.discount))+"</p>":"")+"<p style=\"font-size:20px;font-weight:bold\">Total: "+htmlEscape(money(order.total))+"</p><p>Order status: "+htmlEscape(order.fulfillmentStatus||"Pending")+"</p><p>Thank you for choosing Dew Skincare.</p></div>";
- const text=["Dew Skincare order "+order.number,"Hi "+(order.customer.first||"there")+",","",payment,"",...(order.lines||[]).map(l=>l.name+" × "+l.qty+" — "+money(l.total)),"","Items: "+money(order.itemsTotal),"Delivery: "+money(order.delivery),...(Number(order.discount)>0?["Discount: −"+money(order.discount)]:[]),"Total: "+money(order.total),"Order status: "+(order.fulfillmentStatus||"Pending")].join("\n");
- try{
-  const response=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+env.RESEND_API_KEY,"Content-Type":"application/json","Idempotency-Key":"dew-order-receipt-"+String(order.number).replace(/[^a-zA-Z0-9_-]/g,"-")},body:JSON.stringify({from:env.RESEND_FROM,to:[order.customer.email],subject:"Dew Skincare order "+order.number+" received",html,text})});
-  const result=await response.json().catch(()=>({}));
-  return response.ok?{status:"sent",sentAt:new Date().toISOString(),id:clean(result.id)}:{status:"failed",sentAt:null};
- }catch{return {status:"failed",sentAt:null};}
-}
-async function customerOrders(request,env){
- const auth=await verifiedCustomer(request,env);
- if(!auth.ok)return json({ok:false,error:auth.error},auth.status);
- const result=await env.DB.prepare("SELECT order_json FROM orders ORDER BY created_at DESC").all();
- const orders=(result.results||[]).map(row=>{try{return JSON.parse(row.order_json)}catch{return null}})
-  .filter(order=>order&&String(order.customer?.userId||"")===auth.user.id);
- return json({ok:true,orders});
-}
 async function createOrder(request, env) {
   const body = await request.json();
   const customer = body.customer || {};
   const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address), note=clean(customer.note).slice(0,500);
-  let accountUser=null;
-  if(bearer(request)){
-    const verified=await verifiedCustomer(request,env);
-    if(!verified.ok)return json({ok:false,error:verified.error},verified.status);
-    accountUser=verified.user;
-  }
-  const email=clean(customer.email||accountUser?.email).toLowerCase();
-  if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6 || email.length>254 || (email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) return json({ok:false,error:"Please check your name, phone and delivery address. If you entered an email, check its format."},400);
-  if(accountUser&&email!==accountUser.email)return json({ok:false,error:"Use the email address on your signed-in account."},403);
+  if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
   const catalogue=await getProducts(env);
   const settings=catalogue.settings||{};
   const deliveryAreas=Array.isArray(settings.deliveryAreas)?settings.deliveryAreas:[
@@ -301,16 +258,11 @@ async function createOrder(request, env) {
   const order={
     number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
-    customer:{first,last,phone,email,address,note,userId:accountUser?.id||""},
-    emailReceipt:{status:"pending",sentAt:null}
+    customer:{first,last,phone,address,note}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
     .bind(number,order.date,total,JSON.stringify(order)).run();
-  order.emailReceipt=await sendOrderReceipt(order,env);
-  await env.DB.prepare("UPDATE orders SET order_json=? WHERE order_number=?").bind(JSON.stringify(order),number).run();
-  // Keep the existing Telegram notification content limited to its current order fields.
-  const telegramOrder={...order,customer:{first,last,phone,address,note}};
-  try { await notifyTelegram(telegramOrder,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
+  try { await notifyTelegram(order,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
   return json({ok:true,order},201);
 }
 
@@ -363,7 +315,6 @@ export default {
       if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
       if(path==="/api/admin/logout"&&request.method==="POST")return await adminLogout(request,env);
       if(path==="/api/admin/github"&&["GET","PUT","DELETE"].includes(request.method)){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminGithub(request,env)}
-      if(path==="/api/customer/orders"&&request.method==="GET")return await customerOrders(request,env);
       if (path==="/api/orders" && request.method==="POST") return await createOrder(request,env);
       if (path==="/api/orders" && request.method==="GET") {
         if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
