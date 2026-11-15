@@ -18,7 +18,9 @@ Customer sign-in uses Supabase Auth. The Orders Worker verifies Supabase access 
 3. Configure Supabase Auth custom SMTP to use the verified Resend sender for confirmation and password-reset emails.
 4. Deploy the Worker after adding the variables and secrets.
 
-The sign-in session is kept in the current browser tab because this store is currently on a shared GitHub Pages origin. For persistent cross-tab sessions, move the store to its own verified domain before switching authentication storage to long-lived browser storage.\n\nCheckout email is optional and appears below the phone field. If a customer enters a valid address, the Worker emails the receipt after the order is saved. If they leave it blank, checkout proceeds normally without an email. If delivery fails, the order remains saved and the page reports the issue. Receipts use an order-specific idempotency key to prevent duplicate messages on retries.
+The sign-in session is kept in the current browser tab because this store is currently on a shared GitHub Pages origin. For persistent cross-tab sessions, move the store to its own verified domain before switching authentication storage to long-lived browser storage.
+
+Checkout email is optional and appears below the phone field. If a customer enters a valid address, the Worker emails the receipt after the order is saved. If they leave it blank, checkout proceeds normally without an email. If delivery fails, the order remains saved and the page reports the issue. Receipts use an order-specific idempotency key to prevent duplicate messages on retries.
 
 ## Customer order history
 
