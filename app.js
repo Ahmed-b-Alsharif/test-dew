@@ -63,18 +63,18 @@ function automaticCartDiscount(cartLines,subtotal){
  const now=values.year+'-'+values.month+'-'+values.day+'T'+values.hour+':'+values.minute;
  const live=d=>d.active!==false&&(!d.startsAt||now>=d.startsAt+'T'+(d.startTime||'00:00'))&&(!d.endsAt||now<=d.endsAt+'T'+(d.endTime||'23:59'));
  const d=(S.discounts||[]).find(x=>x.method==='automatic'&&live(x));
- if(!d||d.discountKind!=='buy_x_get_y')return {amount:0,label:''};
+ if(!d||d.discountKind!=='buy_x_get_y')return {amount:0,label:'',lineDiscounts:[]};
  const collectionHas=(cid,id)=>(S.catalogs||[]).some(c=>String(c.id)===String(cid)&&(c.productIds||[]).map(String).includes(String(id)));
  const buyIds=(d.buyProductIds||[]).map(String),buyCids=(d.buyCollectionIds||[]).map(String),getIds=(d.getProductIds||[]).map(String);
  const buys=cartLines.map((line,index)=>({line,index})).filter(x=>(!buyIds.length&&!buyCids.length)||(buyIds.includes(String(x.line.p.id))||buyCids.some(cid=>collectionHas(cid,x.line.p.id)))).sort((a,b)=>Number(getIds.includes(String(a.line.p.id)))-Number(getIds.includes(String(b.line.p.id))));
  const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),mode=d.buyMode||'quantity',requiredQty=Math.max(1,Number(d.buyQuantity||1)),requiredAmount=Number(d.buyAmount||0);
- if(mode==='amount'?buyAmount<requiredAmount:buyQty<requiredQty)return {amount:0,label:''};
+ if(mode==='amount'?buyAmount<requiredAmount:buyQty<requiredQty)return {amount:0,label:'',lineDiscounts:[]};
  const consumed=new Map();let qtySlots=requiredQty,amountCounted=0;
  for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(mode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;take++;amountCounted+=item.line.unit;qtySlots--;}if(take)consumed.set(item.index,take);if(mode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;}
- const rewards=cartLines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.p.id)))?Array.from({length:qty},()=>line.unit):[];}).sort((a,b)=>a-b);
- let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),amount=0,count=0;
- for(const unit of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?unit:d.getValue==='percentage'?unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(unit,Number(d.getAmount||0));remaining--;count++;}
- return count?{amount:Math.min(subtotal,Math.round(amount*100)/100),label:d.title||'Automatic discount'}:{amount:0,label:''};
+ const rewards=cartLines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.p.id)))?Array.from({length:qty},()=>({index,unit:line.unit})):[];}).sort((a,b)=>a.unit-b.unit);
+ let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),amount=0,count=0;const lineDiscounts=cartLines.map(()=>0);
+ for(const reward of rewards){if(remaining<=0)break;const value=d.getValue==='free'?reward.unit:d.getValue==='percentage'?reward.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(reward.unit,Number(d.getAmount||0));lineDiscounts[reward.index]+=value;amount+=value;remaining--;count++;}
+ return count?{amount:Math.min(subtotal,Math.round(amount*100)/100),label:d.title||'Automatic discount',lineDiscounts:lineDiscounts.map(v=>Math.round(v*100)/100)}:{amount:0,label:'',lineDiscounts:[]};
 }
 function renderCart(){
  const c=Cart.get(),ids=Object.keys(c),valid=ids.filter(id=>!!cartProduct(id));
@@ -83,7 +83,7 @@ function renderCart(){
  let subtotal=0;
  const cartLines=valid.map(id=>{const x=cartProduct(id);if(!x)return null;const qty=Math.max(0,Number(c[id])||0),line={...x,qty,total:x.unit*qty};subtotal+=line.total;return line;}).filter(Boolean);
  const discount=automaticCartDiscount(cartLines,subtotal),total=Math.max(0,Math.round((subtotal-discount.amount)*100)/100);
- $('#cartItems').innerHTML=cartLines.map(x=>'<div class="dew-line">'+(x.p.images?.[0]?'<img src="'+esc(optimizedImage(x.p.images[0],240))+'" alt="'+esc(x.p.name)+'">':'<div class="dew-line-placeholder">DEW</div>')+'<div class="dew-line-info"><b>'+esc(x.name)+'</b><span>'+money(x.unit)+'</span><div class="dew-qty"><button data-minus="'+x.key+'" aria-label="Decrease quantity">−</button><span>'+x.qty+'</span><button data-plus="'+x.key+'" aria-label="Increase quantity" '+(x.qty>=x.stock?'disabled':'')+'>+</button></div></div><button class="dew-remove" data-remove="'+x.key+'">Remove</button></div>').join('')||'<p class="dew-empty">Your cart is empty. Find something lovely for your routine.</p>';
+ $('#cartItems').innerHTML=cartLines.map((x,index)=>{const lineDiscount=Number(discount.lineDiscounts?.[index]||0),finalLine=Math.max(0,Math.round((x.total-lineDiscount)*100)/100);const priceHtml=lineDiscount>0?'<div class="dew-line-price"><span>'+money(x.unit)+' each</span><div><del>'+money(x.total)+'</del><strong class="'+(finalLine===0?'is-free':'is-discounted')+'">'+(finalLine===0?'FREE':money(finalLine))+'</strong></div><small>Automatic discount</small></div>':'<span>'+money(x.unit)+' each</span>';return '<div class="dew-line">'+(x.p.images?.[0]?'<img src="'+esc(optimizedImage(x.p.images[0],240))+'" alt="'+esc(x.p.name)+'">':'<div class="dew-line-placeholder">DEW</div>')+'<div class="dew-line-info"><b>'+esc(x.name)+'</b>'+priceHtml+'<div class="dew-qty"><button data-minus="'+x.key+'" aria-label="Decrease quantity">−</button><span>'+x.qty+'</span><button data-plus="'+x.key+'" aria-label="Increase quantity" '+(x.qty>=x.stock?'disabled':'')+'>+</button></div></div><button class="dew-remove" data-remove="'+x.key+'">Remove</button></div>';}).join('')||'<p class="dew-empty">Your cart is empty. Find something lovely for your routine.</p>';
  $('#cartSub').textContent=money(subtotal);$('#cartDiscountRow').hidden=discount.amount<=0;$('#cartDiscountLabel').textContent='Discount ('+discount.label+')';$('#cartDiscountAmount').textContent='−'+money(discount.amount);$('#cartTotal').textContent=money(total);
  const min=+(S.settings.minOrder||0),ok=subtotal>=min&&valid.length;$('#minNote').textContent=ok?'Delivery calculated at checkout':'Minimum order: '+money(min);$('#checkoutBtn').style.opacity=ok?1:.5;$('#checkoutBtn').style.pointerEvents=ok?'auto':'none';
  document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{Cart.setQty(b.dataset.remove,0);renderCart()});
