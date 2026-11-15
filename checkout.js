@@ -111,7 +111,7 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const discHtml = t.chosen && (t.discount>0 || t.chosen.discountKind==='free_shipping') ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discHtml = t.chosen && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
 
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
