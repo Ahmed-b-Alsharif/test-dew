@@ -2781,10 +2781,13 @@
       "title": "buy 2 get 1",
       "valueType": "percentage",
       "scope": "buy_x_get_y",
-      "productIds": [],
-      "collectionIds": [
-        "4569aaa1"
+      "productIds": [
+        "757414b0",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
       ],
+      "collectionIds": [],
       "minQuantity": 0,
       "buyQuantity": 2,
       "buyAmount": 0,
@@ -2812,10 +2815,13 @@
       "endTime": "",
       "updatedAt": "2026-11-15T09:56:17.331Z",
       "createdAt": "2026-11-15T09:56:02.540Z",
-      "buyProductIds": [],
-      "buyCollectionIds": [
-        "4569aaa1"
-      ]
+      "buyProductIds": [
+        "757414b0",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
+      ],
+      "buyCollectionIds": []
     }
   ],
   "pages": [
