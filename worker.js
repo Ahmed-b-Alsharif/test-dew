@@ -135,7 +135,7 @@ function discountProductEligible(d,line,catalogue){
  const product=(catalogue.products||[]).find(p=>String(p.id)===String(line.id));
  return !!product&&(ids.includes(String(line.id))||(cids.length&&cids.includes(String(product.catalog))));
 }
-function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorOrders){
+function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorOrders,discountUses,customerDiscountUses){
  const fail=message=>({ok:false,error:message});
  if(!d||d.active===false)return fail("This discount is not active.");
  if(!discountDateState(d))return fail("This discount is not currently active.");
@@ -144,14 +144,15 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
  if(Number(d.minSpend||0)>itemsTotal)return fail("Minimum spend for this discount is "+money(d.minSpend)+".");
  if(Number(d.minQuantity||0)>lines.reduce((n,l)=>n+l.qty,0))return fail("Add more items to use this discount.");
  if(d.eligibility==="first_time"&&priorOrders>0)return fail("This offer is available to first-time customers only.");
- if(Number(d.usageLimit||0)>0&&Number(d.usedCount||0)>=Number(d.usageLimit))return fail("This discount has reached its usage limit.");
- if(d.onePerCustomer&&priorOrders>0)return fail("This discount can only be used once per customer.");
+ if(Number(d.usageLimit||0)>0&&discountUses>=Number(d.usageLimit))return fail("This discount has reached its usage limit.");
+ if(d.onePerCustomer&&customerDiscountUses>0)return fail("This discount can only be used once per customer.");
  let amount=0,shipping=0,discountedLines=[];
  if(d.discountKind==="free_shipping"||d.type==="free_shipping"){
   if(Number(d.shippingLimit||0)>0&&delivery>Number(d.shippingLimit))return fail("This discount does not apply to this shipping rate.");
   shipping=delivery;
  } else if(d.discountKind==="buy_x_get_y"){
-  const buys=lines.filter(l=>discountProductEligible({...d,scope:d.scope==="products"?"products":"all"},l,catalogue));
+  const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?"products":"all",productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
+  const buys=lines.filter(l=>discountProductEligible(buyRule,l,catalogue));
   const buyQty=buys.reduce((n,l)=>n+l.qty,0),buyAmount=buys.reduce((n,l)=>n+l.total,0);
   if(buyQty<Math.max(1,Number(d.buyQuantity||1))||buyAmount<Number(d.buyAmount||0))return fail("Your cart does not meet the Buy X requirements.");
   const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[];
@@ -213,14 +214,17 @@ async function createOrder(request, env) {
   const code=clean(body.promoCode).toUpperCase();
   const customerPhone=phone.replace(/\D/g,"");
   const priorRows=await env.DB.prepare("SELECT order_json FROM orders").all();
-  const priorOrders=(priorRows.results||[]).reduce((count,row)=>{try{const o=JSON.parse(row.order_json);return count+(String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone?1:0)}catch{return count}},0);
+  const priorOrderList=(priorRows.results||[]).map(row=>{try{return JSON.parse(row.order_json)}catch{return null}}).filter(Boolean);
+  const priorOrders=priorOrderList.filter(o=>String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone).length;
   const discounts=Array.isArray(catalogue.discounts)?catalogue.discounts:[];
   let promo=code?discounts.find(d=>d.active&&d.method!=="automatic"&&String(d.code||"").toUpperCase()===code):null;
   if(code&&!promo)return json({ok:false,error:"That discount code is invalid or inactive."},400);
   if(!promo)promo=discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));
   let discount=0,promoCode=null,discountInfo=null;
   if(promo){
-    const result=calculateDiscount(promo,lines,itemsTotal,delivery,catalogue,{first,last,phone},priorOrders);
+    const discountUses=priorOrderList.filter(o=>String(o.discountInfo?.id||"")===String(promo.id||"")||String(o.promoCode||"").toUpperCase()===String(promo.code||"").toUpperCase()).length;
+    const customerDiscountUses=priorOrderList.filter(o=>(String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone)&&(String(o.discountInfo?.id||"")===String(promo.id||"")||String(o.promoCode||"").toUpperCase()===String(promo.code||"").toUpperCase())).length;
+    const result=calculateDiscount(promo,lines,itemsTotal,delivery,catalogue,{first,last,phone},priorOrders,discountUses,customerDiscountUses);
     if(!result.ok)return json({ok:false,error:result.error},400);
     discount=result.amount;
     delivery=Math.max(0,delivery-result.shipping);
