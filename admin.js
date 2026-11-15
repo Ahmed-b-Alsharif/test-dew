@@ -1,9 +1,34 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = (() => { try { return sessionStorage.getItem('dew_admin_tab') || 'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
+let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
+
 if (isNativeApp) document.documentElement.classList.add('dew-native-app');
+
+function setAdminUrl(nextTab, extra = {}, replace = false) {
+  const params = new URLSearchParams(location.search);
+  params.set('tab', nextTab);
+  for (const key of ['product', 'new']) params.delete(key);
+  for (const [key, value] of Object.entries(extra)) {
+    if (value !== undefined && value !== null && value !== '') params.set(key, String(value));
+  }
+  const query = params.toString();
+  const url = location.pathname + (query ? '?' + query : '') + location.hash;
+  history[replace ? 'replaceState' : 'pushState']({ dewAdmin: true, tab: nextTab }, '', url);
+}
+function navigateAdmin(nextTab, extra = {}) {
+  if (nextTab === tab && !Object.keys(extra).length) return;
+  if (themeEditorDirty) {
+    if (!confirm('You have unsaved theme changes. Leave without saving and discard them?')) return;
+    themeEditorDiscard();
+  }
+  if (isNativeApp) closeModal();
+  tab = nextTab;
+  q = '';
+  setAdminUrl(nextTab, extra);
+  render();
+}
 
 /* ---------- base64 helpers ---------- */
 const enc = s => { const b = new TextEncoder().encode(s); let bin = ''; for (let i = 0; i < b.length; i += 0x8000) bin += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(bin); };
@@ -148,7 +173,7 @@ function toast(msg, bad) {
   clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', bad ? 7000 : 3500);
 }
 
-/* ---------- login ---------- */
+window.addEventListener('popstate',()=>{const params=new URLSearchParams(location.search);const requested=params.get('tab');const allowed=['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'];tab=allowed.includes(requested)?requested:'overview';q='';render();});\n\n/* ---------- login ---------- */
 async function start(){
  if(!adminToken())return showLogin();
  try{await loadData();render()}catch(e){try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}showLogin(e.message)}
@@ -194,9 +219,9 @@ function render() {
       </main>
       ${mobileNav}
     </div>`;
-  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => { if(b.dataset.t===tab)return; if(themeEditorDirty){if(!confirm('You have unsaved theme changes. Leave without saving and discard them?'))return;themeEditorDiscard();} if(isNativeApp)closeModal(); tab=b.dataset.t; q=''; render(); });
+  document.querySelectorAll('[data-t]').forEach(b => b.onclick = () => navigateAdmin(b.dataset.t));
   $('#out').onclick=async()=>{if(themeEditorDirty){if(!confirm('You have unsaved theme changes. Sign out and discard them?'))return;themeEditorDiscard();}const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
-  ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
+  const routeParams = new URLSearchParams(location.search);\n  if (tab === 'products' && (routeParams.has('product') || routeParams.get('new') === '1')) productForm(routeParams.get('product') || '');\n  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -406,8 +431,8 @@ function overview() {
     <div class="overview-columns"><article class="admin-panel"><div class="panel-heading"><div><h3>Sales activity</h3><p>Daily sales trend within the selected period</p></div></div><div style="height:190px;display:flex;align-items:flex-end;gap:10px;padding:18px 4px 4px;border-bottom:1px solid #e8ece7">${buckets.map((b,i)=>`<div title="${egp(b.value)}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:7px"><b style="font-size:11px;color:#52645c">${b.value?egp(b.value).replace('EGP ',''):''}</b><div style="width:100%;max-width:42px;height:${Math.max(3,b.value/max*100)}%;background:#1c524e;border-radius:7px 7px 2px 2px"></div><small style="font-size:10px;color:#78847d">${b.label}</small></div>`).join('')}</div></article>
     <article class="admin-panel"><div class="panel-heading"><div><h3>Top products</h3><p>Units sold in selected period</p></div><button class="text-link" data-go="products">Manage</button></div>${top.map(([n,c])=>`<div class="overview-row"><b>${esc(n)}</b><strong>${c} sold</strong></div>`).join('')||'<p class="empty-note">Sales data will appear here when orders come in.</p>'}<div class="low-stock-note"><b>${low.length} products need attention</b><small>${low.slice(0,3).map(p=>esc(p.name)+' ('+p.stock+')').join(' · ')||'All products have more than 5 in stock.'}</small><button class="text-link" data-go="inventory">Open inventory</button></div></article></div>
     <article class="admin-panel" style="margin-top:18px"><div class="panel-heading"><div><h3>Recent orders</h3><p>Latest customer orders</p></div><button class="text-link" data-go="orders">View all</button></div>${ordersList.slice().sort((a,b)=>new Date(b.date||0)-new Date(a.date||0)).slice(0,5).map(o=>`<div class="overview-row"><div><b>${esc(o.customer?.first||'Customer')} ${esc(o.customer?.last||'')}</b><small>#${esc(o.number||'—')} · ${esc(new Date(o.date||Date.now()).toLocaleDateString())}</small></div><strong>${egp(o.total||0)}</strong></div>`).join('')||'<p class="empty-note">No orders yet. New orders will appear here.</p>'}</article>`;
-  $('#analyticsPeriod').onchange=()=>{const v=$('#analyticsPeriod').value;history.replaceState(null,'',location.pathname+(v==='30'?'':'?period='+v));overview();};
-  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{tab=b.dataset.go;render();});
+  $('#analyticsPeriod').onchange=()=>{const v=$('#analyticsPeriod').value;const params=new URLSearchParams(location.search);if(v==='30')params.delete('period');else params.set('period',v);history.replaceState({dewAdmin:true,tab},'',location.pathname+(params.toString()?'?'+params.toString():''));overview();};
+  document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>navigateAdmin(b.dataset.go));
 }
 function exportCustomersExcel(rows) {
   if (typeof XLSX === 'undefined') {
@@ -495,7 +520,7 @@ function products() {
     <div class="dew-product-list" id="dewProductList"></div>`:`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
     ${list().map(p=>`<tr><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td><td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td><td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b></td><td>${Number(p.stock||0)} in stock</td><td>${p.featured?'Featured':'—'}</td><td><button class="text-link" data-e="${p.id}">Edit</button></td></tr>`).join('')||'<tr><td colspan="7" class="empty-note">No products found.</td></tr>'}</tbody></table></div></div>`}
   `;
-  $('#newP').onclick=()=>productForm();
+  $('#newP').onclick=()=>{setAdminUrl('products',{new:1});productForm();};
   $('#exportProducts').onclick=()=>exportProductsExcel();
   $('#importProducts').onclick=()=>$('#productExcelFile').click();
   $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
@@ -504,7 +529,7 @@ function products() {
     if(el)el.innerHTML=rows.map(p=>`
     <article class="dew-product-card" data-open-product="${esc(p.id)}" role="button" tabindex="0" aria-label="Edit ${esc(p.name)}"><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong><small>${Number(p.stock||0)} in stock · ${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';
     document.querySelectorAll('[data-open-product]').forEach(card=>{
-      const open=()=>productForm(card.dataset.openProduct);
+      const open=()=>{setAdminUrl('products',{product:card.dataset.openProduct});productForm(card.dataset.openProduct);};
       card.onclick=open;
       card.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}};
       const edit=card.querySelector('[data-e]');
@@ -513,7 +538,7 @@ function products() {
   };
   const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
   document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
-  if(!native)document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>productForm(b.dataset.e));
+  if(!native)document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{setAdminUrl('products',{product:b.dataset.e});productForm(b.dataset.e);});
   if(native)draw();
 }
 function productForm(id) {
@@ -599,7 +624,7 @@ function productForm(id) {
   };
   $('#addVariantOption').onclick=()=>{optionRows.push({name:'',values:[]});editingOptionRows.add(optionRows.length-1);renderVariants();};
   renderVariants();
-  paint();$('#backProducts').onclick=()=>{tab='products';render();};$('#cancelProduct').onclick=()=>{tab='products';render();};
+  paint();$('#backProducts').onclick=()=>navigateAdmin('products');$('#cancelProduct').onclick=()=>navigateAdmin('products');
   let productHandleEdited=!!p.shopifyHandle;$('#pHandle').oninput=()=>{productHandleEdited=true;};$('#pn').oninput=()=>{refreshPreview();if(!productHandleEdited)$('#pHandle').value=$('#pn').value.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');};$('#pp').oninput=refreshPreview;$('#pd').oninput=refreshPreview;
   $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resizeProductImage(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
   $('#chooseProductMedia').onclick=()=>chooseMedia(path=>{if(images.length>=8){toast('You can add up to 8 product photos.',true);return;}images.push(path);paint();});
@@ -1150,7 +1175,7 @@ function more() {
     <div class="app-menu-grid">${items.map(([key,title,desc,icon])=>`<button class="app-menu-item" data-t="${key}"><span class="app-menu-icon">${icon}</span><span class="app-menu-copy"><b>${title}</b><small>${desc}</small></span><span class="app-menu-arrow">›</span></button>`).join('')}</div>
     <a class="app-storefront-link" href="https://dewskincaree.com/" target="_blank" rel="noopener noreferrer">View customer storefront ↗</a>
     <button class="app-signout-link" id="appOut">Sign out of Dew Admin</button>`;
-  document.querySelectorAll('.app-menu-item[data-t]').forEach(b => b.onclick = () => { tab=b.dataset.t; q=''; render(); });
+  document.querySelectorAll('.app-menu-item[data-t]').forEach(b => b.onclick = () => navigateAdmin(b.dataset.t));
   $('#appOut').onclick=$('#out').onclick;
 }
 
