@@ -195,7 +195,7 @@ $('#form').onsubmit = async e => {
   const selectedArea=deliveryAreas.find(x=>String(x.id??'').trim()===selectedAreaId);
   if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
   area=String(selectedArea.id);
-  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8 || (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))) {
     $('#err').textContent = 'Please fill in your name, address and phone number. Check the email format if you entered one.'; return;
   }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
