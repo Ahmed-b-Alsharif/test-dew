@@ -6,7 +6,7 @@
 <title>Checkout | Dew Skincare</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261115-checkout-visual-1">
+<link rel="stylesheet" href="styles.css?v=20261115-checkout-visual-2">
 </head>
 <body class="dew-checkout-page">
 <header class="top"><div class="wrap">
@@ -19,8 +19,9 @@
     <section class="checkout-card">
       <div class="checkout-section-title"><span>1</span><h2>Your details</h2></div>
       <div class="checkout-field-grid">
-        <div><label for="name">Full name</label><input id="name" required autocomplete="name" placeholder="Your first and last name"></div>
-        <div><label for="phone">Egyptian mobile number</label><input id="phone" type="tel" required inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
+        <div><label for="firstName">First name</label><input id="firstName" required autocomplete="given-name" placeholder="First name"></div>
+        <div><label for="lastName">Last name</label><input id="lastName" required autocomplete="family-name" placeholder="Last name"></div>
+        <div class="checkout-field-wide"><label for="phone">Egyptian mobile number</label><input id="phone" type="tel" required inputmode="tel" autocomplete="tel" placeholder="01XXXXXXXXX"></div>
       </div>
     </section>
     <section class="checkout-card">
@@ -50,7 +51,7 @@
   </aside>
 </main>
 <script src="cart.js"></script>
-<script src="checkout.js?v=20261115-egypt-checkout-1"></script>
+<script src="checkout.js?v=20261115-egypt-checkout-2"></script>
 <script src="storefront-ui.js?v=20261111-checkout-search-removed-1"></script>
 </body>
 </html>
