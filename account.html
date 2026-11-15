@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Sign in to your Dew Skincare account to view your orders.">
+<title>My account | Dew Skincare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261115-customer-account-1"><link rel="stylesheet" href="account.css?v=20261115-customer-account-1">
+</head><body>
+<header class="top"><div class="wrap"><a class="brand" href="./" style="text-decoration:none">Dew<span>.</span></a><a class="cart-btn" href="./" style="text-decoration:none">Continue shopping</a></div></header>
+<main class="dew-account-page"><div class="dew-account-shell">
+  <div class="dew-account-intro"><p class="dew-account-eyebrow">DEW SKINCARE</p><h1>Your account</h1><p>See your orders and keep up with every Dew delivery.</p></div>
+  <p class="dew-account-alert" id="accountMessage" role="status" aria-live="polite" hidden></p>
+  <section class="dew-account-card" id="accountSetup" hidden><h2>Accounts are being connected</h2><p>Guest checkout is still available. Please check back soon to create an account.</p><a class="btn red" href="checkout.html">Continue as a guest</a></section>
+  <section class="dew-account-card" id="authPanel" hidden>
+    <div class="dew-account-tabs" role="tablist" aria-label="Account access"><button type="button" class="dew-account-tab is-active" data-auth-view="signin">Sign in</button><button type="button" class="dew-account-tab" data-auth-view="signup">Create account</button></div>
+    <form id="signInForm" class="dew-auth-form"><h2>Welcome back</h2><label for="signInEmail">Email</label><input id="signInEmail" type="email" autocomplete="email" required maxlength="254"><label for="signInPassword">Password</label><input id="signInPassword" type="password" autocomplete="current-password" required><button class="btn red" type="submit">Sign in</button><button class="dew-text-button" type="button" id="forgotPassword">Forgot your password?</button></form>
+    <form id="signUpForm" class="dew-auth-form" hidden><h2>Create your Dew account</h2><label for="signUpName">Name</label><input id="signUpName" autocomplete="name" required maxlength="120"><label for="signUpEmail">Email</label><input id="signUpEmail" type="email" autocomplete="email" required maxlength="254"><label for="signUpPassword">Password</label><input id="signUpPassword" type="password" autocomplete="new-password" minlength="8" required><small>Use at least 8 characters.</small><button class="btn red" type="submit">Create account</button><p class="dew-account-note">We’ll email you a link to confirm your address before you sign in.</p></form>
+    <form id="resetRequestForm" class="dew-auth-form" hidden><h2>Reset your password</h2><p>Enter your email and we’ll send you a password reset link.</p><label for="resetEmail">Email</label><input id="resetEmail" type="email" autocomplete="email" required maxlength="254"><button class="btn red" type="submit">Send reset link</button><button class="dew-text-button" type="button" data-auth-view="signin">Back to sign in</button></form>
+    <form id="resetPasswordForm" class="dew-auth-form" hidden><h2>Choose a new password</h2><label for="newPassword">New password</label><input id="newPassword" type="password" autocomplete="new-password" minlength="8" required><button class="btn red" type="submit">Update password</button></form>
+    <p class="dew-account-guest">Prefer not to make an account? <a href="checkout.html">Checkout as a guest</a>.</p>
+  </section>
+  <section class="dew-account-card" id="customerDashboard" hidden><div class="dew-account-dashboard-head"><div><p class="dew-account-eyebrow">SIGNED IN AS</p><h2 id="accountEmail"></h2></div><button type="button" class="dew-text-button" id="signOut">Sign out</button></div><div class="dew-orders-heading"><h2>Your orders</h2><button type="button" class="dew-text-button" id="refreshOrders">Refresh</button></div><div class="dew-account-loading" id="ordersLoading">Loading your orders…</div><div class="dew-orders-list" id="ordersList"></div><div class="dew-orders-empty" id="ordersEmpty" hidden><p>You haven’t placed an order with this account yet.</p><a class="btn red" href="./">Explore Dew</a></div></section>
+</div></main>
+<script src="auth-config.js?v=20261115-customer-account-1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="account.js?v=20261115-customer-account-1"></script>
+</body></html>
