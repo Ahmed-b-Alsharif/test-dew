@@ -238,11 +238,15 @@ async function createOrder(request, env) {
     const discountUses=priorOrderList.filter(usedThisDiscount).length;
     const customerDiscountUses=priorOrderList.filter(o=>String(o.customer?.phone||"").replace(/\D/g,"")===customerPhone&&usedThisDiscount(o)).length;
     const result=calculateDiscount(promo,lines,itemsTotal,delivery,catalogue,{first,last,phone},priorOrders,discountUses,customerDiscountUses);
-    if(!result.ok)return json({ok:false,error:result.error},400);
-    discount=result.amount;
-    delivery=Math.max(0,delivery-result.shipping);
-    promoCode=promo.method==="automatic"?"":promo.code;
-    discountInfo={id:promo.id||"",title:result.title,kind:result.kind,method:promo.method||"code",discountedLines:result.discountedLines||[]};
+    if(!result.ok){
+      if(promo.method==="automatic")promo=null;
+      else return json({ok:false,error:result.error},400);
+    }else{
+      discount=result.amount;
+      delivery=Math.max(0,delivery-result.shipping);
+      promoCode=promo.method==="automatic"?"":promo.code;
+      discountInfo={id:promo.id||"",title:result.title,kind:result.kind,method:promo.method||"code",discountedLines:result.discountedLines||[]};
+    }
   }
   const total=Math.max(0,Math.round((itemsTotal+delivery-discount)*100)/100);
   const now=new Date();
