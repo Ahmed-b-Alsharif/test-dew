@@ -68,7 +68,10 @@ function discountIsLive(d){
 function discountProductMatch(d,line){
   if(d.scope!=='products'||(!d.productIds?.length&&!d.collectionIds?.length))return true;
   const p=S.products.find(x=>String(x.id)===String(line.id));
-  return !!p&&(d.productIds?.map(String).includes(String(line.id))||d.collectionIds?.map(String).includes(String(p.catalog)));
+  if(!p)return false;
+  const productMatch=(d.productIds||[]).map(String).includes(String(line.id));
+  const collectionMatch=(d.collectionIds||[]).some(cid=>String(p.catalog)===String(cid)||(S.catalogs||[]).some(c=>String(c.id)===String(cid)&&(c.productIds||[]).map(String).includes(String(line.id))));
+  return productMatch||collectionMatch;
 }
 function previewDiscount(d,ls,items,delivery){
   if(!d||!discountIsLive(d))return {ok:false,error:'This discount is not active.'};
@@ -80,13 +83,16 @@ function previewDiscount(d,ls,items,delivery){
     shipping=delivery;
   }else if(d.discountKind==='buy_x_get_y'){
     const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?'products':'all',productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
-    const buys=ls.filter(l=>discountProductMatch(buyRule,l));
-    if((d.buyMode||'quantity')==='amount'?buys.reduce((n,l)=>n+l.total,0)<Number(d.buyAmount||0):buys.reduce((n,l)=>n+l.qty,0)<Math.max(1,Number(d.buyQuantity||1)))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
+    const buys=ls.map((line,index)=>({line,index})).filter(x=>discountProductMatch(buyRule,x.line));
+    const buyMode=d.buyMode||'quantity',buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0);
+    if(buyMode==='amount'?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
+    const consumed=new Map();let buySlots=buyMode==='amount'?Infinity:Math.max(1,Number(d.buyQuantity||1));
+    for(const item of buys){const take=Math.min(item.line.qty,buySlots);if(take>0)consumed.set(item.index,take);buySlots-=take;if(buySlots<=0)break;}
     const ids=(d.getProductIds||[]).map(String);
-    const rewards=ls.filter(l=>!ids.length||ids.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},()=>({unit:l.unit}))).sort((a,b)=>a.unit-b.unit);
-    let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
-    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;}
-    if(!rewards.length)return {ok:false,error:'Add an eligible reward product to your cart.'};
+    const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},()=>({unit:l.unit})):[];}).sort((a,b)=>a.unit-b.unit);
+    let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),rewardCount=0;
+    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;rewardCount++;}
+    if(!rewardCount)return {ok:false,error:'Add an eligible reward product to your cart.'};
   }else{
     const eligible=d.discountKind==='amount_off_products'?ls.filter(l=>discountProductMatch(d,l)):ls;
     const base=eligible.reduce((n,l)=>n+l.total,0);
