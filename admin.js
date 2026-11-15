@@ -979,46 +979,98 @@ function discounts() {
   if(!D.discounts)D.discounts=[];
   const native=isNativeApp;
   const active=D.discounts.filter(d=>d.active).length;
-  const amount=d=>d.type==='percentage'?d.value+'% off':d.type==='fixed'?egp(d.value)+' off':'Free shipping';
+  const amount=d=>d.type==='percentage'?d.value+'% off':d.type==='fixed'?egp(d.value)+' off':d.type==='free_shipping'?'Free shipping':d.discountKind==='buy_x_get_y'?'Buy X get Y':d.valueType==='fixed'?egp(d.value)+' off':d.value+'% off';
   let filter='All',term='';
   const filtered=()=>D.discounts.filter(d=>(filter==='All'||(filter==='Active'?!!d.active:!d.active))&&(!term||(d.code+' '+amount(d)).toLowerCase().includes(term)));
   $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">PROMOTIONS</span><h2>Discounts</h2><p>Create and manage offers for your customers.</p></div><button class="admin-primary" id="newDisc">＋ Create discount</button></div>
     <div class="shopify-metrics"><div><span>All discounts</span><b>${D.discounts.length}</b></div><div><span>Active</span><b>${active}</b></div><div><span>Inactive</span><b>${D.discounts.length-active}</b></div></div>
-    ${native?`<div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="discountSearch" type="search" placeholder="Search discount codes"></div><span class="shopify-muted" id="discountCount">${D.discounts.length} discounts</span></div><div class="dew-mobile-filter-row" id="discountFilters">${['All','Active','Inactive'].map(x=>`<button class="dew-mobile-filter ${x==='All'?'active':''}" data-discount-filter="${x}">${x}</button>`).join('')}</div><div class="dew-discount-list" id="dewDiscountList"></div>`:`<p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p><div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="discounts-mobile-table"><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>${D.discounts.map(d=>`<tr><td><b>${esc(d.code)}</b></td><td>${d.type==='percentage'?'Percentage (%)':d.type==='fixed'?'Fixed amount (EGP)':'Free Shipping'}</td><td>${amount(d)}</td><td>${d.minSpend?egp(d.minSpend):'None'}</td><td><button class="pill ${d.active?'g':''}" data-toggledisc="${d.id}">${d.active?'Active':'Inactive'}</button></td><td><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No promo codes created yet.</td></tr>'}</table></div></div>`}`;
-  $('#newDisc').onclick=()=>discForm();
+    ${native?`<div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="discountSearch" type="search" placeholder="Search discount codes"></div><span class="shopify-muted" id="discountCount">${D.discounts.length} discounts</span></div><div class="dew-mobile-filter-row" id="discountFilters">${['All','Active','Inactive'].map(x=>`<button class="dew-mobile-filter ${x==='All'?'active':''}" data-discount-filter="${x}">${x}</button>`).join('')}</div><div class="dew-discount-list" id="dewDiscountList"></div>`:`<p class="note">Create Shopify-style promo codes for percentage discounts, fixed amounts, or free shipping.</p><div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="discounts-mobile-table"><tr><th>Code</th><th>Type</th><th>Value</th><th>Min Spend</th><th>Status</th><th></th></tr>${D.discounts.map(d=>`<tr><td><b>${esc(d.code)}</b></td><td>${d.discountKind==='buy_x_get_y'?'Buy X get Y':d.discountKind==='amount_off_order'?'Amount off order':d.discountKind==='amount_off_products'?'Amount off products':d.type==='free_shipping'?'Free shipping':d.type==='percentage'?'Percentage (%)':'Fixed amount (EGP)'}</td><td>${amount(d)}</td><td>${d.minSpend?egp(d.minSpend):'None'}</td><td><button class="pill ${d.active?'g':''}" data-toggledisc="${d.id}">${d.active?'Active':'Inactive'}</button></td><td><button class="btn small" data-editdisc="${d.id}">Edit</button> <button class="btn small ghost" data-deldisc="${d.id}">Delete</button></td></tr>`).join('')||'<tr><td colspan="6">No promo codes created yet.</td></tr>'}</table></div></div>`}`;
+  $('#newDisc').onclick=()=>discTypePicker();
   const draw=()=>{const list=filtered(),el=$('#dewDiscountList');const count=$('#discountCount');if(count)count.textContent=list.length+' discounts';if(el)el.innerHTML=list.map(d=>`<article class="dew-discount-card"><div class="dew-discount-icon">％</div><div class="dew-discount-info"><b>${esc(d.code)}</b><strong>${amount(d)}</strong><small>${d.minSpend?'Minimum spend '+egp(d.minSpend):'No minimum spend'}</small><span class="dew-product-status ${d.active?'active':'draft'}">${d.active?'Active':'Inactive'}</span></div><div class="dew-discount-actions"><button data-editdisc="${d.id}">Edit</button><button data-toggledisc="${d.id}">${d.active?'Deactivate':'Activate'}</button><button class="danger" data-deldisc="${d.id}">Delete</button></div></article>`).join('')||'<div class="dew-mobile-empty">No matching discounts. Create a discount or change your search.</div>';};
   if(native){draw();$('#discountSearch').oninput=()=>{term=$('#discountSearch').value.trim().toLowerCase();draw();};document.querySelectorAll('[data-discount-filter]').forEach(b=>b.onclick=()=>{filter=b.dataset.discountFilter;document.querySelectorAll('[data-discount-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});}
   document.querySelectorAll('[data-editdisc]').forEach(b=>b.onclick=()=>discForm(b.dataset.editdisc));
   document.querySelectorAll('[data-toggledisc]').forEach(b=>b.onclick=()=>{const d=D.discounts.find(x=>x.id===b.dataset.toggledisc);d.active=!d.active;render();save('Toggle discount '+d.code);});
   document.querySelectorAll('[data-deldisc]').forEach(b=>b.onclick=()=>{const d=D.discounts.find(x=>x.id===b.dataset.deldisc);if(confirm('Delete promo code "'+d.code+'"?')){D.discounts=D.discounts.filter(x=>x!==d);render();save('Delete discount '+d.code);}});
 }
-function discForm(id) {
-  const d = id ? D.discounts.find(x => x.id === id) : { id: uid(), code: '', type: 'percentage', value: 10, minSpend: 0, active: true };
-  modal(`<h2>${id ? 'Edit' : 'New'} promo code</h2><div class="form-grid">    <div class="full"><label>Promo code</label><input id="dc" value="${esc(d.code)}" placeholder="e.g. SAVE20"></div>
-    <div><label>Discount type</label><select id="dt">
-      <option value="percentage" ${d.type === 'percentage' ? 'selected' : ''}>Percentage (%)</option>
-      <option value="fixed" ${d.type === 'fixed' ? 'selected' : ''}>Fixed amount (EGP)</option>
-      <option value="free_shipping" ${d.type === 'free_shipping' ? 'selected' : ''}>Free shipping</option>
-    </select></div>
-    <div><label>Value (percentage or EGP)</label><input id="dv" type="number" min="0" value="${d.value}"></div>
-    <div class="full"><label>Minimum order spend (EGP, 0 for none)</label><input id="dm" type="number" min="0" value="${d.minSpend || 0}"></div>
-    <div class="full"><label><input type="checkbox" id="da" ${d.active ? 'checked' : ''} style="width:auto"> Active</label></div></div>
-    <div class="err" id="me"></div>
-    <div style="display:flex;gap:8px;margin-top:10px"><button class="btn red" id="dSave">Save</button><button class="btn ghost" id="dX">Cancel</button></div>`);
-  $('#dX').onclick = closeModal;
-  $('#dSave').onclick = () => {
-    const code = $('#dc').value.trim().toUpperCase();
-    if (!code) { $('#me').textContent = 'Promo code is required.'; return; }
-    d.code = code;
-    d.type = $('#dt').value;
-    d.value = Number($('#dv').value) || 0;
-    d.minSpend = Number($('#dm').value) || 0;
-    d.active = $('#da').checked;
-    if (!id) D.discounts.push(d);
-    closeModal(); render(); save('Promo code ' + code);
+function discTypePicker() {
+  const types=[
+    ['amount_off_products','Amount off products','Discount specific products or collections of products','tag'],
+    ['buy_x_get_y','Buy X get Y','Reward customers when they buy qualifying items','gift'],
+    ['amount_off_order','Amount off order','Discount the total order amount','shopping-bag'],
+    ['free_shipping','Free shipping','Offer free shipping on an order','truck']
+  ];
+  modal('<div class="dew-discount-picker"><header><div><span class="admin-eyebrow">DISCOUNTS</span><h2>Select discount type</h2></div><button type="button" class="dew-discount-close" id="discPickerClose" aria-label="Close">×</button></header><div class="dew-discount-type-list">'+types.map(([key,title,desc,icon])=>'<button type="button" class="dew-discount-type" data-disc-type="'+key+'"><span class="dew-discount-type-icon">'+({tag:'◇',gift:'♧','shopping-bag':'▱',truck:'♧'}[icon])+'</span><span><b>'+title+'</b><small>'+desc+'</small></span><span class="dew-discount-chevron">›</span></button>').join('')+'</div></div>');
+  $('#modal').classList.add('dew-discount-modal');
+  $('#discPickerClose').onclick=()=>{$('#modal').classList.remove('dew-discount-modal');closeModal();};
+  document.querySelectorAll('[data-disc-type]').forEach(b=>b.onclick=()=>{const type=b.dataset.discType;$('#modal').classList.remove('dew-discount-modal');discForm(null,type);});
+}
+function discForm(id,type) {
+  const old=id?D.discounts.find(x=>x.id===id):null;
+  const d=old||{id:uid(),code:'',type:'percentage',value:10,minSpend:0,active:true};
+  type=type||d.discountKind||(d.type==='free_shipping'?'free_shipping':d.scope==='order'?'amount_off_order':'amount_off_products');
+  const titles={amount_off_products:'Amount off products',buy_x_get_y:'Buy X get Y',amount_off_order:'Amount off order',free_shipping:'Free shipping'};
+  const isBuy=type==='buy_x_get_y',isShip=type==='free_shipping',isOrder=type==='amount_off_order';
+  const products=D.products||[],collections=D.catalogs||[];
+  const selectedProducts=d.productIds||[],selectedCollections=d.collectionIds||[];
+  const productChecks=products.filter(p=>p.visible!==false).map(p=>'<label class="dew-disc-check"><input type="checkbox" name="discProduct" value="'+esc(p.id)+'" '+(selectedProducts.includes(p.id)?'checked':'')+'><span>'+esc(p.name)+'</span></label>').join('');
+  const collectionChecks=collections.map(c=>'<label class="dew-disc-check"><input type="checkbox" name="discCollection" value="'+esc(c.id)+'" '+(selectedCollections.includes(c.id)?'checked':'')+'><span>'+esc(c.name)+'</span></label>').join('');
+  const valType=d.valueType||(d.type==='fixed'?'fixed':'percentage');
+  const method=d.method||'code';
+  const input=(label,id,value,attrs='')=>'<label class="dew-disc-field"><span>'+label+'</span><input id="'+id+'" value="'+esc(value??'')+'" '+attrs+'></label>';
+  const section=(title,desc,body)=>'<section class="dew-disc-section"><div class="dew-disc-section-head"><h3>'+title+'</h3>'+(desc?'<p>'+desc+'</p>':'')+'</div>'+body+'</section>';
+  const productScope=()=>'<div class="dew-disc-choice-row"><label><input type="radio" name="discScope" value="all" '+(!selectedProducts.length&&!selectedCollections.length?'checked':'')+'> All products</label><label><input type="radio" name="discScope" value="specific" '+(selectedProducts.length||selectedCollections.length?'checked':'')+'> Specific products or collections</label></div><div id="discSpecificItems" class="dew-disc-specific '+(selectedProducts.length||selectedCollections.length?'show':'')+'"><details open><summary>Products</summary><div class="dew-disc-check-grid">'+(productChecks||'<p>No products available.</p>')+'</div></details><details><summary>Collections</summary><div class="dew-disc-check-grid">'+(collectionChecks||'<p>No collections available.</p>')+'</div></details></div>';
+  const codeSection=section('Method','Choose how customers receive this discount.','<div class="dew-disc-choice-row"><label><input type="radio" name="discMethod" value="code" '+(method==='code'?'checked':'')+'> Discount code</label><label><input type="radio" name="discMethod" value="automatic" '+(method==='automatic'?'checked':'')+'> Automatic discount</label></div><div id="discCodeWrap" class="'+(method==='automatic'?'dew-disc-hidden':'')+'">'+input('Discount code','dc',d.code||'','placeholder="e.g. DEW20" autocomplete="off"')+'<button type="button" class="dew-disc-generate" id="discGenerate">Generate random code</button></div><div id="discTitleWrap" class="'+(method==='code'?'dew-disc-hidden':'')+'">'+input('Title','discTitle',d.title||'','placeholder="e.g. Weekend offer"')+'</div>');
+  let valueSection='';
+  if(!isBuy&&!isShip)valueSection=section('Discount value','Set the amount customers save.','<div class="dew-disc-choice-row"><label><input type="radio" name="discValueType" value="percentage" '+(valType==='percentage'?'checked':'')+'> Percentage</label><label><input type="radio" name="discValueType" value="fixed" '+(valType==='fixed'?'checked':'')+'> Fixed amount (EGP)</label></div>'+input('Value','dv',d.value??10,'type="number" min="0" step="0.01"'));
+  let appliesSection='';
+  if(type==='amount_off_products')appliesSection=section('Applies to','Choose which products receive the discount.',productScope());
+  if(isOrder)appliesSection=section('Minimum purchase requirements','Optional conditions customers must meet.','<div class="dew-disc-choice-row"><label><input type="radio" name="discMinimum" value="none" '+(!d.minSpend&&!d.minQuantity?'checked':'')+'> No minimum requirements</label><label><input type="radio" name="discMinimum" value="amount" '+(d.minSpend?'checked':'')+'> Minimum purchase amount</label><label><input type="radio" name="discMinimum" value="quantity" '+(d.minQuantity?'checked':'')+'> Minimum quantity of items</label></div><div class="dew-disc-grid-two">'+input('Minimum amount (EGP)','dm',d.minSpend||'','type="number" min="0"')+input('Minimum quantity','discMinQty',d.minQuantity||'','type="number" min="1"')+'</div>');
+  if(isBuy)appliesSection=section('Customer buys','Set what customers need to purchase to qualify.','<div class="dew-disc-grid-two">'+input('Minimum quantity','discBuyQty',d.buyQuantity||1,'type="number" min="1"')+input('Minimum purchase amount (EGP)','discBuyAmount',d.buyAmount||'','type="number" min="0"')+'</div>'+productScope()+'<hr><h4>Customer gets</h4><div class="dew-disc-grid-two">'+input('Quantity of items','discGetQty',d.getQuantity||1,'type="number" min="1"')+'<label class="dew-disc-field"><span>Discounted value</span><select id="discGetValue"><option value="free" '+((d.getValue||'free')==='free'?'selected':'')+'>Free</option><option value="percentage" '+(d.getValue==='percentage'?'selected':'')+'>Percentage off</option><option value="fixed" '+(d.getValue==='fixed'?'selected':'')+'>Amount off each (EGP)</option></select></label></div>'+input('Discount value','discGetAmount',d.getAmount||0,'type="number" min="0"')+'<h4>Customer gets products</h4><div class="dew-disc-check-grid">'+productChecks+'</div>');
+  if(isShip)appliesSection=section('Shipping countries','Choose where free shipping applies.','<label class="dew-disc-choice"><input type="radio" name="discCountries" value="all" '+((d.countries||'all')==='all'?'checked':'')+'> All countries</label><label class="dew-disc-choice"><input type="radio" name="discCountries" value="selected" '+(d.countries==='selected'?'checked':'')+'> Selected countries (Egypt)</label><label class="dew-disc-field"><span>Exclude shipping rates over (EGP)</span><input id="discShipLimit" type="number" min="0" value="'+esc(d.shippingLimit||'')+'" placeholder="No limit"></label>');
+  const requirementSection=section('Eligibility','Who can use this discount?','<label class="dew-disc-choice"><input type="radio" name="discEligibility" value="all" checked> All customers</label><label class="dew-disc-choice"><input type="radio" name="discEligibility" value="first_time" '+(d.eligibility==='first_time'?'checked':'')+'> First-time customers</label>');
+  const usageSection=section('Usage limits','Control how often this discount can be used.','<label class="dew-disc-choice"><input type="checkbox" id="discLimitTotal" '+(d.usageLimit?'checked':'')+'> Limit number of times this discount can be used in total</label>'+input('Maximum uses','discUsageLimit',d.usageLimit||'','type="number" min="1"')+'<label class="dew-disc-choice"><input type="checkbox" id="discOnePerCustomer" '+(d.onePerCustomer?'checked':'')+'> Limit to one use per customer</label>'+(isBuy?'<label class="dew-disc-choice"><input type="checkbox" id="discMaxPerOrder" '+(d.maxUsesPerOrder?'checked':'')+'> Set a maximum number of uses per order</label>'+input('Maximum uses per order','discMaxUses',d.maxUsesPerOrder||'','type="number" min="1"'):''));
+  const comboSection=section('Combinations','Choose whether this discount can be combined with other discounts.','<label class="dew-disc-choice"><input type="checkbox" id="discCombineProduct" '+(d.combineProduct?'checked':'')+'> Product discounts</label><label class="dew-disc-choice"><input type="checkbox" id="discCombineOrder" '+(d.combineOrder?'checked':'')+'> Order discounts</label><label class="dew-disc-choice"><input type="checkbox" id="discCombineShipping" '+(d.combineShipping?'checked':'')+'> Shipping discounts</label>');
+  const datesSection=section('Active dates','Set when this discount starts and ends.','<div class="dew-disc-grid-two">'+input('Start date','discStart',d.startsAt||new Date().toISOString().slice(0,10),'type="date"')+input('Start time','discStartTime',d.startTime||'00:00','type="time"')+'</div><label class="dew-disc-choice"><input type="checkbox" id="discHasEnd" '+(d.endsAt?'checked':'')+'> Set end date</label><div id="discEndWrap" class="'+(d.endsAt?'':'dew-disc-hidden')+'"><div class="dew-disc-grid-two">'+input('End date','discEnd',d.endsAt||'','type="date"')+input('End time','discEndTime',d.endTime||'23:59','type="time"')+'</div></div>');
+  $('#modal').classList.add('dew-discount-builder-modal');
+  modal('<div class="dew-discount-builder"><header class="dew-disc-builder-head"><button type="button" id="discBack" class="dew-disc-back">← Discounts</button><div><span class="admin-eyebrow">CREATE DISCOUNT</span><h2>'+titles[type]+'</h2></div><button type="button" class="dew-discount-close" id="discClose">×</button></header><div class="dew-disc-builder-body"><div class="dew-disc-builder-main">'+codeSection+valueSection+appliesSection+requirementSection+usageSection+comboSection+datesSection+'</div><aside class="dew-disc-summary"><h3>Summary</h3><p id="discSummaryTitle">'+titles[type]+'</p><div id="discSummaryText">'+(method==='code'?'Customers enter a discount code at checkout.':'Discount applies automatically when eligible.')+'</div><small>Review your settings before saving.</small></aside></div><footer class="dew-disc-builder-footer"><button type="button" class="admin-view-store" id="discCancel">Cancel</button><button type="button" class="admin-primary" id="dSave">Save discount</button></footer></div>');
+  $('#discBack').onclick=()=>{ $('#modal').classList.remove('dew-discount-builder-modal');discTypePicker(); };
+  $('#discClose').onclick=$('#discCancel').onclick=()=>{$('#modal').classList.remove('dew-discount-builder-modal');closeModal();};
+  $('#discGenerate').onclick=()=>{$('#dc').value='DEW'+Math.random().toString(36).slice(2,8).toUpperCase();};
+  document.querySelectorAll('input[name="discMethod"]').forEach(x=>x.onchange=()=>{$('#discCodeWrap').classList.toggle('dew-disc-hidden',x.value!=='code');$('#discTitleWrap').classList.toggle('dew-disc-hidden',x.value!=='automatic');});
+  document.querySelectorAll('input[name="discScope"]').forEach(x=>x.onchange=()=>$('#discSpecificItems').classList.toggle('show',x.value==='specific'&&x.checked));
+  $('#discHasEnd').onchange=()=>$('#discEndWrap').classList.toggle('dew-disc-hidden',!$('#discHasEnd').checked);
+  const updateSummary=()=>{$('#discSummaryText').textContent=$('input[name="discMethod"]:checked')?.value==='automatic'?'Discount applies automatically when eligible.':'Customers enter '+($('#dc')?.value||'your code')+' at checkout.';};
+  $('#dc')?.addEventListener('input',updateSummary);
+  $('#dSave').onclick=()=>{
+    const methodValue=$('input[name="discMethod"]:checked')?.value||'code';
+    const code=(methodValue==='code'?$('#dc').value:$('#discTitle').value).trim().toUpperCase();
+    if(methodValue==='code'&&!code){$('#dc').focus();toast('Enter a discount code.',true);return;}
+    if(methodValue==='automatic'&&!$('#discTitle').value.trim()){toast('Enter a title for the automatic discount.',true);return;}
+    const valueType=$('input[name="discValueType"]:checked')?.value||'percentage';
+    const val=Number($('#dv')?.value||0);
+    if(!isBuy&&!isShip&&(!(val>0)||valueType==='percentage'&&val>100)){toast('Enter a valid discount value.',true);return;}
+    const scope=$('input[name="discScope"]:checked')?.value||'all';
+    const productIds=scope==='specific'?[...document.querySelectorAll('input[name="discProduct"]:checked')].map(x=>x.value):[];
+    const collectionIds=scope==='specific'?[...document.querySelectorAll('input[name="discCollection"]:checked')].map(x=>x.value):[];
+    if(type==='amount_off_products'&&scope==='specific'&&!productIds.length&&!collectionIds.length){toast('Select at least one product or collection.',true);return;}
+    const minimum=$('input[name="discMinimum"]:checked')?.value||'none';
+    const startDate=$('#discStart').value;
+    const endDate=$('#discHasEnd').checked?$('#discEnd').value:'';
+    if(endDate&&startDate&&endDate<startDate){toast('End date must be on or after the start date.',true);return;}
+    Object.assign(d,{discountKind:type,method,code:methodValue==='code'?code:'',title:methodValue==='automatic'?$('#discTitle').value.trim():code,
+      type:isShip?'free_shipping':valueType, value:isBuy?0:val, valueType, scope:isOrder?'order':type==='amount_off_products'?'products':type,
+      productIds,collectionIds,minSpend:isOrder&&minimum==='amount'?Number($('#dm').value)||0:0,minQuantity:isOrder&&minimum==='quantity'?Number($('#discMinQty').value)||0:0,
+      buyQuantity:isBuy?Math.max(1,Number($('#discBuyQty').value)||1):0,buyAmount:isBuy?Number($('#discBuyAmount').value)||0:0,
+      getQuantity:isBuy?Math.max(1,Number($('#discGetQty').value)||1):0,getValue:isBuy?$('#discGetValue').value:'',getAmount:isBuy?Number($('#discGetAmount').value)||0:0,
+      countries:isShip?($('input[name="discCountries"]:checked')?.value||'all'):'all',shippingLimit:isShip?Number($('#discShipLimit').value)||0:0,
+      eligibility:$('input[name="discEligibility"]:checked')?.value||'all',usageLimit:$('#discLimitTotal').checked?Math.max(1,Number($('#discUsageLimit').value)||1):0,
+      onePerCustomer:$('#discOnePerCustomer').checked,maxUsesPerOrder:isBuy&&$('#discMaxPerOrder').checked?Math.max(1,Number($('#discMaxUses').value)||1):0,
+      combineProduct:$('#discCombineProduct').checked,combineOrder:$('#discCombineOrder').checked,combineShipping:$('#discCombineShipping').checked,
+      startsAt:startDate,startTime:$('#discStartTime').value,endsAt:endDate,endTime:endDate?$('#discEndTime').value:'',active:true,updatedAt:new Date().toISOString()});
+    if(!id){d.createdAt=new Date().toISOString();D.discounts.push(d);}
+    $('#modal').classList.remove('dew-discount-builder-modal');closeModal();render();save((id?'Update':'Create')+' discount '+(d.code||d.title));
   };
 }
-
 /* ---------- store settings ---------- */
 function store() {
   const s = D.settings;
