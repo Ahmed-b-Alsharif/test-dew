@@ -56,27 +56,54 @@ function lines() {
   return result;
 }
 
-function totals() {
-  const ls = lines();
-  const items = ls.reduce((a, l) => a + l.total, 0);
-  const selectedArea=deliveryAreas.find(x=>x.id===area);
-  let delivery = selectedArea ? Number(selectedArea.fee)||0 : 0;
-
-  let discount = 0;
-  if (appliedDiscount) {
-    if (appliedDiscount.type === 'percentage') {
-      discount = Math.round((items * appliedDiscount.value) / 100);
-    } else if (appliedDiscount.type === 'fixed') {
-      discount = Math.min(items, appliedDiscount.value);
-    } else if (appliedDiscount.type === 'free_shipping') {
-      discount = delivery;
-      delivery = 0;
-    }
-  }
-
-  return { ls, items, delivery, discount, total: Math.max(0, items + delivery - (appliedDiscount && appliedDiscount.type === 'free_shipping' ? 0 : discount)) };
+function cairoNowString(){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Cairo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+  const p=Object.fromEntries(parts.filter(x=>x.type!=='literal').map(x=>[x.type,x.value]));
+  return p.year+'-'+p.month+'-'+p.day+'T'+p.hour+':'+p.minute;
 }
-
+function discountIsLive(d){
+  const now=cairoNowString(),start=d.startsAt?d.startsAt+'T'+(d.startTime||'00:00'):'',end=d.endsAt?d.endsAt+'T'+(d.endTime||'23:59'):'';
+  return d.active!==false&&(!start||now>=start)&&(!end||now<=end);
+}
+function discountProductMatch(d,line){
+  if(d.scope!=='products'||(!d.productIds?.length&&!d.collectionIds?.length))return true;
+  const p=S.products.find(x=>String(x.id)===String(line.id));
+  return !!p&&(d.productIds?.map(String).includes(String(line.id))||d.collectionIds?.map(String).includes(String(p.catalog)));
+}
+function previewDiscount(d,ls,items,delivery){
+  if(!d||!discountIsLive(d))return {ok:false,error:'This discount is not active.'};
+  if(Number(d.minSpend||0)>items)return {ok:false,error:'Minimum spend is '+egp(d.minSpend)+'.'};
+  if(Number(d.minQuantity||0)>ls.reduce((n,l)=>n+l.qty,0))return {ok:false,error:'Add more items to use this discount.'};
+  let amount=0,shipping=0,label=d.title||d.code||'Discount';
+  if(d.discountKind==='free_shipping'||d.type==='free_shipping'){
+    if(Number(d.shippingLimit||0)>0&&delivery>Number(d.shippingLimit))return {ok:false,error:'This discount does not apply to this shipping rate.'};
+    shipping=delivery;
+  }else if(d.discountKind==='buy_x_get_y'){
+    const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?'products':'all',productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
+    const buys=ls.filter(l=>discountProductMatch(buyRule,l));
+    if(buys.reduce((n,l)=>n+l.qty,0)<Math.max(1,Number(d.buyQuantity||1))||buys.reduce((n,l)=>n+l.total,0)<Number(d.buyAmount||0))return {ok:false,error:'Your cart does not meet the Buy X requirements.'};
+    const ids=(d.getProductIds||[]).map(String);
+    const rewards=ls.filter(l=>!ids.length||ids.includes(String(l.id))).flatMap(l=>Array.from({length:l.qty},()=>({unit:l.unit}))).sort((a,b)=>a.unit-b.unit);
+    let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity));
+    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;}
+    if(!rewards.length)return {ok:false,error:'Add an eligible reward product to your cart.'};
+  }else{
+    const eligible=d.discountKind==='amount_off_products'?ls.filter(l=>discountProductMatch(d,l)):ls;
+    const base=eligible.reduce((n,l)=>n+l.total,0);
+    if(d.discountKind==='amount_off_products'&&d.scope==='products'&&!base)return {ok:false,error:'Your cart has no eligible products.'};
+    const kind=d.valueType||(d.type==='fixed'?'fixed':'percentage'),value=Math.max(0,Number(d.value||0));
+    amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);
+  }
+  return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type};
+}
+function automaticDiscount(){return (S.discounts||[]).find(d=>d.active&&d.method==='automatic'&&discountIsLive(d))||null;}
+function totals(){
+  const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
+  let delivery=selectedArea?Number(selectedArea.fee)||0:0;
+  const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='';
+  if(chosen){const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
+  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen};
+}
 function render() {
   const t = totals();
   if (!t.ls.length) {
@@ -84,7 +111,7 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const discHtml = appliedDiscount ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(appliedDiscount.code)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discHtml = t.chosen && (t.discount>0 || t.chosen.discountKind==='free_shipping') ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
 
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
@@ -106,17 +133,14 @@ function render() {
       return;
     }
     if (!codeInput) return;
-    const disc = (S.discounts || []).find(d => d.code === codeInput && d.active);
+    const disc = (S.discounts || []).find(d => d.method!=='automatic' && String(d.code||'').toUpperCase() === codeInput && d.active);
     if (!disc) {
       $('#promoErr').textContent = 'Invalid or inactive promo code.';
       $('#promoErr').style.color = 'var(--red)';
       return;
     }
-    if (disc.minSpend && t.items < disc.minSpend) {
-      $('#promoErr').textContent = `Minimum spend for this code is ${egp(disc.minSpend)}.`;
-      $('#promoErr').style.color = 'var(--red)';
-      return;
-    }
+    const check=previewDiscount(disc,t.ls,t.items,t.delivery);
+    if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}
     appliedDiscount = disc;
     $('#promoErr').textContent = 'Promo code applied successfully!';
     $('#promoErr').style.color = 'var(--green)';
