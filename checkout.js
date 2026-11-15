@@ -109,7 +109,7 @@ function previewDiscount(d,ls,items,delivery){
   }
   return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type};
 }
-function automaticDiscount(){return (S.discounts||[]).find(d=>d.active&&d.method==='automatic'&&discountIsLive(d))||null;}
+function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&d.method==='automatic'&&!d.code&&discountIsLive(d))||null;}
 function totals(){
   const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
   let delivery=selectedArea?Number(selectedArea.fee)||0:0;
