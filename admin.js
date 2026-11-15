@@ -1060,7 +1060,7 @@ function discForm(id,type) {
     if(endDate&&startDate&&endDate<startDate){toast('End date must be on or after the start date.',true);return;}
     Object.assign(d,{discountKind:type,method,code:methodValue==='code'?code:'',title:methodValue==='automatic'?$('#discTitle').value.trim():code,
       type:isShip?'free_shipping':valueType, value:isBuy?0:val, valueType, scope:isOrder?'order':type==='amount_off_products'?'products':type,
-      productIds,collectionIds,minSpend:isOrder&&minimum==='amount'?Number($('#dm').value)||0:0,minQuantity:isOrder&&minimum==='quantity'?Number($('#discMinQty').value)||0:0,
+      productIds,collectionIds,buyProductIds:isBuy&&scope==='specific'?productIds:[],buyCollectionIds:isBuy&&scope==='specific'?collectionIds:[],minSpend:isOrder&&minimum==='amount'?Number($('#dm').value)||0:0,minQuantity:isOrder&&minimum==='quantity'?Number($('#discMinQty').value)||0:0,
       buyQuantity:isBuy?Math.max(1,Number($('#discBuyQty').value)||1):0,buyAmount:isBuy?Number($('#discBuyAmount').value)||0:0,
       getQuantity:isBuy?Math.max(1,Number($('#discGetQty').value)||1):0,getValue:isBuy?$('#discGetValue').value:'',getAmount:isBuy?Number($('#discGetAmount').value)||0:0,getProductIds:isBuy?[...document.querySelectorAll('input[name="discGetProduct"]:checked')].map(x=>x.value):[],
       countries:isShip?($('input[name="discCountries"]:checked')?.value||'all'):'all',shippingLimit:isShip?Number($('#discShipLimit').value)||0:0,
