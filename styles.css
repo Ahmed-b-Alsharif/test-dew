@@ -3054,12 +3054,3 @@ html,body{color-scheme:only light!important}
 .dew-success-thanks{margin:20px 0 0;text-align:center;color:var(--muted);font-family:Fraunces,Georgia,serif;font-style:italic}
 @media(max-width:760px){.dew-success-page{margin:18px auto}.dew-success-grid{grid-template-columns:1fr;border-radius:18px}.dew-success-hero{min-height:410px}.dew-success-greeting{margin-top:34px}.dew-success-receipt{padding:24px 20px}}
 @media print{.top,.dew-success-actions,.dew-copy-order{display:none!important}.dew-success-page{max-width:none;margin:0;padding:0}.dew-success-grid{display:block;box-shadow:none}.dew-success-hero{min-height:auto;padding:24px;background:#143c29!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}.dew-success-hero:after{display:none}.dew-success-receipt{padding:24px}}
-
-/* Customer account and receipt entry points */
-.dew-account-link{display:inline-flex;align-items:center;justify-content:center}
-.dew-account-link svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.dew-account-mobile{display:block;padding:14px 4px;color:var(--green);font-weight:700;text-decoration:none;border-top:1px solid #e5e7e2}
-.dew-account-mobile span{float:right}
-.dew-account-checkout{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;background:#f6f7f3;border-radius:10px;margin:6px 0 10px;font-size:.9rem}
-.dew-account-checkout a{color:var(--green);font-weight:700}
-.dew-receipt-email-status{font-size:.9rem}
