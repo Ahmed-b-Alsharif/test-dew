@@ -2768,6 +2768,50 @@
       "endTime": "",
       "updatedAt": "2026-11-15T09:53:32.398Z",
       "createdAt": "2026-11-15T09:53:32.398Z"
+    },
+    {
+      "id": "8ec61a33",
+      "code": "",
+      "type": "percentage",
+      "value": 0,
+      "minSpend": 0,
+      "active": true,
+      "discountKind": "buy_x_get_y",
+      "method": "code",
+      "title": "buy 2 get 1",
+      "valueType": "percentage",
+      "scope": "buy_x_get_y",
+      "productIds": [],
+      "collectionIds": [
+        "4569aaa1"
+      ],
+      "minQuantity": 0,
+      "buyQuantity": 2,
+      "buyAmount": 0,
+      "getQuantity": 1,
+      "getValue": "free",
+      "getAmount": 0,
+      "getProductIds": [
+        "757414b0",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
+      ],
+      "countries": "all",
+      "shippingLimit": 0,
+      "eligibility": "all",
+      "usageLimit": 0,
+      "onePerCustomer": false,
+      "maxUsesPerOrder": 0,
+      "combineProduct": false,
+      "combineOrder": false,
+      "combineShipping": false,
+      "startsAt": "2026-11-15",
+      "startTime": "00:00",
+      "endsAt": "",
+      "endTime": "",
+      "updatedAt": "2026-11-15T09:56:02.540Z",
+      "createdAt": "2026-11-15T09:56:02.540Z"
     }
   ],
   "pages": [
