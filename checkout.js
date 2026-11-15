@@ -25,11 +25,7 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
   updatePaymentDetails();
   try {
     const c = JSON.parse(localStorage.getItem('dew_customer') || 'null');
-    if (c) {
-      const parts = c.name.split(' ');
-      $('#first').value = parts[0] || ''; $('#last').value = parts.slice(1).join(' ');
-      $('#phone').value = c.phone;
-    }
+    if (c) { $('#name').value = c.name || ''; $('#phone').value = c.phone || ''; }
   } catch {}
   render();
 })();
@@ -38,7 +34,9 @@ function updatePaymentDetails() {
   const box = $('#paymentDetails'); if (!box || !S) return;
   if (paymentMethod !== 'instapay') { box.hidden = true; box.innerHTML = ''; return; }
   const s = S.settings || {}; box.hidden = false;
-  box.innerHTML = '<b>Pay via InstaPay</b><p>'+esc(s.instapayInstructions || 'Please transfer the order total to the account below.')+'</p><p><b>Account:</b> '+esc(s.instapayNumber||'')+'</p><p><b>Name:</b> '+esc(s.instapayName||'')+'</p><small>After payment, Dew will verify your transfer and confirm your order.</small>';
+  box.innerHTML = '<b>Pay via InstaPay</b><p>'+esc(s.instapayInstructions || 'Please transfer the order total to the account below.')+'</p><p><b>Account:</b> <span>'+esc(s.instapayNumber||'')+'</span> <button type="button" class="btn small" id="copyInstapay">Copy number</button></p><p><b>Name:</b> '+esc(s.instapayName||'')+'</p><small>After payment, Dew will verify your transfer and confirm your order.</small><div id="instapayCopyStatus" class="note" aria-live="polite"></div>';
+  const copy=$('#copyInstapay');
+  if(copy) copy.onclick=async()=>{try{await navigator.clipboard.writeText(String(s.instapayNumber||''));$('#instapayCopyStatus').textContent='InstaPay number copied.';}catch{$('#instapayCopyStatus').textContent='Copy is unavailable. Please select and copy the number above.';}};
 }
 function lines() {
   const cart = Cart.get();
@@ -180,15 +178,20 @@ $('#form').onsubmit = async e => {
   e.preventDefault();
   $('#err').textContent = '';
   const t = totals();
-  const first = $('#first').value.trim(), last = $('#last').value.trim(), address = $('#address').value.trim();
+  const fullName = $('#name').value.trim().replace(/\s+/g,' ');
+  const nameParts = fullName.split(' ').filter(Boolean);
+  const first = nameParts.shift() || '', last = nameParts.join(' ');
   const phone = $('#phone').value.trim();
+  const normalizedPhone = phone.replace(/\D/g,'').replace(/^0020/,'20').replace(/^20/,'0');
+  const city = $('#city').value.trim(), street = $('#street').value.trim(), building = $('#building').value.trim();
+  const address = [street,building,city].filter(Boolean).join(', ');
   const selectedAreaId=String($('#deliveryArea').value||'').trim();
   const selectedArea=deliveryAreas.find(x=>String(x.id??'').trim()===selectedAreaId);
   if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
   area=String(selectedArea.id);
-  if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8) {
-    $('#err').textContent = 'Please fill in your name, address and phone number.'; return;
-  }
+  if (!first || !last) { $('#err').textContent = 'Please enter your first and last name.'; $('#name').focus(); return; }
+  if (!/^01[0125]\d{8}$/.test(normalizedPhone)) { $('#err').textContent = 'Enter a valid Egyptian mobile number, for example 01012345678.'; $('#phone').focus(); return; }
+  if (street.length < 3 || city.length < 2) { $('#err').textContent = 'Please enter your city or area and street address.'; return; }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
   const api=(S.settings.ordersApiUrl||'').trim().replace(/\/$/,'');
@@ -197,11 +200,11 @@ $('#form').onsubmit = async e => {
   button.disabled=true; button.textContent='Placing your order…';
   try {
     const response=await fetch(api+'/api/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone,address,note:$('#customerNote').value.trim()}
+      lines:t.ls.map(l=>({id:l.id,variantId:l.variantId,qty:l.qty})),area:String(selectedArea.id),areaName:selectedArea.name,paymentMethod,promoCode:appliedDiscount?.code||'',customer:{first,last,phone:normalizedPhone,address,note:$('#customerNote').value.trim()}
     })});
     const result=await response.json().catch(()=>({}));
     if(!response.ok||!result.ok||!result.order) throw new Error(result.error||'We could not save your order. Please try again.');
-    try { localStorage.setItem('dew_customer',JSON.stringify({name:first+' '+last,phone})); } catch {}
+    try { localStorage.setItem('dew_customer',JSON.stringify({name:first+' '+last,phone:normalizedPhone})); } catch {}
     Cart.clear(); done(result.order);
   } catch(err) {
     $('#err').textContent=err.message||'We could not save your order. Please try again.';
