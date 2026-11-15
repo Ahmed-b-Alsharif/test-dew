@@ -1049,6 +1049,7 @@ function discForm(id,type) {
     const code=(methodValue==='code'?$('#dc').value:$('#discTitle').value).trim().toUpperCase();
     if(methodValue==='code'&&!code){$('#dc').focus();toast('Enter a discount code.',true);return;}
     if(methodValue==='automatic'&&!$('#discTitle').value.trim()){toast('Enter a title for the automatic discount.',true);return;}
+    if(methodValue==='code'&&D.discounts.some(x=>x.id!==d.id&&String(x.code||'').toUpperCase()===code)){toast('This discount code already exists. Choose a different code.',true);$('#dc').focus();return;}
     const valueType=$('input[name="discValueType"]:checked')?.value||'percentage';
     const val=Number($('#dv')?.value||0);
     if(!isBuy&&!isShip&&(!(val>0)||valueType==='percentage'&&val>100)){toast('Enter a valid discount value.',true);return;}
