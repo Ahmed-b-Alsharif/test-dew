@@ -196,7 +196,7 @@ $('#form').onsubmit = async e => {
   if (!selectedArea) { area=null; $('#err').textContent = 'Please select a delivery area from the list.'; $('#deliveryArea').focus(); return; }
   area=String(selectedArea.id);
   if (!first || !last || address.length < 6 || phone.replace(/\D/g, '').length < 8 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    $('#err').textContent = 'Please fill in your name, email, address and phone number.'; return;
+    $('#err').textContent = 'Please fill in your name, address and phone number. Check the email format if you entered one.'; return;
   }
   if (!t.ls.length) { $('#err').textContent = 'Your cart is empty.'; return; }
   if (t.items < S.settings.minOrder) { $('#err').textContent = `Minimum order is ${egp(S.settings.minOrder)}.`; return; }
@@ -243,7 +243,7 @@ function done(o) {
         <button type="button" id="copyOrderNumber" class="dew-copy-order">Copy</button>
       </div>
     </section>
-    <p class="dew-success-copy dew-receipt-email-status">${o.emailReceipt?.status==='sent'?'Receipt emailed to '+esc(customer.email||'your email address'):(o.emailReceipt?.status==='failed'?'We saved your order, but could not email the receipt. Please keep your order number.':'We saved your order. Email receipts are being connected; please keep your order number.')}</p>
+    <p class="dew-success-copy dew-receipt-email-status">${o.emailReceipt?.status==='sent'?'Receipt emailed to '+esc(customer.email||'your email address'):(o.emailReceipt?.status==='failed'?'We saved your order, but could not email the receipt. Please keep your order number.':(o.emailReceipt?.status==='not_requested'?'We saved your order. Add an email at checkout next time to receive an emailed receipt.':'We saved your order. Email receipts are being connected; please keep your order number.'))}</p>
     <section class="dew-success-receipt" aria-label="Order receipt">
       <p class="dew-success-eyebrow">Dew Skincare</p>
       <h2>Your order</h2>
