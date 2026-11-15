@@ -3102,3 +3102,8 @@ html,body{color-scheme:only light!important}
  .dew-checkout-page .checkout-field-grid{grid-template-columns:minmax(0,1fr);gap:12px}
  .dew-checkout-page .checkout-field-wide{grid-column:auto}
 }
+
+/* Use the brand mark in the standalone checkout header. */
+.dew-checkout-page .brand{display:flex;align-items:center;justify-content:flex-start;width:auto}
+.dew-checkout-page .brand .dew-logo-image{width:142px;max-width:142px;max-height:52px;height:auto;object-fit:contain}
+@media(max-width:650px){.dew-checkout-page .brand .dew-logo-image{width:118px;max-width:118px;max-height:44px}}
