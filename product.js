@@ -79,13 +79,12 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
     const d=(S.discounts||[]).find(x=>x.method==='automatic'&&live(x));
     if(!d||d.discountKind!=='buy_x_get_y')return {amount:0,label:''};
     const collectionHas=(cid,id)=>(S.catalogs||[]).some(c=>String(c.id)===String(cid)&&(c.productIds||[]).map(String).includes(String(id)));
-    const buyIds=(d.buyProductIds||[]).map(String),buyCids=(d.buyCollectionIds||[]).map(String);
-    const buys=cartLines.map((line,index)=>({line,index})).filter(x=>(!buyIds.length&&!buyCids.length)||(buyIds.includes(String(x.line.product.id))||buyCids.some(cid=>collectionHas(cid,x.line.product.id))));
-    const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),buyMode=d.buyMode||'quantity';
-    if(buyMode==='amount'?buyAmount<Number(d.buyAmount||0):buyQty<Math.max(1,Number(d.buyQuantity||1)))return {amount:0,label:''};
-    const consumed=new Map();let slots=buyMode==='amount'?Infinity:Math.max(1,Number(d.buyQuantity||1));
-    for(const item of buys){const take=Math.min(item.line.qty,slots);if(take>0)consumed.set(item.index,take);slots-=take;if(slots<=0)break;}
-    const getIds=(d.getProductIds||[]).map(String);
+    const buyIds=(d.buyProductIds||[]).map(String),buyCids=(d.buyCollectionIds||[]).map(String),getIds=(d.getProductIds||[]).map(String);
+    const buys=cartLines.map((line,index)=>({line,index})).filter(x=>(!buyIds.length&&!buyCids.length)||(buyIds.includes(String(x.line.product.id))||buyCids.some(cid=>collectionHas(cid,x.line.product.id)))).sort((a,b)=>Number(getIds.includes(String(a.line.product.id)))-Number(getIds.includes(String(b.line.product.id))));
+    const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),buyMode=d.buyMode||'quantity',requiredQty=Math.max(1,Number(d.buyQuantity||1)),requiredAmount=Number(d.buyAmount||0);
+    if(buyMode==='amount'?buyAmount<requiredAmount:buyQty<requiredQty)return {amount:0,label:''};
+    const consumed=new Map();let qtySlots=requiredQty,amountCounted=0;
+    for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(buyMode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;take++;amountCounted+=item.line.unit;qtySlots--;}if(take)consumed.set(item.index,take);if(buyMode==='amount'?amountCounted>=requiredAmount:qtySlots<=0)break;}
     const rewards=cartLines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.product.id)))?Array.from({length:qty},()=>line.unit):[];}).sort((a,b)=>a-b);
     let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),amount=0,count=0;
     for(const unit of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?unit:d.getValue==='percentage'?unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(unit,Number(d.getAmount||0));remaining--;count++;}
