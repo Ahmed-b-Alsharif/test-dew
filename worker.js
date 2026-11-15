@@ -155,14 +155,21 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
   shipping=delivery;
  } else if(d.discountKind==="buy_x_get_y"){
   const buyRule={...d,scope:(d.buyProductIds?.length||d.buyCollectionIds?.length)?"products":"all",productIds:d.buyProductIds||[],collectionIds:d.buyCollectionIds||[]};
-  const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[];
-  const buys=lines.map((line,index)=>({line,index})).filter(x=>discountProductEligible(buyRule,x.line,catalogue)).sort((a,b)=>Number(getIds.includes(String(a.line.id)))-Number(getIds.includes(String(b.line.id))));
+  const getIds=Array.isArray(d.getProductIds)?d.getProductIds.map(String):[],getQty=Math.max(1,Number(d.getQuantity||1));
+  const isBuyEligible=line=>discountProductEligible(buyRule,line,catalogue);
+  const buys=lines.map((line,index)=>({line,index})).filter(x=>isBuyEligible(x.line)).sort((a,b)=>Number(getIds.includes(String(a.line.id)))-Number(getIds.includes(String(b.line.id))));
   const buyQty=buys.reduce((n,x)=>n+x.line.qty,0),buyAmount=buys.reduce((n,x)=>n+x.line.total,0),buyMode=d.buyMode||"quantity",requiredQty=Math.max(1,Number(d.buyQuantity||1)),requiredAmount=Number(d.buyAmount||0);
-  if(buyMode==="amount"?buyAmount<requiredAmount:buyQty<requiredQty)return fail("Your cart does not meet the Buy X requirements.");
-  const consumed=new Map();let qtySlots=requiredQty,amountCounted=0;
-  for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(buyMode==="amount"?amountCounted>=requiredAmount:qtySlots<=0)break;take++;amountCounted+=Number(item.line.unit||item.line.total/Math.max(1,item.line.qty));qtySlots--;}if(take)consumed.set(item.index,take);if(buyMode==="amount"?amountCounted>=requiredAmount:qtySlots<=0)break;}
+  const rewardBuyQty=buys.reduce((n,x)=>n+(!getIds.length||getIds.includes(String(x.line.id))?x.line.qty:0),0);
+  const rewardOutsideBuyQty=lines.reduce((n,line)=>n+((!getIds.length||getIds.includes(String(line.id)))&&!isBuyEligible(line)?line.qty:0),0);
+  const rewardQty=rewardBuyQty+rewardOutsideBuyQty,overlap=rewardBuyQty>0,groupPool=overlap?buyQty+rewardOutsideBuyQty:buyQty;
+  const groups=buyMode==="amount"?Math.min(Math.floor(buyAmount/Math.max(1,requiredAmount)),Math.floor(rewardQty/getQty)):Math.min(Math.floor(groupPool/(requiredQty+getQty)),Math.floor(rewardQty/getQty));
+  if(groups<1)return fail("Your cart does not meet the Buy X requirements or has no eligible reward product.");
+  const buyUnitsToConsume=buyMode==="amount"?null:groups*requiredQty,buyAmountToConsume=buyMode==="amount"?groups*requiredAmount:0;
+  const consumed=new Map();let qtySlots=buyUnitsToConsume,amountCounted=0;
+  for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(buyMode==="amount"?amountCounted>=buyAmountToConsume:qtySlots<=0)break;take++;amountCounted+=Number(item.line.unit||item.line.total/Math.max(1,item.line.qty));if(buyMode!=="amount")qtySlots--;}if(take)consumed.set(item.index,take);if(buyMode==="amount"?amountCounted>=buyAmountToConsume:qtySlots<=0)break;}
   const rewards=lines.flatMap((line,index)=>{const qty=Math.max(0,line.qty-(consumed.get(index)||0));return (!getIds.length||getIds.includes(String(line.id)))?Array.from({length:qty},(_,i)=>({id:line.id,unit:line.unit,key:line.id+":"+String(line.variantId||"")+":"+i})):[];}).sort((a,b)=>a.unit-b.unit);
-  let remaining=Math.min(Math.max(1,Number(d.getQuantity||1)),Number(d.maxUsesPerOrder||Infinity)),rewardCount=0;
+  const maxUses=Number(d.maxUsesPerOrder||0),targetRewards=groups*getQty;
+  let remaining=maxUses>0?Math.min(targetRewards,maxUses):targetRewards,rewardCount=0;
   for(const item of rewards){if(remaining<=0)break;const cut=d.getValue==="free"?item.unit:d.getValue==="percentage"?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));amount+=cut;discountedLines.push(item.key);remaining--;rewardCount++;}
   if(!rewardCount)return fail("Add an eligible reward product to your cart.");
  } else {
