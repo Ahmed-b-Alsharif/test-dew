@@ -65,6 +65,9 @@ function discountIsLive(d){
   const now=cairoNowString(),start=d.startsAt?d.startsAt+'T'+(d.startTime||'00:00'):'',end=d.endsAt?d.endsAt+'T'+(d.endTime||'23:59'):'';
   return d.active!==false&&(!start||now>=start)&&(!end||now<=end);
 }
+function discountNeedsServerValidation(d){
+  return d?.eligibility==='first_time'||Number(d?.usageLimit||0)>0||d?.onePerCustomer===true;
+}
 function discountProductMatch(d,line){
   if(d.scope!=='products'||(!d.productIds?.length&&!d.collectionIds?.length))return true;
   const p=S.products.find(x=>String(x.id)===String(line.id));
@@ -113,9 +116,12 @@ function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&
 function totals(){
   const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
   let delivery=selectedArea?Number(selectedArea.fee)||0:0;
-  const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='';
-  if(chosen){const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
-  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen};
+  const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='',validationRequired=false;
+  if(chosen){
+    if(discountNeedsServerValidation(chosen))validationRequired=true;
+    else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
+  }
+  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired};
 }
 function render() {
   const t = totals();
@@ -124,12 +130,14 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const discHtml = t.chosen && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discHtml = t.chosen && !t.validationRequired && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? egp(t.delivery) : 'Choose area'}</b></div>
      ${discHtml}
+     ${discountNotice}
      <div class="sum-line total"><span>Total</span><span>${egp(t.total)}</span></div>` +
     `<div style="margin:14px 0 8px;display:flex;gap:8px">
        <input id="promoInput" placeholder="Promo code" style="flex:1;padding:8px 12px;border:1.5px solid #cfd3cc;border-radius:999px;font-size:.9rem" value="${appliedDiscount ? esc(appliedDiscount.code) : ''}">
@@ -152,12 +160,15 @@ function render() {
       $('#promoErr').style.color = 'var(--red)';
       return;
     }
-    const baseDelivery=Number(deliveryAreas.find(x=>x.id===area)?.fee||0);const check=previewDiscount(disc,t.ls,t.items,baseDelivery);
-    if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}
+    const needsServerValidation=discountNeedsServerValidation(disc);
+    if(!needsServerValidation){const baseDelivery=Number(deliveryAreas.find(x=>x.id===area)?.fee||0);const check=previewDiscount(disc,t.ls,t.items,baseDelivery);
+      if(!check.ok){$('#promoErr').textContent=check.error;$('#promoErr').style.color='var(--red)';return;}}
     appliedDiscount = disc;
-    $('#promoErr').textContent = 'Promo code applied successfully!';
-    $('#promoErr').style.color = 'var(--green)';
     render();
+    $('#promoErr').textContent = needsServerValidation
+      ? 'Code saved. Eligibility and usage limits will be checked when you place the order; the cart total does not include it yet.'
+      : 'Promo code applied successfully!';
+    $('#promoErr').style.color = 'var(--green)';
   };
 
   $('#submit').disabled = t.items < S.settings.minOrder;
