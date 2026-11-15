@@ -458,11 +458,11 @@ function exportCustomersExcel(rows) {
       'Total spent (EGP)': Number(c.total||0)
     };
   });
-  const ws = XLSX.utils.json_to_sheet(data, {header:['Customer names used','Phone number','Email','Order numbers','Address','Total orders','Total spent (EGP)']});
-  ws['!cols'] = [{wch:32},{wch:18},{wch:30},{wch:34},{wch:48},{wch:14},{wch:20}];
-  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:F1');
+  const ws = XLSX.utils.json_to_sheet(data, {header:['Customer names used','Phone number','Email','Account','Order numbers','Address','Total orders','Total spent (EGP)']});
+  ws['!cols'] = [{wch:32},{wch:18},{wch:30},{wch:20},{wch:34},{wch:48},{wch:14},{wch:20}];
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1:H1');
   for (let row=1; row<=range.e.r; row++) {
-    const cell=ws[XLSX.utils.encode_cell({r:row,c:6})];
+    const cell=ws[XLSX.utils.encode_cell({r:row,c:7})];
     if(cell) cell.z='#,##0.00 "EGP"';
   }
   const wb = XLSX.utils.book_new();
@@ -947,7 +947,7 @@ function orders() {
   function drawOrderCards(){
     const term = ($('#dewOrderSearch')?.value || '').trim().toLowerCase();
     const filtered = ordersList.map((o,idx)=>({o,idx})).filter(({o})=>{
-      const text = [o.number,customerName(o),o.customer?.phone].join(' ').toLowerCase();
+      const text = [o.number,customerName(o),o.customer?.phone,o.customer?.email].join(' ').toLowerCase();
       if(term && !text.includes(term)) return false;
       if(activeFilter==='Unfulfilled') return !isFulfilled(o)&&fulfillment(o)!=='Cancelled';
       if(activeFilter==='Paid') return payment(o)==='Paid';
@@ -962,7 +962,7 @@ function orders() {
       <article class="dew-order-card" data-open-order="${idx}">
         <div class="dew-order-cell dew-order-number-cell"><span class="dew-order-cell-label">Order</span><b class="dew-order-number">${esc(o.number || 'Order')}</b></div>
         <div class="dew-order-cell dew-order-date-cell"><span class="dew-order-cell-label">Date</span><b class="dew-order-date">${dateText(o.date)}</b><small class="dew-order-time">${timeText(o.date)}</small></div>
-        <div class="dew-order-customer"><span class="dew-order-avatar">${esc((customerName(o).trim()[0]||'G').toUpperCase())}</span><div><span class="dew-order-cell-label">Customer</span><b>${esc(customerName(o))}</b><small>${esc(o.customer?.phone || 'No phone number')}</small></div></div>
+        <div class="dew-order-customer"><span class="dew-order-avatar">${esc((customerName(o).trim()[0]||'G').toUpperCase())}</span><div><span class="dew-order-cell-label">Customer</span><b>${esc(customerName(o))}</b><small>${esc(o.customer?.phone || 'No phone number')}</small>${o.customer?.email?`<small>${esc(o.customer.email)}</small>`:''}</div></div>
         <div class="dew-order-cell dew-order-total-cell"><span class="dew-order-cell-label">Total</span><b class="dew-order-total">${money(o.total)}</b></div>
         <div class="dew-order-cell dew-order-status-cell"><span class="dew-order-cell-label">Status</span><div class="dew-order-badges">${badge(payment(o),payment(o)==='Paid'?'paid':'unpaid')}${badge(fulfillment(o),isFulfilled(o)?'fulfilled':fulfillment(o)==='Cancelled'?'cancelled':'pending')}</div></div>
         <div class="dew-order-open">View <span>›</span></div>
