@@ -235,7 +235,7 @@ function done(o) {
       </div>
     </section>
     <section class="dew-success-receipt" aria-label="Order receipt">
-      <p class="dew-success-eyebrow">Dew Skincare</p>
+      <img class="dew-receipt-logo" src="dew-logo.svg" alt="Dew Skincare Egypt" width="569" height="207">
       <h2>Your order</h2>
       <div class="dew-receipt-items">${itemsHtml}</div>
       <dl class="dew-receipt-totals">
