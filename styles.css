@@ -3188,3 +3188,6 @@ html,body{color-scheme:only light!important}
 /* Footer social links use recognizable icons without visible platform names. */
 .dew-footer-social .dew-social-icon span{display:none}
 .dew-footer-social .dew-social-icon{width:46px;min-width:46px!important;padding:0!important}
+
+/* The fixed mobile navigation is shared by the native app and the phone browser. */
+.app-bottom-nav{display:none}
