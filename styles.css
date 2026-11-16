@@ -3110,3 +3110,77 @@ html,body{color-scheme:only light!important}
 
 /* Brand mark on the customer order receipt and print view. */
 .dew-receipt-logo{display:block;width:154px;max-width:100%;height:auto;max-height:56px;object-fit:contain;object-position:left center;margin:0 0 16px}
+
+
+/* Compact, organized storefront footer */
+.dew-footer{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);
+  grid-template-areas:"about socials" "about nav" "copy copy";
+  align-items:start!important;
+  justify-content:initial!important;
+  gap:14px clamp(28px,7vw,96px);
+  padding:38px clamp(24px,7vw,100px) 20px!important;
+  text-align:left!important;
+}
+.dew-footer-about{
+  grid-area:about;
+  width:auto!important;
+  max-width:480px;
+  flex:none!important;
+  align-items:flex-start!important;
+  margin:0!important;
+  text-align:left!important;
+}
+.dew-footer-about .dew-logo{text-align:left!important}
+.dew-footer-about h3{margin:12px 0 6px!important}
+.dew-footer-about p{max-width:440px!important;margin:0!important;text-align:left!important}
+.dew-footer-social{
+  grid-area:socials;
+  width:auto!important;
+  display:flex!important;
+  justify-content:flex-start!important;
+  align-content:flex-start;
+  padding:0!important;
+}
+.dew-footer-social:before,.dew-footer nav:before{
+  display:block;
+  flex:0 0 100%;
+  color:#75877b;
+  font:700 10px/1.2 Inter,system-ui,sans-serif;
+  letter-spacing:.16em;
+}
+.dew-footer-social:before{content:"FOLLOW DEW"}
+.dew-footer nav{
+  grid-area:nav;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:flex-start!important;
+  align-content:flex-start;
+  gap:10px 20px!important;
+}
+.dew-footer nav:before{content:"QUICK LINKS"}
+.dew-footer nav a{font-size:12px!important}
+.dew-footer small{
+  grid-area:copy;
+  width:auto!important;
+  max-width:none!important;
+  margin-top:8px;
+  padding-top:14px!important;
+  text-align:left!important;
+}
+@media(max-width:760px){
+  .dew-footer{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"about" "socials" "nav" "copy";
+    gap:16px;
+    padding:28px 22px 18px!important;
+    text-align:left!important;
+  }
+  .dew-footer-about{max-width:none}
+  .dew-footer-about p{max-width:520px!important}
+  .dew-footer-social{gap:9px}
+  .dew-footer-social .dew-social-icon{min-width:0!important}
+  .dew-footer nav{gap:10px 18px!important}
+  .dew-footer small{margin-top:2px}
+}
