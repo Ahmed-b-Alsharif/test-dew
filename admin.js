@@ -18,7 +18,9 @@ function setAdminUrl(nextTab, extra = {}, replace = false) {
   history[replace ? 'replaceState' : 'pushState']({ dewAdmin: true, tab: nextTab }, '', url);
 }
 function navigateAdmin(nextTab, extra = {}) {
-  if (nextTab === tab && !Object.keys(extra).length) return;
+  const currentParams = new URLSearchParams(location.search);
+  const leavingProductEditor = nextTab === 'products' && !Object.keys(extra).length && (currentParams.has('product') || currentParams.get('new') === '1');
+  if (nextTab === tab && !Object.keys(extra).length && !leavingProductEditor) return;
   if (themeEditorDirty) {
     if (!confirm('You have unsaved theme changes. Leave without saving and discard them?')) return;
     themeEditorDiscard();
