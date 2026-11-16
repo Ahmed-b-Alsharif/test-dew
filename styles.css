@@ -3107,3 +3107,6 @@ html,body{color-scheme:only light!important}
 .dew-checkout-page .brand{display:flex;align-items:center;justify-content:flex-start;width:auto}
 .dew-checkout-page .brand .dew-logo-image{width:142px;max-width:142px;max-height:52px;height:auto;object-fit:contain}
 @media(max-width:650px){.dew-checkout-page .brand .dew-logo-image{width:118px;max-width:118px;max-height:44px}}
+
+/* Brand mark on the customer order receipt and print view. */
+.dew-receipt-logo{display:block;width:154px;max-width:100%;height:auto;max-height:56px;object-fit:contain;object-position:left center;margin:0 0 16px}
