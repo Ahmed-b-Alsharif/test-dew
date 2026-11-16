@@ -119,7 +119,7 @@ function totals(){
     if(discountNeedsServerValidation(chosen))validationRequired=true;
     else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
   }
-  return {ls,items,delivery,discount,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired};
+  return {ls,items,delivery,discount,discountShipping,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired};
 }
 function render() {
   const t = totals();
@@ -128,12 +128,13 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const discHtml = t.chosen && !t.validationRequired && (t.discount>0 || (t.chosen.discountKind==='free_shipping'||t.chosen.type==='free_shipping')) ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
+  const totalSavings=t.discount+t.discountShipping;
+  const discHtml = t.chosen && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
   const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
   $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
-     <div class="sum-line"><span>Delivery</span><b>${area ? egp(t.delivery) : 'Choose area'}</b></div>
+     <div class="sum-line"><span>Delivery</span><b>${area ? (t.delivery>0?egp(t.delivery):'Free') : 'Choose area'}</b></div>
      ${discHtml}
      ${discountNotice}
      <div class="sum-line total"><span>Total</span><span>${egp(t.total)}</span></div>` +
@@ -215,7 +216,7 @@ $('#form').onsubmit = async e => {
 function done(o) {
   const customer=o.customer||{}, lines=Array.isArray(o.lines)?o.lines:[];
   const subtotal=Number.isFinite(Number(o.itemsTotal))?Number(o.itemsTotal):lines.reduce((n,line)=>n+Number(line.total||0),0);
-  const delivery=Math.max(0,Number(o.delivery)||0),discount=Math.max(0,Number(o.discount)||0);
+  const delivery=Math.max(0,Number(o.delivery)||0),discount=Math.max(0,Number(o.discount)||0),shippingDiscount=Math.max(0,Number(o.shippingDiscount)||0),totalDiscount=discount+shippingDiscount;
   const total=Math.max(0,Number(o.total)||0),isCod=String(o.paymentMethod||paymentMethod).toLowerCase()==='cod';
   const itemsHtml=lines.map(line=>`<div class="dew-receipt-item"><div><b>${esc(line.name||'Dew product')}</b><small>${Math.max(0,Number(line.qty)||0)} × ${egp(line.unit)}</small></div><strong>${egp(line.total)}</strong></div>`).join('');
   $('#page').className='page dew-success-page';
@@ -240,7 +241,7 @@ function done(o) {
       <div class="dew-receipt-items">${itemsHtml}</div>
       <dl class="dew-receipt-totals">
         <div><dt>Subtotal</dt><dd>${egp(subtotal)}</dd></div>
-        ${discount>0?`<div class="dew-receipt-discount"><dt>Discount${o.promoCode?` · ${esc(o.promoCode)}`:''}</dt><dd>−${egp(discount)}</dd></div>`:''}
+        ${totalDiscount>0?`<div class="dew-receipt-discount"><dt>Discount${o.promoCode?` · ${esc(o.promoCode)}`:''}</dt><dd>−${egp(totalDiscount)}</dd></div>`:''}
         <div><dt>Delivery</dt><dd>${delivery>0?egp(delivery):'Free'}</dd></div>
         <div class="dew-receipt-total"><dt>${isCod?'Due on delivery':'Order total'}</dt><dd>${egp(total)}</dd></div>
       </dl>

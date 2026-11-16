@@ -109,7 +109,7 @@ async function notifyTelegram(order, env, settings) {
     "",
     "Items: " + money(order.itemsTotal),
     "Delivery: " + money(order.delivery),
-    "Discount: " + money(order.discount),
+    "Discount: " + money(Number(order.discount||0)+Number(order.shippingDiscount||0)),
     "TOTAL: " + money(order.total),
     "Payment: " + (String(order.paymentMethod||"cod").toLowerCase()==="instapay" ? "InstaPay (awaiting payment)" : "Cash on delivery")
   ].join("\n");
@@ -232,7 +232,7 @@ async function createOrder(request, env) {
   let promo=code?discounts.find(d=>d.active&&d.method!=="automatic"&&String(d.code||"").toUpperCase()===code):null;
   if(code&&!promo)return json({ok:false,error:"That discount code is invalid or inactive."},400);
   if(!promo)promo=discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));
-  let discount=0,promoCode=null,discountInfo=null;
+  let discount=0,shippingDiscount=0,promoCode=null,discountInfo=null;
   if(promo){
     const usedThisDiscount=o=>(!!promo.id&&String(o.discountInfo?.id||"")===String(promo.id))||(!!promo.code&&String(o.promoCode||"").toUpperCase()===String(promo.code).toUpperCase());
     const discountUses=priorOrderList.filter(usedThisDiscount).length;
@@ -243,7 +243,8 @@ async function createOrder(request, env) {
       else return json({ok:false,error:result.error},400);
     }else{
       discount=result.amount;
-      delivery=Math.max(0,delivery-result.shipping);
+      shippingDiscount=result.shipping;
+      delivery=Math.max(0,delivery-shippingDiscount);
       promoCode=promo.method==="automatic"?"":promo.code;
       discountInfo={id:promo.id||"",title:result.title,kind:result.kind,method:promo.method||"code",discountedLines:result.discountedLines||[]};
     }
@@ -257,7 +258,7 @@ async function createOrder(request, env) {
   const number = "DEW#" + sequence.last_number;
   const order={
     number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
-    lines,itemsTotal,delivery,discount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
+    lines,itemsTotal,delivery,discount,shippingDiscount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
     customer:{first,last,phone,address,note}
   };
   await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
