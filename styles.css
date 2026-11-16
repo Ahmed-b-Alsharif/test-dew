@@ -3184,3 +3184,7 @@ html,body{color-scheme:only light!important}
   .dew-footer nav{gap:10px 18px!important}
   .dew-footer small{margin-top:2px}
 }
+
+/* Footer social links use recognizable icons without visible platform names. */
+.dew-footer-social .dew-social-icon span{display:none}
+.dew-footer-social .dew-social-icon{width:46px;min-width:46px!important;padding:0!important}
