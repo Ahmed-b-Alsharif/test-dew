@@ -4,7 +4,12 @@ const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.t
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
 
-if (isNativeApp) document.documentElement.classList.add('dew-native-app');
+const isMobileAdmin = () => { try { return window.matchMedia('(max-width: 699px)').matches; } catch { return false; } };
+if (isNativeApp || isMobileAdmin()) document.documentElement.classList.add('dew-native-app');
+if (!isNativeApp) {
+  const mobileAdminQuery = window.matchMedia?.('(max-width: 699px)');
+  mobileAdminQuery?.addEventListener?.('change', event => document.documentElement.classList.toggle('dew-native-app', event.matches));
+}
 
 function setAdminUrl(nextTab, extra = {}, replace = false) {
   const params = new URLSearchParams(location.search);
@@ -203,12 +208,12 @@ function render() {
   try { sessionStorage.setItem('dew_admin_tab',tab); } catch {}
   const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
-  const mobileNav = isNativeApp ? `<nav class="app-bottom-nav" aria-label="Main navigation">
+  const mobileNav = `<nav class="app-bottom-nav" aria-label="Main navigation">
     <button class="app-tab ${tab==='overview'?'active':''}" data-t="overview"><span class="app-tab-icon">⌂</span><span>Home</span></button>
     <button class="app-tab ${tab==='orders'?'active':''}" data-t="orders"><span class="app-tab-icon">▤</span><span>Orders</span>${ordersList.length?`<i>${ordersList.length}</i>`:''}</button>
     <button class="app-tab ${tab==='products'?'active':''}" data-t="products"><span class="app-tab-icon">◇</span><span>Products</span></button>
     <button class="app-tab ${tab==='more' || !['overview','orders','products'].includes(tab)?'active':''}" data-t="more"><span class="app-tab-icon">☰</span><span>Menu</span></button>
-  </nav>` : '';
+  </nav>`;
   $('#app').innerHTML = `
     <div class="admin-shell">
       <aside class="admin-sidebar">
@@ -477,7 +482,7 @@ function customers() {
   ordersList.forEach(o=>{const c=o.customer||{},phone=String(c.phone||'').trim(),normalized=normalizePhone(phone),key=normalized?'phone:'+normalized:'order:'+(o.number||'unknown');if(!map.has(key))map.set(key,{...c,phone,count:0,total:0,last:o.date,orders:[],names:[]});const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);const usedName=[c.first,c.last].filter(Boolean).join(' ').trim()||'Guest customer';if(!x.names.includes(usedName))x.names.push(usedName);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
   const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
   const filtered=()=>rows.filter(c=>!q||((c.names||[]).join(' ')+' '+(c.phone||'')+' '+(c.orders||[]).map(o=>o.number||'').join(' ')).toLowerCase().includes(q.toLowerCase()));
-  const native=isNativeApp;
+  const native=isNativeApp || isMobileAdmin();
   $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">RELATIONSHIPS</span><h2>Customers</h2><p>Understand your customers and their purchase history.</p></div><button class="admin-view-store" id="exportCustomers">Export Excel</button></div>
     <div class="shopify-metrics"><div><span>Total customers</span><b>${rows.length}</b></div><div><span>Total orders</span><b>${ordersList.length}</b></div><div><span>Customer sales</span><b>${egp(rows.reduce((n,c)=>n+c.total,0))}</b></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search name, phone or order number"></div><span class="shopify-muted" id="customerCount">${filtered().length} customers</span></div>
@@ -518,7 +523,7 @@ function products() {
   const list=()=>D.products.filter(p=>(!query||(p.name+' '+(p.tags||'')).toLowerCase().includes(query))&&(activeFilter==='All'||(activeFilter==='Active'?!!p.visible:!p.visible)));
   const live=D.products.filter(p=>p.visible).length;
   const low=D.products.filter(p=>Number(p.stock||0)<=5).length;
-  const native=isNativeApp;
+  const native=isNativeApp || isMobileAdmin();
   $('#view').innerHTML=`
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
@@ -921,7 +926,7 @@ function nativeOrders(){
 }
 
 function orders() {
-  if (isNativeApp) { nativeOrders(); return; }
+  if (isNativeApp || isMobileAdmin()) { nativeOrders(); return; }
   const money = value => egp(Number(value || 0));
   const dateText = value => {
     const d = new Date(value || Date.now());
@@ -1028,7 +1033,7 @@ function orders() {
 /* ---------- discounts ---------- */
 function discounts() {
   if(!D.discounts)D.discounts=[];
-  const native=isNativeApp;
+  const native=isNativeApp || isMobileAdmin();
   const active=D.discounts.filter(d=>d.active).length;
   const amount=d=>d.discountKind==='buy_x_get_y'?'Buy X get Y':d.discountKind==='free_shipping'||d.type==='free_shipping'?'Free shipping':(d.valueType||d.type)==='fixed'?egp(d.value)+' off':d.value+'% off';
   let filter='All',term='';
