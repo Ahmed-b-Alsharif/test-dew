@@ -557,7 +557,7 @@ function productForm(id) {
   const moneyLabel=n=>'EGP '+Number(n||0).toLocaleString('en-US');
   $('#view').innerHTML=`
     <div class="editor-breadcrumb"><button class="text-link" id="backProducts">← Products</button><span>/</span><b>${id?'Edit product':'Add product'}</b></div>
-    <div class="shopify-page-head product-editor-head"><div><span class="admin-eyebrow">PRODUCTS / ${id?'EDIT':'NEW'}</span><h2>${id?esc(p.name):'Add product'}</h2><p>Organize product details just like Shopify Admin.</p></div><div class="editor-head-actions"><button class="admin-view-store" id="cancelProduct">Discard</button><button class="admin-primary" id="saveProduct">Save</button></div></div>
+    <div class="shopify-page-head product-editor-head"><div><span class="admin-eyebrow">PRODUCTS / ${id?'EDIT':'NEW'}</span><h2>${id?esc(p.name):'Add product'}</h2><p>Organize product details just like Shopify Admin.</p></div><div class="editor-head-actions">${id?'<button class="text-link danger-link" id="deleteProduct">Delete product</button>':''}<button class="admin-view-store" id="cancelProduct">Discard</button><button class="admin-primary" id="saveProduct">Save</button></div></div>
     <div class="product-editor-layout">
       <div class="product-editor-main">
         <section class="editor-panel"><div class="editor-panel-title"><h3>Media</h3><span>Up to 8 images</span></div><div class="product-media-grid" id="productMedia"></div><label class="media-add">＋ Add images<input type="file" id="pf" accept="image/*" multiple></label><button type="button" class="text-link" id="chooseProductMedia">Choose from Media Library</button><p class="editor-hint">Product photos are automatically fitted to 1000 × 1250 px (4:5). The full photo is preserved without cropping and adapts to phone and desktop screens.</p></section>
@@ -632,6 +632,25 @@ function productForm(id) {
   $('#addVariantOption').onclick=()=>{optionRows.push({name:'',values:[]});editingOptionRows.add(optionRows.length-1);renderVariants();};
   renderVariants();
   paint();$('#backProducts').onclick=()=>navigateAdmin('products');$('#cancelProduct').onclick=()=>navigateAdmin('products');
+  const deleteButton=$('#deleteProduct');
+  if(deleteButton)deleteButton.onclick=async()=>{
+    const current=D.products.find(x=>String(x.id)===String(id));
+    if(!current)return;
+    if(!confirm('Delete “'+current.name+'” from your store? This removes it from the product catalog and collections. Past orders will remain unchanged.'))return;
+    deleteButton.disabled=true;deleteButton.textContent='Deleting…';
+    const removedIndex=D.products.indexOf(current);
+    const collectionSnapshots=(D.catalogs||[]).map(c=>({collection:c,productIds:Array.isArray(c.productIds)?[...c.productIds]:null}));
+    D.products.splice(removedIndex,1);
+    (D.catalogs||[]).forEach(c=>{if(Array.isArray(c.productIds))c.productIds=c.productIds.filter(productId=>String(productId)!==String(id));});
+    try{
+      await save('Delete product '+current.name,true);
+      navigateAdmin('products');
+    }catch(error){
+      D.products.splice(Math.min(removedIndex,D.products.length),0,current);
+      collectionSnapshots.forEach(snapshot=>{if(snapshot.productIds)snapshot.collection.productIds=snapshot.productIds;});
+      productForm(id);
+    }
+  };
   let productHandleEdited=!!p.shopifyHandle;$('#pHandle').oninput=()=>{productHandleEdited=true;};$('#pn').oninput=()=>{refreshPreview();if(!productHandleEdited)$('#pHandle').value=$('#pn').value.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');};$('#pp').oninput=refreshPreview;$('#pd').oninput=refreshPreview;
   $('#pf').onchange=async e=>{const files=[...e.target.files];if(images.length+files.length>8){toast('You can add up to 8 product photos.',true);}for(const file of files.slice(0,8-images.length)){try{const path=await uploadImage(await resizeProductImage(file));images.push(path);paint();}catch(err){toast(err.message,true);break;}}e.target.value='';};
   $('#chooseProductMedia').onclick=()=>chooseMedia(path=>{if(images.length>=8){toast('You can add up to 8 product photos.',true);return;}images.push(path);paint();});
