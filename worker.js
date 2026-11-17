@@ -211,7 +211,7 @@ function inventoryCatalogItems(catalogue){
 async function ensureInventory(env,catalogue){
  await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory (product_id TEXT NOT NULL, variant_id TEXT NOT NULL DEFAULT '', stock INTEGER NOT NULL CHECK(stock>=0), updated_at TEXT NOT NULL, PRIMARY KEY(product_id,variant_id))").run();
  const items=inventoryCatalogItems(catalogue);
- if(items.length)await env.DB.batch(items.map(x=>env.DB.prepare("INSERT OR IGNORE INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?)").bind(x.productId,x.variantId,x.stock,new Date().toISOString())));
+ for(let i=0;i<items.length;i+=80){const batch=items.slice(i,i+80);await env.DB.batch(batch.map(x=>env.DB.prepare("INSERT OR IGNORE INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?)").bind(x.productId,x.variantId,x.stock,new Date().toISOString())));}
 }
 async function readInventory(env,catalogue){
  await ensureInventory(env,catalogue);
@@ -231,7 +231,7 @@ async function adminInventory(request,env){
   if(!valid.has(key)||seen.has(key)||!Number.isSafeInteger(stock)||stock<0||stock>1000000)return adminJson(request,{ok:false,error:"One or more inventory values are invalid. Refresh the admin page and try again."},400);
   seen.add(key);statements.push(env.DB.prepare("INSERT INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?) ON CONFLICT(product_id,variant_id) DO UPDATE SET stock=excluded.stock,updated_at=excluded.updated_at").bind(productId,variantId,stock,new Date().toISOString()));
  }
- if(statements.length)await env.DB.batch(statements);
+ for(let i=0;i<statements.length;i+=80)await env.DB.batch(statements.slice(i,i+80));
  return adminJson(request,{ok:true,items:await readInventory(env,catalogue)});
 }
 async function publicInventory(env){
@@ -342,15 +342,15 @@ async function createOrder(request, env) {
     statements.push(env.DB.prepare("INSERT INTO inventory_guard (id) SELECT 1 WHERE changes()=0"));
   }
   statements.push(env.DB.prepare("UPDATE order_counter SET last_number=last_number+1 WHERE id=1"));
-  statements.push(env.DB.prepare("INSERT INTO orders (order_number,created_at,total,order_json) SELECT 'DEW#'||last_number,?,?,json_set(?, '$.number', 'DEW#'||last_number) FROM order_counter WHERE id=1")
+  statements.push(env.DB.prepare("INSERT INTO orders (order_number,created_at,total,order_json) SELECT 'DEW#'||last_number,?,?,json_set(?, '$.number', 'DEW#'||last_number) FROM order_counter WHERE id=1 RETURNING order_number,order_json")
     .bind(order.date,total,JSON.stringify(order)));
-  try{await env.DB.batch(statements);}catch(e){
+  let transactionResults;try{transactionResults=await env.DB.batch(statements);}catch(e){
     console.error("Atomic stock/order transaction failed",e);
     return json({ok:false,error:"One or more items were just purchased or no longer have enough stock. Please refresh your cart and try again."},409);
   }
-  const sequence=await env.DB.prepare("SELECT last_number FROM order_counter WHERE id=1").first();
-  const number="DEW#"+sequence.last_number;
-  order.number=number;
+  const inserted=transactionResults?.[transactionResults.length-1]?.results?.[0];
+  if(!inserted?.order_number)return json({ok:false,error:"The order could not be confirmed. Please contact Dew before placing it again."},500);
+  const number=inserted.order_number;order.number=number;
   try { await notifyTelegram(order,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
   return json({ok:true,order},201);
 }
