@@ -106,7 +106,8 @@ async function getProducts(env) {
 }
 async function notifyTelegram(order, env, settings) {
   if (settings?.telegramEnabled && settings?.telegramProxyUrl) {
-    const response=await fetch(settings.telegramProxyUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(order)});
+    if(!env.TELEGRAM_PROXY_SECRET)throw new Error("Telegram proxy secret is not configured");
+    const response=await fetch(settings.telegramProxyUrl,{method:"POST",headers:{"Content-Type":"application/json","X-Dew-Proxy-Secret":env.TELEGRAM_PROXY_SECRET},body:JSON.stringify(order)});
     if(!response.ok) throw new Error("Telegram proxy returned an error");
     return;
   }
