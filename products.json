@@ -774,28 +774,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Shade",
           "values": [
-            "Default Title"
+            "04"
           ]
         }
       ],
       "variants": [
         {
-          "id": "5c152b3d",
+          "id": "c91a8acd",
           "options": {
-            "Title": "Default Title"
+            "Shade": "04"
           },
           "price": 200,
           "salePrice": 0,
-          "stock": 10,
-          "sku": "'04",
-          "barcode": "'04"
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227"
         }
       ],
       "price": 200,
       "salePrice": 0,
-      "stock": 10
+      "stock": 0,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "12724006",
