@@ -47,7 +47,7 @@ async function adminLogin(request,env){
  const attempts=await env.DB.prepare("SELECT COUNT(*) AS count FROM admin_login_attempts WHERE ip=? AND attempted_at>?").bind(ip,start).first();
  if(Number(attempts?.count||0)>=8)return adminJson(request,{ok:false,error:"Too many sign-in attempts. Wait 15 minutes and try again."},429);
  const rawBody=await request.text();if(rawBody.length>4096)return adminJson(request,{ok:false,error:"Invalid sign-in request."},413);
- let body={};try{body=JSON.parse(rawBody)}catch{}
+ /** @type {Record<string, any>} */ let body={};try{body=JSON.parse(rawBody)}catch{}
  if(!body||typeof body!=="object"||Array.isArray(body)||String(body.username||"")!==env.ADMIN_USERNAME||String(body.password||"")!==env.ADMIN_PASSWORD){
   await env.DB.prepare("INSERT INTO admin_login_attempts (ip,attempted_at) VALUES (?,?)").bind(ip,now).run();
   return adminJson(request,{ok:false,error:"Incorrect username or password."},401);
@@ -202,7 +202,7 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
 async function createOrder(request, env) {
   const rawBody=await request.text();
   if(rawBody.length>32768)return json({ok:false,error:"Your order is too large. Please remove some items and try again."},413);
-  let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Invalid order request. Please refresh and try again."},400)}
+  /** @type {Record<string, any>} */ let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Invalid order request. Please refresh and try again."},400)}
 
   if(!body||typeof body!=="object"||Array.isArray(body))return json({ok:false,error:"Invalid order request. Please refresh and try again."},400);
   const customer = body.customer || {};
@@ -304,7 +304,7 @@ async function createOrder(request, env) {
 async function createWelcomeLead(request,env){
  const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return json({ok:false,error:"Origin not allowed."},403);
  const rawBody=await request.text();if(rawBody.length>4096)return json({ok:false,error:"Please enter your name and phone number."},413);
- let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Please enter your name and phone number."},400)}
+ /** @type {Record<string, any>} */ let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Please enter your name and phone number."},400)}
  if(!body||typeof body!=="object"||Array.isArray(body))return json({ok:false,error:"Please enter your name and phone number."},400);
  const name=clean(body.name).slice(0,80);let digits=clean(body.phone).replace(/\D/g,"");
  if(digits.startsWith("0020"))digits="0"+digits.slice(4);else if(digits.startsWith("20")&&digits.length===12)digits="0"+digits.slice(2);
