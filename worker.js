@@ -225,10 +225,10 @@ async function adminInventory(request,env){
  const raw=await request.text();if(raw.length>32768)return adminJson(request,{ok:false,error:"Inventory update is too large."},413);
  let body={};try{body=JSON.parse(raw)}catch{return adminJson(request,{ok:false,error:"Invalid inventory update."},400)}
  if(!Array.isArray(body.items)||body.items.length>500)return adminJson(request,{ok:false,error:"Invalid inventory items."},400);
- const valid=new Set(inventoryCatalogItems(catalogue).map(x=>x.productId+"::"+x.variantId)),seen=new Set(),statements=[];
+ const seen=new Set(),statements=[];
  for(const item of body.items){
   const productId=clean(item?.productId),variantId=clean(item?.variantId),stock=Number(item?.stock),key=productId+"::"+variantId;
-  if(!valid.has(key)||seen.has(key)||!Number.isSafeInteger(stock)||stock<0||stock>1000000)return adminJson(request,{ok:false,error:"One or more inventory values are invalid. Refresh the admin page and try again."},400);
+  if(!productId||productId.length>128||variantId.length>128||seen.has(key)||!Number.isSafeInteger(stock)||stock<0||stock>1000000)return adminJson(request,{ok:false,error:"One or more inventory values are invalid. Refresh the admin page and try again."},400);
   seen.add(key);statements.push(env.DB.prepare("INSERT INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?) ON CONFLICT(product_id,variant_id) DO UPDATE SET stock=excluded.stock,updated_at=excluded.updated_at").bind(productId,variantId,stock,new Date().toISOString()));
  }
  for(let i=0;i<statements.length;i+=80)await env.DB.batch(statements.slice(i,i+80));
