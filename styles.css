@@ -3337,3 +3337,55 @@ html,body{color-scheme:only light!important}
   .dew-header nav{align-items:center;max-width:100%}
   .dew-header nav a{white-space:nowrap}
 }
+
+/* Dew customer Offer popup */
+.dew-offer-overlay{position:fixed;inset:0;z-index:10050;display:grid;place-items:center;padding:18px;background:rgba(14,35,28,.58);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.dew-offer-modal{position:relative;width:min(100%,440px);max-height:min(90dvh,760px);overflow:auto;border:1px solid rgba(28,82,78,.16);border-radius:22px;background:#fbf8f1;color:#183b35;box-shadow:0 24px 90px rgba(0,0,0,.24);font-family:inherit}
+.dew-offer-close{position:absolute;top:12px;right:14px;z-index:2;width:36px;height:36px;border:0;border-radius:50%;background:#e7eee5;color:#1c524e;font-size:25px;line-height:1;cursor:pointer}
+.dew-offer-brand{display:flex;flex-direction:column;align-items:center;gap:4px;padding:25px 48px 10px}.dew-offer-logo{display:block;width:112px;height:auto;max-height:44px;object-fit:contain}
+.dew-offer-brand>span,.dew-offer-eyebrow{font-size:9px;letter-spacing:2px;font-weight:800;color:#668078}
+.dew-offer-content{padding:8px 30px 26px;text-align:center}.dew-offer-eyebrow{display:block;margin:7px 0 9px;color:#1c524e}
+.dew-offer-content h2{margin:0 0 9px;color:#123a29;font-family:Georgia,serif;font-size:27px;line-height:1.15;font-weight:600}
+.dew-offer-message{margin:0 auto 18px;max-width:340px;color:#65746a;font-size:14px;line-height:1.6}
+.dew-offer-code-wrap{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 auto 18px;padding:10px 12px 10px 16px;max-width:300px;border:1px dashed #8ca99b;border-radius:12px;background:#fff}
+.dew-offer-code{font-size:17px;font-weight:800;letter-spacing:1.4px;color:#1c524e;overflow-wrap:anywhere}
+.dew-offer-code-wrap button{display:flex;align-items:center;gap:6px;padding:8px 10px;border:0;border-radius:8px;background:#1c524e;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
+.dew-offer-code-wrap button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.dew-offer-auto-note{display:flex;align-items:center;justify-content:center;gap:9px;margin:0 auto 18px;padding:12px;border-radius:11px;background:#e7eee5;color:#1c524e;font-size:13px;font-weight:700}
+.dew-offer-auto-note>span:first-child{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#1c524e;color:#fff}
+.dew-offer-form{text-align:left}.dew-offer-form label{display:block;margin:12px 0 6px;color:#31574b;font-size:12px;font-weight:700}
+.dew-offer-form input{display:block;width:100%;min-height:46px;padding:11px 13px;border:1px solid #d6e0d7;border-radius:10px;background:#fff;color:#183b35;font:inherit;font-size:14px;outline:none;box-sizing:border-box}
+.dew-offer-form input:focus{border-color:#1c524e;box-shadow:0 0 0 3px rgba(28,82,78,.11)}
+.dew-offer-submit{width:100%;min-height:48px;margin-top:16px;border:0;border-radius:10px;background:#1c524e;color:#fff;font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.dew-offer-submit:hover{background:#123a29}.dew-offer-submit:disabled{opacity:.65;cursor:wait}
+.dew-offer-skip{display:block;width:100%;margin:9px auto 0;padding:9px;border:0;background:transparent;color:#64776e;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.dew-offer-privacy{margin:10px 0 0;text-align:center;color:#87948c;font-size:10px;line-height:1.45}.dew-offer-error{margin:9px 0 0;color:#a33b32;font-size:12px;line-height:1.4}
+.dew-offer-success{padding-top:6px;text-align:center}.dew-offer-success[hidden]{display:none!important}
+.dew-offer-success-icon{display:grid;place-items:center;width:42px;height:42px;margin:0 auto 9px;border-radius:50%;background:#e2efe5;color:#1c524e;font-size:23px;font-weight:800}
+.dew-offer-success>b{display:block;color:#123a29;font-size:18px}.dew-offer-success>p{margin:5px 0 12px;color:#65746a;font-size:13px}
+@media(max-width:520px){.dew-offer-overlay{align-items:center;padding:12px}.dew-offer-modal{width:min(100%,390px);max-height:calc(100dvh - 24px);border-radius:19px}.dew-offer-brand{padding:20px 44px 8px}.dew-offer-logo{width:96px;max-height:38px}.dew-offer-content{padding:7px 20px 19px}.dew-offer-content h2{font-size:24px}.dew-offer-message{font-size:13px;margin-bottom:13px}.dew-offer-form input{min-height:44px}.dew-offer-submit{min-height:46px}}
+@media(prefers-reduced-motion:no-preference){.dew-offer-modal{animation:dewOfferIn .24s ease-out}@keyframes dewOfferIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}}
+/* Offer settings in Dew Admin */
+.dew-offer-admin-logo{display:flex;align-items:center;justify-content:center;min-width:108px;padding:10px 14px;border:1px solid #e2ebe3;border-radius:12px;background:#fbf8f1}
+.dew-offer-admin-logo img{display:block;width:84px;height:30px;object-fit:contain}
+.dew-offer-admin-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.dew-offer-admin-panel{min-width:0;padding:20px!important}.dew-offer-admin-heading{display:flex;align-items:center;gap:12px;margin-bottom:17px}
+.dew-offer-admin-heading h3{margin:0 0 4px;color:#1c524e;font-size:16px}.dew-offer-admin-heading p{margin:0;color:#77857c;font-size:12px}
+.dew-offer-admin-icon{display:grid;place-items:center;flex:0 0 40px;width:40px;height:40px;border-radius:12px;background:#e7eee5;color:#1c524e;font-size:20px}
+.dew-offer-admin-toggle{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-top:1px solid #edf0eb;cursor:pointer}
+.dew-offer-admin-toggle input{flex:0 0 18px;width:18px;height:18px;margin:2px 0 0;accent-color:#1c524e}
+.dew-offer-admin-toggle span{display:grid;gap:4px}.dew-offer-admin-toggle b{color:#263f34;font-size:13px}.dew-offer-admin-toggle small{color:#7a887f;font-size:11px;line-height:1.45}
+.dew-offer-admin-date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}
+.dew-offer-admin-field{display:block;min-width:0;margin:12px 0}.dew-offer-admin-field>span{display:block;margin-bottom:7px;color:#40594b;font-size:12px;font-weight:700}
+.dew-offer-admin-field input,.dew-offer-admin-field textarea,.dew-offer-admin-field select{width:100%;min-width:0;box-sizing:border-box;padding:11px 12px;border:1px solid #dce5dc;border-radius:9px;background:#fff;color:#233d31;font:inherit;font-size:13px}
+.dew-offer-admin-field textarea{resize:vertical;line-height:1.5}.dew-offer-admin-field small{display:block;margin-top:6px;color:#7b897f;font-size:11px;line-height:1.45}
+.dew-offer-admin-preview{grid-column:1/-1;padding:20px!important;background:#f8faf7!important}
+.dew-offer-preview-card{width:min(100%,360px);margin:13px auto;padding:22px 20px;text-align:center;border:1px solid #dfe9df;border-radius:16px;background:#fbf8f1;box-shadow:0 8px 25px rgba(18,58,41,.06)}
+.dew-offer-preview-card img{display:block;width:92px;height:34px;object-fit:contain;margin:0 auto 8px}
+.dew-offer-preview-card>span{font-size:9px;letter-spacing:1.6px;color:#668078;font-weight:800}
+.dew-offer-preview-card h3{margin:10px 0 7px;color:#123a29;font-family:Georgia,serif;font-size:23px}
+.dew-offer-preview-card p{margin:0 0 13px;color:#65746a;font-size:13px;line-height:1.5}
+.dew-offer-preview-note{padding:10px;border-radius:9px;background:#e7eee5;color:#1c524e;font-size:12px;font-weight:700}
+.dew-offer-preview-card>small{display:block;margin-top:12px;color:#8a958d;font-size:10px}
+.dew-offer-admin-savebar{display:flex;align-items:center;gap:14px;margin:16px 0 26px}.dew-offer-admin-savebar .note{margin:0}
+@media(max-width:760px){.dew-offer-admin-layout{grid-template-columns:minmax(0,1fr)}.dew-offer-admin-preview{grid-column:1}.dew-offer-admin-date-grid{grid-template-columns:minmax(0,1fr)}.dew-offer-admin-savebar{align-items:stretch;flex-direction:column}.dew-offer-admin-savebar button{width:100%;min-height:48px}}
