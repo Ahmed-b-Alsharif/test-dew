@@ -364,7 +364,7 @@ export default {
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
       if (path==="/api/welcome-leads" && request.method==="POST") {
-        if(!await consumeRateLimit(request,env,"welcome-leads",6,60*60*1000))return json({ok:false,error:"Too many attempts. Please try again later."},429);
+        if(!await consumeRateLimit(request,env,"welcome-leads",20,60*60*1000))return json({ok:false,error:"Too many attempts. Please try again later."},429);
         return await createWelcomeLead(request,env);
       }
       if (path==="/api/admin/welcome-leads" && request.method==="GET") return await getWelcomeLeads(request,env);
@@ -376,7 +376,7 @@ export default {
       if (path==="/api/orders" && request.method==="POST") {
         const origin=request.headers.get("Origin")||"";
         if(origin&&!ADMIN_ORIGINS.has(origin))return json({ok:false,error:"Origin not allowed."},403);
-        if(!await consumeRateLimit(request,env,"orders",5,15*60*1000))return json({ok:false,error:"Too many order attempts. Please wait a little and try again."},429);
+        if(!await consumeRateLimit(request,env,"orders",20,15*60*1000))return json({ok:false,error:"Too many order attempts. Please wait a little and try again."},429);
         return await createOrder(request,env);
       }
       if (path==="/api/orders" && request.method==="GET") {
