@@ -431,67 +431,114 @@
       "id": "62c8b49e",
       "name": "3f1d5004",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "4be6283f",
+        "5302dec3"
+      ]
     },
     {
       "id": "e52c8bbf",
       "name": "be6c3d75",
       "description": "",
-      "image": ""
-    },
-    {
-      "id": "5ac135ce",
-      "name": "7aa4667d",
-      "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "6590f759",
+        "02155935",
+        "53e00483",
+        "5f537094",
+        "7aa07c64",
+        "daaa60ff",
+        "9fd72a4a",
+        "12724006",
+        "97518fd3",
+        "b2518901",
+        "95b42b11"
+      ]
     },
     {
       "id": "273ebb28",
       "name": "c4dcfef1",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "757414b0",
+        "b7b6c660",
+        "1bd5e3ce",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
+      ]
     },
     {
       "id": "7a6b54a1",
       "name": "8b845705",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "d4ef44f1"
+      ]
     },
     {
       "id": "c7a6bd0a",
       "name": "dd86dc77",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "58806ff3",
+        "928936b1",
+        "6c043d33"
+      ]
     },
     {
       "id": "b292c1dd",
       "name": "cfb36855",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3ffd74ff",
+        "e2a1f39f"
+      ]
     },
     {
       "id": "c7e1a842",
       "name": "35003259",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "0424f67a",
+        "2cc19e9e"
+      ]
     },
     {
       "id": "0f3c81ca",
       "name": "444bbcdc",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "950127fe",
+        "c2b4ce28",
+        "dbb95a5d",
+        "3cf25ab8"
+      ]
     },
     {
       "id": "5b94fe18",
       "name": "19c4466a",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3c5c256b"
+      ]
     },
     {
       "id": "5c636f9b",
       "name": "ed4077f0",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "735c75b6"
+      ]
     }
   ],
   "products": [
