@@ -231,7 +231,7 @@ async function createOrder(request, env) {
   const discounts=Array.isArray(catalogue.discounts)?catalogue.discounts:[];
   let promo=code?discounts.find(d=>d.active&&d.method!=="automatic"&&String(d.code||"").toUpperCase()===code):null;
   if(code&&!promo)return json({ok:false,error:"That discount code is invalid or inactive."},400);
-  if(!promo)promo=discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));
+  if(!promo){const offer=settings.offer||{};const cairoDay=new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Cairo",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());const offerLive=offer.show!==false&&offer.active!==false&&(!offer.startDate||cairoDay>=offer.startDate)&&(!offer.endDate||cairoDay<=offer.endDate);const selected=offerLive&&offer.type==="automatic"?discounts.find(d=>String(d.id)===String(offer.automaticDiscountId)&&d.active&&d.method==="automatic"&&discountDateState(d)):null;promo=selected||discounts.find(d=>d.active&&d.method==="automatic"&&discountDateState(d));}
   let discount=0,shippingDiscount=0,promoCode=null,discountInfo=null;
   if(promo){
     const usedThisDiscount=o=>(!!promo.id&&String(o.discountInfo?.id||"")===String(promo.id))||(!!promo.code&&String(o.promoCode||"").toUpperCase()===String(promo.code).toUpperCase());
@@ -267,6 +267,24 @@ async function createOrder(request, env) {
   return json({ok:true,order},201);
 }
 
+
+async function createWelcomeLead(request,env){
+ const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return json({ok:false,error:"Origin not allowed."},403);
+ let body={};try{body=await request.json()}catch{return json({ok:false,error:"Please enter your name and phone number."},400)}
+ const name=clean(body.name).slice(0,80);let digits=clean(body.phone).replace(/\D/g,"");
+ if(digits.startsWith("0020"))digits="0"+digits.slice(4);else if(digits.startsWith("20")&&digits.length===12)digits="0"+digits.slice(2);
+ if(!name||!/^01[0125]\d{8}$/.test(digits))return json({ok:false,error:"Please enter a valid Egyptian mobile number."},400);
+ const now=new Date().toISOString();
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS welcome_leads (phone TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, offer_title TEXT NOT NULL DEFAULT '', offer_type TEXT NOT NULL DEFAULT 'promo_code')").run();
+ await env.DB.prepare("INSERT INTO welcome_leads (phone,name,created_at,updated_at,offer_title,offer_type) VALUES (?,?,?,?,?,?) ON CONFLICT(phone) DO UPDATE SET name=excluded.name,updated_at=excluded.updated_at,offer_title=excluded.offer_title,offer_type=excluded.offer_type").bind(digits,name,now,now,clean(body.offerTitle).slice(0,120),body.offerType==="automatic"?"automatic":"promo_code").run();
+ return json({ok:true});
+}
+async function getWelcomeLeads(request,env){
+ if(!await validAdminSession(request,env))return adminJson(request,{ok:false,error:"Unauthorized"},401);
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS welcome_leads (phone TEXT PRIMARY KEY, name TEXT NOT NULL, created_at TEXT NOT NULL, updated_at TEXT NOT NULL, offer_title TEXT NOT NULL DEFAULT '', offer_type TEXT NOT NULL DEFAULT 'promo_code')").run();
+ const result=await env.DB.prepare("SELECT phone,name,created_at,updated_at,offer_title,offer_type FROM welcome_leads ORDER BY updated_at DESC").all();
+ return adminJson(request,{ok:true,leads:result.results||[]});
+}
 async function getInstagramRecent(request, env) {
   const token = clean(env.INSTAGRAM_ACCESS_TOKEN);
   if (!token) return json({ok:false,error:"Instagram access is not configured on the Worker."},503);
@@ -311,6 +329,8 @@ export default {
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
+      if (path==="/api/welcome-leads" && request.method==="POST") return await createWelcomeLead(request,env);
+      if (path==="/api/admin/welcome-leads" && request.method==="GET") return await getWelcomeLeads(request,env);
       if (path==="/api/instagram/recent" && request.method==="GET") return await getInstagramRecent(request, env);
       if(path==="/api/admin/login"&&request.method==="POST"){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminLogin(request,env)}
       if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
