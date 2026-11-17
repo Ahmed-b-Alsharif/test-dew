@@ -426,15 +426,80 @@
         "showViewAll": true,
         "viewAllText": "View all collection"
       }
+    },
+    {
+      "id": "62c8b49e",
+      "name": "3f1d5004",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "e52c8bbf",
+      "name": "be6c3d75",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "5ac135ce",
+      "name": "7aa4667d",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "273ebb28",
+      "name": "c4dcfef1",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "7a6b54a1",
+      "name": "8b845705",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "c7a6bd0a",
+      "name": "dd86dc77",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "b292c1dd",
+      "name": "cfb36855",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "c7e1a842",
+      "name": "35003259",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "0f3c81ca",
+      "name": "444bbcdc",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "5b94fe18",
+      "name": "19c4466a",
+      "description": "",
+      "image": ""
+    },
+    {
+      "id": "5c636f9b",
+      "name": "ed4077f0",
+      "description": "",
+      "image": ""
     }
   ],
   "products": [
     {
       "id": "4be6283f",
       "name": "Fluffy Kashmir Pouch Set",
-      "shopifyHandle": "fluffy-kashmir-pouch-set",
       "description": "A little beauty treat, all packed and ready to go! This set brings together a soft Fluffy Kashmir pouch, 60 ml splash perfume, 30 ml Orchid Body Butter, Macaron Lip Balm and Strawberry Lip Gloss. Perfect for gifting, travel or keeping your everyday favourites close. Choose your preferred scent or flavour by contacting us.",
-      "catalog": "3f1d5004",
+      "catalog": "62c8b49e",
       "tags": "BodyButter, Cream, CrueltyFree, Fluffy, Kashmir, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Moisturizing, OrchidBodyButter, Pink, pouch, Self-care, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -453,38 +518,34 @@
       ],
       "variants": [
         {
-          "id": "f2a5bdb3",
+          "id": "f465e74c",
           "options": {
             "size": "7CM x 15CM x 8CM"
           },
           "price": 550,
-          "salePrice": 0,
+          "salePrice": 490,
           "stock": 3,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
       "price": 550,
-      "salePrice": 0,
-      "stock": 3,
-      "seoTitle": "fluffy kashmir pouch set",
-      "seoDescription": ""
+      "salePrice": 490,
+      "stock": 3
     },
     {
       "id": "5302dec3",
       "name": "Fluffy Kashmir Beauty Pouch",
-      "shopifyHandle": "fluffy-pink-beauty-pouch",
       "description": "Keep your beauty favourites together in one adorable place. This soft, fluffy pouch is lightweight, easy to carry and roomy enough for your everyday makeup and skincare essentials. A cute addition to your handbag, vanity or travel bag. Size: 7 × 15 × 8 cm.",
-      "catalog": "3f1d5004",
+      "catalog": "62c8b49e",
       "tags": "everyday use, Fluffy, Lightweight, pouch",
       "visible": true,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/29.jpg?v=1773141995",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/28.jpg?v=1773141996",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/websitedew_2.jpg?v=1773141959",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/24.jpg?v=1773141959",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/25.jpg?v=1773141959"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/websitedew_2.jpg?v=1773141959"
       ],
       "howToUse": "",
       "options": [
@@ -497,41 +558,34 @@
       ],
       "variants": [
         {
-          "id": "faecac58",
+          "id": "0eb35cd9",
           "options": {
             "Size": "7CM 15CM 8CM"
           },
-          "price": 310,
-          "salePrice": 0,
+          "price": 350,
+          "salePrice": 310,
           "stock": 0,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 310,
-      "salePrice": 280,
+      "price": 350,
+      "salePrice": 310,
       "stock": 0
     },
     {
       "id": "6590f759",
       "name": "Lip Gloss",
-      "shopifyHandle": "lipgloss",
       "description": "A little shine goes a long way! Dew Lip Gloss adds a glossy finish to your look and glides on smoothly for a lovely, comfortable feel. Wear it on its own for a fresh shine or layer it over your favourite lip colour. Pick your favourite shade and get ready to glow.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": false,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_6.jpg?v=1762873227",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/10.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/09.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/06.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/05.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/04.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/02.jpg?v=1762873227",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
       ],
       "howToUse": "",
       "options": [
@@ -546,54 +600,51 @@
       ],
       "variants": [
         {
-          "id": "3f1d5657",
+          "id": "31509a86",
           "options": {
             "color": "1"
           },
-          "price": 235,
-          "salePrice": 200,
+          "price": 200,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
           "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/brush.png?v=1762873227"
         },
         {
-          "id": "3fef1416",
+          "id": "14943b66",
           "options": {
             "color": "2"
           },
-          "price": 235,
-          "salePrice": 0,
+          "price": 200,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
           "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
         },
         {
-          "id": "d8d5123c",
+          "id": "6c60b5c7",
           "options": {
             "color": "3"
           },
-          "price": 235,
-          "salePrice": 0,
+          "price": 200,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
           "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/0.jpg?v=1762873227"
         }
       ],
-      "price": 235,
-      "salePrice": 200,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "price": 200,
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "02155935",
       "name": "Dew Gloss 01",
-      "shopifyHandle": "dew-gloss-01",
       "description": "Meet your new everyday shine! Dew Gloss 01 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -611,12 +662,12 @@
       ],
       "variants": [
         {
-          "id": "ae4134c3",
+          "id": "f218f0e6",
           "options": {
             "Shade": "01"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -624,17 +675,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "lip Gloss 01",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "53e00483",
       "name": "Dew Gloss 10",
-      "shopifyHandle": "dew-gloss-10",
       "description": "Meet your new everyday shine! Dew Gloss 10 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -652,12 +700,12 @@
       ],
       "variants": [
         {
-          "id": "ecae5311",
+          "id": "524e00af",
           "options": {
             "Shade": "10"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -665,17 +713,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "5f537094",
       "name": "Dew Gloss 09",
-      "shopifyHandle": "dew-gloss-09",
       "description": "Meet your new everyday shine! Dew Gloss 09 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -693,12 +738,12 @@
       ],
       "variants": [
         {
-          "id": "c83e6553",
+          "id": "bc4f2aec",
           "options": {
             "Shade": "09"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -706,17 +751,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "7aa07c64",
       "name": "Dew Gloss 06",
-      "shopifyHandle": "dew-gloss-06",
       "description": "Meet your new everyday shine! Dew Gloss 06 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -734,12 +776,12 @@
       ],
       "variants": [
         {
-          "id": "6ca2410b",
+          "id": "6ec88033",
           "options": {
             "Shade": "06"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -747,17 +789,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "daaa60ff",
       "name": "Dew Gloss 05",
-      "shopifyHandle": "dew-gloss-05",
       "description": "Meet your new everyday shine! Dew Gloss 05 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -775,12 +814,12 @@
       ],
       "variants": [
         {
-          "id": "d6ec279a",
+          "id": "40060cf7",
           "options": {
             "Shade": "05"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -788,17 +827,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "9fd72a4a",
       "name": "Dew Gloss 04",
-      "shopifyHandle": "dew-gloss-04",
       "description": "Meet your new everyday shine! Dew Gloss 04 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -816,12 +852,12 @@
       ],
       "variants": [
         {
-          "id": "c91a8acd",
+          "id": "6e27798b",
           "options": {
             "Shade": "04"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -829,17 +865,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "12724006",
       "name": "Dew Gloss 03",
-      "shopifyHandle": "dew-gloss-03",
       "description": "Meet your new everyday shine! Dew Gloss 03 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -857,12 +890,12 @@
       ],
       "variants": [
         {
-          "id": "81efaf84",
+          "id": "5b2adde8",
           "options": {
             "Shade": "03"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -870,17 +903,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "97518fd3",
       "name": "Dew Gloss 02",
-      "shopifyHandle": "dew-gloss-02",
       "description": "Meet your new everyday shine! Dew Gloss 02 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -898,12 +928,12 @@
       ],
       "variants": [
         {
-          "id": "79e3ea88",
+          "id": "d25def0b",
           "options": {
             "Shade": "02"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -911,17 +941,14 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "b2518901",
       "name": "Dew Gloss 00",
-      "shopifyHandle": "dew-gloss-00",
       "description": "Meet your new everyday shine! Dew Gloss 00 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -939,12 +966,12 @@
       ],
       "variants": [
         {
-          "id": "536939bd",
+          "id": "d70a3a56",
           "options": {
             "Shade": "00"
           },
           "price": 200,
-          "salePrice": 0,
+          "salePrice": 150,
           "stock": 0,
           "sku": "",
           "barcode": "",
@@ -952,30 +979,36 @@
         }
       ],
       "price": 200,
-      "salePrice": 0,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "salePrice": 150,
+      "stock": 0
     },
     {
       "id": "95e54cca",
       "name": "Dew Skincare Whitening Creamy Roll-On Deodorant",
-      "shopifyHandle": "dew-skincare-whitening-creamy-roll-on-deodorant",
       "description": "Feel fresh and confident with Dew Whitening Creamy Roll-On Deodorant. Its creamy texture glides on easily, while its fresh scent helps keep you feeling comfortable throughout the day. A simple everyday essential for your underarm-care routine.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, Hydrating, lacoste fresh, Men, Moisturizing, Natural, Refreshing, Self-care, Tropical, Tulip, underarms, whiten, Whitening, Women",
       "visible": true,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_deodrant.png?v=1770559468",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/11.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_Make_the_dream_in_a_12a7296a-edb0-4416-877d-941a778ab408.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_make_the_sunset_in_a_2f80aa41-c227-4a49-9798-86d74b835758.png?v=1770559468",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_NOw_the_frost_in_sep_5ff409e2-98c3-4b55-b967-4fe83731ae19.png?v=1770559468"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_Make_the_dream_in_a_12a7296a-edb0-4416-877d-941a778ab408.png?v=1770559468"
       ],
       "howToUse": "",
       "options": [],
-      "variants": [],
+      "variants": [
+        {
+          "id": "841c8c59",
+          "options": {},
+          "price": 220,
+          "salePrice": 200,
+          "stock": 30,
+          "sku": "",
+          "barcode": "",
+          "image": ""
+        }
+      ],
       "price": 220,
       "salePrice": 200,
       "stock": 30
@@ -983,17 +1016,15 @@
     {
       "id": "95b42b11",
       "name": "Lip Gloss Set 1.5 ML",
-      "shopifyHandle": "lip-gloss-set",
       "description": "Six little glosses, so many ways to shine! This set includes 6 scented lip glosses, each 1.5 ml, in fun shades you can mix, match and carry with you. Perfect for trying different looks or sharing a little sweetness. Add this cute set to your bag!",
-      "catalog": "be6c3d75",
+      "catalog": "e52c8bbf",
       "tags": "CrueltyFree, Hydrating, Lips, Moisturizing, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Glosssettnobox.jpg?v=1762866793",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_3.jpg?v=1762866793",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/openbox.jpg?v=1762866793"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_3.jpg?v=1762866793"
       ],
       "howToUse": "",
       "options": [
@@ -1006,30 +1037,27 @@
       ],
       "variants": [
         {
-          "id": "f7afb832",
+          "id": "e87a78fc",
           "options": {
             "Mini 6 Gloss": "1.5 ML"
           },
-          "price": 265,
-          "salePrice": 250,
+          "price": 280,
+          "salePrice": 230,
           "stock": 0,
           "sku": "",
           "barcode": "",
           "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793"
         }
       ],
-      "price": 265,
-      "salePrice": 250,
-      "stock": 0,
-      "seoTitle": "",
-      "seoDescription": ""
+      "price": 280,
+      "salePrice": 230,
+      "stock": 0
     },
     {
       "id": "757414b0",
       "name": "Lip Balm Candy",
-      "shopifyHandle": "lip-balm-candy",
       "description": "Sweet-looking lips start with a little care! Candy Lip Balm helps keep your lips feeling soft and moisturised, with a playful candy-inspired scent. Keep it close for an easy swipe whenever your lips need a little extra love.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -1049,27 +1077,27 @@
       ],
       "variants": [
         {
-          "id": "5c4efe9f",
+          "id": "675ec64e",
           "options": {
             "Title": "Default Title"
           },
-          "price": 110,
-          "salePrice": 90,
+          "price": 100,
+          "salePrice": 85,
           "stock": 14,
           "sku": "",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 110,
-      "salePrice": 90,
+      "price": 100,
+      "salePrice": 85,
       "stock": 14
     },
     {
       "id": "af73e68b",
       "name": "Dew Bundle",
-      "shopifyHandle": "dew-bundle",
       "description": "Build a little self-care moment with the Dew Bundle! Choose the products you love and put together a skincare set that suits your routine. Pick your preferred options before adding the bundle to your cart, then enjoy your Dew favourites together.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, Cleansing, Daily Lip Care, DailySkincare, Dew, DewSkincare, for all skin types, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, lip Scrub, Lip treatment, Lips, Moisturizer, Moisturizing, moisturizing shower gel, Natural, Natural Ingredients, NaturalIngredients",
       "visible": false,
       "featured": false,
@@ -1089,7 +1117,7 @@
       ],
       "variants": [
         {
-          "id": "390917a2",
+          "id": "42fc17dc",
           "options": {
             "Title": "Default Title"
           },
@@ -1097,7 +1125,8 @@
           "salePrice": 0,
           "stock": 10,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
       "price": 550,
@@ -1107,19 +1136,15 @@
     {
       "id": "b7b6c660",
       "name": "LipBalm x3",
-      "shopifyHandle": "lipbalm-x3-1",
       "description": "Three lip balms are better than one! Keep one in your bag, one by your bed and one wherever you need a quick touch of moisture. This handy set helps keep your lips feeling soft and cared for throughout the day. Choose your favourite available flavours.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "Daily Lip Care, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Lip treatment, Lips, Moisturizer, Moisturizing, Smooth Lips, Soft Lips, Strawberry",
       "visible": true,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/balmbundle.jpg?v=1762871720",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bundle_3.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_2.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/23.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/22.jpg?v=1762871720",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate_5c12aeb6-3ad4-43b4-863c-7085e932b649.jpg?v=1756907490"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/website_dew_2.jpg?v=1762871720"
       ],
       "howToUse": "",
       "options": [
@@ -1132,27 +1157,27 @@
       ],
       "variants": [
         {
-          "id": "4d489fd8",
+          "id": "023983ef",
           "options": {
             "Title": "Default Title"
           },
-          "price": 265,
-          "salePrice": 250,
+          "price": 300,
+          "salePrice": 200,
           "stock": 13,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 265,
-      "salePrice": 250,
+      "price": 300,
+      "salePrice": 200,
       "stock": 13
     },
     {
       "id": "561a22fa",
       "name": "Sunblock SPF 50++",
-      "shopifyHandle": "sunblock-natural-sunscreen-sfp50",
       "description": "Make sun protection part of your everyday routine with Dew Sunblock SPF 50++. Its SPF 50+ formula is made for daily use, helping protect your skin when you're out and about. Apply generously before sun exposure and reapply regularly. Size: 100 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, beach, Hydrating, Moisturizing, Natural, NaturalIngredients, NaturalSkincare, SPF50++, sunblock, Sunscreen",
       "visible": true,
       "featured": false,
@@ -1171,7 +1196,7 @@
       ],
       "variants": [
         {
-          "id": "b3b3d8f8",
+          "id": "0619851b",
           "options": {
             "Size": "100 ML"
           },
@@ -1179,7 +1204,8 @@
           "salePrice": 290,
           "stock": 6,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
       "price": 430,
@@ -1189,19 +1215,15 @@
     {
       "id": "1bd5e3ce",
       "name": "Cookie LipBalm",
-      "shopifyHandle": "cookie-lipbalm",
       "description": "A treat for your lips! This adorable cookie-shaped lip balm helps keep lips soft and moisturised, with a sweet chocolate scent. Cute enough to make you smile and handy enough to take everywhere. Flavour: Chocolate.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "all skin types, Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Lip treatment, Lips, Moisturizing, Natural, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_change_the_colorfull.png?v=1770632402",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/All.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candy.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/strawberry.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.png?v=1770632402",
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/chocolate.jpg?v=1770633463"
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/candy.png?v=1770632402"
       ],
       "howToUse": "",
       "options": [
@@ -1214,54 +1236,57 @@
       ],
       "variants": [
         {
-          "id": "253eba9e",
+          "id": "c380e72a",
           "options": {
             "Flavor 10ML": "Chocolate"
           },
-          "price": 135,
-          "salePrice": 130,
+          "price": 125,
+          "salePrice": 110,
           "stock": 18,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         },
         {
-          "id": "33a9e541",
+          "id": "e7e3dce9",
           "options": {},
-          "price": 135,
-          "salePrice": 130,
+          "price": 125,
+          "salePrice": 110,
           "stock": 16,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         },
         {
-          "id": "26c4a452",
+          "id": "c2c50eec",
           "options": {},
-          "price": 135,
-          "salePrice": 130,
+          "price": 125,
+          "salePrice": 110,
           "stock": 15,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         },
         {
-          "id": "643de885",
+          "id": "172551f0",
           "options": {},
-          "price": 135,
-          "salePrice": 130,
+          "price": 125,
+          "salePrice": 110,
           "stock": 20,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 135,
-      "salePrice": 130,
+      "price": 125,
+      "salePrice": 110,
       "stock": 69
     },
     {
       "id": "d4ef44f1",
       "name": "Micellar Water - Makeup remover",
-      "shopifyHandle": "micellar-cleansing-water-makeup-remover",
       "description": "A fresh start for your skin! Dew Micellar Water helps lift away makeup and everyday impurities, leaving your skin feeling clean and refreshed. A handy step for your daily cleansing routine. Size: 80 ml.",
-      "catalog": "8b845705",
+      "catalog": "7a6b54a1",
       "tags": "all skin types, Cleansing, Cleansing Water, makeup remover, Micellar, Moisturizing, Natural",
       "visible": true,
       "featured": false,
@@ -1281,27 +1306,27 @@
       ],
       "variants": [
         {
-          "id": "bce6bccd",
+          "id": "dbfd8a2a",
           "options": {
             "Size": "80 ML"
           },
-          "price": 220,
-          "salePrice": 0,
+          "price": 110,
+          "salePrice": 90,
           "stock": 7,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 220,
-      "salePrice": 0,
+      "price": 110,
+      "salePrice": 90,
       "stock": 7
     },
     {
       "id": "58806ff3",
       "name": "DEW HAIR KIT",
-      "shopifyHandle": "dew-hair-kit",
       "description": "Give your hair routine a rosemary refresh! The Dew Hair Kit pairs Rosemary Shampoo with Rosemary Conditioner for a simple wash-and-care duo. Cleanse, condition and enjoy hair that feels fresh, soft and easy to manage. Your two-step hair-care set is ready to go.",
-      "catalog": "dd86dc77",
+      "catalog": "c7a6bd0a",
       "tags": "Chemicals Free, cleans, Cleansing, CrueltyFree, DailyHairCare, DetangleYourHair, Dew, DewSkincare, dryness, EcoFriendlyBeauty, ForAllHairTypes, HairCareRoutine, HairConditioner, HairStrength, HydratingHair, HydratingShampoo, MoisturizingShampoo, Natural, Natural Ingredients, NaturalIngredients, NaturalShampoo, NaturalSkincare, RosemaryConditioner, RosemaryShampoo, Shampoo, ShinyHair, SkincareRoutine, SoftHair, SulfateFree, SulfateFreeConditioner, SulfateFreeShampoo",
       "visible": true,
       "featured": false,
@@ -1320,27 +1345,27 @@
       ],
       "variants": [
         {
-          "id": "fa6a5b72",
+          "id": "23a2e375",
           "options": {
             "Title": "Default Title"
           },
-          "price": 690,
-          "salePrice": 0,
+          "price": 310,
+          "salePrice": 500,
           "stock": 5,
           "sku": "Bundle Hair care",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 690,
-      "salePrice": 0,
+      "price": 310,
+      "salePrice": 500,
       "stock": 5
     },
     {
       "id": "3744b4c0",
       "name": "Orchid Body Butter",
-      "shopifyHandle": "orchid-body-butter",
       "description": "Wrap your skin in a little everyday luxury. Orchid Body Butter has a rich, creamy feel that helps moisturise and soften your skin, finished with a delicate orchid-inspired scent. Massage onto your skin whenever it needs a comforting touch. Size: 192 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, BodyButter, DailySkincare, Dew, DewSkincare, FloralSkincare, for all skin types, Hydrating, HydratingBodyButter, Moisturizer, Moisturizing, Natural Ingredients, NaturalIngredients, NaturalSkincare, OrchidBodyButter, PamperYourself, refreshes your skin, Self-care, Skin care, SkincareRoutine, SoftSkin",
       "visible": true,
       "featured": false,
@@ -1359,27 +1384,27 @@
       ],
       "variants": [
         {
-          "id": "0ff1bb61",
+          "id": "960be623",
           "options": {
             "Size": "192 ML"
           },
-          "price": 300,
-          "salePrice": 210,
+          "price": 250,
+          "salePrice": 200,
           "stock": 8,
           "sku": "'6228600112",
-          "barcode": "'6228600112"
+          "barcode": "'6228600112",
+          "image": ""
         }
       ],
-      "price": 300,
-      "salePrice": 210,
+      "price": 250,
+      "salePrice": 200,
       "stock": 8
     },
     {
       "id": "ab8882b2",
       "name": "Honey & Milk Body Butter",
-      "shopifyHandle": "honey-milk-body-butter",
       "description": "A cosy moment of softness for your skin. Honey & Milk Body Butter has a rich, creamy texture that helps moisturise and soften, with a warm, comforting scent. Smooth it over your skin and enjoy a little self-care every day. Size: 192 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "BodyButter, CrueltyFree, HoneyMilkButter, HoneySkincare, Hydrating, HydratingBodyButter, LuxurySkincare, Moisturizer, Moisturizing, Natural, NaturalSkincare, Nourishing, PamperYourself, SkincareRoutine, SoftSkin",
       "visible": true,
       "featured": false,
@@ -1398,27 +1423,27 @@
       ],
       "variants": [
         {
-          "id": "7d9c0217",
+          "id": "bb3a533c",
           "options": {
             "Size": "192 ML"
           },
-          "price": 300,
-          "salePrice": 210,
+          "price": 250,
+          "salePrice": 200,
           "stock": 11,
           "sku": "'62286001111",
-          "barcode": "'62286001111"
+          "barcode": "'62286001111",
+          "image": ""
         }
       ],
-      "price": 300,
-      "salePrice": 210,
+      "price": 250,
+      "salePrice": 200,
       "stock": 11
     },
     {
       "id": "928936b1",
       "name": "Rosemary Conditioner",
-      "shopifyHandle": "rosemary-conditioner",
       "description": "Give your hair a softer, smoother finish with Dew Rosemary Conditioner. This rosemary-inspired conditioner helps moisturise your hair and make it easier to detangle and manage. Use after shampooing for a simple, feel-good hair-care routine.",
-      "catalog": "dd86dc77",
+      "catalog": "c7a6bd0a",
       "tags": "DailyHairCare, DetangleYourHair, DewSkincare, EcoFriendlyBeauty, ForAllHairTypes, HairConditioner, HealthyHair, HydratingHair, NaturalIngredients, RosemaryConditioner, SoftHair, SulfateFree, SulfateFreeConditioner",
       "visible": true,
       "featured": false,
@@ -1437,27 +1462,27 @@
       ],
       "variants": [
         {
-          "id": "4886eab4",
+          "id": "6e4adcbb",
           "options": {
             "Size": "450 ML"
           },
-          "price": 355,
-          "salePrice": 330,
+          "price": 310,
+          "salePrice": 270,
           "stock": 8,
           "sku": "'6285001112",
-          "barcode": "'6285001112"
+          "barcode": "'6285001112",
+          "image": ""
         }
       ],
-      "price": 355,
-      "salePrice": 330,
+      "price": 310,
+      "salePrice": 270,
       "stock": 8
     },
     {
       "id": "6c043d33",
       "name": "Rosemary Shampoo",
-      "shopifyHandle": "rosemary-shampoo",
       "description": "Refresh your wash day with Dew Rosemary Shampoo. It gently cleanses your hair and scalp, leaving your hair feeling fresh and ready for conditioning. Pair it with Dew Rosemary Conditioner for a simple rosemary hair-care routine.",
-      "catalog": "dd86dc77",
+      "catalog": "c7a6bd0a",
       "tags": "Cleansing, DailyHairCare, ForAllHairTypes, HairCareRoutine, HairStrength, HealthyHair, Hydrating, HydratingShampoo, Moisturizing, MoisturizingShampoo, Natural, NaturalShampoo, RosemaryShampoo, Shampoo, ShinyHair, SulfateFreeShampoo",
       "visible": true,
       "featured": false,
@@ -1476,27 +1501,27 @@
       ],
       "variants": [
         {
-          "id": "acaf2de7",
+          "id": "b506e962",
           "options": {
             "Size": "450 ML"
           },
-          "price": 330,
-          "salePrice": 310,
+          "price": 300,
+          "salePrice": 260,
           "stock": 5,
           "sku": "'62285001111",
-          "barcode": "'62285001111"
+          "barcode": "'62285001111",
+          "image": ""
         }
       ],
-      "price": 330,
-      "salePrice": 310,
+      "price": 300,
+      "salePrice": 260,
       "stock": 5
     },
     {
       "id": "4ae993e5",
       "name": "Lip Balm Coconut",
-      "shopifyHandle": "dew-coconut-lip-balm",
       "description": "A little tropical love for your lips! Dew Coconut Lip Balm helps keep lips feeling soft, smooth and moisturised, with a creamy coconut scent. Swipe on whenever your lips need a little care.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -1515,27 +1540,27 @@
       ],
       "variants": [
         {
-          "id": "d74bab00",
+          "id": "b6d4daf1",
           "options": {
             "Title": "Default Title"
           },
-          "price": 110,
-          "salePrice": 90,
+          "price": 100,
+          "salePrice": 85,
           "stock": 14,
           "sku": "",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 110,
-      "salePrice": 90,
+      "price": 100,
+      "salePrice": 85,
       "stock": 14
     },
     {
       "id": "3280bf12",
       "name": "Lip Balm Chocolate",
-      "shopifyHandle": "dew-chocolate-lip-balm",
       "description": "Chocolate lovers, this one's for you! Dew Chocolate Lip Balm helps keep your lips feeling soft and moisturised, with a delicious chocolate-inspired scent. A lovely everyday essential to keep close.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -1555,27 +1580,27 @@
       ],
       "variants": [
         {
-          "id": "eefdeeae",
+          "id": "86274c03",
           "options": {
             "Title": "Default Title"
           },
-          "price": 110,
-          "salePrice": 90,
+          "price": 100,
+          "salePrice": 85,
           "stock": 6,
           "sku": "",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 110,
-      "salePrice": 90,
+      "price": 100,
+      "salePrice": 85,
       "stock": 6
     },
     {
       "id": "2aece5ff",
       "name": "Strawberry Shower Gel",
-      "shopifyHandle": "strawberry-shower-gel",
       "description": "Make shower time sweeter with Dew Strawberry Shower Gel. Its fruity strawberry scent turns your daily cleanse into a fresh, feel-good moment, leaving your skin feeling clean and refreshed. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, body wash for all skin types, cleans, Cleansing, Hydrating, Moisturizing, moisturizing shower gel, Natural, Nourishing, refreshes your skin, Refreshing, Self-care, Shower Essentials, Shower Gel, Strawberry",
       "visible": true,
       "featured": false,
@@ -1594,27 +1619,27 @@
       ],
       "variants": [
         {
-          "id": "462f540f",
+          "id": "8e3abd6d",
           "options": {
             "Fragrance & Size": "Strawberry - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 7,
           "sku": "'62280001118",
-          "barcode": "'62280001118"
+          "barcode": "'62280001118",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 7
     },
     {
       "id": "289d19e5",
       "name": "Tropical Shower Gel",
-      "shopifyHandle": "tropical-shower-gel",
       "description": "Take your senses on a little getaway! Dew Tropical Shower Gel gently cleanses your skin and brings a bright, tropical touch to your shower routine. Enjoy a refreshing start or finish to your day. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, Chemicals Free, Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Tropical",
       "visible": true,
       "featured": false,
@@ -1633,27 +1658,27 @@
       ],
       "variants": [
         {
-          "id": "12d24f09",
+          "id": "19bf96d1",
           "options": {
             "Fragrance & Size": "Tropical - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 8,
           "sku": "'62280001119",
-          "barcode": "'62280001119"
+          "barcode": "'62280001119",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 8
     },
     {
       "id": "b8b23b95",
       "name": "Sunshine Splash Shower Gel",
-      "shopifyHandle": "sunshine-splash-shower-gel",
       "description": "A sunny, feel-good shower in a bottle! Dew Sunshine Splash Shower Gel cleanses your skin and leaves behind a lovely Girl of Now-inspired fragrance. Make every shower feel like a little treat. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Girl of Now, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Sunshine Splash",
       "visible": false,
       "featured": false,
@@ -1672,27 +1697,27 @@
       ],
       "variants": [
         {
-          "id": "6298e42f",
+          "id": "5266088a",
           "options": {
             "Fragrance & Size": "Girl of Now - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 15,
           "sku": "'62280001111",
-          "barcode": "'62280001111"
+          "barcode": "'62280001111",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 15
     },
     {
       "id": "c7793f18",
       "name": "Kiwi Shower Gel",
-      "shopifyHandle": "kiwi-shower-gel",
       "description": "A splash of fruity freshness! Dew Kiwi Shower Gel cleanses your skin and leaves it feeling fresh, with a bright kiwi scent you'll love. A lovely pick-me-up for your everyday shower. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "all skin types, Cleansing, Hydrating, Kiwi, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": true,
       "featured": false,
@@ -1711,27 +1736,27 @@
       ],
       "variants": [
         {
-          "id": "1cd36ed3",
+          "id": "8026ff28",
           "options": {
             "Fragrance & Size": "Kiwi - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 2,
           "sku": "'62280001114",
-          "barcode": "'62280001114"
+          "barcode": "'62280001114",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 2
     },
     {
       "id": "70424d62",
       "name": "Harmony Shower Gel",
-      "shopifyHandle": "harmony-shower-gel",
       "description": "Cleanse with a touch of elegance. Dew Harmony Shower Gel brings a fresh, Dylan Blue-inspired fragrance to your daily shower routine while leaving your skin feeling clean and refreshed. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Harmony, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Versace Dylan Blue",
       "visible": false,
       "featured": false,
@@ -1750,27 +1775,27 @@
       ],
       "variants": [
         {
-          "id": "e95ce6ce",
+          "id": "c4efab86",
           "options": {
             "Fragrance & Size": "Versace Dylan Blue F - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 1,
           "sku": "'62280001120",
-          "barcode": "'62280001120"
+          "barcode": "'62280001120",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 1
     },
     {
       "id": "3aa54356",
       "name": "Freshly Squeezed Shower Gel",
-      "shopifyHandle": "freshly-squeezed-shower-gel",
       "description": "Start your day on a fresh note! Dew Freshly Squeezed Shower Gel brings a bright, Y-inspired fragrance to your shower while cleansing your skin. A refreshing everyday essential. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": false,
       "featured": false,
@@ -1789,27 +1814,27 @@
       ],
       "variants": [
         {
-          "id": "e8987166",
+          "id": "fa5154b6",
           "options": {
             "Fragrance & Size": "Y Perfume - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 15,
           "sku": "'62280001121",
-          "barcode": "'62280001121"
+          "barcode": "'62280001121",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 15
     },
     {
       "id": "7797d362",
       "name": "Fresh Mint Shower Gel",
-      "shopifyHandle": "fresh-mint-shower-gel",
       "description": "Wake up your shower routine with Dew Fresh Mint Shower Gel. Its crisp minty scent brings a refreshing feel while it cleanses your skin. Perfect for a fresh-feeling start to your day. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Fresh Mint, Hydrating, mint scent, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": false,
       "featured": false,
@@ -1828,27 +1853,27 @@
       ],
       "variants": [
         {
-          "id": "f57e8d7b",
+          "id": "673285b9",
           "options": {
             "Fragrance & Size": "Fresh Mint - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 11,
           "sku": "'62280001115",
-          "barcode": "'62280001115"
+          "barcode": "'62280001115",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 11
     },
     {
       "id": "3a057abb",
       "name": "Fresh Breeze Shower Gel",
-      "shopifyHandle": "fresh-breeze-shower-gel",
       "description": "Fresh, warm and ready for the day. Dew Fresh Breeze Shower Gel cleanses your skin and leaves it with a Stronger With You-inspired scent. Add a little fragrance to your everyday shower routine. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Dew, Fresh Breeze, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Shower Essentials, Shower Gel, Skin care, Stronger with you",
       "visible": false,
       "featured": false,
@@ -1867,27 +1892,27 @@
       ],
       "variants": [
         {
-          "id": "e4ff2d32",
+          "id": "94c27c06",
           "options": {
             "Fragrance & Size": "Stronger with you - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 15,
           "sku": "'62280001117",
-          "barcode": "'62280001117"
+          "barcode": "'62280001117",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 15
     },
     {
       "id": "44ce24bf",
       "name": "Crystal Waves Shower Gel",
-      "shopifyHandle": "crystal-waves-shower-gel",
       "description": "Bring a clean, confident feel to your shower with Dew Crystal Waves Shower Gel. It cleanses your skin and leaves a fresh, Gentleman-inspired fragrance behind. A lovely everyday pick. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Crystal Waves, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel, Y EAU DE PARFUM",
       "visible": false,
       "featured": false,
@@ -1906,27 +1931,27 @@
       ],
       "variants": [
         {
-          "id": "cd81e544",
+          "id": "fedef127",
           "options": {
             "Fregrance & Size": "Gentleman perfume - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 15,
           "sku": "'62280001113",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 15
     },
     {
       "id": "24ce557b",
       "name": "Coconut Shower Gel",
-      "shopifyHandle": "coconut-shower-gel",
       "description": "Enjoy a little tropical comfort with Dew Coconut Shower Gel. Its creamy coconut scent makes every shower feel like a mini escape while it cleanses your skin. A lovely addition to your daily routine. Size: 480 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Cleansing, Coconut, for all skin types, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": true,
       "featured": false,
@@ -1945,27 +1970,27 @@
       ],
       "variants": [
         {
-          "id": "40ca72e9",
+          "id": "6e754740",
           "options": {
             "Fragrance & Size": "Coconut - 480 ML"
           },
-          "price": 320,
-          "salePrice": 280,
+          "price": 220,
+          "salePrice": 180,
           "stock": 1,
           "sku": "'62280001112",
-          "barcode": "'62280001112"
+          "barcode": "'62280001112",
+          "image": ""
         }
       ],
-      "price": 320,
-      "salePrice": 280,
+      "price": 220,
+      "salePrice": 180,
       "stock": 1
     },
     {
       "id": "484027a5",
       "name": "Vanilla Moisturizer Cream",
-      "shopifyHandle": "vanillamoisturizercream",
       "description": "Soft skin with a sweet touch of vanilla. Dew Vanilla Moisturizer Cream helps moisturise your skin and leave it feeling smooth, with a warm vanilla scent. Massage in after showering or whenever your skin needs a little care. Size: 150 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
       "visible": true,
       "featured": false,
@@ -1984,27 +2009,27 @@
       ],
       "variants": [
         {
-          "id": "8a088762",
+          "id": "7ce8fece",
           "options": {
             "Fragrance & Size": "Vanilla - 150 ML"
           },
-          "price": 245,
+          "price": 200,
           "salePrice": 170,
           "stock": 14,
           "sku": "'62284001112",
-          "barcode": "'62284001112"
+          "barcode": "'62284001112",
+          "image": ""
         }
       ],
-      "price": 245,
+      "price": 200,
       "salePrice": 170,
       "stock": 14
     },
     {
       "id": "c7609040",
       "name": "Sunshine Splash Moisturizer Cream",
-      "shopifyHandle": "sunshine-splash-moisturizer-cream",
       "description": "Give your skin a little sunshine! Dew Sunshine Splash Moisturizer helps moisturise and soften your skin, finished with a lovely Girl of Now-inspired fragrance. A feel-good step for your everyday body-care routine. Size: 150 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
       "visible": true,
       "featured": false,
@@ -2023,27 +2048,27 @@
       ],
       "variants": [
         {
-          "id": "9ddaf8b2",
+          "id": "8284a48c",
           "options": {
             "Fragrance & Size": "Girl of Now - 150 ML"
           },
-          "price": 245,
+          "price": 200,
           "salePrice": 170,
           "stock": 10,
           "sku": "'62284001113",
-          "barcode": "'62284001113"
+          "barcode": "'62284001113",
+          "image": ""
         }
       ],
-      "price": 245,
+      "price": 200,
       "salePrice": 170,
       "stock": 10
     },
     {
       "id": "76232b17",
       "name": "Harmony Moisturizer Cream",
-      "shopifyHandle": "harmony-moisturizer-cream",
       "description": "A little everyday care with an elegant scent. Dew Harmony Moisturizer Cream helps keep your skin feeling soft and moisturised, with a fresh Tulip fragrance. Smooth it on after a shower or whenever your skin needs a touch of comfort. Size: 150 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "Coconut, Cream, Hand Cream, Harmony, Hydrating, Moisturizer, Moisturizing, Natural, Sunshine Splash, Vanilla, Versace Dylan",
       "visible": true,
       "featured": false,
@@ -2062,27 +2087,27 @@
       ],
       "variants": [
         {
-          "id": "e019e8b3",
+          "id": "432765c3",
           "options": {
             "Fragrance & Size": "Tulip - 150 ML"
           },
-          "price": 245,
+          "price": 200,
           "salePrice": 170,
           "stock": 1,
           "sku": "'62284001114",
-          "barcode": "'62284001114"
+          "barcode": "'62284001114",
+          "image": ""
         }
       ],
-      "price": 245,
+      "price": 200,
       "salePrice": 170,
       "stock": 1
     },
     {
       "id": "9af52287",
       "name": "Sunshine Splash Foot Cream",
-      "shopifyHandle": "sunshine-splash-foot-cream",
       "description": "Give your feet the care they deserve. Dew Sunshine Splash Foot Cream helps moisturise dry-feeling feet and soften rough areas, with a lovely Girl of Now-inspired scent. Massage into clean, dry feet as part of your self-care routine. Size: 150 ml.",
-      "catalog": "7aa4667d",
+      "catalog": "5ac135ce",
       "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
       "visible": true,
       "featured": false,
@@ -2101,7 +2126,7 @@
       ],
       "variants": [
         {
-          "id": "70e627bd",
+          "id": "2ecdbc03",
           "options": {
             "Fragrance & Size": "Girl of Now - 150 ML"
           },
@@ -2109,7 +2134,8 @@
           "salePrice": 180,
           "stock": 6,
           "sku": "'62282001113",
-          "barcode": "'62282001113"
+          "barcode": "'62282001113",
+          "image": ""
         }
       ],
       "price": 220,
@@ -2119,9 +2145,8 @@
     {
       "id": "3ffd74ff",
       "name": "Fresh Mint Foot Cream",
-      "shopifyHandle": "fresh-mint-foot-cream",
       "description": "Freshen up your foot-care routine with Dew Fresh Mint Foot Cream. Its creamy feel helps moisturise dry feet and soften rough areas, while the minty scent leaves a refreshing touch. Massage into clean, dry feet whenever they need care. Size: 150 ml.",
-      "catalog": "cfb36855",
+      "catalog": "b292c1dd",
       "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
       "visible": true,
       "featured": false,
@@ -2140,7 +2165,7 @@
       ],
       "variants": [
         {
-          "id": "8e566350",
+          "id": "3b4fd096",
           "options": {
             "Fragrance & Size": "Mint - 150 ML"
           },
@@ -2148,7 +2173,8 @@
           "salePrice": 180,
           "stock": 14,
           "sku": "'62282001112",
-          "barcode": "'62282001112"
+          "barcode": "'62282001112",
+          "image": ""
         }
       ],
       "price": 220,
@@ -2158,9 +2184,8 @@
     {
       "id": "0424f67a",
       "name": "Cherry Kiss Cheeks and Lips Tint (Red)",
-      "shopifyHandle": "cherry-kiss-cheeks-and-lips-tint",
       "description": "A fresh pop of colour in one little product! Cherry Kiss Tint adds a lovely red touch to both cheeks and lips for an easy, put-together look. Start with a small amount and blend to build your favourite colour.",
-      "catalog": "35003259",
+      "catalog": "c7e1a842",
       "tags": "Blush, Blusher, Cheek, kiss, Lips, love, Pink, Red, Tint",
       "visible": true,
       "featured": false,
@@ -2179,27 +2204,27 @@
       ],
       "variants": [
         {
-          "id": "c027b976",
+          "id": "f495fef8",
           "options": {
             "Title": "Default Title"
           },
-          "price": 150,
+          "price": 120,
           "salePrice": 110,
           "stock": 4,
           "sku": "",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 150,
+      "price": 120,
       "salePrice": 110,
       "stock": 4
     },
     {
       "id": "950127fe",
       "name": "Apricots Lip Scrub",
-      "shopifyHandle": "apricots-lip-scrub",
       "description": "Give your lips a gentle polish with Dew Apricots Lip Scrub. Its apricot-inspired scent makes lip care feel like a treat, while the scrub helps smooth away dry, flaky skin. Massage gently onto damp lips, rinse, then follow with your favourite lip balm. Size: 20 ml.",
-      "catalog": "444bbcdc",
+      "catalog": "0f3c81ca",
       "tags": "Apricots, Lip care, lip Scrub, Lip treatment, scrub",
       "visible": true,
       "featured": false,
@@ -2218,27 +2243,27 @@
       ],
       "variants": [
         {
-          "id": "d5efe97f",
+          "id": "85865422",
           "options": {
             "Flavor & Size": "Apricots - 20 ML"
           },
-          "price": 135,
-          "salePrice": 100,
+          "price": 120,
+          "salePrice": 80,
           "stock": 14,
           "sku": "'62283001114",
-          "barcode": "'62283001114"
+          "barcode": "'62283001114",
+          "image": ""
         }
       ],
-      "price": 135,
-      "salePrice": 100,
+      "price": 120,
+      "salePrice": 80,
       "stock": 14
     },
     {
       "id": "c2b4ce28",
       "name": "Strawberry Lip Scrub",
-      "shopifyHandle": "strawberry-lip-scrub",
       "description": "Sweet strawberry care for softer-feeling lips! Dew Strawberry Lip Scrub gently exfoliates to help remove dry, flaky skin and leave your lips feeling smooth. Massage lightly onto lips, rinse off and finish with lip balm. Size: 20 ml.",
-      "catalog": "444bbcdc",
+      "catalog": "0f3c81ca",
       "tags": "Lip care, lip Scrub, Lip treatment, scrub, Strawberry",
       "visible": true,
       "featured": false,
@@ -2257,27 +2282,27 @@
       ],
       "variants": [
         {
-          "id": "f03e6b2b",
+          "id": "9747a34a",
           "options": {
             "Flavor & Size": "Strawberry - 20 ML"
           },
-          "price": 135,
-          "salePrice": 100,
+          "price": 120,
+          "salePrice": 80,
           "stock": 13,
           "sku": "'62283001113",
-          "barcode": "'62283001113"
+          "barcode": "'62283001113",
+          "image": ""
         }
       ],
-      "price": 135,
-      "salePrice": 100,
+      "price": 120,
+      "salePrice": 80,
       "stock": 13
     },
     {
       "id": "dbb95a5d",
       "name": "Vanilla Lip Scrub",
-      "shopifyHandle": "vanilla-lip-scrub",
       "description": "A sweet little step for a smoother pout. Dew Vanilla Lip Scrub gently exfoliates dry, flaky skin and leaves lips feeling soft and smooth, with a warm vanilla scent. Massage lightly onto lips, rinse off and follow with lip balm. Size: 20 ml.",
-      "catalog": "444bbcdc",
+      "catalog": "0f3c81ca",
       "tags": "Daily Lip Care, Lip care, lip Scrub, Lip treatment, scrub, Vanilla",
       "visible": true,
       "featured": false,
@@ -2296,27 +2321,27 @@
       ],
       "variants": [
         {
-          "id": "e0e7b9b8",
+          "id": "50d95dc6",
           "options": {
             "Flavor & Size": "Vanilla - 20 ML"
           },
-          "price": 135,
-          "salePrice": 100,
+          "price": 120,
+          "salePrice": 80,
           "stock": 14,
           "sku": "'62283001112",
-          "barcode": "'62283001112"
+          "barcode": "'62283001112",
+          "image": ""
         }
       ],
-      "price": 135,
-      "salePrice": 100,
+      "price": 120,
+      "salePrice": 80,
       "stock": 14
     },
     {
       "id": "5082f6d9",
       "name": "Lip Balm Strawberry",
-      "shopifyHandle": "dew-strawberry-lip-balm",
       "description": "A little strawberry sweetness for your everyday lip care! Dew Strawberry Lip Balm helps keep your lips feeling soft and moisturised, with a lovely fruity scent. Pop it in your bag and swipe on whenever you need it.",
-      "catalog": "c4dcfef1",
+      "catalog": "273ebb28",
       "tags": "Daily Lip Care, Hydrating, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Lip Protection, Moisturizing, Natural Ingredients, Nourishing, Smooth Lips, Soft Lips",
       "visible": true,
       "featured": false,
@@ -2327,17 +2352,27 @@
       ],
       "howToUse": "",
       "options": [],
-      "variants": [],
-      "price": 110,
-      "salePrice": 90,
+      "variants": [
+        {
+          "id": "9f45e76a",
+          "options": {},
+          "price": 100,
+          "salePrice": 85,
+          "stock": 11,
+          "sku": "",
+          "barcode": "",
+          "image": ""
+        }
+      ],
+      "price": 100,
+      "salePrice": 85,
       "stock": 11
     },
     {
       "id": "2cc19e9e",
       "name": "Pink Love Cheeks and Lips Tint",
-      "shopifyHandle": "pink-love-cheeks-and-lips-tint",
       "description": "Your easy, rosy glow in one step! Pink Love Tint adds a soft pink touch to your cheeks and lips for a fresh, natural-looking finish. Apply a little, blend well and build the colour until you love the look.",
-      "catalog": "35003259",
+      "catalog": "c7e1a842",
       "tags": "Blush, Blusher, Cheek, kiss, Lips, love, Pink, Red, Tint",
       "visible": true,
       "featured": false,
@@ -2356,27 +2391,27 @@
       ],
       "variants": [
         {
-          "id": "08cf5545",
+          "id": "4eda9eba",
           "options": {
             "Title": "Default Title"
           },
-          "price": 150,
+          "price": 120,
           "salePrice": 110,
           "stock": 12,
           "sku": "",
-          "barcode": "'1122334455"
+          "barcode": "'1122334455",
+          "image": ""
         }
       ],
-      "price": 150,
+      "price": 120,
       "salePrice": 110,
       "stock": 12
     },
     {
       "id": "3c5c256b",
       "name": "Coconut Dreams Moisturizer Cream",
-      "shopifyHandle": "coconut-dreams-moisturizer-cream",
       "description": "A little tropical comfort for your skin. Dew Coconut Dreams Moisturizer Cream helps moisturise and soften, with a lovely coconut scent. Apply after showering or whenever your skin needs a smooth, cared-for feel. Size: 150 ml.",
-      "catalog": "19c4466a",
+      "catalog": "5b94fe18",
       "tags": "Coconut, Cream, Hand Cream, Harmony, Moisturizer, Sunshine Splash, Vanilla",
       "visible": true,
       "featured": false,
@@ -2395,27 +2430,27 @@
       ],
       "variants": [
         {
-          "id": "37a8b9ea",
+          "id": "fa6b4b1b",
           "options": {
             "Fragrance & Size": "Coconut - 150 ML"
           },
-          "price": 245,
+          "price": 200,
           "salePrice": 170,
           "stock": 18,
           "sku": "'62284001111",
-          "barcode": "'62284001111"
+          "barcode": "'62284001111",
+          "image": ""
         }
       ],
-      "price": 245,
+      "price": 200,
       "salePrice": 170,
       "stock": 18
     },
     {
       "id": "3cf25ab8",
       "name": "Coconut Dream Lip Scrub",
-      "shopifyHandle": "coconut-dream-lip-scrub",
       "description": "A little coconut treat for your lips! Dew Coconut Dream Lip Scrub gently exfoliates to help remove dry, flaky skin and leave lips feeling smooth. Massage lightly onto lips, rinse off and follow with your favourite lip balm. Size: 20 ml.",
-      "catalog": "444bbcdc",
+      "catalog": "0f3c81ca",
       "tags": "Coconut, Lip care, lip Scrub, Lip treatment, scrub",
       "visible": true,
       "featured": false,
@@ -2434,27 +2469,27 @@
       ],
       "variants": [
         {
-          "id": "37ce09cd",
+          "id": "99cd0e79",
           "options": {
             "Flavor & Size": "Coconut - 20 ML"
           },
-          "price": 135,
-          "salePrice": 100,
+          "price": 120,
+          "salePrice": 80,
           "stock": 15,
           "sku": "'62283001111",
-          "barcode": "'62283001111"
+          "barcode": "'62283001111",
+          "image": ""
         }
       ],
-      "price": 135,
-      "salePrice": 100,
+      "price": 120,
+      "salePrice": 80,
       "stock": 15
     },
     {
       "id": "e2a1f39f",
       "name": "Fresh Breeze Foot Cream",
-      "shopifyHandle": "fresh-breeze-foot-cream",
       "description": "Treat your feet to a fresh moment of care. Dew Fresh Breeze Foot Cream helps moisturise dry-feeling feet and soften rough areas, with a warm Stronger With You-inspired scent. Massage into clean, dry feet whenever they need a little extra care. Size: 150 ml.",
-      "catalog": "cfb36855",
+      "catalog": "b292c1dd",
       "tags": "dryness, Foot care, Foot cream, Fresh Breeze, Mint, Rough Foot, Sunshine Splash",
       "visible": true,
       "featured": false,
@@ -2473,7 +2508,7 @@
       ],
       "variants": [
         {
-          "id": "020aab23",
+          "id": "d6ec4c3d",
           "options": {
             "Fragrance & Size": "Stronger With You - 150 ML"
           },
@@ -2481,7 +2516,8 @@
           "salePrice": 180,
           "stock": 15,
           "sku": "'62282001111",
-          "barcode": "'62282001111"
+          "barcode": "'62282001111",
+          "image": ""
         }
       ],
       "price": 220,
@@ -2491,9 +2527,8 @@
     {
       "id": "735c75b6",
       "name": "French Lavender Shower Gel",
-      "shopifyHandle": "french-lavender-shower-gel",
       "description": "Slow down and enjoy a calming shower moment with Dew French Lavender Shower Gel. Its lovely lavender scent brings a relaxing touch to your daily cleanse, leaving your skin feeling clean and refreshed. Size: 480 ml.",
-      "catalog": "ed4077f0",
+      "catalog": "5c636f9b",
       "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
       "visible": true,
       "featured": false,
@@ -2512,22 +2547,21 @@
       ],
       "variants": [
         {
-          "id": "b376765b",
+          "id": "8628d22d",
           "options": {
             "Fragrance & Size": "Lavender - 480 ML"
           },
-          "price": 250,
-          "salePrice": 220,
+          "price": 220,
+          "salePrice": 180,
           "stock": 2,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": ""
         }
       ],
-      "price": 250,
-      "salePrice": 220,
-      "stock": 2,
-      "seoTitle": "",
-      "seoDescription": ""
+      "price": 220,
+      "salePrice": 180,
+      "stock": 2
     }
   ],
   "discounts": [
