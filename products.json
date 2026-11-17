@@ -569,28 +569,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Shade",
           "values": [
-            "Default Title"
+            "01"
           ]
         }
       ],
       "variants": [
         {
-          "id": "e38b0dd6",
+          "id": "ae4134c3",
           "options": {
-            "Title": "Default Title"
+            "Shade": "01"
           },
           "price": 200,
           "salePrice": 0,
-          "stock": 8,
-          "sku": "'01",
-          "barcode": "'01"
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/01.jpg?v=1762873227"
         }
       ],
       "price": 200,
       "salePrice": 0,
-      "stock": 8
+      "stock": 0,
+      "seoTitle": "lip Gloss 01",
+      "seoDescription": ""
     },
     {
       "id": "53e00483",
