@@ -4,6 +4,7 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
 (async function () {
   try { S = await (await fetch('products.json',{cache:'no-cache'})).json(); }
   catch { $('#sumBody').innerHTML = '<p class="note">Could not load the shop. Please refresh.</p>'; return; }
+  try{const r=await fetch('https://dew-orders-api.aalshari.workers.dev/api/inventory',{cache:'no-store'}),j=await r.json();if(r.ok&&j.ok){const m=new Map(j.items.map(x=>[String(x.productId)+'::'+String(x.variantId||''),Number(x.stock)||0]));for(const p of S.products||[]){if(p.variants?.length){for(const v of p.variants){const k=String(p.id)+'::'+String(v.id);if(m.has(k))v.stock=m.get(k);}p.stock=p.variants.reduce((n,v)=>n+Math.max(0,Number(v.stock)||0),0);}else{const k=String(p.id)+'::';if(m.has(k))p.stock=m.get(k);}}}}catch(e){console.warn('Live inventory could not be refreshed; checkout will verify stock.',e)}
   S.products = S.products.filter(p => p.visible);
   if (!S.discounts) S.discounts = [];
   const s = S.settings;
