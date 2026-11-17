@@ -591,7 +591,7 @@ function products() {
   const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
   document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
   if(!native)document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{setAdminUrl('products',{product:b.dataset.e});productForm(b.dataset.e);});
-  if(native)draw();
+  draw();
 }
 function productForm(id) {
   const p = id ? D.products.find(x => x.id === id) : { name:'', catalog:D.catalogs[0]?.id||'', price:'', salePrice:'', stock:0, description:'', howToUse:'', tags:'', images:[], visible:true, featured:false };
