@@ -82,7 +82,7 @@
           }
         ],
         "logoPosition": "center",
-        "navPosition": "center"
+        "navPosition": "left"
       },
       "hero": {
         "show": true,
