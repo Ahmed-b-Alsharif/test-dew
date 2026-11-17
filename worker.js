@@ -3,15 +3,30 @@ const cors = {
   "Access-Control-Allow-Methods": "GET,POST,PUT,DELETE,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type,Authorization"
 };
-const json = (data, status=200) => new Response(JSON.stringify(data), {status, headers:{...cors,"Content-Type":"application/json","Cache-Control":"no-store"}});
+const SECURITY_HEADERS = {
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "Referrer-Policy": "no-referrer",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'"
+};
+const json = (data, status=200) => new Response(JSON.stringify(data), {status, headers:{...cors,...SECURITY_HEADERS,"Content-Type":"application/json","Cache-Control":"no-store"}});
 const clean = v => String(v ?? "").trim();
 const money = n => "EGP " + Number(n || 0).toLocaleString("en-US");
 const ADMIN_ORIGINS=new Set(["https://ahmed-b-alsharif.github.io","https://dewskincaree.com","https://www.dewskincaree.com","capacitor://localhost"]);
-const adminCors=request=>{const origin=request.headers.get("Origin")||"";return {...cors,"Access-Control-Allow-Origin":ADMIN_ORIGINS.has(origin)?origin:"https://ahmed-b-alsharif.github.io","Access-Control-Allow-Headers":"Content-Type,Authorization","Vary":"Origin"}};
+const adminCors=request=>{const origin=request.headers.get("Origin")||"";return {...cors,...SECURITY_HEADERS,"Access-Control-Allow-Origin":ADMIN_ORIGINS.has(origin)?origin:"https://ahmed-b-alsharif.github.io","Access-Control-Allow-Headers":"Content-Type,Authorization","Vary":"Origin"}};
 const adminJson=(request,data,status=200)=>new Response(JSON.stringify(data),{status,headers:{...adminCors(request),"Content-Type":"application/json","Cache-Control":"no-store"}});
 const ADMIN_SESSION_MS=12*60*60*1000, ADMIN_REPO="Ahmed-b-alsharif/test-dew";
 const hex=bytes=>Array.from(bytes,b=>b.toString(16).padStart(2,"0")).join("");
 async function digest(value){return hex(new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(value))))}
+async function consumeRateLimit(request,env,scope,limit,windowMs){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS api_rate_limits (scope TEXT NOT NULL, ip_hash TEXT NOT NULL, window_start INTEGER NOT NULL, hits INTEGER NOT NULL, PRIMARY KEY(scope,ip_hash,window_start))").run();
+ await env.DB.prepare("CREATE INDEX IF NOT EXISTS idx_api_rate_limits_window ON api_rate_limits(window_start)").run();
+ const ip=request.headers.get("CF-Connecting-IP")||"unknown",ipHash=await digest(ip),now=Date.now(),windowStart=Math.floor(now/windowMs)*windowMs;
+ const row=await env.DB.prepare("INSERT INTO api_rate_limits (scope,ip_hash,window_start,hits) VALUES (?,?,?,1) ON CONFLICT(scope,ip_hash,window_start) DO UPDATE SET hits=hits+1 WHERE hits < ? RETURNING hits").bind(scope,ipHash,windowStart,limit).first();
+ await env.DB.prepare("DELETE FROM api_rate_limits WHERE window_start < ?").bind(now-86400000).run();
+ return !!row;
+}
 function randomToken(){const b=new Uint8Array(32);crypto.getRandomValues(b);return hex(b)}
 function bearer(request){const h=request.headers.get("Authorization")||"";return h.startsWith("Bearer ")?h.slice(7):""}
 async function ensureAdminTables(env){
@@ -183,7 +198,10 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
 }
 
 async function createOrder(request, env) {
-  const body = await request.json();
+  const rawBody=await request.text();
+  if(rawBody.length>32768)return json({ok:false,error:"Your order is too large. Please remove some items and try again."},413);
+  let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Invalid order request. Please refresh and try again."},400)}
+
   const customer = body.customer || {};
   const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address), note=clean(customer.note).slice(0,500);
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
@@ -204,16 +222,28 @@ async function createOrder(request, env) {
   if (paymentMethod==="cod" && paymentSettings.codEnabled===false) return json({ok:false,error:"Cash on Delivery is currently unavailable."},400);
   if (paymentMethod==="instapay" && (paymentSettings.instapayEnabled===false || !clean(paymentSettings.instapayNumber))) return json({ok:false,error:"InstaPay is currently unavailable."},400);
   if (!Array.isArray(body.lines) || !body.lines.length) return json({ok:false,error:"Your cart is empty."},400);
+  if (body.lines.length>40) return json({ok:false,error:"Your cart has too many separate items. Please review it and try again."},400);
   const products=(catalogue.products||[]).filter(p=>p.visible);
+  const aggregatedItems=new Map();
+  for(const item of body.lines){
+    if(!item||typeof item!=="object")return json({ok:false,error:"One of the products is invalid. Please refresh your cart."},409);
+    const id=clean(item.id),variantId=clean(item.variantId),qty=Number(item.qty);
+    if(!id||!Number.isSafeInteger(qty)||qty<1||qty>99)return json({ok:false,error:"One of the product quantities is invalid. Please update your cart."},409);
+    const key=JSON.stringify([id,variantId]);
+    const existing=aggregatedItems.get(key)||{id,variantId,qty:0};
+    existing.qty+=qty;
+    if(existing.qty>99)return json({ok:false,error:"The quantity for one product is too high. Please update your cart."},409);
+    aggregatedItems.set(key,existing);
+  }
   const lines=[];
-  for (const item of body.lines) {
-    const p=products.find(x=>String(x.id)===String(item.id));
-    const variant=p?.variants?.find(v=>String(v.id)===String(item.variantId||""));
+  for(const item of aggregatedItems.values()){
+    const p=products.find(x=>String(x.id)===item.id);
+    const variant=p?.variants?.find(v=>String(v.id)===item.variantId);
     const hasVariants=Array.isArray(p?.variants)&&p.variants.length>0;
-    const qty=Math.floor(Number(item.qty));
-    if (!p || (hasVariants&&!variant) || !Number.isFinite(qty) || qty<1) return json({ok:false,error:"One of the products or selected options is unavailable. Please refresh your cart."},409);
-    const stock=variant?Number(variant.stock||0):Number(p.stock||0);
-    if(qty>stock)return json({ok:false,error:"The selected option does not have enough stock. Please update your cart."},409);
+    const qty=item.qty;
+    if(!p||(hasVariants&&!variant)||(!hasVariants&&item.variantId))return json({ok:false,error:"One of the products or selected options is unavailable. Please refresh your cart."},409);
+    const stock=Number(variant?variant.stock:p.stock);
+    if(!Number.isFinite(stock)||qty>stock)return json({ok:false,error:"The selected option does not have enough stock. Please update your cart."},409);
     const basePrice=variant?Number(variant.price||0):Number(p.price||0);
     const salePrice=variant?Number(variant.salePrice||0):Number(p.salePrice||0);
     const unit=salePrice>0&&salePrice<basePrice?salePrice:basePrice;
@@ -270,7 +300,8 @@ async function createOrder(request, env) {
 
 async function createWelcomeLead(request,env){
  const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return json({ok:false,error:"Origin not allowed."},403);
- let body={};try{body=await request.json()}catch{return json({ok:false,error:"Please enter your name and phone number."},400)}
+ const rawBody=await request.text();if(rawBody.length>4096)return json({ok:false,error:"Please enter your name and phone number."},413);
+ let body={};try{body=JSON.parse(rawBody)}catch{return json({ok:false,error:"Please enter your name and phone number."},400)}
  const name=clean(body.name).slice(0,80);let digits=clean(body.phone).replace(/\D/g,"");
  if(digits.startsWith("0020"))digits="0"+digits.slice(4);else if(digits.startsWith("20")&&digits.length===12)digits="0"+digits.slice(2);
  if(!name||!/^01[0125]\d{8}$/.test(digits))return json({ok:false,error:"Please enter a valid Egyptian mobile number."},400);
@@ -325,18 +356,26 @@ async function getInstagramRecent(request, env) {
 
 export default {
   async fetch(request,env) {
-    if (request.method==="OPTIONS") return new Response(null,{status:204,headers:cors});
+    if (request.method==="OPTIONS") return new Response(null,{status:204,headers:{...cors,...SECURITY_HEADERS}});
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
-      if (path==="/api/welcome-leads" && request.method==="POST") return await createWelcomeLead(request,env);
+      if (path==="/api/welcome-leads" && request.method==="POST") {
+        if(!await consumeRateLimit(request,env,"welcome-leads",6,60*60*1000))return json({ok:false,error:"Too many attempts. Please try again later."},429);
+        return await createWelcomeLead(request,env);
+      }
       if (path==="/api/admin/welcome-leads" && request.method==="GET") return await getWelcomeLeads(request,env);
       if (path==="/api/instagram/recent" && request.method==="GET") return await getInstagramRecent(request, env);
       if(path==="/api/admin/login"&&request.method==="POST"){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminLogin(request,env)}
       if(path==="/api/admin/session"&&request.method==="GET")return adminJson(request,{ok:await validAdminSession(request,env)});
       if(path==="/api/admin/logout"&&request.method==="POST")return await adminLogout(request,env);
       if(path==="/api/admin/github"&&["GET","PUT","DELETE"].includes(request.method)){const origin=request.headers.get("Origin")||"";if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);return await adminGithub(request,env)}
-      if (path==="/api/orders" && request.method==="POST") return await createOrder(request,env);
+      if (path==="/api/orders" && request.method==="POST") {
+        const origin=request.headers.get("Origin")||"";
+        if(origin&&!ADMIN_ORIGINS.has(origin))return json({ok:false,error:"Origin not allowed."},403);
+        if(!await consumeRateLimit(request,env,"orders",5,15*60*1000))return json({ok:false,error:"Too many order attempts. Please wait a little and try again."},429);
+        return await createOrder(request,env);
+      }
       if (path==="/api/orders" && request.method==="GET") {
         if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
         const result=await env.DB.prepare("SELECT order_json FROM orders ORDER BY created_at DESC").all();
