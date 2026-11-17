@@ -328,8 +328,8 @@ async function createOrder(request, env) {
   // Stock deduction, order numbering and order creation are one atomic D1 batch.
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS order_counter (id INTEGER PRIMARY KEY CHECK (id = 1), last_number INTEGER NOT NULL)").run();
   await env.DB.prepare("INSERT OR IGNORE INTO order_counter (id, last_number) VALUES (1, 999)").run();
-  await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_guard (id INTEGER PRIMARY KEY)").run();
-  await env.DB.prepare("INSERT OR IGNORE INTO inventory_guard (id) VALUES (1)").run();
+  // A CHECK constraint deliberately aborts the whole D1 batch if any stock update fails.
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_abort (id INTEGER PRIMARY KEY CHECK (id = 0))").run();
   const order={
     number:"__DEW_ORDER_NUMBER__",date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,shippingDiscount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
@@ -339,7 +339,7 @@ async function createOrder(request, env) {
   for(const line of lines){
     statements.push(env.DB.prepare("UPDATE inventory SET stock=stock-?,updated_at=? WHERE product_id=? AND variant_id=? AND stock>=?")
       .bind(line.qty,now.toISOString(),String(line.id),String(line.variantId||""),line.qty));
-    statements.push(env.DB.prepare("INSERT INTO inventory_guard (id) SELECT 1 WHERE changes()=0"));
+    statements.push(env.DB.prepare("INSERT INTO inventory_abort (id) SELECT 1 WHERE changes()=0"));
   }
   statements.push(env.DB.prepare("UPDATE order_counter SET last_number=last_number+1 WHERE id=1"));
   statements.push(env.DB.prepare("INSERT INTO orders (order_number,created_at,total,order_json) SELECT 'DEW#'||last_number,?,?,json_set(?, '$.number', 'DEW#'||last_number) FROM order_counter WHERE id=1 RETURNING order_number,order_json")
