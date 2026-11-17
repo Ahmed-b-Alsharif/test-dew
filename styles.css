@@ -3324,3 +3324,16 @@ html,body{color-scheme:only light!important}
 @media(max-width:480px){
   .homepage-editor-fields .product-section-editor .product-section-choices{grid-template-columns:minmax(0,1fr)!important}
 }
+
+/* Header logo and navigation placement: independent alignment with collision-free stacking */
+@media(min-width:761px){
+  .dew-header{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:76px;column-gap:28px}
+  .dew-header>nav,.dew-header>.dew-logo{grid-column:1;grid-row:1;min-width:0}
+  .dew-header>.dew-header-actions{grid-column:2;grid-row:1;justify-self:end}
+  .dew-header.header-same-position{grid-template-rows:auto auto;row-gap:7px;padding-top:12px;padding-bottom:12px;height:auto;min-height:76px}
+  .dew-header.header-same-position>.dew-logo{grid-column:1;grid-row:1}
+  .dew-header.header-same-position>nav{grid-column:1;grid-row:2;justify-self:center!important;text-align:center;max-width:100%;padding:2px 0 4px}
+  .dew-header.header-same-position>.dew-header-actions{grid-column:2;grid-row:1;align-self:center}
+  .dew-header nav{align-items:center;max-width:100%}
+  .dew-header nav a{white-space:nowrap}
+}
