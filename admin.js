@@ -811,6 +811,7 @@ async function importProductsExcel(file){
       const ids=new Set(merged.map(p=>p.id));D.products=[...D.products.filter(p=>!ids.has(p.id)),...merged];
       const saved=await gh('PUT','contents/products.json',{message:'Import products from '+(isShopify?'Shopify CSV':'CSV/Excel'),content:enc(JSON.stringify(D,null,2)+'\n'),sha:SHA});
       SHA=saved.content.sha;
+       const stockItems=merged.flatMap(inventoryItemsForProduct);await adminInventoryRequest('PUT',stockItems);
       closeModal();toast('Imported '+merged.length+' products successfully.');products();
     }catch(err){btn.disabled=false;btn.textContent='Try import again';toast(err.message,true);}
   };
