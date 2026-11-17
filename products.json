@@ -272,13 +272,13 @@
     },
     "offer": {
       "show": false,
-      "active": false,
+      "active": true,
       "startDate": "",
       "endDate": "",
       "title": "A little treat from Dew",
       "message": "Enjoy a special offer on your next order.",
       "type": "promo_code",
-      "promoCode": "",
+      "promoCode": "WELCOME10",
       "automaticDiscountId": ""
     }
   },
