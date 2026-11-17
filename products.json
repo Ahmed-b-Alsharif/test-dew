@@ -269,6 +269,17 @@
       "showDetails": true,
       "showShipping": true,
       "showCategory": true
+    },
+    "offer": {
+      "show": false,
+      "active": false,
+      "startDate": "",
+      "endDate": "",
+      "title": "A little treat from Dew",
+      "message": "Enjoy a special offer on your next order.",
+      "type": "promo_code",
+      "promoCode": "",
+      "automaticDiscountId": ""
     }
   },
   "catalogs": [
