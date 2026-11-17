@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
+let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], welcomeLeads = [], welcomeLeadsError = '', tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','offer','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
@@ -67,6 +67,8 @@ async function loadData() {
   const result=await response.json().catch(()=>({}));
   if(!response.ok||!result.ok)throw Error(result.error||'Could not load orders.');
   ordersList=result.orders||[];ordersSHA=null;
+  welcomeLeads=[];welcomeLeadsError='';
+  try{const leadResponse=await fetch(ADMIN_API+'/api/admin/welcome-leads',{headers:{Authorization:'Bearer '+adminToken()},cache:'no-store'});const leadResult=await leadResponse.json().catch(()=>({}));if(!leadResponse.ok||!leadResult.ok)throw Error(leadResult.error||'Could not load Offer contacts.');welcomeLeads=Array.isArray(leadResult.leads)?leadResult.leads:[];}catch(e){welcomeLeadsError=e.message||'Offer contacts are not available yet.';}
   try { await refreshImageLibrary(); } catch (e) { imageLibrary = []; }
 }
 
@@ -206,7 +208,7 @@ function showLogin(msg){
 /* ---------- shell ---------- */
 function render() {
   try { sessionStorage.setItem('dew_admin_tab',tab); } catch {}
-  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['store','Settings'],['help','Help']];
+  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['offer','Offer'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
   const mobileNav = `<nav class="app-bottom-nav" aria-label="Main navigation">
     <button class="app-tab ${tab==='overview'?'active':''}" data-t="overview"><span class="app-tab-icon">⌂</span><span>Home</span></button>
@@ -232,7 +234,7 @@ function render() {
   $('#out').onclick=async()=>{if(themeEditorDirty){if(!confirm('You have unsaved theme changes. Sign out and discard them?'))return;themeEditorDiscard();}const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{localStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
   const routeParams = new URLSearchParams(location.search);
   if (tab === 'products' && (routeParams.has('product') || routeParams.get('new') === '1')) productForm(routeParams.get('product') || '');
-  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, store, help, more })[tab]();
+  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, offer, store, help, more })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -480,13 +482,14 @@ function customers() {
   const map=new Map();
   const normalizePhone=value=>{let digits=String(value||'').replace(/\D/g,'');if(digits.startsWith('0020'))digits='0'+digits.slice(4);else if(digits.startsWith('20')&&digits.length>=11)digits='0'+digits.slice(2);return digits;};
   ordersList.forEach(o=>{const c=o.customer||{},phone=String(c.phone||'').trim(),normalized=normalizePhone(phone),key=normalized?'phone:'+normalized:'order:'+(o.number||'unknown');if(!map.has(key))map.set(key,{...c,phone,count:0,total:0,last:o.date,orders:[],names:[]});const x=map.get(key);x.count++;x.total+=Number(o.total||0);x.orders.push(o);const usedName=[c.first,c.last].filter(Boolean).join(' ').trim()||'Guest customer';if(!x.names.includes(usedName))x.names.push(usedName);if(new Date(o.date||0)>new Date(x.last||0))x.last=o.date;});
+  welcomeLeads.forEach(lead=>{const phone=String(lead.phone||'').trim(),normalized=normalizePhone(phone);if(!normalized)return;const key='phone:'+normalized;let x=map.get(key);if(!x){x={phone,count:0,total:0,last:lead.updated_at||lead.created_at,orders:[],names:[],address:''};map.set(key,x);}const name=String(lead.name||'').trim();if(name&&!x.names.includes(name))x.names.unshift(name);x.source='Offer';x.offerTitle=lead.offer_title||'';x.offerType=lead.offer_type||'';x.leadDate=lead.created_at||'';if(!x.last||new Date(lead.updated_at||lead.created_at)>new Date(x.last))x.last=lead.updated_at||lead.created_at;});
   const rows=[...map.values()].sort((a,b)=>new Date(b.last||0)-new Date(a.last||0));
   const filtered=()=>rows.filter(c=>!q||((c.names||[]).join(' ')+' '+(c.phone||'')+' '+(c.orders||[]).map(o=>o.number||'').join(' ')).toLowerCase().includes(q.toLowerCase()));
   const native=isNativeApp || isMobileAdmin();
-  $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">RELATIONSHIPS</span><h2>Customers</h2><p>Understand your customers and their purchase history.</p></div><button class="admin-view-store" id="exportCustomers">Export Excel</button></div>
+  $('#view').innerHTML=`<div class="shopify-page-head"><div><span class="admin-eyebrow">RELATIONSHIPS</span><h2>Customers</h2><p>Customer details collected from orders and the Offer popup.</p></div><button class="admin-view-store" id="exportCustomers">Export Excel</button></div>
     <div class="shopify-metrics"><div><span>Total customers</span><b>${rows.length}</b></div><div><span>Total orders</span><b>${ordersList.length}</b></div><div><span>Customer sales</span><b>${egp(rows.reduce((n,c)=>n+c.total,0))}</b></div></div>
     <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search name, phone or order number"></div><span class="shopify-muted" id="customerCount">${filtered().length} customers</span></div>
-    ${native?'<div class="dew-customer-list" id="dewCustomerList"></div>':`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Names used</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered().map(c=>`<tr><td><b>${esc((c.names||[]).join(' / '))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers yet.</td></tr>'}</tbody></table></div></div>`}`;
+    ${welcomeLeadsError?'<p class="note">Offer contacts could not be loaded: '+esc(welcomeLeadsError)+'</p>':''}${native?'<div class="dew-customer-list" id="dewCustomerList"></div>':`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="customers-mobile-table"><thead><tr><th>Names used</th><th>Phone</th><th>Orders</th><th>Total spent</th><th></th></tr></thead><tbody>${filtered().map(c=>`<tr><td><b>${esc((c.names||[]).join(' / '))}</b></td><td>${esc(c.phone||'—')}</td><td>${c.count}</td><td>${egp(c.total)}</td><td><button class="btn small" data-customer="${rows.indexOf(c)}">View</button></td></tr>`).join('')||'<tr><td colspan="5">No customers yet.</td></tr>'}</tbody></table></div></div>`}`;
   $('#exportCustomers').onclick=()=>exportCustomersExcel(rows);
   function showCustomer(index){
     const c=rows[index];if(!c)return;
@@ -497,7 +500,7 @@ function customers() {
       return '<article class="dew-customer-order-row"><div><b>'+esc(o.number||'Order')+'</b><small>'+esc(name)+' · '+esc(new Date(o.date||0).toLocaleDateString())+'</small>'+(o.customer?.note?'<small class="dew-customer-order-note">Note: '+esc(o.customer.note)+'</small>':'')+'</div><strong>'+egp(o.total)+'</strong></article>';
     }).join('')||'<p class="note">No orders found.</p>';
     if(native){
-      $('#view').innerHTML='<div class="dew-customer-detail-page"><div class="editor-breadcrumb"><button class="text-link" id="backCustomers">← Customers</button><span>/</span><b>Customer</b></div><div class="shopify-page-head"><div><span class="admin-eyebrow">CUSTOMER PROFILE</span><h2>'+esc((c.names||[]).join(' / ')||'Guest customer')+'</h2><p>'+esc(c.phone||'No phone number')+'</p></div><button class="admin-view-store" id="exportCustomerHistory">Export Excel</button></div><div class="shopify-metrics"><div><span>Orders</span><b>'+c.count+'</b></div><div><span>Total spent</span><b>'+egp(c.total)+'</b></div><div><span>Last order</span><b class="dew-customer-last-date">'+(c.last?esc(new Date(c.last).toLocaleDateString()):'—')+'</b></div></div><section class="editor-panel dew-customer-profile-section"><h3>Customer information</h3><div class="dew-customer-profile-line"><span>Phone number</span><b>'+esc(c.phone||'—')+'</b></div><div class="dew-customer-profile-line"><span>Names used on orders</span><div class="dew-customer-name-chips">'+names+'</div></div><div class="dew-customer-profile-line"><span>Address</span><b>'+esc(history[0]?.customer?.address||c.address||'—')+'</b></div></section><section class="editor-panel dew-customer-history-section"><div class="editor-panel-title"><h3>Order history</h3><span>'+history.length+' orders</span></div><div class="dew-customer-order-list">'+orderRows+'</div></section></div>';
+      $('#view').innerHTML='<div class="dew-customer-detail-page"><div class="editor-breadcrumb"><button class="text-link" id="backCustomers">← Customers</button><span>/</span><b>Customer</b></div><div class="shopify-page-head"><div><span class="admin-eyebrow">CUSTOMER PROFILE</span><h2>'+esc((c.names||[]).join(' / ')||'Guest customer')+'</h2><p>'+esc(c.phone||'No phone number')+'</p></div><button class="admin-view-store" id="exportCustomerHistory">Export Excel</button></div><div class="shopify-metrics"><div><span>Orders</span><b>'+c.count+'</b></div><div><span>Total spent</span><b>'+egp(c.total)+'</b></div><div><span>Last order</span><b class="dew-customer-last-date">'+(c.last?esc(new Date(c.last).toLocaleDateString()):'—')+'</b></div></div><section class="editor-panel dew-customer-profile-section"><h3>Customer information</h3><div class="dew-customer-profile-line"><span>Phone number</span><b>'+esc(c.phone||'—')+'</b></div><div class="dew-customer-profile-line"><span>Source</span><b>'+esc(c.source||'Order checkout')+'</b></div>'+(c.leadDate?'<div class="dew-customer-profile-line"><span>Offer details collected</span><b>'+esc(new Date(c.leadDate).toLocaleDateString())+'</b></div>':'')+'<div class="dew-customer-profile-line"><span>Names recorded</span><div class="dew-customer-name-chips">'+names+'</div></div><div class="dew-customer-profile-line"><span>Address</span><b>'+esc(history[0]?.customer?.address||c.address||'—')+'</b></div></section><section class="editor-panel dew-customer-history-section"><div class="editor-panel-title"><h3>Order history</h3><span>'+history.length+' orders</span></div><div class="dew-customer-order-list">'+orderRows+'</div></section></div>';
       $('#backCustomers').onclick=()=>{q='';tab='customers';render();};
       $('#exportCustomerHistory').onclick=()=>exportCustomersExcel([c]);
       return;
@@ -505,7 +508,7 @@ function customers() {
     modal('<div class="dew-customer-detail"><h2>Customer details</h2><p><b>Phone:</b> '+esc(c.phone||'—')+'<br><b>Total orders:</b> '+c.count+'<br><b>Total spent:</b> '+egp(c.total)+'<br><b>Last order:</b> '+(c.last?new Date(c.last).toLocaleString():'—')+'</p><h3>Names used on orders</h3><ul>'+(c.names||[]).map(n=>'<li>'+esc(n)+'</li>').join('')+'</ul><h3>All orders</h3>'+history.map(o=>{const name=[o.customer?.first,o.customer?.last].filter(Boolean).join(' ')||'Guest customer';return '<div class="overview-row"><div><b>'+esc(o.number||'Order')+'</b><small>'+esc(name)+' · '+esc(new Date(o.date||0).toLocaleDateString())+' · '+esc(o.fulfillmentStatus||'Pending')+'</small></div><strong>'+egp(o.total)+'</strong></div>'+(o.customer?.note?'<p class="note">Customer note: '+esc(o.customer.note)+'</p>':'');}).join('')+'<button class="btn" style="margin-top:16px" id="closeCustomerDetail">Close</button></div>');
     $('#closeCustomerDetail').onclick=closeModal;
   }
-  const draw=()=>{const list=filtered(),el=$('#dewCustomerList');$('#customerCount').textContent=list.length+' customers';if(el)el.innerHTML=list.map(c=>{const i=rows.indexOf(c),name=(c.names||[]).join(' / ')||'Guest customer';return `<button class="dew-customer-card" data-customer="${i}"><span class="dew-customer-avatar">${esc(name[0].toUpperCase())}</span><span class="dew-customer-main"><b>${esc(name)}</b><small>${esc(c.phone||'No phone number')}</small><small>${c.count} ${c.count===1?'order':'orders'} · ${(c.orders||[]).map(o=>esc(o.number||'')).join(', ')}</small></span><span class="dew-customer-spend"><b>${egp(c.total)}</b><small>Total spent</small></span><span class="dew-card-chevron">›</span></button>`;}).join('')||'<div class="dew-mobile-empty">Customers will appear here after their first order.</div>';};
+  const draw=()=>{const list=filtered(),el=$('#dewCustomerList');$('#customerCount').textContent=list.length+' customers';if(el)el.innerHTML=list.map(c=>{const i=rows.indexOf(c),name=(c.names||[]).join(' / ')||'Guest customer';return `<button class="dew-customer-card" data-customer="${i}"><span class="dew-customer-avatar">${esc(name[0].toUpperCase())}</span><span class="dew-customer-main"><b>${esc(name)}</b><small>${esc(c.phone||'No phone number')}</small><small>${c.count} ${c.count===1?'order':'orders'}${c.source?' · '+esc(c.source):''} · ${(c.orders||[]).map(o=>esc(o.number||'')).join(', ')}</small></span><span class="dew-customer-spend"><b>${egp(c.total)}</b><small>Total spent</small></span><span class="dew-card-chevron">›</span></button>`;}).join('')||'<div class="dew-mobile-empty">Customers collected through the Offer popup or checkout will appear here.</div>';};
   $('#q').oninput=()=>{q=$('#q').value;draw();};
   if(native){draw();$('#dewCustomerList').onclick=e=>{const b=e.target.closest('[data-customer]');if(b)showCustomer(Number(b.dataset.customer));};}
   else document.querySelectorAll('[data-customer]').forEach(b=>b.onclick=()=>showCustomer(Number(b.dataset.customer)));
@@ -1179,6 +1182,39 @@ function discForm(id,type) {
   };
 }
 /* ---------- store settings ---------- */
+
+/* ---------- customer Offer popup settings ---------- */
+function offer(){
+ const s=D.settings||(D.settings={});
+ const o=s.offer||(s.offer={show:false,active:false,startDate:'',endDate:'',title:'A little treat from Dew',message:'Enjoy a special offer on your next order.',type:'promo_code',promoCode:'',automaticDiscountId:''});
+ const autoDiscounts=(D.discounts||[]).filter(d=>d.method==='automatic'&&d.discountKind==='buy_x_get_y');
+ const field=(label,id,value,type='text',hint='')=>'<label class="dew-offer-admin-field"><span>'+label+'</span><input id="'+id+'" type="'+type+'" value="'+esc(value||'')+'">'+(hint?'<small>'+hint+'</small>':'')+'</label>';
+ $('#view').innerHTML='<div class="shopify-page-head"><div><span class="admin-eyebrow">CUSTOMER EXPERIENCE</span><h2>Offer</h2><p>Choose when customers see your offer and what they receive.</p></div><span class="dew-offer-admin-logo"><img src="dew-logo.svg" alt="Dew Skincare"></span></div>'+
+ '<div class="dew-offer-admin-layout"><section class="editor-panel dew-offer-admin-panel"><div class="dew-offer-admin-heading"><span class="dew-offer-admin-icon">✦</span><div><h3>Offer visibility</h3><p>Control whether the popup appears on the storefront.</p></div></div>'+
+ '<label class="dew-offer-admin-toggle"><input id="offerShow" type="checkbox" '+(o.show?'checked':'')+'><span><b>Show offer to customers</b><small>Turn this off to hide the popup without deleting its settings.</small></span></label>'+
+ '<label class="dew-offer-admin-toggle"><input id="offerActive" type="checkbox" '+(o.active?'checked':'')+'><span><b>Offer is active</b><small>The offer must be active and visible to appear.</small></span></label>'+
+ '<div class="dew-offer-admin-date-grid">'+field('Start date','offerStart',o.startDate,'date','Leave empty to start immediately.')+field('End date','offerEnd',o.endDate,'date','Leave empty for no end date.')+'</div></section>'+
+ '<section class="editor-panel dew-offer-admin-panel"><div class="dew-offer-admin-heading"><span class="dew-offer-admin-icon">✎</span><div><h3>Offer content</h3><p>Keep your message short and inviting.</p></div></div>'+
+ field('Popup title','offerTitle',o.title)+
+ '<label class="dew-offer-admin-field"><span>Message shown to customers</span><textarea id="offerMessage" rows="3">'+esc(o.message||'')+'</textarea></label>'+
+ '<label class="dew-offer-admin-field"><span>Offer type</span><select id="offerType"><option value="promo_code" '+((o.type||'promo_code')==='promo_code'?'selected':'')+'>Promo code (customer copies it)</option><option value="automatic" '+(o.type==='automatic'?'selected':'')+'>Automatic discount</option></select></label>'+
+ '<div id="offerPromoFields" '+(o.type==='automatic'?'hidden':'')+'>'+field('Promo code','offerCode',o.promoCode,'text','Customers can copy this code from the popup and enter it at checkout.')+'</div>'+
+ '<div id="offerAutomaticFields" '+(o.type!=='automatic'?'hidden':'')+'><label class="dew-offer-admin-field"><span>Choose an automatic discount</span><select id="offerDiscount"><option value="">Select an automatic discount</option>'+autoDiscounts.map(d=>'<option value="'+esc(d.id)+'" '+(String(d.id)===String(o.automaticDiscountId)?'selected':'')+'>'+esc(d.title||d.code||'Automatic discount')+' · '+(d.active?'Active':'Inactive')+'</option>').join('')+'</select><small>Manage discount rules and dates in Discounts. This selected automatic discount is used while the Offer is active.</small></label></div></section>'+
+ '<section class="editor-panel dew-offer-admin-preview"><span class="admin-eyebrow">CUSTOMER PREVIEW</span><div class="dew-offer-preview-card"><img src="dew-logo.svg" alt="Dew Skincare"><span>A LITTLE DEW FOR YOU</span><h3 id="offerPreviewTitle">'+esc(o.title||'A little treat from Dew')+'</h3><p id="offerPreviewMessage">'+esc(o.message||'Enjoy a special offer on your next order.')+'</p><div class="dew-offer-preview-note" id="offerPreviewType">'+(o.type==='automatic'?'✓ Applied automatically at checkout':'Promo code: '+esc(o.promoCode||'YOURCODE'))+'</div><small>Popup appears once per customer per day.</small></div><p class="note">Customers can always close the popup or choose Skip.</p></section></div>'+
+ '<div class="dew-offer-admin-savebar"><button class="admin-primary" id="saveOffer">Save Offer</button><span class="note">Changes are published to your storefront when saved.</span></div>';
+ const sync=()=>{const automatic=$('#offerType').value==='automatic';$('#offerPromoFields').hidden=automatic;$('#offerAutomaticFields').hidden=!automatic;$('#offerPreviewTitle').textContent=$('#offerTitle').value||'A little treat from Dew';$('#offerPreviewMessage').textContent=$('#offerMessage').value||'';$('#offerPreviewType').textContent=automatic?'✓ Applied automatically at checkout':'Promo code: '+($('#offerCode').value||'YOURCODE');};
+ $('#offerType').onchange=sync;$('#offerTitle').oninput=sync;$('#offerMessage').oninput=sync;$('#offerCode').oninput=sync;
+ $('#saveOffer').onclick=async()=>{
+  const start=$('#offerStart').value,end=$('#offerEnd').value;if(start&&end&&end<start){toast('The end date must be on or after the start date.',true);return;}
+  const type=$('#offerType').value,discountId=$('#offerDiscount')?.value||'';
+  if(type==='promo_code'&&!$('#offerCode').value.trim()){toast('Enter a promo code or switch to Automatic discount.',true);return;}
+  if(type==='automatic'&&!discountId){toast('Choose an automatic discount first.',true);return;}
+  if(type==='automatic'&&!autoDiscounts.some(d=>String(d.id)===String(discountId))){toast('The selected automatic discount is no longer available.',true);return;}
+  s.offer={show:$('#offerShow').checked,active:$('#offerActive').checked,startDate:start,endDate:end,title:$('#offerTitle').value.trim(),message:$('#offerMessage').value.trim(),type,promoCode:type==='promo_code'?$('#offerCode').value.trim().toUpperCase():'',automaticDiscountId:type==='automatic'?discountId:''};
+  try{await save('Update customer Offer settings',true);toast('Offer settings saved.');}catch{}
+ };
+}
+
 function store() {
   const s = D.settings;
   if (s.instapayEnabled === undefined) s.instapayEnabled = true;
@@ -1246,6 +1282,7 @@ function more() {
     ['customers','Customers','View customer details and order history','♙'],
     ['inventory','Inventory','Update stock quantities','▤'],
     ['discounts','Discounts','Create and manage promo codes','%'],
+    ['offer','Offer','Control the customer popup, dates and message','✦'],
     ['store','Store settings','Payments, delivery areas, contact details and notifications','⚙'],
     ['help','Help & information','How your Dew store works','?']
   ];
