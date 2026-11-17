@@ -278,7 +278,8 @@
       "title": "A little treat from Dew",
       "message": "Enjoy a special offer on your next order.",
       "type": "promo_code",
-      "promoCode": "WELCOME10",
+      "promoCode": "FIRST15",
+      "promoDiscountId": "18e4c166",
       "automaticDiscountId": ""
     }
   },
