@@ -3202,3 +3202,28 @@ html,body{color-scheme:only light!important}
 .dew-product-card{position:relative}
 .dew-product-card .dew-product-select input{margin:0}
 @media(max-width:699px){.dew-bulk-actions{position:sticky;top:8px;z-index:8;box-shadow:0 4px 16px #0000000c}.dew-bulk-actions strong{width:100%;margin:0}.dew-product-select{top:10px;left:10px}}
+
+/* Header navigation editor: one clearly numbered row per link */
+.homepage-editor-fields .editor-subgroup:has(.nav-link-editor) > .editor-hint{grid-column:1/-1}
+.homepage-editor-fields .editor-subgroup:has(.nav-link-editor){grid-template-columns:minmax(0,1fr)}
+.homepage-editor-fields .editor-subgroup .nav-link-editor{
+  grid-column:1/-1;display:grid;grid-template-columns:34px minmax(0,1fr) auto;
+  align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #e9eee8;min-width:0
+}
+.homepage-editor-fields .nav-link-order{
+  width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+  background:#edf4ee;color:#1c524e;font-size:12px;font-weight:800
+}
+.homepage-editor-fields .nav-link-editor .editor-two-col{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:12px;min-width:0
+}
+.homepage-editor-fields .nav-link-editor .editor-field{min-width:0;margin:0}
+.homepage-editor-fields .nav-link-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin:0;white-space:nowrap}
+@media(max-width:900px){
+  .homepage-editor-fields .editor-subgroup .nav-link-editor{grid-template-columns:30px minmax(0,1fr)}
+  .homepage-editor-fields .nav-link-editor .nav-link-actions{grid-column:2;justify-content:flex-start}
+}
+@media(max-width:600px){
+  .homepage-editor-fields .nav-link-editor .editor-two-col{grid-template-columns:minmax(0,1fr)}
+  .homepage-editor-fields .editor-subgroup .nav-link-editor{gap:8px}
+}
