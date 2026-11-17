@@ -964,28 +964,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Mini 6 Gloss",
           "values": [
-            "Default Title"
+            "1.5 ML"
           ]
         }
       ],
       "variants": [
         {
-          "id": "da41746d",
+          "id": "f7afb832",
           "options": {
-            "Title": "Default Title"
+            "Mini 6 Gloss": "1.5 ML"
           },
           "price": 265,
           "salePrice": 250,
-          "stock": 9,
-          "sku": "lipGloss set",
-          "barcode": "lipGloss set"
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793"
         }
       ],
       "price": 265,
       "salePrice": 250,
-      "stock": 9
+      "stock": 0,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "757414b0",
