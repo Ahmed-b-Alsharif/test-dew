@@ -21,7 +21,7 @@ function productCard(p){
 }
 async function boot(){
  try{
-  const S=await(await fetch('products.json',{cache:'no-cache'})).json();
+  const S=await(await fetch('products.json',{cache:'no-cache'})).json();try{const r=await fetch('https://dew-orders-api.aalshari.workers.dev/api/inventory',{cache:'no-store'}),j=await r.json();if(r.ok&&j.ok){const m=new Map(j.items.map(x=>[String(x.productId)+'::'+String(x.variantId||''),Number(x.stock)||0]));for(const p of S.products||[]){if(p.variants?.length){for(const v of p.variants){const k=String(p.id)+'::'+String(v.id);if(m.has(k))v.stock=m.get(k);}p.stock=p.variants.reduce((n,v)=>n+Math.max(0,Number(v.stock)||0),0);}else{const k=String(p.id)+'::';if(m.has(k))p.stock=m.get(k);}}}}catch(e){console.warn('Live inventory could not be refreshed; checkout will verify stock.',e)}
   const params=new URLSearchParams(location.search);
   const id=params.get('id');
   const collectionSlug=window.DEW_COLLECTION_SLUG||params.get('collection');
