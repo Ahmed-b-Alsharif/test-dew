@@ -224,7 +224,31 @@
           }
         ]
       },
-      "productSections": [],
+      "productSections": [
+        {
+          "id": "6e680957",
+          "show": true,
+          "title": "New product section",
+          "productIds": [
+            "5f537094",
+            "ab8882b2",
+            "757414b0",
+            "b7b6c660",
+            "58806ff3",
+            "6c043d33",
+            "4ae993e5",
+            "3744b4c0",
+            "561a22fa",
+            "95e54cca",
+            "9fd72a4a"
+          ],
+          "limit": 5,
+          "position": "after-best-sellers",
+          "showViewAll": true,
+          "viewAllText": "View all",
+          "viewAllUrl": "#shop"
+        }
+      ],
       "collectionFrame": {
         "show": true,
         "background": "#fffefa",
