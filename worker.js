@@ -419,6 +419,12 @@ export default {
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
+      if (path==="/api/inventory" && request.method==="GET") return await publicInventory(env);
+      if (path==="/api/admin/inventory" && ["GET","PUT"].includes(request.method)) {
+        const origin=request.headers.get("Origin")||"";
+        if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);
+        return await adminInventory(request,env);
+      }
       if (path==="/api/welcome-leads" && request.method==="POST") {
         if(!await consumeRateLimit(request,env,"welcome-leads",20,60*60*1000))return json({ok:false,error:"Too many attempts. Please try again later."},429);
         return await createWelcomeLead(request,env);
