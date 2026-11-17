@@ -199,6 +199,45 @@ function calculateDiscount(d,lines,itemsTotal,delivery,catalogue,customer,priorO
  return {ok:true,amount:Math.min(itemsTotal,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),discountedLines,kind:d.discountKind||d.type,title:d.title||d.code||"Discount"};
 }
 
+
+function inventoryCatalogItems(catalogue){
+ const items=[];
+ for(const p of catalogue.products||[]){
+  if(Array.isArray(p.variants)&&p.variants.length){for(const v of p.variants)items.push({productId:String(p.id),variantId:String(v.id),stock:Math.max(0,Math.floor(Number(v.stock)||0))});}
+  else items.push({productId:String(p.id),variantId:"",stock:Math.max(0,Math.floor(Number(p.stock)||0))});
+ }
+ return items;
+}
+async function ensureInventory(env,catalogue){
+ await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory (product_id TEXT NOT NULL, variant_id TEXT NOT NULL DEFAULT '', stock INTEGER NOT NULL CHECK(stock>=0), updated_at TEXT NOT NULL, PRIMARY KEY(product_id,variant_id))").run();
+ const items=inventoryCatalogItems(catalogue);
+ for(let i=0;i<items.length;i+=80){const batch=items.slice(i,i+80);await env.DB.batch(batch.map(x=>env.DB.prepare("INSERT OR IGNORE INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?)").bind(x.productId,x.variantId,x.stock,new Date().toISOString())));}
+}
+async function readInventory(env,catalogue){
+ await ensureInventory(env,catalogue);
+ const result=await env.DB.prepare("SELECT product_id,variant_id,stock FROM inventory").all();
+ return (result.results||[]).map(x=>({productId:x.product_id,variantId:x.variant_id,stock:Number(x.stock)}));
+}
+async function adminInventory(request,env){
+ if(!await validAdminSession(request,env))return adminJson(request,{ok:false,error:"Unauthorized"},401);
+ const catalogue=await getProducts(env);await ensureInventory(env,catalogue);
+ if(request.method==="GET")return adminJson(request,{ok:true,items:await readInventory(env,catalogue)});
+ const raw=await request.text();if(raw.length>32768)return adminJson(request,{ok:false,error:"Inventory update is too large."},413);
+ let body={};try{body=JSON.parse(raw)}catch{return adminJson(request,{ok:false,error:"Invalid inventory update."},400)}
+ if(!Array.isArray(body.items)||body.items.length>500)return adminJson(request,{ok:false,error:"Invalid inventory items."},400);
+ const seen=new Set(),statements=[];
+ for(const item of body.items){
+  const productId=clean(item?.productId),variantId=clean(item?.variantId),stock=Number(item?.stock),key=productId+"::"+variantId;
+  if(!productId||productId.length>128||variantId.length>128||seen.has(key)||!Number.isSafeInteger(stock)||stock<0||stock>1000000)return adminJson(request,{ok:false,error:"One or more inventory values are invalid. Refresh the admin page and try again."},400);
+  seen.add(key);statements.push(env.DB.prepare("INSERT INTO inventory (product_id,variant_id,stock,updated_at) VALUES (?,?,?,?) ON CONFLICT(product_id,variant_id) DO UPDATE SET stock=excluded.stock,updated_at=excluded.updated_at").bind(productId,variantId,stock,new Date().toISOString()));
+ }
+ for(let i=0;i<statements.length;i+=80)await env.DB.batch(statements.slice(i,i+80));
+ return adminJson(request,{ok:true,items:await readInventory(env,catalogue)});
+}
+async function publicInventory(env){
+ const catalogue=await getProducts(env);return json({ok:true,items:await readInventory(env,catalogue)});
+}
+
 async function createOrder(request, env) {
   const rawBody=await request.text();
   if(rawBody.length>32768)return json({ok:false,error:"Your order is too large. Please remove some items and try again."},413);
@@ -209,6 +248,7 @@ async function createOrder(request, env) {
   const first=clean(customer.first), last=clean(customer.last), phone=clean(customer.phone), address=clean(customer.address), note=clean(customer.note).slice(0,500);
   if (!first || !last || phone.replace(/\D/g,"").length < 8 || address.length < 6) return json({ok:false,error:"Please check your delivery details."},400);
   const catalogue=await getProducts(env);
+  await ensureInventory(env,catalogue);
   const settings=catalogue.settings||{};
   const deliveryAreas=Array.isArray(settings.deliveryAreas)?settings.deliveryAreas:[
     {id:"cairo",name:"Cairo & Giza",fee:Number(settings.deliveryCairo||0),enabled:true},
@@ -245,8 +285,9 @@ async function createOrder(request, env) {
     const hasVariants=Array.isArray(p?.variants)&&p.variants.length>0;
     const qty=item.qty;
     if(!p||(hasVariants&&!variant)||(!hasVariants&&item.variantId))return json({ok:false,error:"One of the products or selected options is unavailable. Please refresh your cart."},409);
-    const stock=Number(variant?variant.stock:p.stock);
-    if(!Number.isFinite(stock)||qty>stock)return json({ok:false,error:"The selected option does not have enough stock. Please update your cart."},409);
+    const stockRow=await env.DB.prepare("SELECT stock FROM inventory WHERE product_id=? AND variant_id=?").bind(String(p.id),variant?String(variant.id):"").first();
+    const stock=Number(stockRow?.stock);
+    if(!Number.isSafeInteger(stock)||qty>stock)return json({ok:false,error:"The selected option does not have enough stock. Please update your cart."},409);
     const basePrice=variant?Number(variant.price||0):Number(p.price||0);
     const salePrice=variant?Number(variant.salePrice||0):Number(p.salePrice||0);
     const unit=salePrice>0&&salePrice<basePrice?salePrice:basePrice;
@@ -284,18 +325,32 @@ async function createOrder(request, env) {
   }
   const total=Math.max(0,Math.round((itemsTotal+delivery-discount)*100)/100);
   const now=new Date();
-  // Generate short, sequential Dew order numbers: DEW#1000, DEW#1001, ...
+  // Stock deduction, order numbering and order creation are one atomic D1 batch.
   await env.DB.prepare("CREATE TABLE IF NOT EXISTS order_counter (id INTEGER PRIMARY KEY CHECK (id = 1), last_number INTEGER NOT NULL)").run();
   await env.DB.prepare("INSERT OR IGNORE INTO order_counter (id, last_number) VALUES (1, 999)").run();
-  const sequence = await env.DB.prepare("UPDATE order_counter SET last_number = last_number + 1 WHERE id = 1 RETURNING last_number").first();
-  const number = "DEW#" + sequence.last_number;
+  await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_guard (id INTEGER PRIMARY KEY)").run();
+  await env.DB.prepare("INSERT OR IGNORE INTO inventory_guard (id) VALUES (1)").run();
   const order={
-    number,date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
+    number:"__DEW_ORDER_NUMBER__",date:now.toISOString(),status:"Pending",paymentMethod,paymentStatus:paymentMethod==="instapay"?"Awaiting InstaPay payment":"Unpaid (COD)",fulfillmentStatus:"Pending",trackingNumber:"",
     lines,itemsTotal,delivery,discount,shippingDiscount,promoCode,discountInfo,total,area:selectedArea.name,areaId:selectedArea.id,
     customer:{first,last,phone,address,note}
   };
-  await env.DB.prepare("INSERT INTO orders (order_number, created_at, total, order_json) VALUES (?, ?, ?, ?)")
-    .bind(number,order.date,total,JSON.stringify(order)).run();
+  const statements=[];
+  for(const line of lines){
+    statements.push(env.DB.prepare("UPDATE inventory SET stock=stock-?,updated_at=? WHERE product_id=? AND variant_id=? AND stock>=?")
+      .bind(line.qty,now.toISOString(),String(line.id),String(line.variantId||""),line.qty));
+    statements.push(env.DB.prepare("INSERT INTO inventory_guard (id) SELECT 1 WHERE changes()=0"));
+  }
+  statements.push(env.DB.prepare("UPDATE order_counter SET last_number=last_number+1 WHERE id=1"));
+  statements.push(env.DB.prepare("INSERT INTO orders (order_number,created_at,total,order_json) SELECT 'DEW#'||last_number,?,?,json_set(?, '$.number', 'DEW#'||last_number) FROM order_counter WHERE id=1 RETURNING order_number,order_json")
+    .bind(order.date,total,JSON.stringify(order)));
+  let transactionResults;try{transactionResults=await env.DB.batch(statements);}catch(e){
+    console.error("Atomic stock/order transaction failed",e);
+    return json({ok:false,error:"One or more items were just purchased or no longer have enough stock. Please refresh your cart and try again."},409);
+  }
+  const inserted=transactionResults?.[transactionResults.length-1]?.results?.[0];
+  if(!inserted?.order_number)return json({ok:false,error:"The order could not be confirmed. Please contact Dew before placing it again."},500);
+  const number=inserted.order_number;order.number=number;
   try { await notifyTelegram(order,env,settings); } catch(e) { console.error("Telegram notification failed",e); }
   return json({ok:true,order},201);
 }
@@ -364,6 +419,12 @@ export default {
     const url=new URL(request.url), path=url.pathname.replace(/\/$/,"");
     try {
       if (path==="/api/health" && request.method==="GET") return json({ok:true,service:"Dew Orders API"});
+      if (path==="/api/inventory" && request.method==="GET") return await publicInventory(env);
+      if (path==="/api/admin/inventory" && ["GET","PUT"].includes(request.method)) {
+        const origin=request.headers.get("Origin")||"";
+        if(origin&&!ADMIN_ORIGINS.has(origin))return adminJson(request,{ok:false,error:"Origin not allowed."},403);
+        return await adminInventory(request,env);
+      }
       if (path==="/api/welcome-leads" && request.method==="POST") {
         if(!await consumeRateLimit(request,env,"welcome-leads",20,60*60*1000))return json({ok:false,error:"Too many attempts. Please try again later."},429);
         return await createWelcomeLead(request,env);
