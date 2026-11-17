@@ -815,28 +815,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Shade",
           "values": [
-            "Default Title"
+            "03"
           ]
         }
       ],
       "variants": [
         {
-          "id": "ceded652",
+          "id": "81efaf84",
           "options": {
-            "Title": "Default Title"
+            "Shade": "03"
           },
           "price": 200,
           "salePrice": 0,
-          "stock": 10,
-          "sku": "'03",
-          "barcode": "'03"
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/03.jpg?v=1757756752"
         }
       ],
       "price": 200,
       "salePrice": 0,
-      "stock": 10
+      "stock": 0,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "97518fd3",
