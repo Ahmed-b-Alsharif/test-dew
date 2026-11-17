@@ -271,10 +271,10 @@
       "showCategory": true
     },
     "offer": {
-      "show": false,
+      "show": true,
       "active": true,
-      "startDate": "",
-      "endDate": "",
+      "startDate": "2026-11-17",
+      "endDate": "2026-11-18",
       "title": "A little treat from Dew",
       "message": "Enjoy a special offer on your next order.",
       "type": "promo_code",
