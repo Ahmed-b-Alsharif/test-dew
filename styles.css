@@ -3191,3 +3191,14 @@ html,body{color-scheme:only light!important}
 
 /* The fixed mobile navigation is shared by the native app and the phone browser. */
 .app-bottom-nav{display:none}
+
+/* Bulk product actions */
+.dew-bulk-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0;padding:12px 14px;background:var(--surface,#fff);border:1px solid var(--line,#e5e7eb);border-radius:12px}
+.dew-bulk-actions[hidden]{display:none!important}
+.dew-bulk-actions strong{margin-right:auto;font-size:13px}
+.dew-select-cell{width:42px;text-align:center!important}
+.dew-select-cell input,.dew-product-select input{width:17px;height:17px;accent-color:var(--green,#174b3b);cursor:pointer}
+.dew-product-select{position:absolute;z-index:2;top:12px;left:12px;display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid #d9dfdb;box-shadow:0 1px 4px #0001;cursor:pointer}
+.dew-product-card{position:relative}
+.dew-product-card .dew-product-select input{margin:0}
+@media(max-width:699px){.dew-bulk-actions{position:sticky;top:8px;z-index:8;box-shadow:0 4px 16px #0000000c}.dew-bulk-actions strong{width:100%;margin:0}.dew-product-select{top:10px;left:10px}}
