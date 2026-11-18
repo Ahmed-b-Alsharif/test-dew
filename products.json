@@ -1742,7 +1742,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 7,
+          "stock": 5,
           "sku": "'62280001118",
           "barcode": "'62280001118",
           "image": ""
@@ -1750,7 +1750,10 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 7
+      "stock": 5,
+      "shopifyHandle": "strawberry-shower-gel",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "289d19e5",
