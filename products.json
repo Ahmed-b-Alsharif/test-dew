@@ -1196,29 +1196,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Flavor",
           "values": [
-            "Default Title"
+            "Candy"
           ]
         }
       ],
       "variants": [
         {
-          "id": "905bfa53",
+          "id": "95894a13",
           "options": {
-            "Title": "Default Title"
+            "Flavor": "Candy"
           },
           "price": 100,
           "salePrice": 85,
-          "stock": 14,
+          "stock": 50,
           "sku": "",
-          "barcode": "'1122334455",
-          "image": ""
+          "barcode": ""
         }
       ],
       "price": 100,
       "salePrice": 85,
-      "stock": 14
+      "stock": 50,
+      "shopifyHandle": "lip-balm-candy",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "af73e68b",
