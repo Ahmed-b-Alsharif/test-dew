@@ -131,8 +131,7 @@
     el.hidden=false;
     let about=el.querySelector('.dew-footer-about');
     if(!about){about=document.createElement('div');about.className='dew-footer-about';el.prepend(about);}
-    const logo=header.logoImage?'<img class="dew-logo-image" src="'+esc(header.logoImage)+'" alt="'+esc(header.logo||settings.storeName||'Dew')+'">':esc(header.logo||settings.storeName||'Dew');
-    about.innerHTML='<a class="dew-logo" href="./">'+logo+'</a><h3>About Dew</h3><p>'+esc(footer.about||'')+'</p>';
+    about.innerHTML='<h3>About Dew</h3><p>'+esc(footer.about||'')+'</p>';
     let socials=el.querySelector('.dew-footer-social');
     if(!socials){socials=document.createElement('div');socials.className='dew-footer-social';about.after(socials);}
     socials.innerHTML=social;
