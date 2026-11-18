@@ -3622,3 +3622,31 @@ html,body{color-scheme:only light!important}
     border-top:1px solid #e1e5dc!important;
   }
 }
+
+
+/* Keep the desktop Follow Dew buttons aligned exactly like the two-column mobile layout. */
+@media(min-width:761px){
+  dialog.dew-mobile-menu .dew-mobile-menu-social,
+  aside.dew-mobile-menu.is-open .dew-mobile-menu-social{
+    width:100%!important;box-sizing:border-box!important;text-align:left!important;
+    align-self:stretch!important;
+  }
+  dialog.dew-mobile-menu .dew-social-links,
+  aside.dew-mobile-menu.is-open .dew-social-links{
+    display:flex!important;width:100%!important;align-items:stretch!important;
+    justify-content:flex-start!important;gap:10px!important;flex-wrap:nowrap!important;
+  }
+  dialog.dew-mobile-menu .dew-social-links .dew-social-icon,
+  aside.dew-mobile-menu.is-open .dew-social-links .dew-social-icon{
+    display:inline-flex!important;flex:1 1 calc(50% - 5px)!important;
+    width:auto!important;min-width:calc(50% - 5px)!important;max-width:none!important;
+    height:auto!important;min-height:48px!important;box-sizing:border-box!important;
+    padding:0 14px!important;justify-content:center!important;align-items:center!important;
+    gap:9px!important;font:600 13px/1 Inter,system-ui,sans-serif!important;
+    white-space:nowrap!important;
+  }
+  dialog.dew-mobile-menu .dew-social-links .dew-social-icon svg,
+  aside.dew-mobile-menu.is-open .dew-social-links .dew-social-icon svg{
+    width:21px!important;height:21px!important;flex:0 0 21px!important;
+  }
+}
