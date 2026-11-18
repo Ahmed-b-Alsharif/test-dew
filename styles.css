@@ -3488,3 +3488,5 @@ html,body{color-scheme:only light!important}
   dialog.dew-mobile-menu nav{display:flex!important;flex:1;flex-direction:column!important;align-items:stretch;width:100%;overflow-y:auto;padding-top:10px}
   dialog.dew-mobile-menu nav a{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 2px;border-bottom:1px solid #efede6;color:var(--dew-ink,#183b35);text-decoration:none;font:22px Georgia,serif}
 }
+
+@media(min-width:761px){.collections-page-header>.dew-back-home{display:none!important}}
