@@ -142,7 +142,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
     updateVariant();
   });
   $('#addProduct').onclick=()=>addToCart(false);$('#buyNow').onclick=()=>addToCart(true);$('#openCart').onclick=open;$('#closeCart').onclick=close;$('#scrim').onclick=close;renderCart();
-  if(!document.querySelector('link[rel~="icon"]')){const icon=document.createElement('link');icon.rel='icon';icon.type='image/png';icon.href='favicon.png?v=20261118-product-page-fix-1';document.head.appendChild(icon);}
-  if(![...document.scripts].some(script=>/storefront-ui\\.js(?:\\?|$)/.test(script.src))){const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261118-product-page-fix-1';document.body.appendChild(storefrontUI);}
+  if(!document.querySelector('link[rel~="icon"]')){const icon=document.createElement('link');icon.rel='icon';icon.type='image/png';icon.href='favicon.png?v=20261118-product-page-fix-2';document.head.appendChild(icon);}
+  if(![...document.scripts].some(script=>script.src.includes('storefront-ui.js'))){const storefrontUI=document.createElement('script');storefrontUI.src='storefront-ui.js?v=20261118-product-page-fix-2';document.body.appendChild(storefrontUI);}
  }catch(e){console.error(e);root.innerHTML='<main class="product-page"><h2>Could not load this product.</h2><p>Please refresh and try again.</p><a href="./#shop">Back to shop</a></main>';}
 })();
