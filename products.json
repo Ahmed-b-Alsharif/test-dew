@@ -1784,7 +1784,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 8,
+          "stock": 0,
           "sku": "'62280001119",
           "barcode": "'62280001119",
           "image": ""
@@ -1792,7 +1792,10 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 8
+      "stock": 0,
+      "shopifyHandle": "tropical-shower-gel",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "b8b23b95",
