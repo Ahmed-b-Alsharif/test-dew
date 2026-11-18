@@ -443,67 +443,141 @@
       "id": "f82c320f",
       "name": "62c8b49e",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "4be6283f",
+        "5302dec3"
+      ]
     },
     {
       "id": "61ce3458",
       "name": "e52c8bbf",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "6590f759",
+        "02155935",
+        "53e00483",
+        "5f537094",
+        "7aa07c64",
+        "daaa60ff",
+        "9fd72a4a",
+        "12724006",
+        "97518fd3",
+        "b2518901",
+        "95b42b11"
+      ]
     },
     {
       "id": "28b8dc6a",
       "name": "5ac135ce",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "95e54cca",
+        "af73e68b",
+        "561a22fa",
+        "3744b4c0",
+        "ab8882b2",
+        "2aece5ff",
+        "289d19e5",
+        "b8b23b95",
+        "c7793f18",
+        "70424d62",
+        "3aa54356",
+        "7797d362",
+        "3a057abb",
+        "44ce24bf",
+        "24ce557b",
+        "484027a5",
+        "c7609040",
+        "76232b17",
+        "9af52287"
+      ]
     },
     {
       "id": "65fdf1d2",
       "name": "273ebb28",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "757414b0",
+        "b7b6c660",
+        "1bd5e3ce",
+        "4ae993e5",
+        "3280bf12",
+        "5082f6d9"
+      ]
     },
     {
       "id": "3fe595fd",
       "name": "7a6b54a1",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "d4ef44f1"
+      ]
     },
     {
       "id": "ac3a4f8b",
       "name": "c7a6bd0a",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "58806ff3",
+        "928936b1",
+        "6c043d33"
+      ]
     },
     {
       "id": "99146168",
       "name": "b292c1dd",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3ffd74ff",
+        "e2a1f39f"
+      ]
     },
     {
       "id": "5d69dbc3",
       "name": "c7e1a842",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "0424f67a",
+        "2cc19e9e"
+      ]
     },
     {
       "id": "9d744638",
       "name": "0f3c81ca",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "950127fe",
+        "c2b4ce28",
+        "dbb95a5d",
+        "3cf25ab8"
+      ]
     },
     {
       "id": "a96ce12c",
       "name": "5b94fe18",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "3c5c256b"
+      ]
     },
     {
       "id": "0daec391",
       "name": "5c636f9b",
       "description": "",
-      "image": ""
+      "image": "",
+      "productIds": [
+        "735c75b6"
+      ]
     }
   ],
   "products": [
@@ -1002,34 +1076,69 @@
     },
     {
       "id": "95e54cca",
-      "name": "Dew Skincare Whitening Creamy Roll-On Deodorant",
+      "name": "Whitening Creamy Roll-On Deodorant",
       "description": "Feel fresh and confident with Dew Whitening Creamy Roll-On Deodorant. Its creamy texture glides on easily, while its fresh scent helps keep you feeling comfortable throughout the day. A simple everyday essential for your underarm-care routine.",
       "catalog": "28b8dc6a",
       "tags": "all skin types, Hydrating, lacoste fresh, Men, Moisturizing, Natural, Refreshing, Self-care, Tropical, Tulip, underarms, whiten, Whitening, Women",
       "visible": true,
       "featured": false,
       "images": [
-        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_deodrant.png?v=1770559468",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/11.png?v=1770559468",
+        "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/all_deodrant.png?v=1770559468",
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/gemini-3-pro-image-preview-2k_a_Make_the_dream_in_a_12a7296a-edb0-4416-877d-941a778ab408.png?v=1770559468"
       ],
       "howToUse": "",
-      "options": [],
+      "options": [
+        {
+          "name": "50 ML",
+          "values": [
+            "Women Dream",
+            "Women SunSet",
+            "Men Frost"
+          ]
+        }
+      ],
       "variants": [
         {
-          "id": "42000351",
-          "options": {},
+          "id": "bc200b40",
+          "options": {
+            "50 ML": "Women Dream"
+          },
           "price": 220,
-          "salePrice": 200,
-          "stock": 30,
+          "salePrice": 0,
+          "stock": 4,
           "sku": "",
-          "barcode": "",
-          "image": ""
+          "barcode": ""
+        },
+        {
+          "id": "ac8445af",
+          "options": {
+            "50 ML": "Women SunSet"
+          },
+          "price": 220,
+          "salePrice": 0,
+          "stock": 3,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "fd624a94",
+          "options": {
+            "50 ML": "Men Frost"
+          },
+          "price": 220,
+          "salePrice": 0,
+          "stock": 5,
+          "sku": "",
+          "barcode": ""
         }
       ],
       "price": 220,
-      "salePrice": 200,
-      "stock": 30
+      "salePrice": 0,
+      "stock": 12,
+      "shopifyHandle": "whitening-creamy-roll-on-deodorant",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "95b42b11",
