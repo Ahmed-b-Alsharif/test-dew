@@ -565,10 +565,10 @@ function products() {
   $('#view').innerHTML=`
     <div class="shopify-page-head"><div><span class="admin-eyebrow">CATALOGUE</span><h2>Products</h2><p>Manage your products, prices, stock and storefront visibility.</p></div><button class="admin-primary" id="newP">＋ Add product</button></div>
     <div class="shopify-metrics"><div><span>All products</span><b>${D.products.length}</b></div><div><span>Active</span><b>${live}</b></div><div><span>Low stock</span><b>${low}</b></div></div>
-    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name"></div><div class="dew-mobile-toolbar-actions"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><button class="admin-view-store" id="selectAllProducts">Select all</button><span class="shopify-muted">${list().length} products</span></div></div>
+    <div class="shopify-toolbar"><div class="shopify-search"><span>⌕</span><input id="q" value="${esc(q)}" placeholder="Search products by name"></div><div class="dew-mobile-toolbar-actions"><button class="admin-view-store" id="exportProducts">Export Excel</button><button class="admin-view-store" id="importProducts">Import CSV / Excel</button><input id="productExcelFile" type="file" accept=".xlsx,.xls,.csv" hidden><button class="admin-view-store" id="selectAllProducts">Select all</button><span class="shopify-muted" id="productCount">${list().length} products</span></div></div>
     <div class="dew-bulk-actions" id="productBulkActions" hidden><strong id="productSelectionCount">0 selected</strong><button type="button" class="admin-view-store" id="bulkActivate">Set active</button><button type="button" class="admin-view-store" id="bulkDraft">Set draft</button><button type="button" class="admin-danger" id="bulkDelete">Delete selected</button><button type="button" class="text-link" id="clearProductSelection">Clear</button></div>
     ${native?`<div class="dew-mobile-filter-row" id="productFilters">${['All','Active','Draft'].map(x=>`<button class="dew-mobile-filter ${x==='All'?'active':''}" data-product-filter="${x}">${x}</button>`).join('')}</div>
-    <div class="dew-product-list" id="dewProductList"></div>`:`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th class="dew-select-cell"><input type="checkbox" id="selectAllTableProducts" aria-label="Select all visible products"></th><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody>
+    <div class="dew-product-list" id="dewProductList"></div>`:`<div class="admin-panel table-panel"><div class="admin-table-wrap"><table class="shopify-table products-mobile-table"><thead><tr><th class="dew-select-cell"><input type="checkbox" id="selectAllTableProducts" aria-label="Select all visible products"></th><th>Product</th><th>Status</th><th>Collection</th><th>Price</th><th>Inventory</th><th>Homepage</th><th></th></tr></thead><tbody id="dewProductsTableBody">
     ${list().map(p=>`<tr><td class="dew-select-cell"><input type="checkbox" data-select-product="${esc(p.id)}" aria-label="Select ${esc(p.name)}"></td><td><div class="product-cell"><div class="product-thumb">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div><b>${esc(p.name)}</b><small>${esc(p.tags||'No tags')}</small></div></div></td><td><span class="shopify-status ${p.visible?'is-live':'is-draft'}"><i></i>${p.visible?'Active':'Draft'}</span></td><td>${esc(catName(p.catalog))}</td><td><b>${p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price)}</b></td><td>${quickStockMarkup(p)}</td><td>${p.featured?'Featured':'—'}</td><td><button class="text-link" data-e="${p.id}">Edit</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty-note">No products found.</td></tr>'}</tbody></table></div></div>`}
   `;
   $('#newP').onclick=()=>{setAdminUrl('products',{new:1});productForm();};
@@ -577,6 +577,9 @@ function products() {
   $('#productExcelFile').onchange=async e=>{try{await importProductsExcel(e.target.files[0]);}catch(err){toast(err.message,true);}e.target.value='';};
   const draw=()=>{
     const rows=list();const el=$('#dewProductList');
+    const tableBody=$('#dewProductsTableBody');
+    if(tableBody) tableBody.innerHTML=rows.map(p=>'<tr><td class="dew-select-cell"><input type="checkbox" data-select-product="'+esc(p.id)+'" aria-label="Select '+esc(p.name)+'"></td><td><div class="product-cell"><div class="product-thumb">'+(p.images?.[0]?'<img src="'+esc(p.images[0])+'" alt="">':'<span>DEW</span>')+'</div><div><b>'+esc(p.name)+'</b><small>'+esc(p.tags||'No tags')+'</small></div></div></td><td><span class="shopify-status '+(p.visible?'is-live':'is-draft')+'"><i></i>'+(p.visible?'Active':'Draft')+'</span></td><td>'+esc(catName(p.catalog))+'</td><td><b>'+(p.salePrice>0&&p.salePrice<p.price?egp(p.salePrice):egp(p.price))+'</b></td><td>'+quickStockMarkup(p)+'</td><td>'+(p.featured?'Featured':'—')+'</td><td><button class="text-link" data-e="'+esc(p.id)+'">Edit</button></td></tr>').join('')||'<tr><td colspan="8" class="empty-note">No products found.</td></tr>';
+    const count=$('#productCount');if(count)count.textContent=rows.length+' products';
     if(el)el.innerHTML=rows.map(p=>`
     <article class="dew-product-card" data-open-product="${esc(p.id)}" role="button" tabindex="0" aria-label="Edit ${esc(p.name)}"><label class="dew-product-select" aria-label="Select ${esc(p.name)}"><input type="checkbox" data-select-product="${esc(p.id)}"><span></span></label><div class="dew-product-image">${p.images?.[0]?`<img src="${esc(p.images[0])}" alt="">`:'<span>DEW</span>'}</div><div class="dew-product-info"><b>${esc(p.name)}</b><span class="dew-product-status ${p.visible?'active':'draft'}">${p.visible?'Active':'Draft'}</span><strong>${egp(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)}</strong>${quickStockMarkup(p)}<small>${esc(catName(p.catalog))}</small>${p.featured?'<small class="dew-product-featured">Featured on homepage</small>':''}</div><button class="dew-card-more" data-e="${p.id}" aria-label="Edit product">›</button></article>`).join('')||'<div class="dew-mobile-empty">No products found. Try another search or add a product.</div>';
     document.querySelectorAll('[data-open-product]').forEach(card=>{
@@ -587,6 +590,11 @@ function products() {
       if(edit)edit.onclick=e=>{e.stopPropagation();open();};
     });
     document.querySelectorAll('[data-select-product]').forEach(input=>{input.checked=selectedProductIds.has(String(input.dataset.selectProduct));input.onchange=()=>{const id=String(input.dataset.selectProduct);if(input.checked)selectedProductIds.add(id);else selectedProductIds.delete(id);syncSelection();};});
+    if(tableBody){
+      tableBody.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{setAdminUrl('products',{product:b.dataset.e});productForm(b.dataset.e);});
+      tableBody.querySelectorAll('[data-select-product]').forEach(input=>{input.checked=selectedProductIds.has(String(input.dataset.selectProduct));input.onchange=()=>{const id=String(input.dataset.selectProduct);if(input.checked)selectedProductIds.add(id);else selectedProductIds.delete(id);syncSelection();};});
+      bindQuickStock(tableBody);
+    }
     bindQuickStock(el||document);
     syncSelection();
   };
@@ -626,7 +634,7 @@ function products() {
   $('#bulkDraft').onclick=()=>setBulkStatus(false);
   $('#bulkDelete').onclick=deleteSelected;
   $('#clearProductSelection').onclick=()=>{selectedProductIds.clear();draw();};
-  const search=$('#q');search.oninput=()=>{q=search.value;draw();const count=document.querySelector('.dew-mobile-toolbar-actions .shopify-muted');if(count)count.textContent=list().length+' products';};
+  const search=$('#q');search.oninput=()=>{q=search.value;draw();};
   document.querySelectorAll('[data-product-filter]').forEach(b=>b.onclick=()=>{activeFilter=b.dataset.productFilter;document.querySelectorAll('[data-product-filter]').forEach(x=>x.classList.toggle('active',x===b));draw();});
   if(!native)document.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{setAdminUrl('products',{product:b.dataset.e});productForm(b.dataset.e);});
   draw();
