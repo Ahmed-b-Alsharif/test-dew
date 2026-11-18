@@ -2556,14 +2556,6 @@
   ],
   "discounts": [
     {
-      "id": "d1",
-      "code": "WELCOME10",
-      "type": "percentage",
-      "value": 10,
-      "minSpend": 0,
-      "active": true
-    },
-    {
       "id": "45a758b5",
       "code": "FREE",
       "type": "free_shipping",
