@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], welcomeLeads = [], welcomeLeadsError = '', tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','offer','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
+let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], welcomeLeads = [], welcomeLeadsError = '', tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','discounts','offer','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
@@ -194,7 +194,7 @@ function toast(msg, bad) {
   clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = 'none', bad ? 7000 : 3500);
 }
 
-window.addEventListener('popstate',()=>{const params=new URLSearchParams(location.search);const requested=params.get('tab');const allowed=['overview','homepage','pages','products','catalogs','media','orders','customers','inventory','discounts','store','help','more'];tab=allowed.includes(requested)?requested:'overview';q='';render();});
+window.addEventListener('popstate',()=>{const params=new URLSearchParams(location.search);const requested=params.get('tab');const allowed=['overview','homepage','pages','products','catalogs','media','orders','customers','discounts','store','help','more'];tab=allowed.includes(requested)?requested:'overview';q='';render();});
 
 /* ---------- login ---------- */
 async function start(){
@@ -220,7 +220,7 @@ function showLogin(msg){
 /* ---------- shell ---------- */
 function render() {
   try { sessionStorage.setItem('dew_admin_tab',tab); } catch {}
-  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['inventory','Inventory'],['discounts','Discounts'],['offer','Offer'],['store','Settings'],['help','Help']];
+  const tabs = [['overview','Overview'],['homepage','Theme editor'],['pages','Pages'],['products','Products'],['catalogs','Collections'],['media','Media library'],['orders','Orders'],['customers','Customers'],['discounts','Discounts'],['offer','Offer'],['store','Settings'],['help','Help']];
   const names = Object.fromEntries(tabs);
   const mobileNav = `<nav class="app-bottom-nav" aria-label="Main navigation">
     <button class="app-tab ${tab==='overview'?'active':''}" data-t="overview"><span class="app-tab-icon">⌂</span><span>Home</span></button>
@@ -246,7 +246,7 @@ function render() {
   $('#out').onclick=async()=>{if(themeEditorDirty){if(!confirm('You have unsaved theme changes. Sign out and discard them?'))return;themeEditorDiscard();}const token=adminToken();try{await fetch(ADMIN_API+'/api/admin/logout',{method:'POST',headers:{Authorization:'Bearer '+token}})}catch{}try{sessionStorage.removeItem(ADMIN_SESSION_KEY)}catch{}D=null;showLogin()};
   const routeParams = new URLSearchParams(location.search);
   if (tab === 'products' && (routeParams.has('product') || routeParams.get('new') === '1')) productForm(routeParams.get('product') || '');
-  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, inventory, discounts, offer, store, help, more })[tab]();
+  else ({ overview, homepage, pages, products, catalogs, media, orders, customers, discounts, offer, store, help, more })[tab]();
 }
 function modal(html) { $('#modal').innerHTML = html; $('#ov').classList.add('open'); }
 function closeModal() { $('#ov').classList.remove('open'); }
@@ -1329,7 +1329,6 @@ function more() {
     ['catalogs','Collections','Organize products into collections','◇'],
     ['media','Media library','Manage uploaded store images','▣'],
     ['customers','Customers','View customer details and order history','♙'],
-    ['inventory','Inventory','Update stock quantities','▤'],
     ['discounts','Discounts','Create and manage promo codes','%'],
     ['offer','Offer','Control the customer popup, dates and message','✦'],
     ['store','Store settings','Payments, delivery areas, contact details and notifications','⚙'],
