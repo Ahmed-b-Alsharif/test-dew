@@ -1278,29 +1278,31 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Title",
+          "name": "Flavors",
           "values": [
-            "Default Title"
+            "Strawberry, Coconut, Chocolate"
           ]
         }
       ],
       "variants": [
         {
-          "id": "fffe539d",
+          "id": "96c3339e",
           "options": {
-            "Title": "Default Title"
+            "Flavors": "Strawberry, Coconut, Chocolate"
           },
           "price": 300,
           "salePrice": 200,
-          "stock": 13,
+          "stock": 50,
           "sku": "",
-          "barcode": "",
-          "image": ""
+          "barcode": ""
         }
       ],
       "price": 300,
       "salePrice": 200,
-      "stock": 13
+      "stock": 50,
+      "shopifyHandle": "lipbalm-x3",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "561a22fa",
