@@ -812,20 +812,18 @@ async function importProductsExcel(file){
     const first=g.variants[0],existing=D.products.find(p=>(g.handle&&p.shopifyHandle===g.handle)||String(p.name||'').trim().toLowerCase()===String(g.name||'').trim().toLowerCase());
     const id=g.id||existing?.id||uid();
     const catalogNames=g.collectionNames;
-    const catalogName=catalogNames[0]||'';
-    let catalog='';
-    if(catalogName){
-      let c=D.catalogs.find(x=>String(x.name||'').trim().toLowerCase()===catalogName.toLowerCase());
-      if(!c){c={id:uid(),name:catalogName,description:'',image:''};D.catalogs.push(c);}
-      catalog=c.id;
-    }
-    incoming.push({id,name:g.name,shopifyHandle:g.handle||undefined,description:g.description||existing?.description||'',catalog:catalog||existing?.catalog||'',tags:g.tags||existing?.tags||'',visible:g.visible,featured:existing?.featured||g.featured||false,images:g.images.length?g.images:(existing?.images||[]),howToUse:existing?.howToUse||'',options,variants:g.variants,price:first.price,salePrice:first.salePrice,stock:g.variants.reduce((n,v)=>n+v.stock,0)});
+    // Imports may contain either a collection name (Shopify CSV) or a Dew collection ID (Dew Excel export).
+    // Only match collections that already exist in Admin. Never create collections during product import.
+    const matchedCatalog=catalogNames.map(value=>D.catalogs.find(c=>String(c.id)===String(value).trim()||String(c.name||'').trim().toLowerCase()===String(value).trim().toLowerCase())).find(Boolean);
+    const existingCatalogIsValid=existing?.catalog&&D.catalogs.some(c=>String(c.id)===String(existing.catalog));
+    const catalog=matchedCatalog?.id||(existingCatalogIsValid?existing.catalog:'');
+    incoming.push({id,name:g.name,shopifyHandle:g.handle||undefined,description:g.description||existing?.description||'',catalog,tags:g.tags||existing?.tags||'',visible:g.visible,featured:existing?.featured||g.featured||false,images:g.images.length?g.images:(existing?.images||[]),howToUse:existing?.howToUse||'',options,variants:g.variants,price:first.price,salePrice:first.salePrice,stock:g.variants.reduce((n,v)=>n+v.stock,0)});
   }
   if(!incoming.length)throw new Error('Products were found, but none had a valid variant price.');
   const collectionCount=D.catalogs.length;
   const preview=incoming.slice(0,8).map(p=>'<tr><td>'+esc(p.name)+'</td><td>'+esc(catName(p.catalog))+'</td><td>'+egp(p.salePrice>0?p.salePrice:p.price)+'</td><td>'+p.variants.length+'</td></tr>').join('');
   const newCount=incoming.filter(p=>!D.products.some(x=>x.id===p.id||String(x.name||'').trim().toLowerCase()===p.name.trim().toLowerCase())).length;
-  const updateCount=incoming.length-newCount;  const note=isShopify&&!headerMap.has('collection')&&!headerMap.has('collections')&&!headerMap.has('collection title')&&!headerMap.has('collection name')?'Only values in the CSV’s Collection column are used for collection assignment. Product Type is not a collection, so it will never create collections during import.':'';
+  const updateCount=incoming.length-newCount;  const note='Imported collection values are matched only to collections already created in Dew Admin. Unknown collection names or IDs are ignored; importing products will never create new collections.';
   modal('<div class="shopify-page-head"><div><span class="admin-eyebrow">SHOPIFY CSV IMPORT</span><h2>Review products</h2><p>Check the products before saving them to your Dew store.</p></div></div><div class="shopify-metrics"><div><span>Products</span><b>'+incoming.length+'</b></div><div><span>New</span><b>'+newCount+'</b></div><div><span>Matching names to update</span><b>'+updateCount+'</b></div><div><span>Collections in store</span><b>'+D.catalogs.length+'</b></div></div>'+(note?'<p class="editor-hint">'+esc(note)+'</p>':'')+'<div class="admin-table-wrap"><table class="shopify-table"><thead><tr><th>Product</th><th>Collection</th><th>Price</th><th>Variants</th></tr></thead><tbody>'+preview+'</tbody></table></div>'+(incoming.length>8?'<p class="editor-hint">Showing the first 8 products. All '+incoming.length+' will be imported.</p>':'')+'<p class="editor-hint">Product descriptions, prices, variants, stock, SKUs, barcodes and image links will be imported. Existing products with matching names will be updated rather than duplicated.</p><div class="editor-head-actions" style="justify-content:flex-end;margin-top:18px"><button class="admin-view-store" id="cancelProductImport">Cancel</button><button class="admin-primary" id="confirmProductImport">Import '+incoming.length+' products</button></div>');  $('#cancelProductImport').onclick=closeModal;
   $('#confirmProductImport').onclick=async()=>{
     const btn=$('#confirmProductImport');btn.disabled=true;btn.textContent='Importing...';
