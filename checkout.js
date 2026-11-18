@@ -100,14 +100,15 @@ function previewDiscount(d,ls,items,delivery){
     const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},(_,unitIndex)=>({unit:l.unit,lineIndex:index,key:String(l.id)+':'+String(l.variantId||'')+':'+unitIndex})):[];}).sort((a,b)=>a.unit-b.unit);
     const maxUses=Number(d.maxUsesPerOrder||0),targetRewards=groups*getQty;
     let remaining=maxUses>0?Math.min(targetRewards,maxUses):targetRewards,rewardCount=0;
-    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;rewardCount++;}
+    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;lineDiscounts[item.lineIndex]=(lineDiscounts[item.lineIndex]||0)+(d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0)));remaining--;rewardCount++;}
     if(!rewardCount)return {ok:false,error:'Add an eligible reward product to your cart.'};
   }else{
     const eligible=d.discountKind==='amount_off_products'?ls.filter(l=>discountProductMatch(d,l)):ls;
     const base=eligible.reduce((n,l)=>n+l.total,0);
     if(d.discountKind==='amount_off_products'&&d.scope==='products'&&!base)return {ok:false,error:'Your cart has no eligible products.'};
     const kind=d.valueType||(d.type==='fixed'?'fixed':'percentage'),value=Math.max(0,Number(d.value||0));
-    amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);\n    if(d.discountKind==='amount_off_products'&&base>0){for(const line of eligible){const index=ls.indexOf(line);lineDiscounts[index]=amount*(line.total/base);}}
+    amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);
+    if(d.discountKind==='amount_off_products'&&base>0){for(const line of eligible){const index=ls.indexOf(line);lineDiscounts[index]=amount*(line.total/base);}}
   }
   return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type,lineDiscounts};
 }
@@ -130,7 +131,8 @@ function render() {
   }
 
   const totalSavings=t.discount+t.discountShipping;
-  const productDiscount = t.chosen && (t.chosen.discountKind==='amount_off_products'||t.chosen.discountKind==='buy_x_get_y');\n  const discHtml = t.chosen && !productDiscount && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
+  const productDiscount = t.chosen && (t.chosen.discountKind==='amount_off_products'||t.chosen.discountKind==='buy_x_get_y');
+  const discHtml = t.chosen && !productDiscount && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
   const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
   $('#sumBody').innerHTML = t.ls.map((l,index) => {const saving=Math.min(l.total,Number(t.lineDiscounts[index]||0));const net=Math.max(0,l.total-saving);return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span>${saving>0?`<br><span class="checkout-item-discount">You save ${egp(saving)} · ${esc(t.discountLabel)}</span>`:''}</span><b>${saving>0?`<span class="checkout-item-old-price">${egp(l.total)}</span><br>`:''}${egp(net)}</b></div>`;}).join('') +
