@@ -73,12 +73,16 @@
             "url": "collection/hair-care"
           },
           {
+            "label": "Lip Gloss",
+            "url": "collection/lip-gloss"
+          },
+          {
             "label": "Fluffy Pouch",
             "url": "collection/fluffy-pouch"
           },
           {
-            "label": "Lip Gloss",
-            "url": "collection/lip-gloss"
+            "label": "Foot Care",
+            "url": "collection/foot-care"
           }
         ],
         "logoPosition": "center",
