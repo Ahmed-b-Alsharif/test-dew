@@ -144,13 +144,14 @@ function save(message, propagateError=false) {
 }
 
 function saveOrders(message){
- chain=chain.then(async()=>{
-  try{
-   const response=await fetch(ADMIN_API+'/api/orders',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+adminToken()},body:JSON.stringify({orders:ordersList})});
-   const result=await response.json().catch(()=>({}));if(!response.ok||!result.ok)throw Error(result.error||'Could not update orders.');
-   toast('Orders updated.');
-  }catch(e){toast(e.message,true);throw e}
- });return chain.catch(()=>{});
+ const save=chain.then(async()=>{
+  const response=await fetch(ADMIN_API+'/api/orders',{method:'PUT',headers:{'Content-Type':'application/json',Authorization:'Bearer '+adminToken()},body:JSON.stringify({orders:ordersList})});
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok||!result.ok)throw Error(result.error||'Could not update orders.');
+  return result;
+ });
+ chain=save.catch(()=>{});
+ return save;
 }
 
 async function refreshImageLibrary() {
@@ -1005,8 +1006,8 @@ function nativeOrders(){
    '<section class="dew-native-detail-card"><h3>Payment & fulfilment</h3><label class="dew-native-order-field">Payment status<select id="dewOrderPayment"><option '+(payment(o)==='Unpaid (COD)'?'selected':'')+'>Unpaid (COD)</option><option '+(payment(o)==='Awaiting InstaPay payment'?'selected':'')+'>Awaiting InstaPay payment</option><option '+(payment(o)==='Paid'?'selected':'')+'>Paid</option></select></label><label class="dew-native-order-field">Fulfilment status<select id="dewOrderFulfillment"><option '+(fulfillment(o)==='Pending'?'selected':'')+'>Pending</option><option '+(fulfillment(o)==='Processing'?'selected':'')+'>Processing</option><option '+(fulfillment(o)==='Shipped'?'selected':'')+'>Shipped</option><option '+(fulfillment(o)==='Delivered'?'selected':'')+'>Delivered</option><option '+(fulfillment(o)==='Cancelled'?'selected':'')+'>Cancelled</option></select></label><label class="dew-native-order-field">Tracking number<input id="dewOrderTracking" value="'+esc(o.trackingNumber||'')+'" placeholder="Add tracking number"></label><button class="dew-native-order-primary" id="dewSaveNativeOrder">Save changes</button></section>'+
    '<section class="dew-native-detail-card"><h3>Order notes</h3><p class="note">Private note for your team. Customers cannot see it.</p><textarea id="orderNote" rows="3" placeholder="Add a note about this order...">'+esc(o.note||'')+'</textarea><button class="dew-native-order-secondary" id="saveNativeOrderNote">Save note</button></section><button class="dew-native-order-delete" id="dewDeleteNativeOrder">Delete order</button></section>';
   $('#dewNativeBackOrders').onclick=renderList;$('#dewNativeCloseOrder').onclick=renderList;
-  $('#dewSaveNativeOrder').onclick=async()=>{o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();const b=$('#dewSaveNativeOrder');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Update '+o.number);toast('Order updated.');renderDetail(i);}catch(e){b.disabled=false;b.textContent='Save changes';toast(e.message||'Could not save order.',true);}};
-  $('#saveNativeOrderNote').onclick=async()=>{o.note=$('#orderNote').value.trim();const b=$('#saveNativeOrderNote');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Save note for '+o.number);toast('Order note saved.');renderDetail(i);}catch(e){b.disabled=false;b.textContent='Save note';toast(e.message||'Could not save note.',true);}};
+  $('#dewSaveNativeOrder').onclick=async()=>{const previous={paymentStatus:o.paymentStatus,fulfillmentStatus:o.fulfillmentStatus,trackingNumber:o.trackingNumber};o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();const b=$('#dewSaveNativeOrder');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Update '+o.number);toast('Order updated.');renderDetail(i);}catch(e){Object.assign(o,previous);b.disabled=false;b.textContent='Save changes';toast(e.message||'Could not save order.',true);}};
+  $('#saveNativeOrderNote').onclick=async()=>{const previous=o.note;o.note=$('#orderNote').value.trim();const b=$('#saveNativeOrderNote');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Save note for '+o.number);toast('Order note saved.');renderDetail(i);}catch(e){o.note=previous;b.disabled=false;b.textContent='Save note';toast(e.message||'Could not save note.',true);}};
   $('#dewDeleteNativeOrder').onclick=()=>{if(!confirm('Delete this order record?'))return;fetch(ADMIN_API+'/api/orders/'+encodeURIComponent(o.number),{method:'DELETE',headers:{Authorization:'Bearer '+adminToken()}}).then(async r=>{const v=await r.json().catch(()=>({}));if(!r.ok||!v.ok)throw Error(v.error||'Could not delete order');ordersList.splice(i,1);toast('Order deleted.');renderList();}).catch(e=>toast(e.message,true));};
  }
  renderList();
@@ -1105,8 +1106,8 @@ function orders() {
         <section class="dew-order-detail-section"><h3>Order notes</h3><p class="note">Private notes for your team. Customers cannot see these.</p><textarea id="orderNote" rows="3" placeholder="Add a note about this order...">${esc(o.note||'')}</textarea><button class="btn ghost" id="saveOrderNote">Save note</button></section>
         <button class="btn ghost dew-order-delete" id="dewDeleteOrder">Delete order</button>
       </div>`);
-    $('#saveOrderNote').onclick=()=>{o.note=$('#orderNote').value.trim();saveOrders('Save note for '+o.number).then(()=>{closeModal();toast('Order note saved.');});};
-    $('#dewSaveOrderStatus').onclick=()=>{o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();saveOrders('Update '+o.number).then(()=>{closeModal();orders();toast('Order updated.');});};
+    $('#saveOrderNote').onclick=async()=>{const previous=o.note;o.note=$('#orderNote').value.trim();const b=$('#saveOrderNote');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Save note for '+o.number);closeModal();toast('Order note saved.');}catch(e){o.note=previous;b.disabled=false;b.textContent='Save note';toast(e.message||'Could not save note.',true);}};
+    $('#dewSaveOrderStatus').onclick=async()=>{const previous={paymentStatus:o.paymentStatus,fulfillmentStatus:o.fulfillmentStatus,trackingNumber:o.trackingNumber};o.paymentStatus=$('#dewOrderPayment').value;o.fulfillmentStatus=$('#dewOrderFulfillment').value;o.trackingNumber=$('#dewOrderTracking').value.trim();const b=$('#dewSaveOrderStatus');b.disabled=true;b.textContent='Saving…';try{await saveOrders('Update '+o.number);closeModal();orders();toast('Order updated.');}catch(e){Object.assign(o,previous);b.disabled=false;b.textContent='Save order updates';toast(e.message||'Could not save order.',true);}};
     $('#mCloseBtn').onclick=closeModal;
     $('#dewDeleteOrder').onclick=()=>{
       if(!confirm('Delete this order record?')) return;
