@@ -2483,21 +2483,13 @@
       ],
       "howToUse": "",
       "options": [],
-      "variants": [
-        {
-          "id": "34a49d16",
-          "options": {},
-          "price": 100,
-          "salePrice": 85,
-          "stock": 11,
-          "sku": "",
-          "barcode": "",
-          "image": ""
-        }
-      ],
+      "variants": [],
       "price": 100,
       "salePrice": 85,
-      "stock": 11
+      "stock": 20,
+      "shopifyHandle": "lip-balm-strawberry",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "2cc19e9e",
