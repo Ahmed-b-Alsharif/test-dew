@@ -3389,3 +3389,6 @@ html,body{color-scheme:only light!important}
 .dew-offer-preview-card>small{display:block;margin-top:12px;color:#8a958d;font-size:10px}
 .dew-offer-admin-savebar{display:flex;align-items:center;gap:14px;margin:16px 0 26px}.dew-offer-admin-savebar .note{margin:0}
 @media(max-width:760px){.dew-offer-admin-layout{grid-template-columns:minmax(0,1fr)}.dew-offer-admin-preview{grid-column:1}.dew-offer-admin-date-grid{grid-template-columns:minmax(0,1fr)}.dew-offer-admin-savebar{align-items:stretch;flex-direction:column}.dew-offer-admin-savebar button{width:100%;min-height:48px}}
+
+/* Quick stock editing in the Products list */
+.dew-quick-stock-list{display:grid;gap:6px;min-width:150px}.dew-quick-stock-row{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;color:#65736a}.dew-quick-stock-row span{max-width:115px;overflow-wrap:anywhere}.dew-quick-stock-input{width:76px!important;min-width:62px;box-sizing:border-box}.dew-quick-stock-single{justify-content:flex-start}.dew-product-info .dew-quick-stock-list{margin-top:5px}.dew-product-info .dew-quick-stock-row{justify-content:flex-start;flex-wrap:wrap}
