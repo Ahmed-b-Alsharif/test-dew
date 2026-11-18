@@ -79,7 +79,7 @@ function previewDiscount(d,ls,items,delivery){
   if(!d||!discountIsLive(d))return {ok:false,error:'This discount is not active.'};
   if(Number(d.minSpend||0)>items)return {ok:false,error:'Minimum spend is '+egp(d.minSpend)+'.'};
   if(Number(d.minQuantity||0)>ls.reduce((n,l)=>n+l.qty,0))return {ok:false,error:'Add more items to use this discount.'};
-  let amount=0,shipping=0,label=d.title||d.code||'Discount';
+  let amount=0,shipping=0,label=d.title||d.code||'Discount',lineDiscounts={};
   if(d.discountKind==='free_shipping'||d.type==='free_shipping'){
     if(Number(d.shippingLimit||0)>0&&delivery>Number(d.shippingLimit))return {ok:false,error:'This discount does not apply to this shipping rate.'};
     shipping=delivery;
@@ -97,7 +97,7 @@ function previewDiscount(d,ls,items,delivery){
     const buyUnitsToConsume=buyMode==='amount'?null:groups*requiredQty,buyAmountToConsume=buyMode==='amount'?groups*requiredAmount:0;
     const consumed=new Map();let qtySlots=buyUnitsToConsume,amountCounted=0;
     for(const item of buys){let take=0;for(let i=0;i<item.line.qty;i++){if(buyMode==='amount'?amountCounted>=buyAmountToConsume:qtySlots<=0)break;take++;amountCounted+=Number(item.line.unit||item.line.total/Math.max(1,item.line.qty));if(buyMode!=='amount')qtySlots--;}if(take)consumed.set(item.index,take);if(buyMode==='amount'?amountCounted>=buyAmountToConsume:qtySlots<=0)break;}
-    const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},()=>({unit:l.unit})):[];}).sort((a,b)=>a.unit-b.unit);
+    const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},(_,unitIndex)=>({unit:l.unit,lineIndex:index,key:String(l.id)+':'+String(l.variantId||'')+':'+unitIndex})):[];}).sort((a,b)=>a.unit-b.unit);
     const maxUses=Number(d.maxUsesPerOrder||0),targetRewards=groups*getQty;
     let remaining=maxUses>0?Math.min(targetRewards,maxUses):targetRewards,rewardCount=0;
     for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;rewardCount++;}
@@ -107,9 +107,9 @@ function previewDiscount(d,ls,items,delivery){
     const base=eligible.reduce((n,l)=>n+l.total,0);
     if(d.discountKind==='amount_off_products'&&d.scope==='products'&&!base)return {ok:false,error:'Your cart has no eligible products.'};
     const kind=d.valueType||(d.type==='fixed'?'fixed':'percentage'),value=Math.max(0,Number(d.value||0));
-    amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);
+    amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);\n    if(d.discountKind==='amount_off_products'&&base>0){for(const line of eligible){const index=ls.indexOf(line);lineDiscounts[index]=amount*(line.total/base);}}
   }
-  return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type};
+  return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type,lineDiscounts};
 }
 function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&d.method==='automatic'&&!d.code&&discountIsLive(d))||null;}
 function totals(){
@@ -118,9 +118,9 @@ function totals(){
   const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='',validationRequired=false;
   if(chosen){
     if(discountNeedsServerValidation(chosen))validationRequired=true;
-    else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;}}
+    else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;lineDiscounts=result.lineDiscounts||{};}}
   }
-  return {ls,items,delivery,discount,discountShipping,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired};
+  return {ls,items,delivery,discount,discountShipping,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired,lineDiscounts};
 }
 function render() {
   const t = totals();
@@ -130,10 +130,10 @@ function render() {
   }
 
   const totalSavings=t.discount+t.discountShipping;
-  const discHtml = t.chosen && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
+  const productDiscount = t.chosen && (t.chosen.discountKind==='amount_off_products'||t.chosen.discountKind==='buy_x_get_y');\n  const discHtml = t.chosen && !productDiscount && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
   const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
-  $('#sumBody').innerHTML = t.ls.map(l => `<div class="sum-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span></span><b>${egp(l.total)}</b></div>`).join('') +
+  $('#sumBody').innerHTML = t.ls.map((l,index) => {const saving=Math.min(l.total,Number(t.lineDiscounts[index]||0));const net=Math.max(0,l.total-saving);return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span>${saving>0?`<br><span class="checkout-item-discount">You save ${egp(saving)} · ${esc(t.discountLabel)}</span>`:''}</span><b>${saving>0?`<span class="checkout-item-old-price">${egp(l.total)}</span><br>`:''}${egp(net)}</b></div>`;}).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? (t.delivery>0?egp(t.delivery):'Free') : 'Choose area'}</b></div>
      ${discHtml}
