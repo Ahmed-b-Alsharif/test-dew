@@ -70,36 +70,30 @@
  }
  setupStickyAnnouncementBar();
 
-/* Apply the same editable, continuously repeating announcement bar to every storefront page. */
+/* Render the exact homepage announcement bar on every customer page except the order receipt. */
 (()=>{
  'use strict';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let settingsPromise;
  const loadSettings=()=>settingsPromise||(settingsPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}).then(x=>x.settings||{}));
  const apply=async()=>{
-  // The homepage and product.js render their own announcement bars. Do not add a second fallback bar on either page.
-  if(document.getElementById('app')||document.getElementById('productApp'))return;
+  const receipt=document.querySelector('.dew-success-page');
+  let bar=document.querySelector('.dew-ann');
+  if(document.getElementById('app'))return;
+  if(receipt){bar?.remove();return;}
   try{
    const settings=await loadSettings(),a=settings.homepage?.announcement||{};
-   let bar=document.querySelector('.dew-ann');
    if(a.show===false){bar?.remove();return;}
-   const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).map(x=>String(x||'').trim()).filter(Boolean);
+   const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).filter(Boolean);
    if(!messages.length){bar?.remove();return;}
-   const repeated=Array.from({length:32},()=>messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')).join('<i aria-hidden="true">✦</i>');
-   const speed=['slow','fast'].includes(a.speed)?a.speed:'normal';
-   const html='<div class="dew-ann-group">'+repeated+'</div>';
-   const content='<div class="dew-ann-track">'+html+html+'</div>';
-   if(!bar){
-    bar=document.createElement('div');
-    const anchor=document.querySelector('.dew-header,.top');
-    const parent=anchor?.parentNode||document.body;
-    if(anchor)parent.insertBefore(bar,anchor);else parent.insertBefore(bar,parent.firstChild);
-   }
-   const desiredClass='dew-ann is-marquee speed-'+speed;
-   const desiredHtml='<a href="'+esc(a.link||'./#shop')+'">'+content+'</a>';
+   const mode=a.mode||'static',speed=a.speed||'normal';
+   const group='<div class="dew-ann-group">'+Array.from({length:32},()=>messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')).join('<i aria-hidden="true">✦</i>')+'</div>';
+   const content=mode==='static'?messages.map(m=>'<span>'+esc(m)+'</span>').join(' · '):'<div class="dew-ann-track">'+group+group+'</div>';
+   if(!bar){bar=document.createElement('div');const anchor=document.querySelector('.dew-header,.top');const parent=anchor?.parentNode||document.body;if(anchor)parent.insertBefore(bar,anchor);else parent.insertBefore(bar,parent.firstChild);}
+   const desiredClass='dew-ann '+(mode==='static'?'is-static':'is-marquee')+' speed-'+esc(speed);
+   const desiredHtml='<a href="'+esc(a.link||'#shop')+'">'+content+'</a>';
    if(bar.className!==desiredClass)bar.className=desiredClass;
    if(bar.innerHTML!==desiredHtml)bar.innerHTML=desiredHtml;
-   bar.dataset.dewGlobalTicker='true';
   }catch(e){/* Keep the page usable if store settings cannot be loaded. */}
  };
  let queued=false;
@@ -108,6 +102,7 @@
  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 })();
 
+/* 
 /* Keep the mobile social menu and every storefront footer in sync with Theme Editor settings. */
 (()=>{
  'use strict';
