@@ -78,14 +78,16 @@
  const loadSettings=()=>settingsPromise||(settingsPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}).then(x=>x.settings||{}));
  const apply=async()=>{
   const receipt=document.querySelector('.dew-success-page');
-  let bar=document.querySelector('.dew-ann');
+  const bars=[...document.querySelectorAll('.dew-ann')];
+  let bar=bars.shift()||null;
   if(document.getElementById('app'))return;
-  if(receipt){bar?.remove();return;}
+  if(receipt){bars.forEach(x=>x.remove());bar?.remove();return;}
+  bars.forEach(x=>x.remove());
   try{
    const settings=await loadSettings(),a=settings.homepage?.announcement||{};
-   if(a.show===false){bar?.remove();return;}
+   if(a.show===false){document.querySelectorAll('.dew-ann').forEach(x=>x.remove());return;}
    const messages=(Array.isArray(a.messages)?a.messages:[a.text||'']).filter(Boolean);
-   if(!messages.length){bar?.remove();return;}
+   if(!messages.length){document.querySelectorAll('.dew-ann').forEach(x=>x.remove());return;}
    const mode=a.mode||'static',speed=a.speed||'normal';
    const group='<div class="dew-ann-group">'+Array.from({length:32},()=>messages.map(m=>'<span>'+esc(m)+'</span>').join('<i aria-hidden="true">•</i>')).join('<i aria-hidden="true">✦</i>')+'</div>';
    const content=mode==='static'?messages.map(m=>'<span>'+esc(m)+'</span>').join(' · '):'<div class="dew-ann-track">'+group+group+'</div>';
