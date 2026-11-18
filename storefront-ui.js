@@ -102,7 +102,6 @@
  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 })();
 
-/* 
 /* Keep the mobile social menu and every storefront footer in sync with Theme Editor settings. */
 (()=>{
  'use strict';
