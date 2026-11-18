@@ -3568,3 +3568,57 @@ html,body{color-scheme:only light!important}
   dialog.dew-mobile-menu .dew-social-links .dew-social-icon[aria-label="Facebook"] svg{fill:currentColor!important;stroke:none!important}
   body.dew-menu-open{overflow:hidden!important}
 }
+
+
+/* Homepage uses its existing aside drawer; give it the same desktop presentation and overlay. */
+@media(min-width:761px){
+  aside.dew-mobile-menu.is-open{
+    display:flex!important;position:fixed!important;inset:0 auto 0 0!important;
+    width:min(88vw,380px)!important;max-width:100vw!important;height:100vh!important;height:100dvh!important;
+    max-height:100vh!important;max-height:100dvh!important;margin:0!important;
+    padding:0 23px 28px!important;box-sizing:border-box!important;
+    border:0!important;border-right:1px solid #e8e6dc!important;border-radius:0!important;
+    background:#fbf8f1!important;color:#183b35!important;
+    box-shadow:18px 0 50px rgba(18,42,32,.18)!important;
+    flex-direction:column!important;overflow:hidden!important;overscroll-behavior:contain!important;
+    transform:none!important;visibility:visible!important;z-index:1001!important;
+  }
+  .dew-mobile-menu-scrim:not([hidden]){
+    display:block!important;position:fixed!important;inset:0!important;
+    background:rgba(14,31,25,.48)!important;backdrop-filter:blur(2px);
+    z-index:1000!important;opacity:1!important;
+  }
+  aside.dew-mobile-menu.is-open .dew-mobile-menu-head{
+    display:flex!important;flex:none!important;min-height:82px!important;
+    padding:20px 0 16px!important;align-items:center!important;justify-content:center!important;
+    position:relative!important;border-bottom:1px solid #e4e6dc!important;
+    color:#1c524e!important;font:700 10px/1.2 Inter,system-ui,sans-serif!important;letter-spacing:.22em!important;
+  }
+  aside.dew-mobile-menu.is-open .dew-mobile-menu-head button{
+    position:absolute!important;right:0!important;top:50%!important;transform:translateY(-50%)!important;
+    width:36px!important;height:36px!important;display:grid!important;place-items:center!important;
+    padding:0!important;border:1px solid #e1e5dc!important;border-radius:50%!important;
+    background:#fffdf8!important;color:#1c524e!important;font:300 25px/1 Inter,system-ui,sans-serif!important;
+  }
+  aside.dew-mobile-menu.is-open nav{
+    display:flex!important;flex:1 1 auto!important;min-height:0!important;width:100%!important;
+    flex-direction:column!important;align-items:stretch!important;gap:9px!important;
+    overflow-y:auto!important;padding:16px 0 22px!important;
+  }
+  aside.dew-mobile-menu.is-open nav a{
+    display:grid!important;grid-template-columns:minmax(0,1fr) 30px!important;align-items:center!important;
+    width:100%!important;min-height:56px!important;margin:0!important;padding:13px 14px!important;
+    box-sizing:border-box!important;border:1px solid #e8e8df!important;border-radius:12px!important;
+    background:rgba(255,255,255,.58)!important;color:#183b35!important;text-decoration:none!important;
+    font:20px/1.25 Georgia,serif!important;
+  }
+  aside.dew-mobile-menu.is-open nav a span{
+    width:27px!important;height:27px!important;display:grid!important;place-items:center!important;
+    border:1px solid #dce4d9!important;border-radius:50%!important;color:#1c524e!important;
+    font:13px/1 Inter,system-ui,sans-serif!important;
+  }
+  aside.dew-mobile-menu.is-open .dew-mobile-menu-social{
+    display:block!important;flex:none!important;margin-top:auto!important;padding:20px 0 4px!important;
+    border-top:1px solid #e1e5dc!important;
+  }
+}
