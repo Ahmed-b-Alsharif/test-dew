@@ -510,6 +510,7 @@
     {
       "id": "4be6283f",
       "name": "Fluffy Kashmir Pouch Set",
+      "shopifyHandle": "fluffy-kashmir-pouch-set",
       "description": "A little beauty treat, all packed and ready to go! This set brings together a soft Fluffy Kashmir pouch, 60 ml splash perfume, 30 ml Orchid Body Butter, Macaron Lip Balm and Strawberry Lip Gloss. Perfect for gifting, travel or keeping your everyday favourites close. Choose your preferred scent or flavour by contacting us.",
       "catalog": "f82c320f",
       "tags": "BodyButter, Cream, CrueltyFree, Fluffy, Kashmir, Lip care, Lip Health, Lip Hydration, Lip Moisturizer, Moisturizing, OrchidBodyButter, Pink, pouch, Self-care, Smooth Lips, Soft Lips",
@@ -536,7 +537,7 @@
           },
           "price": 550,
           "salePrice": 490,
-          "stock": 3,
+          "stock": 2,
           "sku": "",
           "barcode": "",
           "image": ""
@@ -544,7 +545,9 @@
       ],
       "price": 550,
       "salePrice": 490,
-      "stock": 3
+      "stock": 2,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "5302dec3",
