@@ -2698,18 +2698,5 @@
       "createdAt": "2026-11-17T14:57:13.911Z"
     }
   ],
-  "pages": [
-    {
-      "title": "about us",
-      "slug": "about-us",
-      "intro": "11111111",
-      "content": "2323",
-      "image": "",
-      "published": true,
-      "showInHeader": false,
-      "showInFooter": true,
-      "seoTitle": "",
-      "seoDescription": ""
-    }
-  ]
+  "pages": []
 }
