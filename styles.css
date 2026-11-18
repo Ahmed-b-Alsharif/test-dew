@@ -3399,3 +3399,36 @@ html,body{color-scheme:only light!important}
 
 .dew-cart-savings-note{font-size:12px;color:#c62828;background:#fff1f0;border-left:3px solid #c62828;padding:9px 11px;margin:10px 0;font-weight:700}.dew-collection-tools{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin:18px 0 22px;padding:16px;background:#fff;border:1px solid #e6ebe4}.dew-collection-tools label{display:grid;gap:5px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#60736a}.dew-collection-tools input,.dew-collection-tools select{min-height:42px;min-width:150px;border:1px solid #d8e1d8;background:#fff;padding:9px 12px;color:#183b35;border-radius:2px;font:13px Inter,system-ui,sans-serif}.dew-collection-tools label:first-of-type{flex:1;min-width:180px}.dew-collection-tools label:first-of-type input{width:100%}.dew-collection-tools>span{font-size:12px;color:#60736a;padding:10px 0}.dew-collection-all-link{font-size:12px;color:#1c524e;padding:10px 12px;border:1px solid #d8e1d8;text-decoration:none;white-space:nowrap}.dew-collection-no-results{grid-column:1/-1;padding:35px 12px;text-align:center;color:#63756b}
 @media(max-width:760px){.dew-collection-tools{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}.dew-collection-tools label:first-of-type{grid-column:1/-1}.dew-collection-tools input,.dew-collection-tools select{min-width:0;width:100%}.dew-collection-all-link{grid-column:1/-1;text-align:center}.dew-drawer{width:100%;right:0;padding:16px 15px calc(14px + env(safe-area-inset-bottom))}.dew-line{gap:9px;padding:12px 0}.dew-line>img,.dew-line>.dew-line-placeholder{width:64px;height:72px;flex-basis:64px}.dew-line-info>b{font-size:12px}}
+
+
+/* Unified mobile storefront header: remove the gap and keep every page aligned with the homepage. */
+@media(max-width:760px){
+  html{scroll-padding-top:calc(var(--dew-ann-height,0px) + 72px)}
+  .dew-ann{position:sticky!important;top:0!important;z-index:75!important;margin:0!important}
+  .dew-header,
+  #productApp>.dew-header,
+  #collectionApp>.dew-header,
+  #collectionsApp>.dew-header,
+  #pageApp>.dew-header{
+    position:sticky!important;
+    top:var(--dew-ann-height,0px)!important;
+    z-index:70!important;
+    display:grid!important;
+    height:72px!important;
+    min-height:72px!important;
+    max-height:72px!important;
+    box-sizing:border-box!important;
+    margin:0!important;
+    padding:0 14px!important;
+    grid-template-columns:44px minmax(0,1fr) auto!important;
+    align-items:center!important;
+    gap:8px!important;
+    isolation:isolate;
+  }
+  #productApp,#collectionApp,#collectionsApp,#pageApp{margin:0!important;padding-top:0!important}
+  .dew-header>nav{display:none!important}
+  .dew-header>.dew-logo{top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important}
+  .dew-header>.dew-mobile-menu-toggle{grid-column:1!important;grid-row:1!important}
+  .dew-header>.dew-header-actions{grid-column:3!important;grid-row:1!important}
+  .dew-header+.product-page,.dew-header+.dew-main{scroll-margin-top:calc(var(--dew-ann-height,0px) + 72px)}
+}
