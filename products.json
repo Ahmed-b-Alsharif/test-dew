@@ -1359,9 +1359,12 @@
       "howToUse": "",
       "options": [
         {
-          "name": "Flavor 10ML",
+          "name": "Flavor",
           "values": [
-            "Chocolate"
+            "Chocolate",
+            "Strawebrry",
+            "Candy",
+            "Coconut"
           ]
         }
       ],
@@ -1369,49 +1372,55 @@
         {
           "id": "22db25b3",
           "options": {
-            "Flavor 10ML": "Chocolate"
+            "Flavor": "Chocolate"
           },
           "price": 125,
           "salePrice": 110,
-          "stock": 18,
+          "stock": 10,
           "sku": "",
           "barcode": "",
           "image": ""
         },
         {
-          "id": "7a61e5ae",
-          "options": {},
+          "id": "27af804b",
+          "options": {
+            "Flavor": "Strawebrry"
+          },
           "price": 125,
-          "salePrice": 110,
-          "stock": 16,
+          "salePrice": 0,
+          "stock": 10,
           "sku": "",
-          "barcode": "",
-          "image": ""
+          "barcode": ""
         },
         {
-          "id": "f7057fc5",
-          "options": {},
+          "id": "db5f9252",
+          "options": {
+            "Flavor": "Candy"
+          },
           "price": 125,
-          "salePrice": 110,
-          "stock": 15,
+          "salePrice": 0,
+          "stock": 10,
           "sku": "",
-          "barcode": "",
-          "image": ""
+          "barcode": ""
         },
         {
-          "id": "0cdbd835",
-          "options": {},
+          "id": "821a7241",
+          "options": {
+            "Flavor": "Coconut"
+          },
           "price": 125,
-          "salePrice": 110,
-          "stock": 20,
+          "salePrice": 0,
+          "stock": 10,
           "sku": "",
-          "barcode": "",
-          "image": ""
+          "barcode": ""
         }
       ],
       "price": 125,
       "salePrice": 110,
-      "stock": 69
+      "stock": 40,
+      "shopifyHandle": "cookie-lipbalm",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "d4ef44f1",
@@ -1443,7 +1452,7 @@
           },
           "price": 110,
           "salePrice": 90,
-          "stock": 7,
+          "stock": 10,
           "sku": "",
           "barcode": "",
           "image": ""
@@ -1451,7 +1460,7 @@
       ],
       "price": 110,
       "salePrice": 90,
-      "stock": 7
+      "stock": 10
     },
     {
       "id": "58806ff3",
@@ -1482,7 +1491,7 @@
           },
           "price": 310,
           "salePrice": 500,
-          "stock": 5,
+          "stock": 1,
           "sku": "Bundle Hair care",
           "barcode": "",
           "image": ""
@@ -1490,7 +1499,7 @@
       ],
       "price": 310,
       "salePrice": 500,
-      "stock": 5
+      "stock": 1
     },
     {
       "id": "3744b4c0",
@@ -1641,7 +1650,7 @@
           },
           "price": 300,
           "salePrice": 260,
-          "stock": 5,
+          "stock": 2,
           "sku": "'62285001111",
           "barcode": "'62285001111",
           "image": ""
@@ -1649,7 +1658,7 @@
       ],
       "price": 300,
       "salePrice": 260,
-      "stock": 5
+      "stock": 2
     },
     {
       "id": "4ae993e5",
@@ -1680,7 +1689,7 @@
           },
           "price": 100,
           "salePrice": 85,
-          "stock": 14,
+          "stock": 20,
           "sku": "",
           "barcode": "'1122334455",
           "image": ""
@@ -1688,7 +1697,7 @@
       ],
       "price": 100,
       "salePrice": 85,
-      "stock": 14
+      "stock": 20
     },
     {
       "id": "3280bf12",
@@ -1708,7 +1717,7 @@
       "variants": [],
       "price": 100,
       "salePrice": 85,
-      "stock": 6,
+      "stock": 20,
       "shopifyHandle": "lip-balm-chocolate",
       "seoTitle": "",
       "seoDescription": ""
@@ -1826,7 +1835,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 15,
+          "stock": 0,
           "sku": "'62280001111",
           "barcode": "'62280001111",
           "image": ""
@@ -1834,7 +1843,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 15
+      "stock": 0
     },
     {
       "id": "c7793f18",
@@ -1865,7 +1874,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 2,
+          "stock": 5,
           "sku": "'62280001114",
           "barcode": "'62280001114",
           "image": ""
@@ -1873,7 +1882,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 2
+      "stock": 5
     },
     {
       "id": "70424d62",
@@ -1904,7 +1913,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 1,
+          "stock": 0,
           "sku": "'62280001120",
           "barcode": "'62280001120",
           "image": ""
@@ -1912,7 +1921,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 1
+      "stock": 0
     },
     {
       "id": "3aa54356",
@@ -1943,7 +1952,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 15,
+          "stock": 0,
           "sku": "'62280001121",
           "barcode": "'62280001121",
           "image": ""
@@ -1951,7 +1960,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 15
+      "stock": 0
     },
     {
       "id": "7797d362",
@@ -1982,7 +1991,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 11,
+          "stock": 0,
           "sku": "'62280001115",
           "barcode": "'62280001115",
           "image": ""
@@ -1990,7 +1999,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 11
+      "stock": 0
     },
     {
       "id": "3a057abb",
@@ -2021,7 +2030,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 15,
+          "stock": 0,
           "sku": "'62280001117",
           "barcode": "'62280001117",
           "image": ""
@@ -2029,7 +2038,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 15
+      "stock": 0
     },
     {
       "id": "44ce24bf",
@@ -2060,7 +2069,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 15,
+          "stock": 0,
           "sku": "'62280001113",
           "barcode": "'1122334455",
           "image": ""
@@ -2068,7 +2077,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 15
+      "stock": 0
     },
     {
       "id": "24ce557b",
@@ -2099,7 +2108,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 1,
+          "stock": 0,
           "sku": "'62280001112",
           "barcode": "'62280001112",
           "image": ""
@@ -2107,7 +2116,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 1
+      "stock": 0
     },
     {
       "id": "484027a5",
@@ -2336,7 +2345,7 @@
           },
           "price": 120,
           "salePrice": 110,
-          "stock": 4,
+          "stock": 10,
           "sku": "",
           "barcode": "'1122334455",
           "image": ""
@@ -2344,7 +2353,7 @@
       ],
       "price": 120,
       "salePrice": 110,
-      "stock": 4
+      "stock": 10
     },
     {
       "id": "950127fe",
@@ -2375,7 +2384,7 @@
           },
           "price": 120,
           "salePrice": 80,
-          "stock": 14,
+          "stock": 5,
           "sku": "'62283001114",
           "barcode": "'62283001114",
           "image": ""
@@ -2383,7 +2392,7 @@
       ],
       "price": 120,
       "salePrice": 80,
-      "stock": 14
+      "stock": 5
     },
     {
       "id": "c2b4ce28",
@@ -2414,7 +2423,7 @@
           },
           "price": 120,
           "salePrice": 80,
-          "stock": 13,
+          "stock": 29,
           "sku": "'62283001113",
           "barcode": "'62283001113",
           "image": ""
@@ -2422,7 +2431,7 @@
       ],
       "price": 120,
       "salePrice": 80,
-      "stock": 13
+      "stock": 29
     },
     {
       "id": "dbb95a5d",
@@ -2453,7 +2462,7 @@
           },
           "price": 120,
           "salePrice": 80,
-          "stock": 14,
+          "stock": 15,
           "sku": "'62283001112",
           "barcode": "'62283001112",
           "image": ""
@@ -2461,7 +2470,7 @@
       ],
       "price": 120,
       "salePrice": 80,
-      "stock": 14
+      "stock": 15
     },
     {
       "id": "5082f6d9",
@@ -2515,7 +2524,7 @@
           },
           "price": 120,
           "salePrice": 110,
-          "stock": 12,
+          "stock": 20,
           "sku": "",
           "barcode": "'1122334455",
           "image": ""
@@ -2523,7 +2532,7 @@
       ],
       "price": 120,
       "salePrice": 110,
-      "stock": 12
+      "stock": 20
     },
     {
       "id": "3c5c256b",
@@ -2596,7 +2605,7 @@
           },
           "price": 120,
           "salePrice": 80,
-          "stock": 15,
+          "stock": 10,
           "sku": "'62283001111",
           "barcode": "'62283001111",
           "image": ""
@@ -2604,7 +2613,7 @@
       ],
       "price": 120,
       "salePrice": 80,
-      "stock": 15
+      "stock": 10
     },
     {
       "id": "e2a1f39f",
@@ -2674,7 +2683,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 2,
+          "stock": 0,
           "sku": "",
           "barcode": "",
           "image": ""
@@ -2682,7 +2691,7 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 2
+      "stock": 0
     }
   ],
   "discounts": [
