@@ -534,10 +534,10 @@ function inventory() {
 /* ---------- products ---------- */
 /* ---------- products ---------- */
 function products() {
-  const query=q.toLowerCase();
+  const query=()=>q.toLowerCase();
   let activeFilter='All';
   const selectedProductIds=new Set();
-  const list=()=>D.products.filter(p=>(!query||String(p.name||'').toLowerCase().includes(query))&&(activeFilter==='All'||(activeFilter==='Active'?!!p.visible:!p.visible)));
+  const list=()=>D.products.filter(p=>(!query()||String(p.name||'').toLowerCase().includes(query()))&&(activeFilter==='All'||(activeFilter==='Active'?!!p.visible:!p.visible)));
   const live=D.products.filter(p=>p.visible).length;
   const low=D.products.filter(p=>Number(p.stock||0)<=5).length;
   const native=isNativeApp || isMobileAdmin();
