@@ -965,7 +965,7 @@
             "50 ML": "Women Dream"
           },
           "price": 220,
-          "salePrice": 0,
+          "salePrice": 170,
           "stock": 4,
           "sku": "",
           "barcode": ""
@@ -976,7 +976,7 @@
             "50 ML": "Women SunSet"
           },
           "price": 220,
-          "salePrice": 0,
+          "salePrice": 170,
           "stock": 3,
           "sku": "",
           "barcode": ""
@@ -987,14 +987,14 @@
             "50 ML": "Men Frost"
           },
           "price": 220,
-          "salePrice": 0,
+          "salePrice": 170,
           "stock": 5,
           "sku": "",
           "barcode": ""
         }
       ],
       "price": 220,
-      "salePrice": 0,
+      "salePrice": 170,
       "stock": 12,
       "shopifyHandle": "whitening-creamy-roll-on-deodorant",
       "seoTitle": "",
