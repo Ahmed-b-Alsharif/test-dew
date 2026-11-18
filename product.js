@@ -15,6 +15,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   const products=(S.products||[]).filter(x=>x.visible);
   const p=products.find(x=>handle&&(x.shopifyHandle||String(x.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))===handle)||products.find(x=>x.id===id);
   if(!p){root.innerHTML='<main class="product-page"><a class="product-back" href="./#shop">← Back to shop</a><section class="product-not-found"><h1>Product not found</h1><p>This product may no longer be available.</p><a class="dew-btn" href="./#shop">Continue shopping</a></section></main>';return;}
+  try{const key='dew_recently_viewed';const old=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>String(x)!==String(p.id));localStorage.setItem(key,JSON.stringify([p.id,...old].slice(0,6)));}catch{}
   const images=(p.images||[]).filter(Boolean), related=products.filter(x=>x.id!==p.id&&x.catalog===p.catalog).slice(0,4);
   const fallback=products.filter(x=>x.id!==p.id&&!related.some(r=>r.id===x.id)).slice(0,4-related.length);
   const suggestions=[...related,...fallback].slice(0,4);
