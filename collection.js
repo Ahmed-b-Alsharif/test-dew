@@ -6,18 +6,31 @@ const multiOptions=p=>(p.options||[]).some(o=>Array.isArray(o.values)&&new Set(o
 const hasChoices=p=>multiOptions(p);
 const stock=p=>variants(p).length?variants(p).reduce((n,v)=>n+Math.max(0,Number(v.stock||0)),0):Math.max(0,Number(p.stock||0));
 const effectivePrice=v=>Number(v?.salePrice)>0&&Number(v.salePrice)<Number(v.price)?Number(v.salePrice):Number(v?.price||0);
-function productPrice(p){
- const vs=variants(p),prices=vs.length?vs.map(effectivePrice).filter(n=>n>0):[effectivePrice(p)];
- if(!prices.length)return money(p.price);
+function priceRange(values){
+ const prices=values.map(Number).filter(n=>Number.isFinite(n)&&n>0);
+ if(!prices.length)return '';
  const min=Math.min(...prices),max=Math.max(...prices);
  return min===max?money(min):money(min)+' – '+money(max);
+}
+function productPrice(p){
+ const vs=variants(p),prices=vs.length?vs.map(effectivePrice):[effectivePrice(p)];
+ return priceRange(prices)||money(p.price);
+}
+function productOriginalPrice(p){
+ const vs=variants(p),prices=vs.length?vs.map(v=>Number(v.price||0)):[Number(p.price||0)];
+ return priceRange(prices);
+}
+function productHasSale(p){
+ return variants(p).length
+  ? variants(p).some(v=>Number(v.salePrice)>0&&Number(v.salePrice)<Number(v.price))
+  : Number(p.salePrice)>0&&Number(p.salePrice)<Number(p.price);
 }
 function optimizedImage(src,width=1000){try{const u=new URL(src,location.href);if(u.hostname.endsWith('cdn.shopify.com')){u.searchParams.set('width',String(width));u.searchParams.set('format','webp');return u.href}}catch{}return src}
 function picture(src,name,width=1000){return src?'<img src="'+esc(optimizedImage(src,width))+'" alt="'+esc(name)+'" loading="lazy" decoding="async">':'<div class="dew-placeholder"><b>DEW</b></div>'}
 function productCard(p){
  const sold=stock(p)<1,choice=hasChoices(p),url=encodeURIComponent(p.shopifyHandle||p.name.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))+'/';
  const actions=sold?'<button class="dew-collection-disabled" disabled>Sold out</button>':choice?'<a class="dew-collection-choose" href="'+url+'">Choose option</a>':'<button class="dew-collection-add" type="button" data-collection-add="'+esc(p.id)+'">Add to cart</button><button class="dew-collection-buy" type="button" data-collection-buy="'+esc(p.id)+'">Buy now</button>';
- return '<article class="dew-collection-card"><a class="dew-collection-product-link" href="'+url+'"><div class="dew-collection-product-photo">'+picture(p.images?.[0],p.name,800)+(sold?'<span class="dew-sold-out-badge">SOLD OUT</span>':'')+'<span class="dew-collection-photo-tag">DEW SKINCARE</span></div><div class="dew-collection-product-copy"><h3>'+esc(p.name)+'</h3><div class="dew-product-prices">'+(variants(p).length===0&&p.salePrice>0&&p.salePrice<p.price?'<del>'+money(p.price)+'</del>':'')+'<strong'+((Number(p.salePrice)>0&&Number(p.salePrice)<Number(p.price))||variants(p).some(v=>Number(v.salePrice)>0&&Number(v.salePrice)<Number(v.price))?' class="is-sale"':'')+'>'+productPrice(p)+'</strong></div></div></a><div class="dew-collection-actions '+(choice?'has-choice':'')+'">'+actions+'</div></article>';
+ return '<article class="dew-collection-card"><a class="dew-collection-product-link" href="'+url+'"><div class="dew-collection-product-photo">'+picture(p.images?.[0],p.name,800)+(sold?'<span class="dew-sold-out-badge">SOLD OUT</span>':'')+'<span class="dew-collection-photo-tag">DEW SKINCARE</span></div><div class="dew-collection-product-copy"><h3>'+esc(p.name)+'</h3><div class="dew-product-prices">'+(productHasSale(p)?'<del>'+productOriginalPrice(p)+'</del>':'')+'<strong'+(productHasSale(p)?' class="is-sale"':'')+'>'+productPrice(p)+'</strong></div></div></a><div class="dew-collection-actions '+(choice?'has-choice':'')+'">'+actions+'</div></article>';
 }
 async function boot(){
  try{
