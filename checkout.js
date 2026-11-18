@@ -48,8 +48,8 @@ function lines() {
     if (!p || (variantId && !v)) { delete cart[key]; return null; }
     const stock=v?Number(v.stock||0):Number(p.stock||0),qty=Math.min(cart[key],stock);
     if(stock<1||qty<1)return null;
-    const unit=v?(Number(v.salePrice)>0&&Number(v.salePrice)<Number(v.price)?Number(v.salePrice):Number(v.price)):eff(p);
-    return { id, variantId:variantId||null, name:p.name+(v?' · '+Object.values(v.options||{}).join(' / '):''), qty, unit, total:unit*qty };
+    const originalUnit=v?Number(v.price||0):Number(p.price||0),unit=v?(Number(v.salePrice)>0&&Number(v.salePrice)<Number(v.price)?Number(v.salePrice):Number(v.price)):eff(p);
+    return { id, variantId:variantId||null, name:p.name+(v?' · '+Object.values(v.options||{}).join(' / '):''), qty, unit, originalUnit, total:unit*qty };
   }).filter(Boolean).filter(line=>line.qty>0);
   if(Object.keys(cart).length!==originalKeys.length)Cart.set(cart);
   return result;
@@ -100,7 +100,7 @@ function previewDiscount(d,ls,items,delivery){
     const rewards=ls.flatMap((l,index)=>{const remainingQty=Math.max(0,l.qty-(consumed.get(index)||0));return (!ids.length||ids.includes(String(l.id)))?Array.from({length:remainingQty},(_,unitIndex)=>({unit:l.unit,lineIndex:index,key:String(l.id)+':'+String(l.variantId||'')+':'+unitIndex})):[];}).sort((a,b)=>a.unit-b.unit);
     const maxUses=Number(d.maxUsesPerOrder||0),targetRewards=groups*getQty;
     let remaining=maxUses>0?Math.min(targetRewards,maxUses):targetRewards,rewardCount=0;
-    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;lineDiscounts[item.lineIndex]=(lineDiscounts[item.lineIndex]||0)+(d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0)));remaining--;rewardCount++;}
+    for(const item of rewards){if(remaining<=0)break;amount+=d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0));remaining--;lineDiscounts[item.lineIndex]=(lineDiscounts[item.lineIndex]||0)+(d.getValue==='free'?item.unit:d.getValue==='percentage'?item.unit*Math.min(100,Number(d.getAmount||0))/100:Math.min(item.unit,Number(d.getAmount||0)));rewardCount++;}
     if(!rewardCount)return {ok:false,error:'Add an eligible reward product to your cart.'};
   }else{
     const eligible=d.discountKind==='amount_off_products'?ls.filter(l=>discountProductMatch(d,l)):ls;
@@ -115,7 +115,7 @@ function previewDiscount(d,ls,items,delivery){
 function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&d.method==='automatic'&&!d.code&&discountIsLive(d))||null;}
 function totals(){
   const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
-  let delivery=selectedArea?Number(selectedArea.fee)||0:0;
+  let delivery=selectedArea?Number(selectedArea.fee)||0:0,lineDiscounts={};
   const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='',validationRequired=false;
   if(chosen){
     if(discountNeedsServerValidation(chosen))validationRequired=true;
@@ -135,7 +135,7 @@ function render() {
   const discHtml = t.chosen && !productDiscount && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
   const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
-  $('#sumBody').innerHTML = t.ls.map((l,index) => {const saving=Math.min(l.total,Number(t.lineDiscounts[index]||0));const net=Math.max(0,l.total-saving);return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span>${saving>0?`<br><span class="checkout-item-discount" style="display:inline-block;margin-top:4px;color:var(--green);font-size:.78rem;font-weight:600;line-height:1.35">You save ${egp(saving)} · ${esc(t.discountLabel)}</span>`:''}</span><b>${saving>0?`<span class="checkout-item-old-price" style="color:#8a918b;text-decoration:line-through;font-size:.82rem;font-weight:400">${egp(l.total)}</span><br>`:''}${egp(net)}</b></div>`;}).join('') +
+  $('#sumBody').innerHTML = t.ls.map((l,index) => {const lineSaving=Math.min(l.total,Number(t.lineDiscounts[index]||0)),net=Math.max(0,l.total-lineSaving),originalTotal=l.originalUnit*l.qty,saving=Math.max(0,originalTotal-net),hasPriceCut=saving>0;return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span>${hasPriceCut?`<br><span class="checkout-item-discount" style="display:inline-block;margin-top:4px;color:#c62828;font-size:.78rem;font-weight:700;line-height:1.35">You save ${egp(saving)}${lineSaving>0&&t.discountLabel?' · '+esc(t.discountLabel):''}</span>`:''}</span><b>${hasPriceCut?`<span class="checkout-item-old-price" style="color:#8a918b;text-decoration:line-through;font-size:.82rem;font-weight:400">${egp(originalTotal)}</span><br>`:''}<span style="${hasPriceCut?'color:#c62828;font-weight:800':''}">${egp(net)}</span></b></div>`;}).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? (t.delivery>0?egp(t.delivery):'Free') : 'Choose area'}</b></div>
      ${discHtml}
