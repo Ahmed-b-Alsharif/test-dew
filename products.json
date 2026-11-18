@@ -2559,7 +2559,7 @@
           },
           "price": 200,
           "salePrice": 170,
-          "stock": 18,
+          "stock": 0,
           "sku": "'62284001111",
           "barcode": "'62284001111",
           "image": ""
@@ -2567,7 +2567,10 @@
       ],
       "price": 200,
       "salePrice": 170,
-      "stock": 18
+      "stock": 0,
+      "shopifyHandle": "coconut-dreams-moisturizer-cream",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "3cf25ab8",
