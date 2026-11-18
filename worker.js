@@ -73,7 +73,7 @@ async function adminGithub(request,env){
   response=await fetch(apiUrl,{headers:{...headers,"Cache-Control":"no-cache, no-store","Pragma":"no-cache"}});
   if(response.ok){const items=await response.json();const photos=Array.isArray(items)?items.filter(x=>x.type==="file"&&/\.(webp|png|jpe?g|gif|avif)$/i.test(x.name||"")).map(x=>({name:x.name,path:x.path,type:x.type,sha:x.sha})):[];return adminJson(request,photos);}
  }
- if(request.method==="PUT"&&path==="contents/sitemap.xml"){
+ if(request.method==="PUT"&&(path==="contents/sitemap.xml"||/^contents\/[a-z0-9][a-z0-9-]{0,100}\/index\.html$/.test(path))){
   let payload;
   try{payload=JSON.parse(await request.text())}catch{return adminJson(request,{message:"Invalid sitemap update payload."},400)}
   for(let attempt=0;attempt<6;attempt++){
