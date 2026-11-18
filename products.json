@@ -2561,7 +2561,7 @@
       "type": "free_shipping",
       "value": 0,
       "minSpend": 0,
-      "active": true,
+      "active": false,
       "discountKind": "free_shipping",
       "method": "code",
       "title": "FREE",
