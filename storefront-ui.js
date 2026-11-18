@@ -104,46 +104,63 @@
  new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 })();
 
-/* Keep the mobile social menu and every storefront footer in sync with Theme Editor settings. */
+/* Keep storefront footers in sync after async page templates render. Checkout and receipt are excluded. */
 (()=>{
  'use strict';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const socialMarkup=(settings,labels=true)=>{
+ const socialMarkup=settings=>{
   const items=[
    ['instagramUrl','Instagram','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>'],
    ['facebookUrl','Facebook','<path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11.4 1 9.5 2.8 9.5 6.1V9H6v4h3.5v8z"/>']
   ];
-  return items.filter(([key])=>/^https?:\/\//i.test(String(settings[key]||''))).map(([key,name,svg])=>'<a class="dew-social-icon" href="'+esc(settings[key])+'" target="_blank" rel="noopener noreferrer" aria-label="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg>'+(labels?'<span>'+name+'</span>':'')+'</a>').join('');
+  return items.filter(([key])=>/^https?:\\/\\//i.test(String(settings[key]||''))).map(([key,name,svg])=>'<a class="dew-social-icon" href="'+esc(settings[key])+'" target="_blank" rel="noopener noreferrer" aria-label="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg><span>'+name+'</span></a>').join('');
  };
+ let dataPromise;
+ const loadData=()=>dataPromise||(dataPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}));
+ let running=false,queued=false;
  const sync=async()=>{
+  if(running||document.body.classList.contains('dew-checkout-page')||document.querySelector('.dew-success-page'))return;
+  const footers=[...document.querySelectorAll('.dew-footer')].filter(el=>el.dataset.dewFooterReady!=='1');
+  const menu=document.querySelector('#dewMobileMenu');
+  const menuNeedsSync=menu&&menu.dataset.dewSocialReady!=='1';
+  if(!footers.length&&!menuNeedsSync)return;
+  running=true;
   try{
-   const response=await fetch('products.json',{cache:'no-cache'});if(!response.ok)return;
-   const data=await response.json(),settings=data.settings||{},home=settings.homepage||{},footer=home.footer||{},header=home.header||{};
-   const social=socialMarkup(settings,true);
-   let menu=document.querySelector('#dewMobileMenu');
-   if(menu){
+   const data=await loadData(),settings=data.settings||{},home=settings.homepage||{},footer=home.footer||{};
+   const social=socialMarkup(settings);
+   if(menuNeedsSync){
     let area=menu.querySelector('.dew-mobile-menu-social');
     if(!area){area=document.createElement('div');area.className='dew-mobile-menu-social';menu.append(area);}
-    area.innerHTML='<b>FOLLOW DEW</b><div class="dew-social-links">'+(social||'<span class="dew-social-empty">Follow Dew on social media</span>')+'</div>';
+    const html='<b>FOLLOW DEW</b><div class="dew-social-links">'+(social||'<span class="dew-social-empty">Follow Dew on social media</span>')+'</div>';
+    if(area.innerHTML!==html)area.innerHTML=html;
+    menu.dataset.dewSocialReady='1';
    }
-   document.querySelectorAll('.dew-footer').forEach(el=>{
-    if(footer.show===false){el.hidden=true;return;}
+   footers.forEach(el=>{
+    if(footer.show===false){el.hidden=true;el.dataset.dewFooterReady='1';return;}
     el.hidden=false;
+    if(!el.id)el.id='contact';
     let about=el.querySelector('.dew-footer-about');
     if(!about){about=document.createElement('div');about.className='dew-footer-about';el.prepend(about);}
-    about.innerHTML='<h3>About Dew</h3><p>'+esc(footer.about||'')+'</p>';
+    const aboutHtml='<h3>About Dew</h3><p>'+esc(footer.about||'')+'</p>';
+    if(about.innerHTML!==aboutHtml)about.innerHTML=aboutHtml;
     let socials=el.querySelector('.dew-footer-social');
     if(!socials){socials=document.createElement('div');socials.className='dew-footer-social';about.after(socials);}
-    socials.innerHTML=social;
+    if(socials.innerHTML!==social)socials.innerHTML=social;
     let nav=el.querySelector('nav');
     if(!nav){nav=document.createElement('nav');socials.after(nav);}
     const links=[...(Array.isArray(footer.links)?footer.links:[]),...(data.pages||[]).filter(p=>p.published&&p.showInFooter).map(p=>({label:p.title,url:'page.html?slug='+encodeURIComponent(p.slug)}))];
-    nav.innerHTML=links.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('');
+    const navHtml=links.map(x=>'<a href="'+esc(x.url)+'">'+esc(x.label)+'</a>').join('');
+    if(nav.innerHTML!==navHtml)nav.innerHTML=navHtml;
     let small=el.querySelector('small');
     if(!small){small=document.createElement('small');el.append(small);}
-    small.textContent='© '+new Date().getFullYear()+' '+(settings.storeName||'Dew Skincare')+'. '+(footer.copyright||'All rights reserved.');
+    const copyright='© '+new Date().getFullYear()+' '+(settings.storeName||'Dew Skincare')+'. '+(footer.copyright||'All rights reserved.');
+    if(small.textContent!==copyright)small.textContent=copyright;
+    el.dataset.dewFooterReady='1';
    });
-  }catch(e){/* Preserve the rendered page if shared settings are temporarily unavailable. */}
+  }catch(e){/* Retry if settings are temporarily unavailable. */}
+  finally{running=false;}
  };
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',sync,{once:true});else sync();
+ const schedule=()=>{if(queued)return;queued=true;Promise.resolve().then(()=>{queued=false;sync()})};
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
+ new MutationObserver(schedule).observe(document.documentElement,{childList:true,subtree:true});
 })();
