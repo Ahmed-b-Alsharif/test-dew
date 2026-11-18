@@ -359,14 +359,16 @@
         "3ffd74ff",
         "e2a1f39f"
       ],
-      "desktopImage": "",
-      "mobileImage": "",
+      "desktopImage": "images/1795015979941-6af7efe6.webp",
+      "mobileImage": "images/1795015984508-15e65f49.webp",
       "homepageSection": {
         "show": true,
         "limit": 5,
         "showViewAll": true,
         "viewAllText": "View all Foot Care"
-      }
+      },
+      "desktopImageRemoved": false,
+      "mobileImageRemoved": false
     },
     {
       "id": "a775b245",
