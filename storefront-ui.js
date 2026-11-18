@@ -113,7 +113,7 @@
    ['instagramUrl','Instagram','<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>'],
    ['facebookUrl','Facebook','<path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11.4 1 9.5 2.8 9.5 6.1V9H6v4h3.5v8z"/>']
   ];
-  return items.filter(([key])=>/^https?:\\/\\//i.test(String(settings[key]||''))).map(([key,name,svg])=>'<a class="dew-social-icon" href="'+esc(settings[key])+'" target="_blank" rel="noopener noreferrer" aria-label="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg><span>'+name+'</span></a>').join('');
+  return items.filter(([key])=>/^https?:\/\//i.test(String(settings[key]||''))).map(([key,name,svg])=>'<a class="dew-social-icon" href="'+esc(settings[key])+'" target="_blank" rel="noopener noreferrer" aria-label="'+name+'"><svg viewBox="0 0 24 24" aria-hidden="true">'+svg+'</svg><span>'+name+'</span></a>').join('');
  };
  let dataPromise;
  const loadData=()=>dataPromise||(dataPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}));
