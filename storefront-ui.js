@@ -32,7 +32,7 @@
 
  }
  if(!document.querySelector('link[rel="stylesheet"][href*="styles.css"]')){const css=document.createElement('link');css.rel='stylesheet';css.href='styles.css?v=20261110-9';css.dataset.dewStorefrontStyles='true';document.head.append(css);}
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+ let menuInitDone=false;const bootMenu=()=>{if(menuInitDone)return true;if(!document.querySelector('.dew-header'))return false;menuInitDone=true;init();return true};if(!bootMenu()){const menuObserver=new MutationObserver(()=>{if(bootMenu())menuObserver.disconnect()});menuObserver.observe(document.documentElement,{childList:true,subtree:true});document.addEventListener('DOMContentLoaded',bootMenu,{once:true});}
 })();
  function setupStickyAnnouncementBar(){
   const sync=()=>{
