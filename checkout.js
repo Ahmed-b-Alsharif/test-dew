@@ -108,20 +108,22 @@ function previewDiscount(d,ls,items,delivery){
     if(d.discountKind==='amount_off_products'&&d.scope==='products'&&!base)return {ok:false,error:'Your cart has no eligible products.'};
     const kind=d.valueType||(d.type==='fixed'?'fixed':'percentage'),value=Math.max(0,Number(d.value||0));
     amount=kind==='fixed'?Math.min(base,value):Math.round(base*Math.min(100,value)/100);
-    if(d.discountKind==='amount_off_products'&&base>0){for(const line of eligible){const index=ls.indexOf(line);lineDiscounts[index]=amount*(line.total/base);}}
+    if(base>0){for(const line of eligible){const index=ls.indexOf(line);lineDiscounts[index]=amount*(line.total/base);}}
   }
   return {ok:true,amount:Math.min(items,Math.round(amount*100)/100),shipping:Math.min(delivery,shipping),label,kind:d.discountKind||d.type,lineDiscounts};
 }
 function automaticDiscount(){return (S.discounts||[]).find(d=>d.active!==false&&d.method==='automatic'&&!d.code&&discountIsLive(d))||null;}
 function totals(){
-  const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),selectedArea=deliveryAreas.find(x=>x.id===area);
-  let delivery=selectedArea?Number(selectedArea.fee)||0:0,lineDiscounts={};
+  const ls=lines(),items=ls.reduce((a,l)=>a+l.total,0),originalItems=ls.reduce((a,l)=>a+(Number(l.originalUnit||l.unit)*l.qty),0),selectedArea=deliveryAreas.find(x=>x.id===area);
+  const deliveryBeforeDiscount=selectedArea?Number(selectedArea.fee)||0:0;
+  let delivery=deliveryBeforeDiscount,lineDiscounts={};
   const chosen=appliedDiscount||automaticDiscount();let discount=0,discountShipping=0,discountLabel='',validationRequired=false;
   if(chosen){
     if(discountNeedsServerValidation(chosen))validationRequired=true;
     else {const result=previewDiscount(chosen,ls,items,delivery);if(result.ok){discount=result.amount;discountShipping=result.shipping;delivery=Math.max(0,delivery-discountShipping);discountLabel=result.label;lineDiscounts=result.lineDiscounts||{};}}
   }
-  return {ls,items,delivery,discount,discountShipping,total:Math.max(0,Math.round((items+delivery-discount)*100)/100),discountLabel,chosen,validationRequired,lineDiscounts};
+  const total=Math.max(0,Math.round((items+delivery-discount)*100)/100),originalOrderTotal=originalItems+deliveryBeforeDiscount,totalSavings=Math.max(0,Math.round((originalOrderTotal-total)*100)/100);
+  return {ls,items,originalItems,deliveryBeforeDiscount,delivery,discount,discountShipping,total,originalOrderTotal,totalSavings,discountLabel,chosen,validationRequired,lineDiscounts};
 }
 function render() {
   const t = totals();
@@ -130,16 +132,17 @@ function render() {
     $('#submit').disabled = true; return;
   }
 
-  const totalSavings=t.discount+t.discountShipping;
   const productDiscount = t.chosen && (t.chosen.discountKind==='amount_off_products'||t.chosen.discountKind==='buy_x_get_y');
-  const discHtml = t.chosen && !productDiscount && !t.validationRequired && totalSavings>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(totalSavings)}</b></div>` : '';
+  const discHtml = t.chosen && !productDiscount && !t.validationRequired && t.discount>0 ? `<div class="sum-line" style="color:var(--green)"><span>Discount (${esc(t.discountLabel)})</span><b>-${egp(t.discount)}</b></div>` : '';
   const discountNotice = t.validationRequired ? '<p class="note">Discount eligibility and usage limits will be checked when you place the order. This total does not include the discount yet.</p>' : '';
 
-  $('#sumBody').innerHTML = t.ls.map((l,index) => {const lineSaving=Math.min(l.total,Number(t.lineDiscounts[index]||0)),net=Math.max(0,l.total-lineSaving),originalTotal=l.originalUnit*l.qty,saving=Math.max(0,originalTotal-net),hasPriceCut=saving>0;return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${egp(l.unit)} each</span>${hasPriceCut?`<br><span class="checkout-item-discount" style="display:inline-block;margin-top:4px;color:#c62828;font-size:.78rem;font-weight:700;line-height:1.35">You save ${egp(saving)}${lineSaving>0&&t.discountLabel?' · '+esc(t.discountLabel):''}</span>`:''}</span><b>${hasPriceCut?`<span class="checkout-item-old-price" style="color:#8a918b;text-decoration:line-through;font-size:.82rem;font-weight:400">${egp(originalTotal)}</span><br>`:''}<span style="${hasPriceCut?'color:#c62828;font-weight:800':''}">${egp(net)}</span></b></div>`;}).join('') +
+  $('#sumBody').innerHTML = t.ls.map((l,index) => {const lineSaving=Math.min(l.total,Number(t.lineDiscounts[index]||0)),net=Math.max(0,l.total-lineSaving),originalTotal=l.originalUnit*l.qty,saving=Math.max(0,originalTotal-net),hasPriceCut=saving>0,finalUnit=l.qty?net/l.qty:l.unit;return `<div class="sum-line checkout-product-line"><span>${esc(l.name)} &times; ${l.qty}<br><span class="note">${hasPriceCut?`<del style="color:#8a918b">${egp(l.originalUnit)} each</del> <strong style="color:#c62828">${egp(finalUnit)} each</strong>`:`${egp(l.unit)} each`}</span>${hasPriceCut?`<br><span class="checkout-item-discount" style="display:inline-block;margin-top:4px;color:#c62828;font-size:.78rem;font-weight:700;line-height:1.35">You save ${egp(saving)}${lineSaving>0&&t.discountLabel?' · '+esc(t.discountLabel):''}</span>`:''}</span><b>${hasPriceCut?`<span class="checkout-item-old-price" style="color:#8a918b;text-decoration:line-through;font-size:.82rem;font-weight:400">${egp(originalTotal)}</span><br>`:''}<span style="${hasPriceCut?'color:#c62828;font-weight:800':''}">${egp(net)}</span></b></div>`;}).join('') +
     `<div class="sum-line"><span>Items</span><b>${egp(t.items)}</b></div>
      <div class="sum-line"><span>Delivery</span><b>${area ? (t.delivery>0?egp(t.delivery):'Free') : 'Choose area'}</b></div>
      ${discHtml}
      ${discountNotice}
+     <div class="sum-line" style="border-top:1px solid #e4e7e1;padding-top:10px;margin-top:8px"><span>Price before discounts</span><b>${egp(t.originalOrderTotal)}</b></div>
+     <div class="sum-line" style="color:#c62828;font-weight:700"><span>You saved</span><b>-${egp(t.totalSavings)}</b></div>
      <div class="sum-line total"><span>Total</span><span>${egp(t.total)}</span></div>` +
     `<div style="margin:14px 0 8px;display:flex;gap:8px">
        <input id="promoInput" placeholder="Promo code" style="flex:1;padding:8px 12px;border:1.5px solid #cfd3cc;border-radius:999px;font-size:.9rem" value="${appliedDiscount ? esc(appliedDiscount.code) : ''}">
