@@ -1701,31 +1701,14 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Chocolate3.jpg?v=1770633660"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "Title",
-          "values": [
-            "Default Title"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "59ed7e1b",
-          "options": {
-            "Title": "Default Title"
-          },
-          "price": 100,
-          "salePrice": 85,
-          "stock": 6,
-          "sku": "",
-          "barcode": "'1122334455",
-          "image": ""
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 100,
       "salePrice": 85,
-      "stock": 6
+      "stock": 6,
+      "shopifyHandle": "lip-balm-chocolate",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "2aece5ff",
