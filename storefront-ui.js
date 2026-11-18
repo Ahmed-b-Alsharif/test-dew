@@ -77,8 +77,8 @@
  let settingsPromise;
  const loadSettings=()=>settingsPromise||(settingsPromise=fetch('products.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw Error('Store settings unavailable');return r.json()}).then(x=>x.settings||{}));
  const apply=async()=>{
-  // The homepage app.js renders its own announcement bar. Do not race it with this fallback renderer.
-  if(document.getElementById('app'))return;
+  // The homepage and product.js render their own announcement bars. Do not add a second fallback bar on either page.
+  if(document.getElementById('app')||document.getElementById('productApp'))return;
   try{
    const settings=await loadSettings(),a=settings.homepage?.announcement||{};
    let bar=document.querySelector('.dew-ann');
