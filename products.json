@@ -2285,7 +2285,7 @@
           },
           "price": 220,
           "salePrice": 180,
-          "stock": 14,
+          "stock": 0,
           "sku": "'62282001112",
           "barcode": "'62282001112",
           "image": ""
@@ -2293,7 +2293,10 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 14
+      "stock": 0,
+      "shopifyHandle": "fresh-mint-foot-cream",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "0424f67a",
