@@ -552,6 +552,7 @@
     {
       "id": "5302dec3",
       "name": "Fluffy Kashmir Beauty Pouch",
+      "shopifyHandle": "fluffy-kashmir-beauty-pouch",
       "description": "Keep your beauty favourites together in one adorable place. This soft, fluffy pouch is lightweight, easy to carry and roomy enough for your everyday makeup and skincare essentials. A cute addition to your handbag, vanity or travel bag. Size: 7 × 15 × 8 cm.",
       "catalog": "f82c320f",
       "tags": "everyday use, Fluffy, Lightweight, pouch",
@@ -579,7 +580,7 @@
           },
           "price": 350,
           "salePrice": 310,
-          "stock": 0,
+          "stock": 4,
           "sku": "",
           "barcode": "",
           "image": ""
@@ -587,7 +588,9 @@
       ],
       "price": 350,
       "salePrice": 310,
-      "stock": 0
+      "stock": 4,
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "6590f759",
