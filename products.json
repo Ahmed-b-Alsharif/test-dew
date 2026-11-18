@@ -1599,7 +1599,7 @@
           },
           "price": 310,
           "salePrice": 270,
-          "stock": 8,
+          "stock": 4,
           "sku": "'6285001112",
           "barcode": "'6285001112",
           "image": ""
@@ -1607,7 +1607,10 @@
       ],
       "price": 310,
       "salePrice": 270,
-      "stock": 8
+      "stock": 4,
+      "shopifyHandle": "rosemary-conditioner",
+      "seoTitle": "",
+      "seoDescription": ""
     },
     {
       "id": "6c043d33",
