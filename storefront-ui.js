@@ -120,13 +120,15 @@
  let running=false,queued=false;
  const sync=async()=>{
   if(running||document.body.classList.contains('dew-checkout-page')||document.querySelector('.dew-success-page'))return;
-  const footers=[...document.querySelectorAll('.dew-footer')].filter(el=>el.dataset.dewFooterReady!=='1');
-  const menu=document.querySelector('#dewMobileMenu');
-  const menuNeedsSync=menu&&menu.dataset.dewSocialReady!=='1';
-  if(!footers.length&&!menuNeedsSync)return;
+  const hasPendingFooter=[...document.querySelectorAll('.dew-footer')].some(el=>el.dataset.dewFooterReady!=='1');
+  const initialMenu=document.querySelector('#dewMobileMenu');
+  if(!hasPendingFooter&&(!initialMenu||initialMenu.dataset.dewSocialReady==='1'))return;
   running=true;
   try{
    const data=await loadData(),settings=data.settings||{},home=settings.homepage||{},footer=home.footer||{};
+   const footers=[...document.querySelectorAll('.dew-footer')].filter(el=>el.dataset.dewFooterReady!=='1');
+   const menu=document.querySelector('#dewMobileMenu');
+   const menuNeedsSync=menu&&menu.dataset.dewSocialReady!=='1';
    const social=socialMarkup(settings);
    if(menuNeedsSync){
     let area=menu.querySelector('.dew-mobile-menu-social');
