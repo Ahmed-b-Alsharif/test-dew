@@ -449,13 +449,37 @@ export default {
       if (path==="/api/orders" && request.method==="PUT") {
         if (!await authorized(request,env)) return json({ok:false,error:"Unauthorized"},401);
         const body=await request.json(), orders=Array.isArray(body.orders)?body.orders:[];
+        await env.DB.prepare("CREATE TABLE IF NOT EXISTS inventory_restocks (order_number TEXT PRIMARY KEY, stage TEXT NOT NULL, created_at TEXT NOT NULL)").run();
         for (const o of orders) {
           if (!o.number) continue;
           const result=await env.DB.prepare("SELECT order_json FROM orders WHERE order_number=?").bind(o.number).first();
           if (!result) continue;
           const previous=JSON.parse(result.order_json);
           const updated={...previous,paymentStatus:o.paymentStatus||previous.paymentStatus,fulfillmentStatus:o.fulfillmentStatus||previous.fulfillmentStatus,trackingNumber:o.trackingNumber??previous.trackingNumber,note:o.note??previous.note??""};
-          await env.DB.prepare("UPDATE orders SET order_json=? WHERE order_number=?").bind(JSON.stringify(updated),o.number).run();
+          const isNewCancellation=previous.fulfillmentStatus!=="Cancelled"&&updated.fulfillmentStatus==="Cancelled";
+          if(isNewCancellation){
+            const quantities=new Map();
+            for(const line of Array.isArray(previous.lines)?previous.lines:[]){
+              const productId=String(line.id??""),variantId=String(line.variantId??""),qty=Number(line.qty);
+              if(!productId||!Number.isSafeInteger(qty)||qty<1||qty>99)continue;
+              const key=productId+"::"+variantId;
+              quantities.set(key,{productId,variantId,qty:(quantities.get(key)?.qty||0)+qty});
+            }
+            const now=new Date().toISOString();
+            const statements=[
+              env.DB.prepare("INSERT OR IGNORE INTO inventory_restocks (order_number,stage,created_at) VALUES (?,'pending',?)").bind(o.number,now),
+              env.DB.prepare("UPDATE inventory_restocks SET stage='restocking' WHERE order_number=? AND stage='pending'").bind(o.number)
+            ];
+            for(const item of quantities.values()){
+              statements.push(env.DB.prepare("UPDATE inventory SET stock=stock+?,updated_at=? WHERE product_id=? AND variant_id=? AND EXISTS (SELECT 1 FROM inventory_restocks WHERE order_number=? AND stage='restocking')")
+                .bind(item.qty,now,item.productId,item.variantId,o.number));
+            }
+            statements.push(env.DB.prepare("UPDATE inventory_restocks SET stage='done' WHERE order_number=? AND stage='restocking'").bind(o.number));
+            statements.push(env.DB.prepare("UPDATE orders SET order_json=? WHERE order_number=?").bind(JSON.stringify(updated),o.number));
+            await env.DB.batch(statements);
+          }else{
+            await env.DB.prepare("UPDATE orders SET order_json=? WHERE order_number=?").bind(JSON.stringify(updated),o.number).run();
+          }
         }
         return json({ok:true});
       }
