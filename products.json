@@ -1038,7 +1038,7 @@
           },
           "price": 280,
           "salePrice": 230,
-          "stock": 0,
+          "stock": 5,
           "sku": "",
           "barcode": "",
           "image": "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/Set_1.png?v=1762866793"
@@ -1046,7 +1046,7 @@
       ],
       "price": 280,
       "salePrice": 230,
-      "stock": 0
+      "stock": 5
     },
     {
       "id": "757414b0",
@@ -2531,7 +2531,7 @@
       "description": "Slow down and enjoy a calming shower moment with Dew French Lavender Shower Gel. Its lovely lavender scent brings a relaxing touch to your daily cleanse, leaving your skin feeling clean and refreshed. Size: 480 ml.",
       "catalog": "a33bf143",
       "tags": "Cleansing, Hydrating, Moisturizing, Natural, Nourishing, Refreshing, Self-care, Shower Essentials, Shower Gel",
-      "visible": true,
+      "visible": false,
       "featured": false,
       "images": [
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/French_Lavender_Shower_Gel.jpg?v=1756215316",
@@ -2562,7 +2562,10 @@
       ],
       "price": 220,
       "salePrice": 180,
-      "stock": 0
+      "stock": 0,
+      "shopifyHandle": "french-lavender-shower-gel",
+      "seoTitle": "",
+      "seoDescription": ""
     }
   ],
   "discounts": [
