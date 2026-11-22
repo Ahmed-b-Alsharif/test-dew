@@ -69,12 +69,16 @@
             "url": "collection/body-care"
           },
           {
-            "label": "Hair Care",
-            "url": "collection/hair-care"
+            "label": "Lip Care",
+            "url": "collection/lip-care"
           },
           {
             "label": "Lip Gloss",
             "url": "collection/lip-gloss"
+          },
+          {
+            "label": "Hair Care",
+            "url": "collection/hair-care"
           },
           {
             "label": "Fluffy Pouch",
