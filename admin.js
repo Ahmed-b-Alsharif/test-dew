@@ -1318,44 +1318,58 @@ function store() {
     <div class="full"><label><input type="checkbox" id="s_telegramEnabled" ${s.telegramEnabled ? 'checked' : ''} style="width:auto"> Enable legacy Telegram order notifications</label></div>
     <div class="full"><label>Orders API URL (Cloudflare Worker)</label><input id="s_ordersApiUrl" value="${esc(s.ordersApiUrl||'')}" placeholder="https://dew-orders-api.your-account.workers.dev"></div>
     <div class="full"><label>Orders API</label><input value="Secure Dew admin service" disabled></div>
-    </div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
+    </div><div id="storeSaveStatus" role="status" aria-live="polite" style="margin-top:12px;min-height:20px;font-size:13px;color:var(--muted)">Changes are not saved until you click Save settings.</div><button class="btn red" id="ss" style="margin-top:10px">Save settings</button></div>`;
   const addAreaRow = (id='',name='',fee=0,enabled=true) => {
     $('#deliveryAreaEditor').insertAdjacentHTML('beforeend', `<div class="delivery-area-row" data-area-row data-id="${esc(id)}"><input class="da-name" aria-label="Governorate name" placeholder="Governorate name" value="${esc(name)}"><input class="da-fee" aria-label="Delivery fee" type="number" min="0" value="${Math.max(0,Number(fee)||0)}"><label class="da-enabled"><input type="checkbox" class="da-active" ${enabled?'checked':''}> Active</label><button type="button" class="btn small da-remove">Remove</button></div>`);
   };
   $('#chooseSocialSharingImage').onclick=()=>chooseMedia((path,item)=>{s.socialSharingImage=path;$('#s_socialSharingImage').value=path;$('#socialSharingPreview').src=item.url;});
   $('#addDeliveryArea').onclick=()=>addAreaRow();
   $('#deliveryAreaEditor').onclick=e=>{if(e.target.closest('.da-remove'))e.target.closest('[data-area-row]').remove();};
-  $('#ss').onclick = () => {
-    for (const k of Object.keys(s)) {
-      const el=$('#s_'+k);
-      if(el) { if(el.type==='checkbox') s[k]=el.checked; else s[k]=el.type==='number'?Math.max(0,Number(el.value)||0):el.value.trim(); }
-    }
-    s.deliveryAreas=[...document.querySelectorAll('[data-area-row]')].map((row,i)=>{
-      const name=row.querySelector('.da-name').value.trim();
-      const fee=Math.max(0,Number(row.querySelector('.da-fee').value)||0);
-      const id=row.dataset.id||name.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'area-'+(i+1);
-      return {id,name,fee,enabled:row.querySelector('.da-active').checked};
-    }).filter(x=>x.name);
-    s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
-    s.socialSharingImage=$('#s_socialSharingImage').value.trim();
-    save('Update store settings',true).then(async()=>{
-      try{
-        const htmlFile=await gh('GET','contents/index.html');
-        let html=dec(htmlFile.content);
-        const title=String(s.storeName||'Dew Skincare')+' | '+String(s.tagline||'Natural skincare, made in Egypt');
-        const description=String(s.tagline||'Natural skincare, made in Egypt').replace(/\s+/g,' ').trim();
-        const image=new URL(s.socialSharingImage||'images/1794398816986-2fc3d035.webp',location.origin+'/').href;
-        const attrs={'og:title':title,'og:description':description,'og:url':'https://dewskincaree.com/','og:image':image,'og:image:width':'1200','og:image:height':'630','og:image:alt':title,'twitter:card':'summary_large_image','twitter:title':title,'twitter:description':description,'twitter:image':image};
-        for(const [key,value] of Object.entries(attrs)){
-          const escaped=value.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-          const re=key==='twitter:card'?new RegExp('<meta\\s+name="twitter:card"[^>]*>','i'):new RegExp('<meta\\s+(?:property|name)="'+key+'"[^>]*>','i');
-          const tag=key.startsWith('twitter:')?'<meta name="'+key+'" content="'+escaped+'">':'<meta property="'+key+'" content="'+escaped+'">';
-          if(re.test(html))html=html.replace(re,tag);else html=html.replace('</head>',tag+'</head>');
-        }
-        await putGithubFileLatest('index.html',{message:'Update homepage social sharing preview',content:enc(html)});
-        toast('Store settings and social sharing preview saved.');
-      }catch(error){toast('Settings saved, but social preview tags could not update: '+error.message,true);}
-    });
+  const saveButton=$('#ss'),saveStatus=$('#storeSaveStatus');
+  const setStoreSaveStatus=(message,ok=false)=>{saveStatus.textContent=message;saveStatus.style.color=ok?'#18794e':'#b42318';};
+  $('#ss').onclick = async () => {
+    if(saveButton.disabled)return;
+    saveButton.disabled=true;saveButton.textContent='Saving…';setStoreSaveStatus('Saving store settings and verifying them…');
+    try{
+      for(const k of Object.keys(s)){
+        const el=$('#s_'+k);
+        if(el){if(el.type==='checkbox')s[k]=el.checked;else s[k]=el.type==='number'?Math.max(0,Number(el.value)||0):el.value.trim();}
+      }
+      s.deliveryAreas=[...document.querySelectorAll('[data-area-row]')].map((row,i)=>{
+        const name=row.querySelector('.da-name').value.trim();
+        const fee=Math.max(0,Number(row.querySelector('.da-fee').value)||0);
+        const id=row.dataset.id||name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'area-'+(i+1);
+        return {id,name,fee,enabled:row.querySelector('.da-active').checked};
+      }).filter(x=>x.name);
+      s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
+      s.socialSharingImage=$('#s_socialSharingImage').value.trim();
+      await save('Update store settings',true);
+      const verify=await gh('GET','contents/products.json?t='+Date.now());
+      const savedData=JSON.parse(dec(verify.content));
+      if(JSON.stringify(savedData.settings)!==JSON.stringify(D.settings))throw Error('The store settings could not be verified after saving. Please try again.');
+      SHA=verify.sha;
+      const htmlFile=await gh('GET','contents/index.html');
+      let html=dec(htmlFile.content);
+      const title=String(s.storeName||'Dew Skincare')+' | '+String(s.tagline||'Natural skincare, made in Egypt');
+      const description=String(s.tagline||'Natural skincare, made in Egypt').replace(/\s+/g,' ').trim();
+      const image=new URL(s.socialSharingImage||'images/1794398816986-2fc3d035.webp',location.origin+'/').href;
+      const attrs={'og:title':title,'og:description':description,'og:url':'https://dewskincaree.com/','og:image':image,'og:image:width':'1200','og:image:height':'630','og:image:alt':title,'twitter:card':'summary_large_image','twitter:title':title,'twitter:description':description,'twitter:image':image};
+      for(const [key,value] of Object.entries(attrs)){
+        const escaped=value.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+        const attr=key.startsWith('twitter:')?'name':'property';
+        const needle='<meta '+attr+'="'+key+'"';
+        const pos=html.indexOf(needle);
+        const tag='<meta '+attr+'="'+key+'" content="'+escaped+'">';
+        if(pos>=0){const end=html.indexOf('>',pos);html=html.slice(0,pos)+tag+html.slice(end+1);}
+        else html=html.replace('</head>',tag+'</head>');
+      }
+      await putGithubFileLatest('index.html',{message:'Update homepage social sharing preview',content:enc(html)});
+      setStoreSaveStatus('✓ Saved and verified. Your settings will remain after refresh.',true);
+      saveButton.textContent='Saved ✓';toast('Store settings saved and verified.');
+    }catch(error){
+      setStoreSaveStatus('Not confirmed saved: '+(error.message||'Please try again.'));
+      saveButton.textContent='Save settings';toast('Could not confirm settings were saved: '+error.message,true);
+    }finally{saveButton.disabled=false;}
   };
 }
 
