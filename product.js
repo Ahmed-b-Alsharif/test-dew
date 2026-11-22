@@ -2,6 +2,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>{const c=window.dewProductSettings||{};return String(c.currencyPrefix??'EGP ')+Number(n||0).toLocaleString('en-US')+String(c.currencySuffix||'')};
 const price=p=>p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price;
+const metaTrack=(event,params)=>{if(typeof window.dewMetaTrack==='function')window.dewMetaTrack(event,params);else(window.dewMetaPendingEvents||(window.dewMetaPendingEvents=[])).push({event,params:params||{}});};
 const optimizedImage=(src,width=1200)=>{try{const u=new URL(src,location.href);if(u.hostname.endsWith('cdn.shopify.com')){u.searchParams.set('width',String(width));u.searchParams.set('format','webp');return u.href}}catch{}return src};
 const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values)&&new Set(o.values.map(v=>String(v).trim()).filter(Boolean)).size>1);
 (async()=>{
@@ -15,6 +16,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   const products=(S.products||[]).filter(x=>x.visible);
   const p=products.find(x=>handle&&(x.shopifyHandle||String(x.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))===handle)||products.find(x=>x.id===id);
   if(!p){root.innerHTML='<main class="product-page"><a class="product-back" href="./#shop">← Back to shop</a><section class="product-not-found"><h1>Product not found</h1><p>This product may no longer be available.</p><a class="dew-btn" href="./#shop">Continue shopping</a></section></main>';return;}
+  metaTrack('ViewContent',{content_ids:[String(p.id)],content_type:'product',content_name:String(p.name||''),value:Number(price(p))||0,currency:'EGP'});
   try{const key='dew_recently_viewed';const old=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>String(x)!==String(p.id));localStorage.setItem(key,JSON.stringify([p.id,...old].slice(0,6)));}catch{}
   const images=(p.images||[]).filter(Boolean), related=products.filter(x=>x.id!==p.id&&x.catalog===p.catalog).slice(0,4);
   const fallback=products.filter(x=>x.id!==p.id&&!related.some(r=>r.id===x.id)).slice(0,4-related.length);
@@ -105,7 +107,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
     document.querySelectorAll('[data-plus]').forEach(b=>b.onclick=()=>{const cid=b.dataset.plus,bits=cid.split('::'),x=products.find(y=>y.id===bits[0]),v=x?.variants?.find(z=>z.id===bits[1]);if(x)Cart.add(cid,1,v?Number(v.stock||0):x.stock);renderCart()});
   }
   const open=()=>{$('#drawer').classList.add('open');$('#scrim').classList.add('open')},close=()=>{$('#drawer').classList.remove('open');$('#scrim').classList.remove('open')};
-  function addToCart(goCheckout){if(!available||(hasMultipleVariantValues(p)&&!selectedVariant))return;const n=quantity();Cart.add(cartKey(),n,stock);$('#cartCount').textContent=Cart.count();renderCart();if(goCheckout){location.href='checkout.html';return;}$('#cartToast').textContent=p.name+' added to cart';$('#cartToast').classList.add('show');clearTimeout(window.dewCartToastTimer);window.dewCartToastTimer=setTimeout(()=>$('#cartToast').classList.remove('show'),2200);}
+  function addToCart(goCheckout){if(!available||(hasMultipleVariantValues(p)&&!selectedVariant))return;const n=quantity();Cart.add(cartKey(),n,stock);metaTrack('AddToCart',{content_ids:[String(p.id)],content_type:'product',content_name:String(p.name||''),contents:[{id:String(p.id),quantity:n,item_price:Number(variantUnit())||0}],value:(Number(variantUnit())||0)*n,currency:'EGP'});$('#cartCount').textContent=Cart.count();renderCart();if(goCheckout){location.href='checkout.html';return;}$('#cartToast').textContent=p.name+' added to cart';$('#cartToast').classList.add('show');clearTimeout(window.dewCartToastTimer);window.dewCartToastTimer=setTimeout(()=>$('#cartToast').classList.remove('show'),2200);}
   function showVariantPhoto(url){
     if(!url)return;
     const main=$('#productMainPhoto');if(main)main.src=optimizedImage(url,1400);
