@@ -1,10 +1,14 @@
+User-agent: Googlebot
+Allow: /
+
+User-agent: Google-InspectionTool
+Allow: /
+
 User-agent: facebookexternalhit
 Allow: /
-Disallow: /admin.html
 
 User-agent: Facebot
 Allow: /
-Disallow: /admin.html
 
 User-agent: *
 Allow: /
