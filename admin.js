@@ -124,7 +124,7 @@ async function refreshProductSitemap(previousSlugs = []) {
   await putGithubFileLatest('sitemap.xml',{message:'Refresh product SEO sitemap',content:enc(xml)});
 }
 function save(message, propagateError=false) {
-  chain = chain.then(async () => {
+  chain = chain.catch(() => {}).then(async () => {
     try {
       const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: SHA });
       SHA = r.content.sha;
