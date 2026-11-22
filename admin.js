@@ -1294,9 +1294,11 @@ function store() {
   ];
   if (s.instagramUrl === undefined) s.instagramUrl = '';
   if (s.facebookUrl === undefined) s.facebookUrl = '';
+  if (!s.socialSharingImage) s.socialSharingImage = s.homepage?.hero?.image || 'images/1794398816986-2fc3d035.webp';
   const f = (k, label, type = 'text') => `<div><label>${label}</label><input id="s_${k}" type="${type}" value="${esc(s[k])}"></div>`;
   $('#view').innerHTML = `<h2>Store settings</h2><div class="box"><div class="form-grid">
     ${f('storeName', 'Store name')}${f('tagline', 'Tagline')}
+    <div class="full"><h3>Social sharing image</h3><p class="muted">This is the large photo shown when someone shares dewskincaree.com on WhatsApp, Facebook, or other apps. Use a landscape image exactly 1200 × 630 px (Shopify standard).</p><div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><img id="socialSharingPreview" src="${esc(new URL(s.socialSharingImage,location.origin+'/').href)}" alt="Social sharing preview" style="width:min(100%,360px);aspect-ratio:1200/630;object-fit:cover;border:1px solid #ddd;border-radius:8px"><div><input id="s_socialSharingImage" type="hidden" value="${esc(s.socialSharingImage)}"><button type="button" class="btn small" id="chooseSocialSharingImage">Choose / upload image</button><p class="muted">Choose an image from Media Library. You can upload a new one there first.</p></div></div></div>
     ${f('heroTitle', 'Hero headline')}${f('heroText', 'Hero paragraph')}
     ${f('welcomeLine', 'Welcome screen headline')}${f('welcomeNote', 'Welcome screen note')}
     ${f('whatsapp', 'WhatsApp number (with country code)')}${f('phone', 'Phone')}
@@ -1320,6 +1322,7 @@ function store() {
   const addAreaRow = (id='',name='',fee=0,enabled=true) => {
     $('#deliveryAreaEditor').insertAdjacentHTML('beforeend', `<div class="delivery-area-row" data-area-row data-id="${esc(id)}"><input class="da-name" aria-label="Governorate name" placeholder="Governorate name" value="${esc(name)}"><input class="da-fee" aria-label="Delivery fee" type="number" min="0" value="${Math.max(0,Number(fee)||0)}"><label class="da-enabled"><input type="checkbox" class="da-active" ${enabled?'checked':''}> Active</label><button type="button" class="btn small da-remove">Remove</button></div>`);
   };
+  $('#chooseSocialSharingImage').onclick=()=>chooseMedia((path,item)=>{s.socialSharingImage=path;$('#s_socialSharingImage').value=path;$('#socialSharingPreview').src=item.url;});
   $('#addDeliveryArea').onclick=()=>addAreaRow();
   $('#deliveryAreaEditor').onclick=e=>{if(e.target.closest('.da-remove'))e.target.closest('[data-area-row]').remove();};
   $('#ss').onclick = () => {
@@ -1334,7 +1337,26 @@ function store() {
       return {id,name,fee,enabled:row.querySelector('.da-active').checked};
     }).filter(x=>x.name);
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
-    save('Update store settings').then(()=>{ toast('Store settings saved.'); });
+    s.socialSharingImage=$('#s_socialSharingImage').value.trim();
+    save('Update store settings').then(async()=>{
+      try{
+        const htmlFile=await gh('GET','contents/index.html');
+        let html=dec(htmlFile.content);
+        const title=String(s.storeName||'Dew Skincare')+' | '+String(s.tagline||'Natural skincare, made in Egypt');
+        const description=String(s.tagline||'Natural skincare, made in Egypt').replace(/\s+/g,' ').trim();
+        const image=new URL(s.socialSharingImage||'images/1794398816986-2fc3d035.webp',location.origin+'/').href;
+        const attrs={'og:title':title,'og:description':description,'og:url':'https://dewskincaree.com/','og:image':image,'og:image:width':'1200','og:image:height':'630','og:image:alt':title,'twitter:card':'summary_large_image','twitter:title':title,'twitter:description':description,'twitter:image':image};
+        for(const [key,value] of Object.entries(attrs)){
+          const escaped=value.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+          const re=key==='twitter:card'?new RegExp('<meta\\s+name="twitter:card"[^>]*>','i'):new RegExp('<meta\\s+(?:property|name)="'+key.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\    s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
+    save('Update store settings').then(()=>{ toast('Store settings saved.'); });')+'"[^>]*>','i');
+          const tag=key.startsWith('twitter:')?'<meta name="'+key+'" content="'+escaped+'">':'<meta property="'+key+'" content="'+escaped+'">';
+          if(re.test(html))html=html.replace(re,tag);else html=html.replace('</head>',tag+'</head>');
+        }
+        await putGithubFileLatest('index.html',{message:'Update homepage social sharing preview',content:enc(html)});
+        toast('Store settings and social sharing preview saved.');
+      }catch(error){toast('Settings saved, but social preview tags could not update: '+error.message,true);}
+    });
   };
 }
 
