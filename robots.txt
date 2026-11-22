@@ -1,14 +1,3 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Google-InspectionTool
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
-User-agent: Facebot
-Allow: /
 
 User-agent: *
 Allow: /
