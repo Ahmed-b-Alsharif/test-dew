@@ -1,4 +1,13 @@
+User-agent: facebookexternalhit
+Allow: /
+Disallow: /admin.html
+
+User-agent: Facebot
+Allow: /
+Disallow: /admin.html
+
 User-agent: *
 Allow: /
 Disallow: /admin.html
+
 Sitemap: https://dewskincaree.com/sitemap.xml
