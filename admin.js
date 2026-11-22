@@ -1338,7 +1338,7 @@ function store() {
     }).filter(x=>x.name);
     s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
     s.socialSharingImage=$('#s_socialSharingImage').value.trim();
-    save('Update store settings').then(async()=>{
+    save('Update store settings',true).then(async()=>{
       try{
         const htmlFile=await gh('GET','contents/index.html');
         let html=dec(htmlFile.content);
