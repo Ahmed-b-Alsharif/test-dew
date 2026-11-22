@@ -1,5 +1,6 @@
 const $ = s => document.querySelector(s);
 let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas = [];
+const metaTrack=(event,params)=>{if(typeof window.dewMetaTrack==='function')window.dewMetaTrack(event,params);else(window.dewMetaPendingEvents||(window.dewMetaPendingEvents=[])).push({event,params:params||{}});};
 
 (async function () {
   try { S = await (await fetch('products.json',{cache:'no-cache'})).json(); }
@@ -29,6 +30,8 @@ let S, area = null, appliedDiscount = null, paymentMethod = 'cod', deliveryAreas
     if (c) { const parts=String(c.name||'').trim().split(/\s+/).filter(Boolean); $('#firstName').value=parts.shift()||''; $('#lastName').value=parts.join(' '); $('#phone').value=c.phone||''; }
   } catch {}
   render();
+  const checkoutTotals=totals();
+  if(checkoutTotals.ls.length){metaTrack('InitiateCheckout',{content_ids:[...new Set(checkoutTotals.ls.map(line=>String(line.id)))],content_type:'product',contents:checkoutTotals.ls.map(line=>({id:String(line.id),quantity:line.qty,item_price:Number(line.unit)||0})),num_items:checkoutTotals.ls.reduce((n,line)=>n+line.qty,0),value:Number(checkoutTotals.items)||0,currency:'EGP'});}
 })();
 
 function updatePaymentDetails() {
@@ -224,6 +227,7 @@ function done(o) {
   const subtotal=Number.isFinite(Number(o.itemsTotal))?Number(o.itemsTotal):lines.reduce((n,line)=>n+Number(line.total||0),0);
   const delivery=Math.max(0,Number(o.delivery)||0),discount=Math.max(0,Number(o.discount)||0),shippingDiscount=Math.max(0,Number(o.shippingDiscount)||0),totalDiscount=discount+shippingDiscount;
   const total=Math.max(0,Number(o.total)||0),isCod=String(o.paymentMethod||paymentMethod).toLowerCase()==='cod';
+  metaTrack('Purchase',{content_ids:[...new Set(lines.map(line=>line.id||line.productId).filter(Boolean).map(String))],content_type:'product',contents:lines.filter(line=>line.id||line.productId).map(line=>({id:String(line.id||line.productId),quantity:Math.max(0,Number(line.qty)||0),item_price:Number(line.unit)||0})),num_items:lines.reduce((n,line)=>n+Math.max(0,Number(line.qty)||0),0),value:total,currency:'EGP',transaction_id:String(o.number||'')});
   const itemsHtml=lines.map(line=>`<div class="dew-receipt-item"><div><b>${esc(line.name||'Dew product')}</b><small>${Math.max(0,Number(line.qty)||0)} × ${egp(line.unit)}</small></div><strong>${egp(line.total)}</strong></div>`).join('');
   $('#page').className='page dew-success-page';
   document.title='Order confirmed | Dew Skincare';
