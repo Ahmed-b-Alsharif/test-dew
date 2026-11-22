@@ -11,6 +11,9 @@ if (!window.fbq) {
  fbq('init', '3707742909503050');
  fbq('track', 'PageView');
 }
+/* Shared Meta event helper; flushes events queued by page scripts that load first. */
+window.dewMetaTrack=function(event,params){if(typeof window.fbq==='function')window.fbq('track',event,params||{});else(window.dewMetaPendingEvents||(window.dewMetaPendingEvents=[])).push({event,params:params||{}});};
+if(typeof window.fbq==='function'&&Array.isArray(window.dewMetaPendingEvents)){window.dewMetaPendingEvents.splice(0).forEach(item=>window.fbq('track',item.event,item.params||{}));}
 /* Dew storefront shared mobile menu and site-wide product search */
 (()=>{
  'use strict';
