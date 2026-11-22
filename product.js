@@ -40,6 +40,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   setMeta('meta[property="og:image"]','property',(p.images||[])[0]||'');
   setMeta('meta[property="og:type"]','property','product');
   setMeta('meta[property="og:url"]','property',canonicalUrl);
+  setMeta('meta[name="twitter:card"]','name','summary_large_image');setMeta('meta[name="twitter:title"]','name',seoTitle);setMeta('meta[name="twitter:description"]','name',seoDescription);setMeta('meta[name="twitter:image"]','name',(p.images||[])[0]||'');
   let canonical=document.head.querySelector('link[rel="canonical"]');if(!canonical){canonical=document.createElement('link');canonical.rel='canonical';document.head.appendChild(canonical);}canonical.href=canonicalUrl;
   const productImage=(p.images||[])[0]||'';
   const productSchema={"@context":"https://schema.org/","@type":"Product",name:p.name,description:seoDescription,sku:p.id,image:productImage?[productImage]:undefined,brand:{"@type":"Brand",name:"Dew Skincare"},offers:{"@type":"Offer",url:canonicalUrl,priceCurrency:"EGP",price:String(initialVariant?(Number(initialVariant.salePrice)>0&&Number(initialVariant.salePrice)<Number(initialVariant.price)?initialVariant.salePrice:initialVariant.price):(p.salePrice>0&&p.salePrice<p.price?p.salePrice:p.price)),availability:Number(initialVariant?initialVariant.stock:p.stock||0)>0?"https://schema.org/InStock":"https://schema.org/OutOfStock",itemCondition:"https://schema.org/NewCondition"}};
