@@ -1348,8 +1348,7 @@ function store() {
         const attrs={'og:title':title,'og:description':description,'og:url':'https://dewskincaree.com/','og:image':image,'og:image:width':'1200','og:image:height':'630','og:image:alt':title,'twitter:card':'summary_large_image','twitter:title':title,'twitter:description':description,'twitter:image':image};
         for(const [key,value] of Object.entries(attrs)){
           const escaped=value.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-          const re=key==='twitter:card'?new RegExp('<meta\\s+name="twitter:card"[^>]*>','i'):new RegExp('<meta\\s+(?:property|name)="'+key.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\    s.ordersApiUrl=$('#s_ordersApiUrl').value.trim().replace(/\/$/,'');
-    save('Update store settings').then(()=>{ toast('Store settings saved.'); });')+'"[^>]*>','i');
+          const re=key==='twitter:card'?new RegExp('<meta\\s+name="twitter:card"[^>]*>','i'):new RegExp('<meta\\s+(?:property|name)="'+key+'"[^>]*>','i');
           const tag=key.startsWith('twitter:')?'<meta name="'+key+'" content="'+escaped+'">':'<meta property="'+key+'" content="'+escaped+'">';
           if(re.test(html))html=html.replace(re,tag);else html=html.replace('</head>',tag+'</head>');
         }
