@@ -24,9 +24,6 @@ function cleanUrl(match) {
 }
 
 function extensionFor(url, contentType) {
-  const pathname = new URL(url).pathname;
-  const fromPath = path.extname(pathname).toLowerCase();
-  if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"].includes(fromPath)) return fromPath;
   const type = (contentType || "").split(";")[0].trim().toLowerCase();
   const byType = {
     "image/jpeg": ".jpg",
@@ -35,7 +32,12 @@ function extensionFor(url, contentType) {
     "image/gif": ".gif",
     "image/avif": ".avif"
   };
-  return byType[type] || ".img";
+  if (byType[type]) return byType[type];
+
+  const pathname = new URL(url).pathname;
+  const fromPath = path.extname(pathname).toLowerCase();
+  if ([".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif"].includes(fromPath)) return fromPath;
+  return ".img";
 }
 
 function isImage(bytes, contentType) {
@@ -72,7 +74,7 @@ for (const url of remoteUrls) {
     redirect: "follow",
     headers: {
       "User-Agent": "DewSkincare-Image-Migration/1.0",
-      "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"
+      "Accept": "image/jpeg,image/png,image/gif,image/*;q=0.8,*/*;q=0.5"
     }
   });
 
@@ -101,7 +103,7 @@ for (const url of remoteUrls) {
     contentFiles.set(relativePath, true);
   }
 
-  replacements.set(url, relativePath);
+  replacements.set(url, "https://dewskincaree.com/" + relativePath);
 }
 
 let changedFiles = 0;
