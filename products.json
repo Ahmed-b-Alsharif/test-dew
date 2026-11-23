@@ -701,7 +701,7 @@
           },
           "price": 200,
           "salePrice": 150,
-          "stock": 1,
+          "stock": 0,
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/edf4c9e799ff3444091d4a0e.jpg"
@@ -709,7 +709,7 @@
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 1,
+      "stock": 0,
       "seoTitle": "Dew Gloss 01 Lip Gloss | Egypt",
       "seoDescription": "Shop Dew Gloss 01 in Egypt for a glossy lip finish and a touch of colour. Explore shade 01 in Dew's everyday lip gloss range.",
       "shopifyHandle": "dew-gloss-01"
@@ -720,7 +720,7 @@
       "description": "Meet your new everyday shine! Dew Gloss 10 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
       "catalog": "e706ce85",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
-      "visible": true,
+      "visible": false,
       "featured": false,
       "images": [
         "https://dewskincaree.com/images/shopify/357200ea5b8fc2b3aea9b1b3.jpg"
@@ -925,7 +925,7 @@
           },
           "price": 200,
           "salePrice": 150,
-          "stock": 0,
+          "stock": 5,
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/dec480c3ed5840487cb0020b.jpg"
@@ -937,7 +937,7 @@
           },
           "price": 220,
           "salePrice": 170,
-          "stock": 0,
+          "stock": 10,
           "sku": "",
           "barcode": "",
           "image": "images/1795430887321-5815cf3c.webp"
@@ -956,7 +956,7 @@
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 10,
+      "stock": 25,
       "seoTitle": "Dew Gloss 05 Lip Gloss | Egypt",
       "seoDescription": "Shop Dew Gloss 05 in Egypt for a glossy lip finish and a touch of colour. Explore shade 05 in Dew's everyday lip gloss range.",
       "shopifyHandle": "dew-gloss-05"
@@ -967,7 +967,7 @@
       "description": "Meet your new everyday shine! Dew Gloss 04 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
       "catalog": "e706ce85",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
-      "visible": true,
+      "visible": false,
       "featured": false,
       "images": [
         "https://dewskincaree.com/images/shopify/39f790e97bbd549a40fa3aa7.jpg"
@@ -1007,7 +1007,7 @@
       "description": "Meet your new everyday shine! Dew Gloss 03 gives your lips a glossy finish and a lovely touch of colour. Wear it alone or pair it with your favourite lip liner for an easy, polished look.",
       "catalog": "e706ce85",
       "tags": "beach, Hydrating, Lip Moisturizer, Natural, Smooth Lips, Soft Lips",
-      "visible": true,
+      "visible": false,
       "featured": false,
       "images": [
         "https://dewskincaree.com/images/shopify/d0181a9554761b9c84583fd0.jpg"
