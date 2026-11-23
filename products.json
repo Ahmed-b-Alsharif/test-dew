@@ -1125,7 +1125,8 @@
           "salePrice": 170,
           "stock": 10,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": "images/1795441451494-1421223e.webp"
         },
         {
           "id": "f081e246",
@@ -1136,7 +1137,8 @@
           "salePrice": 130,
           "stock": 10,
           "sku": "",
-          "barcode": ""
+          "barcode": "",
+          "image": "images/1795441453645-2f76b60f.webp"
         }
       ],
       "price": 200,
