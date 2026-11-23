@@ -34,7 +34,7 @@ const hasMultipleVariantValues=p=>(p.options||[]).some(o=>Array.isArray(o.values
   document.title=seoTitle;
   const productHandle=encodeURIComponent(p.shopifyHandle||String(p.name||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''));
   const canonicalUrl='https://dewskincaree.com/'+productHandle+'/';
-  const setMeta=(selector,attribute,value,createName)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');if(createName)el.setAttribute(createName,attribute);else el.setAttribute(attribute==='property'?'property':'name',attribute);document.head.appendChild(el);}el.setAttribute('content',value);};
+  const setMeta=(selector,attribute,value)=>{let el=document.head.querySelector(selector);if(!el){el=document.createElement('meta');const match=selector.match(/meta\[(name|property)="([^"]+)"\]/);if(match)el.setAttribute(match[1],match[2]);document.head.appendChild(el);}el.setAttribute('content',value);};
   setMeta('meta[name="description"]','name',seoDescription);
   setMeta('meta[property="og:title"]','property',seoTitle);
   setMeta('meta[property="og:description"]','property',seoDescription);
