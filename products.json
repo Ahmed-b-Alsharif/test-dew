@@ -761,36 +761,65 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://dewskincaree.com/images/shopify/a13e5ca00e4dfd767c1e0558.jpg"
+        "images/1795438577217-6f13b344.webp",
+        "https://dewskincaree.com/images/shopify/a13e5ca00e4dfd767c1e0558.jpg",
+        "images/1795438575260-f2479e69.webp"
       ],
       "howToUse": "",
       "options": [
         {
-          "name": "Shade",
+          "name": "Shape",
           "values": [
-            "09"
+            "KiKo",
+            "Big Brush",
+            "Squeeze"
           ]
         }
       ],
       "variants": [
         {
-          "id": "702017d1",
+          "id": "6425f07c",
           "options": {
-            "Shade": "09"
+            "Shape": "KiKo"
           },
           "price": 200,
           "salePrice": 150,
-          "stock": 0,
+          "stock": 5,
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/a13e5ca00e4dfd767c1e0558.jpg"
+        },
+        {
+          "id": "40b704f6",
+          "options": {
+            "Shape": "Big Brush"
+          },
+          "price": 220,
+          "salePrice": 170,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795438577217-6f13b344.webp"
+        },
+        {
+          "id": "94fd8439",
+          "options": {
+            "Shape": "Squeeze"
+          },
+          "price": 180,
+          "salePrice": 130,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795438575260-f2479e69.webp"
         }
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 0,
+      "stock": 5,
       "seoTitle": "Dew Gloss 09 Lip Gloss | Egypt",
-      "seoDescription": "Shop Dew Gloss 09 in Egypt for a glossy lip finish and a touch of colour. Explore shade 09 in Dew's everyday lip gloss range."
+      "seoDescription": "Shop Dew Gloss 09 in Egypt for a glossy lip finish and a touch of colour. Explore shade 09 in Dew's everyday lip gloss range.",
+      "shopifyHandle": "dew-gloss-09"
     },
     {
       "id": "7aa07c64",
