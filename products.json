@@ -997,7 +997,7 @@
           },
           "price": 220,
           "salePrice": 170,
-          "stock": 4,
+          "stock": 2,
           "sku": "",
           "barcode": ""
         },
@@ -1026,7 +1026,7 @@
       ],
       "price": 220,
       "salePrice": 170,
-      "stock": 12,
+      "stock": 10,
       "shopifyHandle": "whitening-creamy-roll-on-deodorant",
       "seoTitle": "Whitening Roll-On Deodorant | Dew Egypt",
       "seoDescription": "Shop Dew creamy roll-on deodorant in Egypt for everyday underarm care and a fresh scent. Available in women's and men's fragrance options."
@@ -1372,33 +1372,14 @@
         "https://cdn.shopify.com/s/files/1/0868/4827/4732/files/bund2.jpg?v=1756215286"
       ],
       "howToUse": "",
-      "options": [
-        {
-          "name": "Title",
-          "values": [
-            "Default Title"
-          ]
-        }
-      ],
-      "variants": [
-        {
-          "id": "8de47106",
-          "options": {
-            "Title": "Default Title"
-          },
-          "price": 310,
-          "salePrice": 500,
-          "stock": 1,
-          "sku": "Bundle Hair care",
-          "barcode": "",
-          "image": ""
-        }
-      ],
+      "options": [],
+      "variants": [],
       "price": 310,
       "salePrice": 500,
       "stock": 1,
       "seoTitle": "Rosemary Shampoo & Conditioner Kit | Dew Egypt",
-      "seoDescription": "Shop the Dew Rosemary Hair Kit in Egypt with shampoo and conditioner for a simple wash-day routine. مجموعة شامبو وبلسم روزماري للعناية بالشعر."
+      "seoDescription": "Shop the Dew Rosemary Hair Kit in Egypt with shampoo and conditioner for a simple wash-day routine. مجموعة شامبو وبلسم روزماري للعناية بالشعر.",
+      "shopifyHandle": "dew-hair-kit"
     },
     {
       "id": "3744b4c0",
