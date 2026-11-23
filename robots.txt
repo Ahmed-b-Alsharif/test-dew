@@ -1,7 +1,12 @@
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+
+User-agent: Googlebot-Image
+Allow: /
+
 User-agent: *
 Allow: /
-Allow: /ar/products/
-Allow: /ar/products/rosemary-shampoo
 Disallow: /admin.html
 
 Sitemap: https://dewskincaree.com/sitemap.xml
