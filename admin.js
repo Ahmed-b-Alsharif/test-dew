@@ -1,5 +1,5 @@
 const $ = s => document.querySelector(s);
-let D = null, SHA = null, ordersList = [], ordersSHA = null, imageLibrary = [], welcomeLeads = [], welcomeLeadsError = '', tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','discounts','offer','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
+let D = null, SHA = null, BASE_PRODUCTS_CONTENT = null, ordersList = [], ordersSHA = null, imageLibrary = [], welcomeLeads = [], welcomeLeadsError = '', tab = (() => { try { const requested=new URLSearchParams(location.search).get('tab'); return ['overview','homepage','pages','products','catalogs','media','orders','customers','discounts','offer','store','help','more'].includes(requested)?requested:'overview'; } catch { return 'overview'; } })(), q = '', chain = Promise.resolve(), themeEditorDirty = false, themeEditorDiscard = () => {};
 const uid = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
 const catName = id => (D.catalogs.find(c => c.id === id) || {}).name || '-';
 const isNativeApp = (() => { try { return location.protocol === 'capacitor:' || !!window.Capacitor?.isNativePlatform?.(); } catch { return false; } })();
@@ -68,7 +68,7 @@ function inventoryItemsForProduct(p){return Array.isArray(p.variants)&&p.variant
 
 async function loadData() {
   const f = await gh('GET', 'contents/products.json?t=' + Date.now());
-  SHA = f.sha; D = JSON.parse(dec(f.content));
+  SHA = f.sha; BASE_PRODUCTS_CONTENT = dec(f.content); D = JSON.parse(BASE_PRODUCTS_CONTENT);
   try { if (localStorage.getItem('dew_published_product_routes') === null) localStorage.setItem('dew_published_product_routes', JSON.stringify(productRouteSlugs())); } catch {}
   if (!D.discounts) D.discounts = [];
   D.catalogs = Array.isArray(D.catalogs) ? D.catalogs : [];
@@ -126,8 +126,17 @@ async function refreshProductSitemap(previousSlugs = []) {
 function save(message, propagateError=false) {
   chain = chain.catch(() => {}).then(async () => {
     try {
-      const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: SHA });
+      // Check the latest file version before saving to prevent stale-tab overwrites.
+      const latest = await gh('GET', 'contents/products.json?t=' + Date.now());
+      const latestContent = dec(latest.content);
+      if (latest.sha !== SHA && latestContent !== BASE_PRODUCTS_CONTENT) {
+        SHA = latest.sha;
+        BASE_PRODUCTS_CONTENT = latestContent;
+        throw new Error('Products were changed in another admin session. Your unsaved changes were not written over the newer data. Refresh this admin page, reopen the product, and apply your changes again.');
+      }
+      const r = await gh('PUT', 'contents/products.json', { message, content: enc(JSON.stringify(D, null, 2) + '\n'), sha: latest.sha });
       SHA = r.content.sha;
+      BASE_PRODUCTS_CONTENT = JSON.stringify(D, null, 2) + '\n';
       const currentSlugs=productRouteSlugs();
       let previousSlugs=[];
       try { previousSlugs=JSON.parse(localStorage.getItem('dew_published_product_routes')||'[]'); } catch {}
