@@ -1388,14 +1388,14 @@
           },
           "price": 500,
           "salePrice": 310,
-          "stock": 0,
+          "stock": 1,
           "sku": "",
           "barcode": ""
         }
       ],
       "price": 500,
       "salePrice": 310,
-      "stock": 0,
+      "stock": 1,
       "seoTitle": "Rosemary Shampoo & Conditioner Kit | Dew Egypt",
       "seoDescription": "Shop the Dew Rosemary Hair Kit in Egypt with shampoo and conditioner for a simple wash-day routine. مجموعة شامبو وبلسم روزماري للعناية بالشعر.",
       "shopifyHandle": "dew-hair-kit"
