@@ -1088,36 +1088,63 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://dewskincaree.com/images/shopify/1e2c6627b4139d81ad502cd4.jpg"
+        "https://dewskincaree.com/images/shopify/1e2c6627b4139d81ad502cd4.jpg",
+        "images/1795441451494-1421223e.webp",
+        "images/1795441453645-2f76b60f.webp"
       ],
       "howToUse": "",
       "options": [
         {
-          "name": "Shade",
+          "name": "Shape",
           "values": [
-            "00"
+            "KIKO",
+            "Big Brush",
+            "Squeeze"
           ]
         }
       ],
       "variants": [
         {
-          "id": "51734ef1",
+          "id": "d3cdb5ce",
           "options": {
-            "Shade": "00"
+            "Shape": "KIKO"
           },
           "price": 200,
           "salePrice": 150,
-          "stock": 0,
+          "stock": 5,
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/1e2c6627b4139d81ad502cd4.jpg"
+        },
+        {
+          "id": "67f136c3",
+          "options": {
+            "Shape": "Big Brush"
+          },
+          "price": 220,
+          "salePrice": 170,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "f081e246",
+          "options": {
+            "Shape": "Squeeze"
+          },
+          "price": 180,
+          "salePrice": 130,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
         }
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 0,
+      "stock": 25,
       "seoTitle": "Dew Gloss 00 Lip Gloss | Egypt",
-      "seoDescription": "Shop Dew Gloss 00 in Egypt for a glossy lip finish and a touch of colour. Explore shade 00 in Dew's everyday lip gloss range."
+      "seoDescription": "Shop Dew Gloss 00 in Egypt for a glossy lip finish and a touch of colour. Explore shade 00 in Dew's everyday lip gloss range.",
+      "shopifyHandle": "dew-gloss-00"
     },
     {
       "id": "95e54cca",
