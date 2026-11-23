@@ -455,6 +455,71 @@
   ],
   "products": [
     {
+      "id": "0d5ccf6a",
+      "name": "Dew Gloss 07",
+      "shopifyHandle": "dew-gloss-07",
+      "seoTitle": "",
+      "seoDescription": "",
+      "price": 200,
+      "salePrice": 150,
+      "stock": 30,
+      "description": "",
+      "howToUse": "",
+      "tags": "",
+      "images": [
+        "images/1795429204492-0311dccd.webp",
+        "images/1795429206640-d1e8e047.webp"
+      ],
+      "visible": true,
+      "featured": false,
+      "options": [
+        {
+          "name": "Shape",
+          "values": [
+            "KiKo",
+            "Big Brush",
+            "Squeeze"
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "id": "9a1ff38a",
+          "options": {
+            "Shape": "KiKo"
+          },
+          "price": 200,
+          "salePrice": 150,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
+        },
+        {
+          "id": "86426008",
+          "options": {
+            "Shape": "Big Brush"
+          },
+          "price": 220,
+          "salePrice": 170,
+          "stock": 5,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795429204492-0311dccd.webp"
+        },
+        {
+          "id": "f4a8253c",
+          "options": {
+            "Shape": "Squeeze"
+          },
+          "price": 180,
+          "salePrice": 130,
+          "stock": 15,
+          "sku": "",
+          "barcode": ""
+        }
+      ]
+    },
+    {
       "id": "4be6283f",
       "name": "Fluffy Kashmir Pouch Set",
       "shopifyHandle": "fluffy-kashmir-pouch-set",
