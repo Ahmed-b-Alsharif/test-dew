@@ -1,6 +1,7 @@
-
 User-agent: *
 Allow: /
+Allow: /ar/products/
+Allow: /ar/products/rosemary-shampoo
 Disallow: /admin.html
 
 Sitemap: https://dewskincaree.com/sitemap.xml
