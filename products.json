@@ -796,7 +796,7 @@
           },
           "price": 220,
           "salePrice": 170,
-          "stock": 0,
+          "stock": 10,
           "sku": "",
           "barcode": "",
           "image": "images/1795438577217-6f13b344.webp"
@@ -808,7 +808,7 @@
           },
           "price": 180,
           "salePrice": 130,
-          "stock": 0,
+          "stock": 10,
           "sku": "",
           "barcode": "",
           "image": "images/1795438575260-f2479e69.webp"
@@ -816,7 +816,7 @@
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 5,
+      "stock": 25,
       "seoTitle": "Dew Gloss 09 Lip Gloss | Egypt",
       "seoDescription": "Shop Dew Gloss 09 in Egypt for a glossy lip finish and a touch of colour. Explore shade 09 in Dew's everyday lip gloss range.",
       "shopifyHandle": "dew-gloss-09"
