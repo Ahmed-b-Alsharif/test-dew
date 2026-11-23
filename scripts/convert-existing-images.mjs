@@ -55,7 +55,7 @@ const remoteUrls = new Set();
 for (const file of textFiles) {
   const body = await fs.readFile(file, "utf8");
   originalText.set(file, body);
-  for (const match of body.match(shopifyPattern)) remoteUrls.add(cleanUrl(match));
+  for (const match of body.matchAll(shopifyPattern)) remoteUrls.add(cleanUrl(match[0]));
 }
 
 if (remoteUrls.size === 0) {
