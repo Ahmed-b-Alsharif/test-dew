@@ -841,22 +841,26 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://dewskincaree.com/images/shopify/dec480c3ed5840487cb0020b.jpg"
+        "images/1795430887321-5815cf3c.webp",
+        "https://dewskincaree.com/images/shopify/dec480c3ed5840487cb0020b.jpg",
+        "images/1795430890464-c5067208.webp"
       ],
       "howToUse": "",
       "options": [
         {
-          "name": "Shade",
+          "name": "Shape",
           "values": [
-            "05"
+            "KIKO",
+            "BIG Brush",
+            "Squeeze"
           ]
         }
       ],
       "variants": [
         {
-          "id": "9f47e622",
+          "id": "ff83982f",
           "options": {
-            "Shade": "05"
+            "Shape": "KIKO"
           },
           "price": 200,
           "salePrice": 150,
@@ -864,13 +868,37 @@
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/dec480c3ed5840487cb0020b.jpg"
+        },
+        {
+          "id": "ab9d169f",
+          "options": {
+            "Shape": "BIG Brush"
+          },
+          "price": 220,
+          "salePrice": 170,
+          "stock": 0,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795430887321-5815cf3c.webp"
+        },
+        {
+          "id": "d192e9fc",
+          "options": {
+            "Shape": "Squeeze"
+          },
+          "price": 180,
+          "salePrice": 130,
+          "stock": 10,
+          "sku": "",
+          "barcode": ""
         }
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 0,
+      "stock": 10,
       "seoTitle": "Dew Gloss 05 Lip Gloss | Egypt",
-      "seoDescription": "Shop Dew Gloss 05 in Egypt for a glossy lip finish and a touch of colour. Explore shade 05 in Dew's everyday lip gloss range."
+      "seoDescription": "Shop Dew Gloss 05 in Egypt for a glossy lip finish and a touch of colour. Explore shade 05 in Dew's everyday lip gloss range.",
+      "shopifyHandle": "dew-gloss-05"
     },
     {
       "id": "9fd72a4a",
