@@ -1,4 +1,4 @@
-name: Convert existing website images to WebP
+name: Migrate Shopify-hosted product images
 
 on:
   push:
@@ -12,44 +12,37 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: dew-image-webp-migration
+  group: dew-shopify-image-migration
   cancel-in-progress: false
 
 jobs:
-  convert:
+  migrate:
     runs-on: ubuntu-latest
     steps:
       - name: Check out website
         uses: actions/checkout@v4
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install image converter
-        run: npm install --no-save --package-lock=false sharp
-      - name: Convert all referenced JPG and PNG images
+
+      - name: Download Shopify images without changing them
         run: node scripts/convert-existing-images.mjs
-      - name: Open conversion pull request
+
+      - name: Open migration pull request
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          add-paths: |
-            images/webp/**
-            products.json
-          branch: chore/converted-website-images-webp
+          branch: chore/migrate-shopify-images-to-dew
           delete-branch: true
-          commit-message: "Convert existing website photos to optimized WebP"
-          title: "Convert existing website photos to optimized WebP"
+          commit-message: "Migrate Shopify-hosted images to Dew assets"
+          title: "Migrate Shopify-hosted images to Dew assets"
           body: |
-            This automated migration converts existing local JPG/PNG files and Shopify-hosted JPG/PNG images referenced by the website into optimized WebP files.
+            This automated migration downloads every Shopify CDN image referenced by the site into the repository and updates the matching references.
 
-            - Keeps the same source photos and visual content.
-            - Applies EXIF orientation and limits the longest dimension to 2400px.
-            - Uses WebP quality 82.
-            - Updates image references throughout tracked text/data files.
-            - Removes old local JPG/PNG files only after all conversions and reference checks succeed.
-
-            Please review and merge to publish the migrated image assets.
-          labels: |
-            images
-            performance
+            - Original image bytes are preserved exactly.
+            - No resizing, recompression, or format conversion is performed.
+            - Duplicate image content is stored only once.
+            - All text/data files containing image references are included in this pull request.
+            - The script verifies that no Shopify CDN image references remain before completing.
