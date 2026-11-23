@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large"><meta name="description" content="Explore Dew Skincare collections in Egypt, including skincare, lip care, body care and hair care essentials.">
 <title>Dew Skincare</title>
 <script>
 (function(){
@@ -19,6 +19,8 @@
   document.head.appendChild(el);
   window.DEW_COLLECTION_SLUG=slug;
   window.DEW_COLLECTION_ROUTE=!!slug;
+  var robots=document.querySelector('meta[name="robots"]');
+  if(robots) robots.content=slug?'index,follow,max-snippet:-1,max-image-preview:large':'noindex';
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,7 +28,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css?v=20261115-dew-logo-1">
 <title>Dew Skincare</title>
-<link rel="icon" type="image/png" href="/test-dew/favicon.png?v=20261117-1">
+<link rel="icon" type="image/png" href="/favicon.png?v=20261123-global-favicon-2">
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s)
