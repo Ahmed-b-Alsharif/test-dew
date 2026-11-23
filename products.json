@@ -801,36 +801,65 @@
       "visible": true,
       "featured": false,
       "images": [
-        "https://dewskincaree.com/images/shopify/645b3cc193f1c2560643e1f3.jpg"
+        "images/1795433316045-0dbd8d8c.webp",
+        "https://dewskincaree.com/images/shopify/645b3cc193f1c2560643e1f3.jpg",
+        "images/1795433318375-063d9683.webp"
       ],
       "howToUse": "",
       "options": [
         {
-          "name": "Shade",
+          "name": "Shape",
           "values": [
-            "06"
+            "KiKo",
+            "Big Brush",
+            "Squeeze"
           ]
         }
       ],
       "variants": [
         {
-          "id": "e58cd6bb",
+          "id": "a43befea",
           "options": {
-            "Shade": "06"
+            "Shape": "KiKo"
           },
           "price": 200,
           "salePrice": 150,
-          "stock": 0,
+          "stock": 5,
           "sku": "",
           "barcode": "",
           "image": "https://dewskincaree.com/images/shopify/645b3cc193f1c2560643e1f3.jpg"
+        },
+        {
+          "id": "cbc401cc",
+          "options": {
+            "Shape": "Big Brush"
+          },
+          "price": 220,
+          "salePrice": 170,
+          "stock": 15,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795433316045-0dbd8d8c.webp"
+        },
+        {
+          "id": "82b81ebb",
+          "options": {
+            "Shape": "Squeeze"
+          },
+          "price": 180,
+          "salePrice": 130,
+          "stock": 15,
+          "sku": "",
+          "barcode": "",
+          "image": "images/1795433318375-063d9683.webp"
         }
       ],
       "price": 200,
       "salePrice": 150,
-      "stock": 0,
+      "stock": 35,
       "seoTitle": "Dew Gloss 06 Lip Gloss | Egypt",
-      "seoDescription": "Shop Dew Gloss 06 in Egypt for a glossy lip finish and a touch of colour. Explore shade 06 in Dew's everyday lip gloss range."
+      "seoDescription": "Shop Dew Gloss 06 in Egypt for a glossy lip finish and a touch of colour. Explore shade 06 in Dew's everyday lip gloss range.",
+      "shopifyHandle": "dew-gloss-06"
     },
     {
       "id": "daaa60ff",
