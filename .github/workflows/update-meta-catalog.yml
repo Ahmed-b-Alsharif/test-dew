@@ -1,0 +1,49 @@
+name: Update DEW Meta product feed
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - products.json
+      - scripts/generate-meta-feed.mjs
+      - .github/workflows/update-meta-catalog.yml
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dew-meta-product-feed
+  cancel-in-progress: false
+
+jobs:
+  generate-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out store
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate product feed
+        run: node scripts/generate-meta-feed.mjs
+
+      - name: Commit updated feed
+        run: |
+          if git diff --quiet -- meta-product-feed.xml; then
+            echo "The product feed is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add meta-product-feed.xml
+          git commit -m "Update DEW Meta product feed"
+          git push origin main
